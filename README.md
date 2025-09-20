@@ -418,7 +418,7 @@ This diagram shows the flow between screens, illustrating how users navigate thr
   - Comments on the 3dPrint can also be viewed.  
   - Users can return to the dashboard from this screen.
 
-![](Docs/Screens/3dPrintDetails.png)
+![](Docs/Screens/3DPrintDetails.png)
 
 - **User Details**  
   - Displays detailed information about the user and their printing activity.  
