@@ -120,6 +120,16 @@ A user is able to create a new group that includes users, printers, filaments, a
 - Scope: Basic  
 - Users: Base user  
 
+#### Edit a group
+A user is able to edit the details of an existing group.
+- Scope: Basic
+- Users: Manager
+
+#### Delete a group
+A user is able to delete an existing group.
+- Scope: Basic
+- Users: Manager
+
 #### Join a group
 A user is able to join an existing group.
 - Scope: Basic  
@@ -129,7 +139,6 @@ A user is able to join an existing group.
 A user is able to leave a group. Their resources are no longer shown in listings but remain available in history and estimations.  
 - Scope: Intermediate  
 - Users: Base user  
- 
 
 #### Transfer management
 A user is able to transfer their manager role to another user in the group.
@@ -223,6 +232,11 @@ A user is able to view detailed information about a printer, including hours, 3D
 A user is able to view printing metrics, including estimated vs. actual time, material used, and printer. 
 - Scope: Intermediate  
 - Users: All  
+
+#### 3D Print files
+A user is able to view and download files related to a 3D print.
+- Scope: Advanced
+- Users: Base user, Manager
 
 #### 3dPrint comments
 A user is able to write and view comments about a 3D print in the interaction section. 
