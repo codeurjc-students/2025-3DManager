@@ -1,0 +1,8 @@
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.API\obj\Debug\net8.0\3DMANAGER.API.csproj.AssemblyReference.cache
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.API\obj\Debug\net8.0\3DMANAGER.API.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.API\obj\Debug\net8.0\3DMANAGER.API.AssemblyInfoInputs.cache
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.API\obj\Debug\net8.0\3DMANAGER.API.AssemblyInfo.cs
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.API\obj\Debug\net8.0\3DMANAGER.API.csproj.CoreCompileInputs.cache
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.API\obj\Debug\net8.0\3DMANAGER.API.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.API\obj\Debug\net8.0\3DMANAGER.API.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.API\obj\Debug\net8.0\3DMANAGER.API.sourcelink.json

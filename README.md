@@ -542,7 +542,7 @@ Visualizations will play a key role in making the system’s data more understan
 - **Printer Details:** Each printer will feature a bar chart showing its success rate over time, providing immediate insight into reliability, and potential areas for maintenance or improvement.
 
 ---
-#### Algrotims
+#### Algorithms
 The application will implement several algorithms to provide automatic calculations and estimations for 3D printing processes:
 
 1. **Printer Success Rate**  
