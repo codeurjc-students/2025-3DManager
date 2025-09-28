@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("3DMANAGER.BLL")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6a2b865628c69c2b12790bc785c9b699b901abd2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a338160242144c2ae974f32737cc59f61cc0538f")]
 [assembly: System.Reflection.AssemblyProductAttribute("3DMANAGER.BLL")]
 [assembly: System.Reflection.AssemblyTitleAttribute("3DMANAGER.BLL")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

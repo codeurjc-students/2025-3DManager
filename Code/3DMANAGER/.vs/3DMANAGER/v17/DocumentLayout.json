@@ -3,32 +3,88 @@
   "WorkspaceRootPath": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{58E2D49D-442A-4EE5-A82F-16FD19A05127}|3DMANAGER.DAL\\3DMANAGER.DAL.csproj|c:\\users\\ismav\\desktop\\tfg2\\3dmanager\\code\\3dmanager\\3dmanager.dal\\dbmanagerexample.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{58E2D49D-442A-4EE5-A82F-16FD19A05127}|3DMANAGER.DAL\\3DMANAGER.DAL.csproj|solutionrelative:3dmanager.dal\\dbmanagerexample.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{58E2D49D-442A-4EE5-A82F-16FD19A05127}|3DMANAGER.DAL\\3DMANAGER.DAL.csproj|c:\\users\\ismav\\desktop\\tfg2\\3dmanager\\code\\3dmanager\\3dmanager.dal\\managers\\printerdbmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{58E2D49D-442A-4EE5-A82F-16FD19A05127}|3DMANAGER.DAL\\3DMANAGER.DAL.csproj|solutionrelative:3dmanager.dal\\managers\\printerdbmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1B52264B-EDF1-4C9B-83C2-80D28A48C4C2}|3DMANAGER.BLL\\3DMANAGER.BLL.csproj|c:\\users\\ismav\\desktop\\tfg2\\3dmanager\\code\\3dmanager\\3dmanager.bll\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1B52264B-EDF1-4C9B-83C2-80D28A48C4C2}|3DMANAGER.BLL\\3DMANAGER.BLL.csproj|solutionrelative:3dmanager.bll\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{1B52264B-EDF1-4C9B-83C2-80D28A48C4C2}|3DMANAGER.BLL\\3DMANAGER.BLL.csproj|c:\\users\\ismav\\desktop\\tfg2\\3dmanager\\code\\3dmanager\\3dmanager.bll\\managers\\printermanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1B52264B-EDF1-4C9B-83C2-80D28A48C4C2}|3DMANAGER.BLL\\3DMANAGER.BLL.csproj|solutionrelative:3dmanager.bll\\managers\\printermanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1B52264B-EDF1-4C9B-83C2-80D28A48C4C2}|3DMANAGER.BLL\\3DMANAGER.BLL.csproj|c:\\users\\ismav\\desktop\\tfg2\\3dmanager\\code\\3dmanager\\3dmanager.bll\\mapper\\automapperprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1B52264B-EDF1-4C9B-83C2-80D28A48C4C2}|3DMANAGER.BLL\\3DMANAGER.BLL.csproj|solutionrelative:3dmanager.bll\\mapper\\automapperprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{0839122C-8FB5-4E3B-BACE-1390F3F1E401}|3DMANAGER.API\\3DMANAGER.API.csproj|c:\\users\\ismav\\desktop\\tfg2\\3dmanager\\code\\3dmanager\\3dmanager.api\\controllers\\printercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0839122C-8FB5-4E3B-BACE-1390F3F1E401}|3DMANAGER.API\\3DMANAGER.API.csproj|solutionrelative:3dmanager.api\\controllers\\printercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{0839122C-8FB5-4E3B-BACE-1390F3F1E401}|3DMANAGER.API\\3DMANAGER.API.csproj|c:\\users\\ismav\\desktop\\tfg2\\3dmanager\\code\\3dmanager\\3dmanager.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{0839122C-8FB5-4E3B-BACE-1390F3F1E401}|3DMANAGER.API\\3DMANAGER.API.csproj|solutionrelative:3dmanager.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0839122C-8FB5-4E3B-BACE-1390F3F1E401}|3DMANAGER.API\\3DMANAGER.API.csproj|c:\\users\\ismav\\desktop\\tfg2\\3dmanager\\code\\3dmanager\\3dmanager.api\\3dmanager.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{0839122C-8FB5-4E3B-BACE-1390F3F1E401}|3DMANAGER.API\\3DMANAGER.API.csproj|solutionrelative:3dmanager.api\\3dmanager.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0839122C-8FB5-4E3B-BACE-1390F3F1E401}|3DMANAGER.API\\3DMANAGER.API.csproj|c:\\users\\ismav\\desktop\\tfg2\\3dmanager\\code\\3dmanager\\3dmanager.api\\3dmanager.api.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
-      "RelativeMoniker": "D:0:0:{0839122C-8FB5-4E3B-BACE-1390F3F1E401}|3DMANAGER.API\\3DMANAGER.API.csproj|solutionrelative:3dmanager.api\\3dmanager.api.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+      "AbsoluteMoniker": "D:0:0:{58E2D49D-442A-4EE5-A82F-16FD19A05127}|3DMANAGER.DAL\\3DMANAGER.DAL.csproj|c:\\users\\ismav\\desktop\\tfg2\\3dmanager\\code\\3dmanager\\3dmanager.dal\\base\\mysqldatasource.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{58E2D49D-442A-4EE5-A82F-16FD19A05127}|3DMANAGER.DAL\\3DMANAGER.DAL.csproj|solutionrelative:3dmanager.dal\\base\\mysqldatasource.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{0839122C-8FB5-4E3B-BACE-1390F3F1E401}|3DMANAGER.API\\3DMANAGER.API.csproj|c:\\users\\ismav\\desktop\\tfg2\\3dmanager\\code\\3dmanager\\3dmanager.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{0839122C-8FB5-4E3B-BACE-1390F3F1E401}|3DMANAGER.API\\3DMANAGER.API.csproj|solutionrelative:3dmanager.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0839122C-8FB5-4E3B-BACE-1390F3F1E401}|3DMANAGER.API\\3DMANAGER.API.csproj|c:\\users\\ismav\\desktop\\tfg2\\3dmanager\\code\\3dmanager\\3dmanager.api\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{0839122C-8FB5-4E3B-BACE-1390F3F1E401}|3DMANAGER.API\\3DMANAGER.API.csproj|solutionrelative:3dmanager.api\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{58E2D49D-442A-4EE5-A82F-16FD19A05127}|3DMANAGER.DAL\\3DMANAGER.DAL.csproj|c:\\users\\ismav\\desktop\\tfg2\\3dmanager\\code\\3dmanager\\3dmanager.dal\\3dmanager.dal.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{58E2D49D-442A-4EE5-A82F-16FD19A05127}|3DMANAGER.DAL\\3DMANAGER.DAL.csproj|solutionrelative:3dmanager.dal\\3dmanager.dal.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{58E2D49D-442A-4EE5-A82F-16FD19A05127}|3DMANAGER.DAL\\3DMANAGER.DAL.csproj|c:\\users\\ismav\\desktop\\tfg2\\3dmanager\\code\\3dmanager\\3dmanager.dal\\base\\mysqlmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{58E2D49D-442A-4EE5-A82F-16FD19A05127}|3DMANAGER.DAL\\3DMANAGER.DAL.csproj|solutionrelative:3dmanager.dal\\base\\mysqlmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{58E2D49D-442A-4EE5-A82F-16FD19A05127}|3DMANAGER.DAL\\3DMANAGER.DAL.csproj|c:\\users\\ismav\\desktop\\tfg2\\3dmanager\\code\\3dmanager\\3dmanager.dal\\interfaces\\iprinterdbmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{58E2D49D-442A-4EE5-A82F-16FD19A05127}|3DMANAGER.DAL\\3DMANAGER.DAL.csproj|solutionrelative:3dmanager.dal\\interfaces\\iprinterdbmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{58E2D49D-442A-4EE5-A82F-16FD19A05127}|3DMANAGER.DAL\\3DMANAGER.DAL.csproj|c:\\users\\ismav\\desktop\\tfg2\\3dmanager\\code\\3dmanager\\3dmanager.dal\\models\\printerdbobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{58E2D49D-442A-4EE5-A82F-16FD19A05127}|3DMANAGER.DAL\\3DMANAGER.DAL.csproj|solutionrelative:3dmanager.dal\\models\\printerdbobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{58E2D49D-442A-4EE5-A82F-16FD19A05127}|3DMANAGER.DAL\\3DMANAGER.DAL.csproj|c:\\users\\ismav\\desktop\\tfg2\\3dmanager\\code\\3dmanager\\3dmanager.dal\\base\\idatasource.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{58E2D49D-442A-4EE5-A82F-16FD19A05127}|3DMANAGER.DAL\\3DMANAGER.DAL.csproj|solutionrelative:3dmanager.dal\\base\\idatasource.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1B52264B-EDF1-4C9B-83C2-80D28A48C4C2}|3DMANAGER.BLL\\3DMANAGER.BLL.csproj|c:\\users\\ismav\\desktop\\tfg2\\3dmanager\\code\\3dmanager\\3dmanager.bll\\models\\printerobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1B52264B-EDF1-4C9B-83C2-80D28A48C4C2}|3DMANAGER.BLL\\3DMANAGER.BLL.csproj|solutionrelative:3dmanager.bll\\models\\printerobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0839122C-8FB5-4E3B-BACE-1390F3F1E401}|3DMANAGER.API\\3DMANAGER.API.csproj|c:\\users\\ismav\\desktop\\tfg2\\3dmanager\\code\\3dmanager\\3dmanager.api\\3dmanager.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{0839122C-8FB5-4E3B-BACE-1390F3F1E401}|3DMANAGER.API\\3DMANAGER.API.csproj|solutionrelative:3dmanager.api\\3dmanager.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1B52264B-EDF1-4C9B-83C2-80D28A48C4C2}|3DMANAGER.BLL\\3DMANAGER.BLL.csproj|c:\\users\\ismav\\desktop\\tfg2\\3dmanager\\code\\3dmanager\\3dmanager.bll\\3dmanager.bll.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{1B52264B-EDF1-4C9B-83C2-80D28A48C4C2}|3DMANAGER.BLL\\3DMANAGER.BLL.csproj|solutionrelative:3dmanager.bll\\3dmanager.bll.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0839122C-8FB5-4E3B-BACE-1390F3F1E401}|3DMANAGER.API\\3DMANAGER.API.csproj|c:\\users\\ismav\\desktop\\tfg2\\3dmanager\\code\\3dmanager\\3dmanager.api\\models\\commonresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0839122C-8FB5-4E3B-BACE-1390F3F1E401}|3DMANAGER.API\\3DMANAGER.API.csproj|solutionrelative:3dmanager.api\\models\\commonresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0839122C-8FB5-4E3B-BACE-1390F3F1E401}|3DMANAGER.API\\3DMANAGER.API.csproj|c:\\users\\ismav\\desktop\\tfg2\\3dmanager\\code\\3dmanager\\3dmanager.api\\controllers\\basecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0839122C-8FB5-4E3B-BACE-1390F3F1E401}|3DMANAGER.API\\3DMANAGER.API.csproj|solutionrelative:3dmanager.api\\controllers\\basecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1B52264B-EDF1-4C9B-83C2-80D28A48C4C2}|3DMANAGER.BLL\\3DMANAGER.BLL.csproj|c:\\users\\ismav\\desktop\\tfg2\\3dmanager\\code\\3dmanager\\3dmanager.bll\\mapper\\automapperprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1B52264B-EDF1-4C9B-83C2-80D28A48C4C2}|3DMANAGER.BLL\\3DMANAGER.BLL.csproj|solutionrelative:3dmanager.bll\\mapper\\automapperprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1B52264B-EDF1-4C9B-83C2-80D28A48C4C2}|3DMANAGER.BLL\\3DMANAGER.BLL.csproj|c:\\users\\ismav\\desktop\\tfg2\\3dmanager\\code\\3dmanager\\3dmanager.bll\\interfaces\\iprintermanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1B52264B-EDF1-4C9B-83C2-80D28A48C4C2}|3DMANAGER.BLL\\3DMANAGER.BLL.csproj|solutionrelative:3dmanager.bll\\interfaces\\iprintermanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{58E2D49D-442A-4EE5-A82F-16FD19A05127}|3DMANAGER.DAL\\3DMANAGER.DAL.csproj|c:\\users\\ismav\\desktop\\tfg2\\3dmanager\\code\\3dmanager\\3dmanager.dal\\dbmanagerexample.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{58E2D49D-442A-4EE5-A82F-16FD19A05127}|3DMANAGER.DAL\\3DMANAGER.DAL.csproj|solutionrelative:3dmanager.dal\\dbmanagerexample.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0839122C-8FB5-4E3B-BACE-1390F3F1E401}|3DMANAGER.API\\3DMANAGER.API.csproj|c:\\users\\ismav\\desktop\\tfg2\\3dmanager\\code\\3dmanager\\3dmanager.api\\models\\response.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0839122C-8FB5-4E3B-BACE-1390F3F1E401}|3DMANAGER.API\\3DMANAGER.API.csproj|solutionrelative:3dmanager.api\\models\\response.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,31 +94,234 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 14,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "AutoMapperProfile.cs",
-              "DocumentMoniker": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.BLL\\Mapper\\AutoMapperProfile.cs",
-              "RelativeDocumentMoniker": "3DMANAGER.BLL\\Mapper\\AutoMapperProfile.cs",
-              "ToolTip": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.BLL\\Mapper\\AutoMapperProfile.cs",
-              "RelativeToolTip": "3DMANAGER.BLL\\Mapper\\AutoMapperProfile.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 8,
+              "Title": "MySQLManager.cs",
+              "DocumentMoniker": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.DAL\\Base\\MySQLManager.cs",
+              "RelativeDocumentMoniker": "3DMANAGER.DAL\\Base\\MySQLManager.cs",
+              "ToolTip": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.DAL\\Base\\MySQLManager.cs",
+              "RelativeToolTip": "3DMANAGER.DAL\\Base\\MySQLManager.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-24T19:45:06.559Z",
+              "WhenOpened": "2025-09-28T10:30:41.387Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "MySQLDataSource.cs",
+              "DocumentMoniker": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.DAL\\Base\\MySQLDataSource.cs",
+              "RelativeDocumentMoniker": "3DMANAGER.DAL\\Base\\MySQLDataSource.cs",
+              "ToolTip": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.DAL\\Base\\MySQLDataSource.cs",
+              "RelativeToolTip": "3DMANAGER.DAL\\Base\\MySQLDataSource.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAnwB0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-28T10:26:53.874Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "IDataSource.cs",
+              "DocumentMoniker": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.DAL\\Base\\IDataSource.cs",
+              "RelativeDocumentMoniker": "3DMANAGER.DAL\\Base\\IDataSource.cs",
+              "ToolTip": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.DAL\\Base\\IDataSource.cs",
+              "RelativeToolTip": "3DMANAGER.DAL\\Base\\IDataSource.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-28T10:26:10.223Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.API\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "3DMANAGER.API\\Properties\\launchSettings.json",
+              "ToolTip": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.API\\Properties\\launchSettings.json",
+              "RelativeToolTip": "3DMANAGER.API\\Properties\\launchSettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-09-27T20:35:39.804Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "CommonResponse.cs",
+              "DocumentMoniker": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.API\\Models\\CommonResponse.cs",
+              "RelativeDocumentMoniker": "3DMANAGER.API\\Models\\CommonResponse.cs",
+              "ToolTip": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.API\\Models\\CommonResponse.cs",
+              "RelativeToolTip": "3DMANAGER.API\\Models\\CommonResponse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-27T12:29:40.752Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "DbManagerExample.cs",
+              "DocumentMoniker": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.DAL\\DbManagerExample.cs",
+              "RelativeDocumentMoniker": "3DMANAGER.DAL\\DbManagerExample.cs",
+              "ToolTip": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.DAL\\DbManagerExample.cs",
+              "RelativeToolTip": "3DMANAGER.DAL\\DbManagerExample.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-27T12:05:33.072Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "PrinterObject.cs",
+              "DocumentMoniker": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.BLL\\Models\\PrinterObject.cs",
+              "RelativeDocumentMoniker": "3DMANAGER.BLL\\Models\\PrinterObject.cs",
+              "ToolTip": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.BLL\\Models\\PrinterObject.cs",
+              "RelativeToolTip": "3DMANAGER.BLL\\Models\\PrinterObject.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-27T12:05:07.695Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "3DMANAGER.BLL.csproj",
+              "DocumentMoniker": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.BLL\\3DMANAGER.BLL.csproj",
+              "RelativeDocumentMoniker": "3DMANAGER.BLL\\3DMANAGER.BLL.csproj",
+              "ToolTip": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.BLL\\3DMANAGER.BLL.csproj",
+              "RelativeToolTip": "3DMANAGER.BLL\\3DMANAGER.BLL.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-09-27T12:04:29.618Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "Response.cs",
+              "DocumentMoniker": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.API\\Models\\Response.cs",
+              "RelativeDocumentMoniker": "3DMANAGER.API\\Models\\Response.cs",
+              "ToolTip": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.API\\Models\\Response.cs",
+              "RelativeToolTip": "3DMANAGER.API\\Models\\Response.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-27T11:45:04Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "BaseController.cs",
+              "DocumentMoniker": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.API\\Controllers\\BaseController.cs",
+              "RelativeDocumentMoniker": "3DMANAGER.API\\Controllers\\BaseController.cs",
+              "ToolTip": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.API\\Controllers\\BaseController.cs",
+              "RelativeToolTip": "3DMANAGER.API\\Controllers\\BaseController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-27T11:39:43.541Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "PrinterController.cs",
+              "DocumentMoniker": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.API\\Controllers\\PrinterController.cs",
+              "RelativeDocumentMoniker": "3DMANAGER.API\\Controllers\\PrinterController.cs",
+              "ToolTip": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.API\\Controllers\\PrinterController.cs",
+              "RelativeToolTip": "3DMANAGER.API\\Controllers\\PrinterController.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAiwBoAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-27T11:05:57.501Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "PrinterDbObject.cs",
+              "DocumentMoniker": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.DAL\\Models\\PrinterDbObject.cs",
+              "RelativeDocumentMoniker": "3DMANAGER.DAL\\Models\\PrinterDbObject.cs",
+              "ToolTip": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.DAL\\Models\\PrinterDbObject.cs",
+              "RelativeToolTip": "3DMANAGER.DAL\\Models\\PrinterDbObject.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAgAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-27T10:52:45.769Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "3DMANAGER.DAL.csproj",
+              "DocumentMoniker": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.DAL\\3DMANAGER.DAL.csproj",
+              "RelativeDocumentMoniker": "3DMANAGER.DAL\\3DMANAGER.DAL.csproj",
+              "ToolTip": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.DAL\\3DMANAGER.DAL.csproj",
+              "RelativeToolTip": "3DMANAGER.DAL\\3DMANAGER.DAL.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-09-27T10:11:50.461Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 5,
-              "Title": "3DMANAGER.API",
-              "DocumentMoniker": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.API\\3DMANAGER.API.csproj",
-              "RelativeDocumentMoniker": "3DMANAGER.API\\3DMANAGER.API.csproj",
-              "ToolTip": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.API\\3DMANAGER.API.csproj",
-              "RelativeToolTip": "3DMANAGER.API\\3DMANAGER.API.csproj",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-09-24T18:14:34.164Z",
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.API\\appsettings.json",
+              "RelativeDocumentMoniker": "3DMANAGER.API\\appsettings.json",
+              "ToolTip": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.API\\appsettings.json",
+              "RelativeToolTip": "3DMANAGER.API\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAACDAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-09-27T10:49:32.919Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "PrinterDbManager.cs",
+              "DocumentMoniker": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.DAL\\Managers\\PrinterDbManager.cs",
+              "RelativeDocumentMoniker": "3DMANAGER.DAL\\Managers\\PrinterDbManager.cs",
+              "ToolTip": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.DAL\\Managers\\PrinterDbManager.cs",
+              "RelativeToolTip": "3DMANAGER.DAL\\Managers\\PrinterDbManager.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAAnwBYAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-27T09:45:52.344Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "AutoMapperProfile.cs",
+              "DocumentMoniker": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.BLL\\Mapper\\AutoMapperProfile.cs",
+              "RelativeDocumentMoniker": "3DMANAGER.BLL\\Mapper\\AutoMapperProfile.cs",
+              "ToolTip": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.BLL\\Mapper\\AutoMapperProfile.cs",
+              "RelativeToolTip": "3DMANAGER.BLL\\Mapper\\AutoMapperProfile.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-24T19:45:06.559Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PrinterManager.cs",
+              "DocumentMoniker": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.BLL\\Managers\\PrinterManager.cs",
+              "RelativeDocumentMoniker": "3DMANAGER.BLL\\Managers\\PrinterManager.cs",
+              "ToolTip": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.BLL\\Managers\\PrinterManager.cs",
+              "RelativeToolTip": "3DMANAGER.BLL\\Managers\\PrinterManager.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABoAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-27T09:45:35.911Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "IPrinterDbManager.cs",
+              "DocumentMoniker": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.DAL\\Interfaces\\IPrinterDbManager.cs",
+              "RelativeDocumentMoniker": "3DMANAGER.DAL\\Interfaces\\IPrinterDbManager.cs",
+              "ToolTip": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.DAL\\Interfaces\\IPrinterDbManager.cs",
+              "RelativeToolTip": "3DMANAGER.DAL\\Interfaces\\IPrinterDbManager.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAsAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-27T09:37:19.008Z",
               "EditorCaption": ""
             },
             {
@@ -73,62 +332,35 @@
               "RelativeDocumentMoniker": "3DMANAGER.API\\Program.cs",
               "ToolTip": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.API\\Program.cs",
               "RelativeToolTip": "3DMANAGER.API\\Program.cs",
-              "ViewState": "AgIAACEAAAAAAAAAAAAAAC8AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABsAAAAAAAAAAAAqwD4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-09-24T17:34:39.547Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 13,
               "Title": "3DMANAGER.API.csproj",
               "DocumentMoniker": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.API\\3DMANAGER.API.csproj",
               "RelativeDocumentMoniker": "3DMANAGER.API\\3DMANAGER.API.csproj",
               "ToolTip": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.API\\3DMANAGER.API.csproj",
               "RelativeToolTip": "3DMANAGER.API\\3DMANAGER.API.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
               "WhenOpened": "2025-09-24T17:26:33.14Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.API\\appsettings.json",
-              "RelativeDocumentMoniker": "3DMANAGER.API\\appsettings.json",
-              "ToolTip": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.API\\appsettings.json",
-              "RelativeToolTip": "3DMANAGER.API\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAA0AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-09-24T17:32:04.017Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "DbManagerExample.cs",
-              "DocumentMoniker": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.DAL\\DbManagerExample.cs",
-              "RelativeDocumentMoniker": "3DMANAGER.DAL\\DbManagerExample.cs",
-              "ToolTip": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.DAL\\DbManagerExample.cs",
-              "RelativeToolTip": "3DMANAGER.DAL\\DbManagerExample.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 18,
+              "Title": "IPrinterManager.cs",
+              "DocumentMoniker": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.BLL\\Interfaces\\IPrinterManager.cs",
+              "RelativeDocumentMoniker": "3DMANAGER.BLL\\Interfaces\\IPrinterManager.cs",
+              "ToolTip": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.BLL\\Interfaces\\IPrinterManager.cs",
+              "RelativeToolTip": "3DMANAGER.BLL\\Interfaces\\IPrinterManager.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAsAAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-22T20:42:37.176Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Class1.cs",
-              "DocumentMoniker": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.BLL\\Class1.cs",
-              "RelativeDocumentMoniker": "3DMANAGER.BLL\\Class1.cs",
-              "ToolTip": "C:\\Users\\ismav\\Desktop\\TFG2\\3DManager\\Code\\3DMANAGER\\3DMANAGER.BLL\\Class1.cs",
-              "RelativeToolTip": "3DMANAGER.BLL\\Class1.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-22T20:41:56.068Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-27T09:36:36.065Z"
             }
           ]
         }

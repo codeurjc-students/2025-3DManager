@@ -1,0 +1,13 @@
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.DAL\obj\Debug\net8.0\3DMANAGER.DAL.csproj.AssemblyReference.cache
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.DAL\obj\Debug\net8.0\3DMANAGER.DAL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.DAL\obj\Debug\net8.0\3DMANAGER.DAL.AssemblyInfoInputs.cache
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.DAL\obj\Debug\net8.0\3DMANAGER.DAL.AssemblyInfo.cs
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.DAL\obj\Debug\net8.0\3DMANAGER.DAL.csproj.CoreCompileInputs.cache
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.DAL\obj\Debug\net8.0\3DMANAGER.DAL.sourcelink.json
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.DAL\bin\Debug\net8.0\3DMANAGER.DAL.deps.json
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.DAL\bin\Debug\net8.0\3DMANAGER.DAL.dll
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.DAL\bin\Debug\net8.0\3DMANAGER.DAL.pdb
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.DAL\obj\Debug\net8.0\3DMANAGER.DAL.dll
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.DAL\obj\Debug\net8.0\refint\3DMANAGER.DAL.dll
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.DAL\obj\Debug\net8.0\3DMANAGER.DAL.pdb
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.DAL\obj\Debug\net8.0\ref\3DMANAGER.DAL.dll

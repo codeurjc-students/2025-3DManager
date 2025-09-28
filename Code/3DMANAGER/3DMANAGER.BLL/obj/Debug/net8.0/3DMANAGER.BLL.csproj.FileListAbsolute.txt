@@ -1,0 +1,16 @@
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.BLL\obj\Debug\net8.0\3DMANAGER.BLL.csproj.AssemblyReference.cache
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.BLL\obj\Debug\net8.0\3DMANAGER.BLL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.BLL\obj\Debug\net8.0\3DMANAGER.BLL.AssemblyInfoInputs.cache
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.BLL\obj\Debug\net8.0\3DMANAGER.BLL.AssemblyInfo.cs
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.BLL\obj\Debug\net8.0\3DMANAGER.BLL.csproj.CoreCompileInputs.cache
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.BLL\obj\Debug\net8.0\3DMANAGER.BLL.sourcelink.json
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.BLL\bin\Debug\net8.0\3DMANAGER.BLL.deps.json
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.BLL\bin\Debug\net8.0\3DMANAGER.BLL.dll
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.BLL\bin\Debug\net8.0\3DMANAGER.BLL.pdb
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.BLL\bin\Debug\net8.0\3DMANAGER.DAL.dll
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.BLL\bin\Debug\net8.0\3DMANAGER.DAL.pdb
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.BLL\obj\Debug\net8.0\3DMANAGE.BC565359.Up2Date
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.BLL\obj\Debug\net8.0\3DMANAGER.BLL.dll
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.BLL\obj\Debug\net8.0\refint\3DMANAGER.BLL.dll
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.BLL\obj\Debug\net8.0\3DMANAGER.BLL.pdb
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.BLL\obj\Debug\net8.0\ref\3DMANAGER.BLL.dll

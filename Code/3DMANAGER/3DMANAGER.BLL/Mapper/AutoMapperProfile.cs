@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using _3DMANAGER.BLL.Models;
+using _3DMANAGER.DAL.Models;
+using AutoMapper;
 
 namespace _3DMANAGER.BLL.Mapper
 {
@@ -6,7 +8,7 @@ namespace _3DMANAGER.BLL.Mapper
     {
         public AutoMapperProfile()
         {
-
+            CreateMap<PrinterObject, PrinterDbObject>().ReverseMap();
         }
     }
 }

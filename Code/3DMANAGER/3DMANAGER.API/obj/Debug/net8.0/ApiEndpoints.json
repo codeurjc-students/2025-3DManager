@@ -1,0 +1,12 @@
+[
+  {
+    "ContainingType": "_3DMANAGER.API.Controllers.PrinterController",
+    "Method": "GetPrinterList",
+    "RelativePath": "api/Printer/GetPrinterList",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  }
+]

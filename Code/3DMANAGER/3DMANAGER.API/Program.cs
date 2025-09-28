@@ -1,5 +1,14 @@
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc;
+using _3DMANAGER.BLL.Managers;
+using _3DMANAGER.DAL;
+using _3DMANAGER.BLL.Interfaces;
+using _3DMANAGER.DAL.Managers;
+using _3DMANAGER.DAL.Interfaces;
+using AutoMapper;
+using _3DMANAGER.BLL.Mapper;
+using _3DMANAGER.DAL.Base;
+using MySql.Data.MySqlClient;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,8 +25,25 @@ builder.Services.AddControllers()
     );
 
 //Configuration Automapper
-builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddProfile<AutoMapperProfile>();
+});
 
+builder.Services.AddScoped<IDataSource<MySqlConnection>>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+    return new MySQLDataSource(connectionString, "3DMANAGER");
+});
+
+
+//Inyection dependencies
+builder.Services.AddScoped<IPrinterManager, PrinterManager>();
+builder.Services.AddScoped<IPrinterDbManager, PrinterDbManager>();
+
+//Conection to frontend
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
@@ -28,6 +54,11 @@ builder.Services.AddCors(options =>
                   .AllowAnyHeader();
         });
 });
+
+// Add logging
+builder.Logging.ClearProviders();         
+builder.Logging.AddConsole();            
+builder.Logging.AddDebug();
 
 var app = builder.Build();
 
@@ -41,7 +72,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCors("AllowFrontend");
-
+app.MapControllers();
 
 
 app.Run();

@@ -12,8 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\" />
-    <Folder Include="Managers\" />
+    <ProjectReference Include="..\3DMANAGER.DAL\3DMANAGER.DAL.csproj" />
   </ItemGroup>
 
 </Project>
