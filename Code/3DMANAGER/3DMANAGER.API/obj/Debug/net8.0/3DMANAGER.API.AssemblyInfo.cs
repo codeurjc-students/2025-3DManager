@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("3DMANAGER.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a338160242144c2ae974f32737cc59f61cc0538f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5f357238efec0bea7872904c1937c28c15abba05")]
 [assembly: System.Reflection.AssemblyProductAttribute("3DMANAGER.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("3DMANAGER.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

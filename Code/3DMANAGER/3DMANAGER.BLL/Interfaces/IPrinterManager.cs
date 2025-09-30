@@ -1,14 +1,10 @@
-﻿using _3DMANAGER.BLL.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using _3DMANAGER.API.Models;
+using _3DMANAGER.BLL.Models;
 
 namespace _3DMANAGER.BLL.Interfaces
 {
     public interface IPrinterManager
     {
-        List<PrinterObject> GetPrinterList();
+        List<PrinterObject> GetPrinterList(out BaseError error);
     }
 }

@@ -1,16 +1,10 @@
-﻿using _3DMANAGER.DAL.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using _3DMANAGER.DAL.Base;
+using _3DMANAGER.DAL.Interfaces;
+using _3DMANAGER.DAL.Models;
+using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
 using System.Data;
-using Microsoft.Extensions.Configuration;
-using System.ComponentModel;
-using _3DMANAGER.DAL.Models;
-using _3DMANAGER.DAL.Base;
-using Microsoft.Extensions.Logging;
+using System.Net;
 
 namespace _3DMANAGER.DAL.Managers
 {
@@ -19,9 +13,10 @@ namespace _3DMANAGER.DAL.Managers
         public PrinterDbManager(IDataSource<MySqlConnection> dataSourceFactory, ILogger<PrinterDbManager> logger)
             : base(dataSourceFactory, logger) { }
 
-        public List<PrinterDbObject> GetPrinterList(out int error)
+        public List<PrinterDbObject> GetPrinterList(out ErrorDbObject error)
         {
-            error = 0;
+            error = null;
+            int errorCode = 0;
             List<PrinterDbObject> result = new List<PrinterDbObject>();
             try
             {
@@ -32,7 +27,7 @@ namespace _3DMANAGER.DAL.Managers
                 };
 
                 //cmd.Parameters.Add(new MySqlParameter("@CD_PARTE", MySqlDbType.Guid) { Value = reportCode });
-               
+
                 var errorParam = CreateReturnValueParameter("@CodigoError", MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
 
@@ -40,8 +35,11 @@ namespace _3DMANAGER.DAL.Managers
                 var ds = new DataSet();
                 adapter.Fill(ds);
 
-                error = Convert.ToInt32(errorParam.Value);
-                
+                errorCode = Convert.ToInt32(errorParam.Value);
+                if (errorCode != 0)
+                {
+                    throw new Exception("Error al obtener listado de impresoras");
+                }
                 if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                 {
                     foreach (DataRow row in ds.Tables[0].Rows)
@@ -52,21 +50,20 @@ namespace _3DMANAGER.DAL.Managers
                             result.Add(new PrinterDbObject() { PrinterName = value });
                         }
                     }
-                    return result;
                 }
 
-                throw new Exception("Error al obtener listado de impresoras");
+                return result;
             }
             catch (MySqlException ex)
             {
-                Logger.LogError(ex, $"Error al obtener listado impresoras");
-                error = 500;
+                Logger.LogError(ex, $"Error al obtener listado impresoras de BBDD");
+                error = new ErrorDbObject() { code = (int)HttpStatusCode.InternalServerError, message = "Error al obtener las impresoras de BBDD" };
                 return null;
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex, $"Error al obtener listado impresoras");
-                error = 500;
+                Logger.LogError(ex, $"Error al obtener listado impresoras de BBDD");
+                error = new ErrorDbObject() { code = (int)HttpStatusCode.InternalServerError, message = "Error al obtener las impresoras de BBDD" };
                 return null;
             }
         }

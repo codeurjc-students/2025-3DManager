@@ -65,9 +65,17 @@
               "target": "Package",
               "version": "[8.0.20, )"
             },
+            "Microsoft.AspNetCore.Mvc.Versioning": {
+              "target": "Package",
+              "version": "[5.1.0, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[8.0.8, )"
+            },
+            "NSwag.AspNetCore": {
+              "target": "Package",
+              "version": "[14.6.0, )"
             },
             "Newtonsoft.Json": {
               "target": "Package",
@@ -158,6 +166,10 @@
             "AutoMapper": {
               "target": "Package",
               "version": "[15.0.1, )"
+            },
+            "NSwag.AspNetCore": {
+              "target": "Package",
+              "version": "[14.6.0, )"
             }
           },
           "imports": [
@@ -245,6 +257,10 @@
             "MySql.Data": {
               "target": "Package",
               "version": "[9.4.0, )"
+            },
+            "NSwag.AspNetCore": {
+              "target": "Package",
+              "version": "[14.6.0, )"
             }
           },
           "imports": [

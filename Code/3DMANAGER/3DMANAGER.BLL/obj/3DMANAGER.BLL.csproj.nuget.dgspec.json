@@ -57,6 +57,10 @@
             "AutoMapper": {
               "target": "Package",
               "version": "[15.0.1, )"
+            },
+            "NSwag.AspNetCore": {
+              "target": "Package",
+              "version": "[14.6.0, )"
             }
           },
           "imports": [
@@ -144,6 +148,10 @@
             "MySql.Data": {
               "target": "Package",
               "version": "[9.4.0, )"
+            },
+            "NSwag.AspNetCore": {
+              "target": "Package",
+              "version": "[14.6.0, )"
             }
           },
           "imports": [

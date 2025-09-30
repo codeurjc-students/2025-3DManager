@@ -79,3 +79,16 @@ C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.API\obj\Debug\net
 C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.API\obj\Debug\net8.0\3DMANAGER.API.genruntimeconfig.cache
 C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.API\obj\Debug\net8.0\ref\3DMANAGER.API.dll
 C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.API\obj\Debug\net8.0\3DMANAGER.API.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.API\bin\Debug\net8.0\Microsoft.AspNetCore.Mvc.Versioning.dll
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.API\bin\Debug\net8.0\Namotion.Reflection.dll
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.API\bin\Debug\net8.0\NJsonSchema.dll
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.API\bin\Debug\net8.0\NJsonSchema.Annotations.dll
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.API\bin\Debug\net8.0\NJsonSchema.NewtonsoftJson.dll
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.API\bin\Debug\net8.0\NJsonSchema.Yaml.dll
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.API\bin\Debug\net8.0\NSwag.Annotations.dll
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.API\bin\Debug\net8.0\NSwag.AspNetCore.dll
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.API\bin\Debug\net8.0\NSwag.Core.dll
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.API\bin\Debug\net8.0\NSwag.Core.Yaml.dll
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.API\bin\Debug\net8.0\NSwag.Generation.dll
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.API\bin\Debug\net8.0\NSwag.Generation.AspNetCore.dll
+C:\Users\ismav\Desktop\TFG2\3DManager\Code\3DMANAGER\3DMANAGER.API\bin\Debug\net8.0\YamlDotNet.dll

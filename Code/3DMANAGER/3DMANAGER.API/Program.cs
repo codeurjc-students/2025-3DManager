@@ -1,13 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Mvc;
+﻿using _3DMANAGER.BLL.Interfaces;
 using _3DMANAGER.BLL.Managers;
-using _3DMANAGER.DAL;
-using _3DMANAGER.BLL.Interfaces;
-using _3DMANAGER.DAL.Managers;
-using _3DMANAGER.DAL.Interfaces;
-using AutoMapper;
 using _3DMANAGER.BLL.Mapper;
 using _3DMANAGER.DAL.Base;
+using _3DMANAGER.DAL.Interfaces;
+using _3DMANAGER.DAL.Managers;
 using MySql.Data.MySqlClient;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Swagger Configuration
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddOpenApiDocument();
 
 // Configuration JSON
 builder.Services.AddControllers()
@@ -56,8 +53,8 @@ builder.Services.AddCors(options =>
 });
 
 // Add logging
-builder.Logging.ClearProviders();         
-builder.Logging.AddConsole();            
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 
 var app = builder.Build();
@@ -72,6 +69,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCors("AllowFrontend");
+app.UseCors("AllowReactDev");
 app.MapControllers();
 
 
