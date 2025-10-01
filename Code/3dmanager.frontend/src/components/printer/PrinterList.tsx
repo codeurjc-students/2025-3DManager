@@ -1,39 +1,35 @@
 import React, { useEffect, useState } from "react";
-import { PrinterObject } from "../../models/Printer/PrinterObject";
-import { getPrinterList } from "../../services/PrinterService/PrinterService";
+import { getPrinters } from "../../services/PrinterService/PrinterService";
+import { PrinterObject } from "../../api/generated/apiClient";
 
-export const PrinterList: React.FC = () => {
+const PrinterList = () => {
   const [printers, setPrinters] = useState<PrinterObject[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    let mounted = true;
-    (async () => {
-      try {
-        const data = await getPrinterList();
-        if (mounted) setPrinters(data);
-      } catch (err: any) {
-        console.error("Error cargando impresoras:", err);
-        setError(err?.message || "Error al obtener impresoras");
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    })();
-    return () => { mounted = false; };
-  }, []);
-
-  if (loading) return <div>Cargando impresoras...</div>;
-  if (error) return <div>Error: {error}</div>;
+ useEffect(() => {
+  const fetchPrinters = async () => {
+    try {
+      const response = await getPrinters();
+      // response.data contiene la lista real de impresoras
+      setPrinters(response.data ?? []);
+    } catch (err) {
+      console.error("Error cargando impresoras:", err);
+      setPrinters([]); // opcional: limpiar la lista en caso de error
+    }
+  };
+  console.log(printers);
+  fetchPrinters();
+}, []);
 
   return (
-    <div>
-      <h2>Lista de impresoras</h2>
-      <ul>
-        {printers.map(p => (
-          <li key={p.PrinterName}>{p.PrinterName}</li>
-        ))}
-      </ul>
-    </div>
+    <ul>
+      {printers.length > 0 ? (
+        printers.map(p => <li key={p.printerName}>{p.printerName}</li>)
+      ) : (
+        <li>No hay impresoras disponibles</li>
+      )}
+    </ul>
   );
 };
+
+export default PrinterList;
+

@@ -1,7 +1,5 @@
-import api from "../../api/axiosConfig";
-import { PrinterObject } from "../../models/Printer/PrinterObject";
+import { apiClient } from "../../api/api";
 
-export async function getPrinterList(): Promise<PrinterObject[]> {
-  const response = await api.get<PrinterObject[]>("/Printer/GetPrinterList"); 
-  return response.data;
-}
+export const getPrinters = async () => {
+  return await apiClient.getPrinterList(); // devuelve los datos tipados automáticamente
+};

@@ -14,7 +14,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddOpenApiDocument();
-
+builder.Services.AddSwaggerDocument(config =>
+{
+    config.PostProcess = document =>
+    {
+        document.Info.Title = "3DManager API";
+        document.Info.Version = "v1";
+    };
+});
 // Configuration JSON
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
