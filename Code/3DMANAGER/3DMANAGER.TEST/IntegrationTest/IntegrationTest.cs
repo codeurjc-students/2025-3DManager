@@ -18,9 +18,9 @@ namespace _3DMANAGER.TEST.IntegrationTest
         {
             // Leer appsettings.json
             var config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
+                .AddJsonFile("appsettings.json", optional: true) // opcional
+                .AddUserSecrets<IntegrationTests>() // lee secretos del proyecto de test
                 .Build();
-
             _connectionString = config.GetConnectionString("TestConnection");
 
             // Configurar AutoMapper
