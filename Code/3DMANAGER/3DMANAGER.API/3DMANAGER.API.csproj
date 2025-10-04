@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>_3DMANAGER.API</RootNamespace>
+    <UserSecretsId>989a9fc7-576a-4ae1-bf40-4718dee7b5d4</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
