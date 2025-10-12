@@ -1,0 +1,6 @@
+@_3DMANAGER_APP.Server_HostAddress = http://localhost:5108
+
+GET {{_3DMANAGER_APP.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
