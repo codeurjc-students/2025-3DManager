@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace _3DMANAGER.API.Models
+namespace _3DMANAGER_APP.Server.Models
 {
     public class CommonResponse<Model> : Response
     {

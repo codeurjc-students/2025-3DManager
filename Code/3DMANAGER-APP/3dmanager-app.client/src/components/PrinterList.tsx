@@ -25,7 +25,6 @@ const PrinterList: React.FC = () => {
 
     return (
         <div style= {{ padding: '1rem' }}>
-            <h2>Listado de Impresoras </h2>
 
             { loading && <p>Cargando impresoras...</p> }
             { error && <p style={ { color: 'red' } }> { error } </p> }

@@ -26,10 +26,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\3DMANAGER\3DMANAGER.BLL\3DMANAGER.BLL.csproj" />
+    <ProjectReference Include="..\3DMANAGER-APP.BLL\3DMANAGER-APP.BLL.csproj" />
     <ProjectReference Include="..\3dmanager-app.client\3dmanager-app.client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\3DMANAGER-APP.DAL\3DMANAGER-APP.DAL.csproj" />
   </ItemGroup>
 
 </Project>

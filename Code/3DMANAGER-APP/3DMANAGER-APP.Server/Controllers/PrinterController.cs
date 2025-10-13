@@ -1,6 +1,7 @@
-﻿using _3DMANAGER.API.Models;
-using _3DMANAGER.BLL.Interfaces;
-using _3DMANAGER.BLL.Models;
+﻿using _3DMANAGER_APP.BLL.Interfaces;
+using _3DMANAGER_APP.BLL.Models;
+using _3DMANAGER_APP.BLL.Models.Base;
+using _3DMANAGER_APP.Server.Models;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 

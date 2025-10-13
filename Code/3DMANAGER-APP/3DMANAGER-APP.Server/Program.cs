@@ -1,9 +1,9 @@
-using _3DMANAGER.BLL.Interfaces;
-using _3DMANAGER.BLL.Managers;
-using _3DMANAGER.BLL.Mapper;
-using _3DMANAGER.DAL.Base;
-using _3DMANAGER.DAL.Interfaces;
-using _3DMANAGER.DAL.Managers;
+using _3DMANAGER_APP.BLL.Interfaces;
+using _3DMANAGER_APP.BLL.Managers;
+using _3DMANAGER_APP.BLL.Mapper;
+using _3DMANAGER_APP.DAL.Base;
+using _3DMANAGER_APP.DAL.Interfaces;
+using _3DMANAGER_APP.DAL.Managers;
 using Microsoft.OpenApi.Models;
 using MySql.Data.MySqlClient;
 
