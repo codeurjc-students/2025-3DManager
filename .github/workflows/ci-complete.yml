@@ -14,7 +14,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: Code/3DMANAGER-APP/3dmanager-app.server
+        working-directory: .Code/3DMANAGER-APP/3DMANAGER-APP.Server
 
     steps:
       - name: Checkout code
