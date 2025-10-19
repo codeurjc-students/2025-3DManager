@@ -1,37 +1,52 @@
 ﻿using _3DMANAGER_APP.DAL.Base;
+using _3DMANAGER_APP.DAL.Interfaces;
+using _3DMANAGER_APP.DAL.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using MySql.Data.MySqlClient;
 
-namespace _3DMANAGER_APP.TEST.E2ETest
+namespace _3DMANAGER_APP.TEST
 {
-    public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStartup> where TStartup : class
+    public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram> where TProgram : class
     {
-        protected override IHost CreateHost(IHostBuilder builder)
+        protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            var config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.Testing.json", optional: true)
-                .AddUserSecrets<Program>(optional: true) // <--- aquí se agregan los secretos
-                .Build();
-
-            var connectionString = config.GetConnectionString("TestConnection");
-
             builder.ConfigureServices(services =>
             {
-                // Reemplazar la cadena de conexión de la DAL con la de testing
-                var descriptor = services.SingleOrDefault(
-                    d => d.ServiceType == typeof(IDataSource<MySqlConnection>));
+                // Detectar si estamos en CI (GitHub Actions u otro entorno sin BBDD)
+                var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+                bool isCI = string.Equals(environment, "CI", StringComparison.OrdinalIgnoreCase);
 
-                if (descriptor != null) services.Remove(descriptor);
+                if (isCI)
+                {
+                    // 🔹 Buscar y eliminar la implementación real del DAL
+                    var descriptor = services.SingleOrDefault(
+                        d => d.ServiceType == typeof(IPrinterDbManager));
 
-                services.AddSingleton<IDataSource<MySqlConnection>>(new MySQLDataSource(connectionString, "3DMANAGER"));
+                    if (descriptor != null)
+                        services.Remove(descriptor);
+
+                    // 🔹 Registrar una fake implementation que no use MySQL
+                    services.AddSingleton<IPrinterDbManager, FakePrinterDbManager>();
+                }
             });
+        }
+    }
 
-            builder.UseEnvironment("Testing"); // asegura que estamos en el entorno de test
-
-            return base.CreateHost(builder);
+    /// <summary>
+    /// Fake del acceso a datos para CI: simula la respuesta de la BBDD
+    /// </summary>
+    public class FakePrinterDbManager : IPrinterDbManager
+    {
+        public List<PrinterDbObject> GetPrinterList(out ErrorDbObject error)
+        {
+            error = null;
+            return new List<PrinterDbObject>
+            {
+                new PrinterDbObject { PrinterName = "HP" },
+                new PrinterDbObject { PrinterName = "Epson" },
+                new PrinterDbObject { PrinterName = "Canon" }
+            };
         }
     }
 }

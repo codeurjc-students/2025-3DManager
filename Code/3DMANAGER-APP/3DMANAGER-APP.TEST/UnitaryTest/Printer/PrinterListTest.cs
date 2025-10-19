@@ -8,11 +8,12 @@ using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace _3DMANAGER.TEST.UnitaryTest.Printer
+namespace _3DMANAGER_APP.TEST.UnitaryTest
 {
     public class PrinterListTest
     {
         [Fact]
+        [Trait("Category", "Unitary")]
         public void GetPrinterList_WhenDbReturnsData_ShouldReturnMappedPrinters()
         {
             // Arrange
@@ -55,6 +56,7 @@ namespace _3DMANAGER.TEST.UnitaryTest.Printer
         }
 
         [Fact]
+        [Trait("Category", "Unitary")]
         public void GetPrinterList_WhenDbReturnsError_ShouldSetBaseError()
         {
             // Arrange
