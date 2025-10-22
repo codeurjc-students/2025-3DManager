@@ -465,9 +465,9 @@ Below is an initial diagram that complements the content and entity definitions.
 
 #### 1.Users
 Types of users:
-- **Guest** → Access to the application in demo mode with mocked data. Can navigate but cannot interact with real data.  
-- **Base User** → Standard user within a group. Can upload 3dPrints (GCODE & STL), check printer and filaments data, and comment on 3dPrints.  
-- **Manager** → User with management permissions over the group. In addition to Base User actions, can create/remove printers, filaments, and users within the group.  
+- **Guest** : Access to the application in demo mode with mocked data. Can navigate but cannot interact with real data.  
+- **Base User** : Standard user within a group. Can upload 3dPrints (GCODE & STL), check printer and filaments data, and comment on 3dPrints.  
+- **Manager** : User with management permissions over the group. In addition to Base User actions, can create/remove printers, filaments, and users within the group.  
 
 #### 2.Group
 - Main organizational unit.  
@@ -515,7 +515,7 @@ Types of users:
 #### 2.Base User
 - Member of a group (organization).  
 - Can navigate through all sections of their group: printers, filaments, 3dPrints, and comments.  
-- Upload GCODE files → automatic extraction of printing data.  
+- Upload GCODE files : automatic extraction of printing data.  
 - View personal and group metrics (printed hours, material consumption, produced 3dPrints).  
 - Check the status of printers and filaments associated with the group.  
 - Add comments on already printed 3dPrints.  
@@ -596,12 +596,12 @@ Development follows an iterative and incremental approach, based on agile princi
 #### Technical Summary
 
 - **Type:**  
-  Web SPA + REST API, monolithic architecture with client-server separation.
+  Web SPA + REST API, monolithic solution with a clear client-server separation.
 
 - **Technologies:**  
   - **Languages:** TypeScript, HTML, CSS, C#, SQL.  
-  - **Frontend:** React, React DOM, Axios, Vite, @vitejs/plugin-react, ESLint.  
-  - **Backend:** ASP.NET Core, AutoMapper, Newtonsoft.Json, Swashbuckle.AspNetCore (Swagger/OpenAPI), Microsoft.Extensions.Logging.  
+  - **Frontend:** React, React DOM, Axios, Vite, @vitejs/plugin-react  
+  - **Backend:** ASP.NET Core, ADO.NET AutoMapper, Newtonsoft.Json, Swashbuckle.AspNetCore (Swagger/OpenAPI), Microsoft.Extensions.Logging.  
   - **Database:** MySQL.  
   - **Testing (Frontend):** Vitest, @vitest/ui, @testing-library/react, @testing-library/jest-dom, @testing-library/user-event, jsdom, @playwright/test.  
   - **Testing (Backend):** xUnit, Moq, Microsoft.AspNetCore.Mvc.Testing, Microsoft.AspNetCore.TestHost, CoverletCollector, Microsoft.NET.Test.Sdk.
@@ -645,9 +645,6 @@ These technologies enable a dynamic, modular, and efficient user interface.
 - **React**: Main library for building component-based user interfaces.  
   - [https://react.dev/](https://react.dev/)
 
-- **React DOM**: Renders React components into the browser’s DOM.  
-  - [https://react.dev/reference/react-dom](https://react.dev/reference/react-dom)
-
 - **TypeScript**: A typed language of JavaScript that improves maintainability.  
   - [https://www.typescriptlang.org/](https://www.typescriptlang.org/)
 
@@ -662,71 +659,73 @@ These technologies enable a dynamic, modular, and efficient user interface.
 The frontend environment includes several testing tools for different levels of automation:
 
 - **Vitest**: Primary testing framework used to execute unit tests in Vite environments.  
-  🔗 [https://vitest.dev/](https://vitest.dev/)
+  - [https://vitest.dev/](https://vitest.dev/)
+  - Also provides a UI for visually exploring and running tests.
 
 - **Testing Library (React)**: The libraries `@testing-library/react`, `@testing-library/jest-dom`, and `@testing-library/user-event` are used to validate UI behavior and component rendering.  
   - [https://testing-library.com/docs/react-testing-library/intro/](https://testing-library.com/docs/react-testing-library/intro/)
 
 - **Playwright**: Framework for **E2E (end-to-end)** testing that automates browsers to validate complete user flows.  
   - [https://playwright.dev/](https://playwright.dev/)
+  - Offers a graphical test runner for inspecting and debugging test execution.
 
 
 #### Backend
 
-The server is developed with **ASP.NET Core 8.0** using **C#**, following a layered architecture (Controller → Business Logic → Data Access) and exposing a **REST API** for communication with the frontend.
+The server is developed with **ASP.NET Core 8.0** using **C#**, following a layered architecture (Controller : Business Logic : Data Access) and exposing a **REST API** for communication with the frontend.
 
-- **.NET 8 (ASP.NET Core)** → A cross-platform, high-performance backend framework for web and API development.  
+- **.NET 8 (ASP.NET Core)** : A cross-platform, high-performance backend framework for web and API development.  
   - [https://dotnet.microsoft.com/](https://dotnet.microsoft.com/)
 
-- **AutoMapper** → Library used to automatically map between class objects.  
+- **AutoMapper** : Library used to automatically map between class objects, speeding up development by simplifying data transformations between layers within the server.  
   - [https://automapper.org/](https://automapper.org/)
 
-- **Newtonsoft.Json** → Library for advanced JSON serialization and deserialization.  
+- **Newtonsoft.Json** : Library for advanced JSON serialization and deserialization.  
   - [https://www.newtonsoft.com/json](https://www.newtonsoft.com/json)
 
-- **Swashbuckle.AspNetCore / OpenAPI** → Generates OpenAPI/Swagger documentation for the REST API.  
+- **Swashbuckle.AspNetCore / OpenAPI** : Generates OpenAPI/Swagger documentation for the REST API.  
   - [https://github.com/domaindrivendev/Swashbuckle.AspNetCore](https://github.com/domaindrivendev/Swashbuckle.AspNetCore)
 
-- **Microsoft.Extensions.Configuration / Logging** → Handles configuration management and application logging during runtime.  
+- **Microsoft.Extensions.Configuration / Logging** : Handles configuration management and application logging during runtime.  
   - [https://learn.microsoft.com/en-us/dotnet/core/extensions/configuration](https://learn.microsoft.com/en-us/dotnet/core/extensions/configuration)
+    
+- **ADO.NET** : .NET framework components for connecting to data sources and executing SQL queries or stored procedures. Normally used for SQL Server connections, but it can also be used with MySQL via the appropriate MySQL connector
+  - [https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/](https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/)
 
 **Backend Testing**
 
 The backend includes multiple frameworks and tools for automated unit and integration testing:
 
-- **xUnit** → Unit testing framework for .NET applications.  
+- **xUnit** : Unit testing framework for .NET applications.  
   - [https://xunit.net/](https://xunit.net/)
 
-- **Moq** → Library for creating mock objects during testing.  
+- **Moq** : Library for creating mock objects during testing.  
   - [https://github.com/moq/moq4](https://github.com/moq/moq4)
 
-- **Microsoft.AspNetCore.Mvc.Testing** and **TestHost** → Used to perform integration tests on ASP.NET Core applications.  
+- **Microsoft.AspNetCore.Mvc.Testing** and **TestHost** : Used to perform integration tests on ASP.NET Core applications.  
   - [https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.mvc.testing](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.mvc.testing)
 
-- **CoverletCollector** → Tool used for collecting and reporting code coverage metrics.  
+- **CoverletCollector** : Tool used for collecting and reporting code coverage metrics.  
   - [https://github.com/coverlet-coverage/coverlet](https://github.com/coverlet-coverage/coverlet)
-
+  - Note: This tool has not been fully tested due to the initially limited number of tests.
+    
 #### Database
 
 The project uses a **MySQL** database running locally during development.  
 The backend connects via a **connection string** defined in the configuration file, using stored procedures and database access through **ADO.NET**.
 
-- **MySQL** → Open-source relational database management system.  
+- **MySQL** : Open-source relational database management system.  
   - [https://www.mysql.com/](https://www.mysql.com/)
-
-- **ADO.NET** → .NET framework components for connecting to data sources and executing SQL queries or stored procedures. Normally used for SQL Server connections, but it can also be used with MySQL via the appropriate MySQL connector
-  - [https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/](https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/)
-
 
 #### Deployment Environment
 
 The application is planned to be deployed to the **Microsoft Azure** cloud environment.  
 In future stages, **Docker** containers will be used to encapsulate the frontend, backend, and database services, enabling consistent and portable deployments.
 
-- **Microsoft Azure** → Cloud platform for hosting web applications, databases, and backend services.  
+- **Microsoft Azure** : Cloud platform for hosting web applications, databases, and backend services.  
   - [https://azure.microsoft.com/](https://azure.microsoft.com/)
 
-- **Docker** → Containerization platform that packages the application and its dependencies into isolated units for reproducible deployment.  
+- **Docker** : Containerization platform that packages the application and its dependencies into isolated units for reproducible deployment.  
   - [https://www.docker.com/](https://www.docker.com/)
 
 
@@ -740,31 +739,31 @@ These tools are distinct from the runtime technologies covered in the previous s
 
 #### Integrated Development Environments (IDEs)
 
-- **Visual Studio** → Main IDE used for developing the backend in ASP.NET Core and C# and the frontend in React with typescript. Provides full debugging, project management, and integration with GitHub. It also allows you to use a template to generate the React + ASP.NET Core project.  
+- **Visual Studio** : Main IDE used for developing the backend in ASP.NET Core and C# and the frontend in React with typescript. Provides full debugging, project management, and integration with GitHub. It also allows you to use a template to generate the React + ASP.NET Core project, and simplifies managing NuGet packages to easily add additional functionality.  
   - [https://visualstudio.microsoft.com/](https://visualstudio.microsoft.com/)
 
-- **Visual Studio Code** → Lightweight editor used as a secondary tool to edit singular files or small adjustments.  
+- **Visual Studio Code** : Lightweight editor used as a secondary tool to edit singular files or small adjustments.  
   - [https://code.visualstudio.com/](https://code.visualstudio.com/)
 
 
 #### Version Control & Task Management
 
-- **Git** → Version control system used to track changes in both frontend and backend code.  
+- **Git** : Version control system used to track changes in both frontend and backend code.  
   - [https://git-scm.com/](https://git-scm.com/)
 
-- **GitHub** → Remote repository for code storage, collaboration, and CI/CD workflows.  
+- **GitHub** : Remote repository for code storage, collaboration, and CI/CD workflows.  
   - [https://github.com/](https://github.com/)
 
-- **SourceTree** → Git client for managing branches, commits, and visualizing repository history.  
+- **SourceTree** : Git client for managing branches, commits, and visualizing repository history.  
   - [https://www.sourcetreeapp.com/](https://www.sourcetreeapp.com/)
 
-- **GitHub Issues & Projects** → Task tracking and visual board (Kanban) used to manage features, bugs, and development progress.  
+- **GitHub Issues & Projects** : Task tracking and visual board (Kanban) used to manage features, bugs, and development progress.  
   - [https://docs.github.com/en/issues](https://docs.github.com/en/issues)
 
 
 #### Database Management
 
-- **MySQL Workbench** → Visual database design, query execution, and schema management tool used during development.  
+- **MySQL Workbench** : Visual database design, query execution, and schema management tool used during development.  
   - [https://www.mysql.com/products/workbench/](https://www.mysql.com/products/workbench/)
 
 
@@ -772,10 +771,10 @@ These tools are distinct from the runtime technologies covered in the previous s
 
 > Not fully tested yet
 
-- **ESLint** → Static code analysis tool for JavaScript and TypeScript. Helps enforce coding standards and catch potential errors early.  
+- **ESLint** : Static code analysis tool for JavaScript and TypeScript. Helps enforce coding standards and catch potential errors early.  
   - [https://eslint.org/](https://eslint.org/)
 
-- **TypeScript ESLint** → Integrates TypeScript type checking with ESLint rules.  
+- **TypeScript ESLint** : Integrates TypeScript type checking with ESLint rules.  
   - [https://typescript-eslint.io/](https://typescript-eslint.io/)
     
 
@@ -808,6 +807,7 @@ the frontend, backend, and database. Each component runs as an independent proce
 
 1. **Frontend (Client)**
    - Developed with **React**, **TypeScript**, and **Vite**.
+   - Structured into services (for communicating with the API), models (data structures), and components (rendered UI elements)
    - Runs locally on the Vite development server during development.
    - Deployed as a static web app in production, in the future will be hosted through **Azure App Service**.
 
@@ -816,7 +816,7 @@ the frontend, backend, and database. Each component runs as an independent proce
    - Provides a **REST API** that handles CRUD operations between the frontend and the database.
    - Organized in a layered architecture:
      - **Controllers**: Handle HTTP requests and route them to the business layer.
-     - **Business Logic Layer (BLL)**: Encapsulates the core application logic and validation.
+     - **Business Logic Layer (BLL)**: Encapsulates the core application logic and validation,transforming objects received from the frontend (matching client-side structure) into objects used by the Data Access Layer for database operations.
      - **Data Access Layer (DAL)**: Interacts with the database through **ADO.NET** and stored procedures.
 
 3. **Database**
@@ -828,10 +828,10 @@ the frontend, backend, and database. Each component runs as an independent proce
 
 All communication between the client and the server occurs via **HTTP/HTTPS** using **JSON** as the message format.
 
-![](docs/Diagrams/Communication.png)
+![](Docs/Diagrams/Communication.png)
 
-- Frontend ↔ Backend: HTTPS requests made with **Axios**.
-- Backend ↔ Database: ADO.NET connections executing SQL and stored procedures.
+- Frontend <-> Backend: HTTPS requests made with **Axios**.
+- Backend <-> Database: ADO.NET connections executing SQL and stored procedures.
 - Planned deployment environment: **Microsoft Azure**, where each service can be hosted as a managed resource (App Service, Azure SQL, or container-based deployment).
 
 #### REST API Definition
@@ -847,7 +847,7 @@ This section describes the quality control mechanisms implemented throughout the
 
 #### Automated Testing
 - **Test Types**
-  - Automated tests have been implemented for both the client (frontend) and server (backend) parts of the application. The testing strategy follows an incremental approach, ensuring continuous validation of functionality     at different layers.
+  - Automated tests have been implemented for both the client (frontend) and server (backend) parts of the application. The testing strategy follows an incremental approach, ensuring continuous validation of functionality at different layers.
 
 - **Frontend**:
   - Unit Tests: Focused on individual React components and utility functions.
@@ -857,8 +857,8 @@ This section describes the quality control mechanisms implemented throughout the
 - **Backend**:
   - Unit Tests: Verify the correctness of the business logic (BLL) and data access layer (DAL) independently.
   - Integration Tests: Validate the proper functioning of controllers, database connections (MySQL), and services.
-  - System/E2E Tests: Check the overall workflow between API endpoints and the frontend client.
-IMAGEN
+  - System/E2E Tests: Currently verify that data is correctly rendered across components, simulating parts of user flows, but do not yet cover full user interactions.
+
 #### Test Execution and CI Integration
 
 Two Continuous Integration (CI) workflows are configured in GitHub Actions:
@@ -874,7 +874,7 @@ Two Continuous Integration (CI) workflows are configured in GitHub Actions:
 #### Static Code Analysis
 - **Tools Used**
   - Frontend: ESLint with React and TypeScript plugins (@eslint/js, typescript-eslint, eslint-plugin-react-hooks) ensures code quality, detects unused variables, and enforces consistent coding standards.
-   IMAGEN 
+  - Not fully tested in current phase
 ---
 
 ### Development Process
@@ -893,7 +893,9 @@ It adopts selected practices from Kanban, focusing on continuous improvement, fr
  - ToDo
  - In Progress
  - Done
-IMAGEN
+
+![](Docs/DocsImages/ProjectGitHub.png)
+
 This setup allows for a clear visual representation of the project’s status and facilitates iterative planning and progress tracking.
 
 #### Git Version Control
@@ -907,24 +909,62 @@ A branch-based workflow is adopted to ensure safe integration and controlled dep
 - feature/*: Branches for developing new functionalities or improvements.
 - hotfix/*: Used for urgent fixes on the main branch.
 
-Each feature or bug fix is developed in its own branch and later merged into develop via a pull request after code review and successful CI execution.
-IMAGEN
+During development, each feature or bug fix is developed in its own branch and later merged into develop via a pull request after code review and successful CI execution.
+Before it is merged, it is deleted to keep the repository clean.
+
 **Git Metrics**
 |Metric |	Description |Phase|
 |-------|-------------|-----|
-|Commits|	Approximately X commits across all branches.| Phase 2 |
-|Branches|	Around X active branches during development.| Phase 2 |
+|Commits|	Approximately 12 commits across all branches.| Phase 2 |
+|Branches|	Around 4 active branches during development.| Phase 2 |
 |Contributors|	1 developer and 1 Supervisor .| Phase 2 |
-|Pull Requests|	Around X pull request .| Phase 2 |
+|Pull Requests|	Around 1 pull request .| Phase 2 |
 
-IMAGEN
+![](Docs/DocsImages/GitHubMetrics.png)
 
 #### Continuous Integration (CI)
 
 Automated Continuous Integration is implemented through GitHub Actions, ensuring that each code change is verified before being merged.
 
-CI Workflows
-IMAGEN
+**CI Workflows**
+
+- Basic CI
+  -  The automated workflows are designed to run on every commit pushed to the remote repository. The basic workflow is divided into two main jobs:
+  - Both jobs are executed independently, ensuring that changes in either the frontend or backend are validated automatically on each commit. This structure keeps the repository in a consistent and test-verified state at all times.
+    
+![](Docs/DocsImages/CIBasic.png)
+
+  - Frontend Job:
+    - Builds the client application.
+    - Runs unit tests for the frontend.
+      
+![](Docs/DocsImages/CIBasicClientJob.png)
+
+  - Backend Job
+    - Builds the server application.
+    - Executes unit tests for the backend
+      
+![](Docs/DocsImages/CIBasicServerJob.png)
+
+- Full CI
+  - A full workflow is triggered for every pull request targeting develop or main. Its goal is to ensure that all changes are fully validated before being merged into critical branches.
+    
+![](Docs/DocsImages/CIFull.png)
+
+  - Frontend Job:
+    - Builds the client application.
+    - Runs unit tests .
+    - Executes integration tests .
+    - Runs E2E tests
+      
+![](Docs/DocsImages/CIFullClientJob.png)
+
+  - Backend Job
+    - Builds the server application.
+    - Executes unit, integration and e2e test, covering controllers business logic, and data access layers.
+      
+![](Docs/DocsImages/CIFullServerJob.png) 
+
 ---
 
 ### Code Execution and editing
@@ -938,14 +978,15 @@ The project repository is publicly hosted under the URJC (Universidad Rey Juan C
 #### Database Setup
 
 - The application uses a MySQL database running locally during development.
-- The database can be started using a local MySQL service (e.g., MySQL Workbench
+- The database can be started using a local MySQL service (MySQL Workbench)
 
 #### Database Initialization
 
 - The repository includes a SQL schema defining the main tables and entities with initial columns.
 - Additionally, a stored procedure is provided for retrieving printer names from the system.
 - The connection is configured in the backend via the connection string inside the application settings file (appsettings.json).
-
+- **For security**, the connection string is stored in user secrets rather than in plain text, preventing sensitive data from being exposed in the repository.
+  
 > In future versions, the database may be migrated to a cloud environment.
 
 #### Application Execution
@@ -962,7 +1003,9 @@ The project repository is publicly hosted under the URJC (Universidad Rey Juan C
 
 - Backend automated tests are executed using Visual Studio’s Test Explorer, which provides an integrated interface for discovering, running, and debugging all test cases.
 - To enable Visual Studio test execution, the project uses the xUnit test Nuget package *xunit.runner.visualstudio*
-IMAGEN
+
+![](Docs/DocsImages/TestExplorerBackend.png) 
+
 **Frontend Tests**
 
 Frontend tests can be executed either:
@@ -971,6 +1014,7 @@ Frontend tests can be executed either:
 - Through an interactive UI mode (for both unit tests and E2E tests)
 
 To execute the test on both forms, you can use teh following script writed on the package.json:
+
   - "test": "vitest",
   - "test:ui": "vitest --ui", 
   - "test:e2e": "playwright test",
@@ -979,10 +1023,13 @@ To execute the test on both forms, you can use teh following script writed on th
 On the terminal these commnads are used like : 
   - `npm run test` : runs unit tests in the console
   - `npm run test:ui` : opens a graphical UI to run and debug tests
-    IMAGEN
+    
+  ![](Docs/DocsImages/UIVitest.png)
+
   - `npm run test:e2e` : runs Playwright E2E tests in console mode
   - `npm run test:e2e:ui` : opens the Playwright test runner interface, showing browser execution visually
-    IMAGEN
+
+  ![](Docs/DocsImages/UIPlaywright.png)
 
 
 #### Release Creation
