@@ -838,7 +838,8 @@ All communication between the client and the server occurs via **HTTP/HTTPS** us
 - The API specification is automatically generated at runtime using **Swashbuckle.AspNetCore**.
 - The OpenAPI document (`swagger.json`) is exported from the application build.
 - This approach allows API documentation to be browsed directly in GitHub Pages or the repository :
-  SWAGGER
+
+>Current swagger version : https://codeurjc-students.github.io/2025-3DManager/swagger.html  
 ---
 
 ### Quality Assurance
