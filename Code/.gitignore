@@ -67,3 +67,5 @@ desktop.ini
 *.gz
 
 ```
+### --- Test ---
+playwright-report/

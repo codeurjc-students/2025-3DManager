@@ -1,0 +1,95 @@
+name: CI Full
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-test-server:
+    name: Build and Test server
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore Server project
+        run: dotnet restore 3DMANAGER-APP/3DMANAGER-APP.Server/3DMANAGER-APP.Server.csproj
+
+      - name: Build Server project
+        run: dotnet build 3DMANAGER-APP/3DMANAGER-APP.Server/3DMANAGER-APP.Server.csproj --no-restore --configuration Release
+
+      - name: Restore Test project
+        run: dotnet restore 3DMANAGER-APP/3DMANAGER-APP.TEST/3DMANAGER-APP.TEST.csproj
+
+      - name: Build Test project
+        run: dotnet build 3DMANAGER-APP/3DMANAGER-APP.TEST/3DMANAGER-APP.TEST.csproj --no-restore --configuration Release
+
+      - name: Run full test suite (.NET)
+        env:
+          ASPNETCORE_ENVIRONMENT: CI
+        run: dotnet test 3DMANAGER-APP/3DMANAGER-APP.TEST/3DMANAGER-APP.TEST.csproj --no-build --configuration Release
+        
+
+  build-and-test-client:
+    name: Build and Test client
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: 3DMANAGER-APP/3dmanager-app.client
+
+      - name: Clean Vitest cache
+        run: rm -rf .vitest
+        working-directory: 3DMANAGER-APP/3dmanager-app.client
+
+      - name: Run unitary tests (Vitest)
+        run: npm run test:ci-basic
+        working-directory: 3DMANAGER-APP/3dmanager-app.client
+
+      - name: Run integration tests (Vitest)
+        run: npm run test:integration
+        working-directory: 3DMANAGER-APP/3dmanager-app.client
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+        working-directory: 3DMANAGER-APP/3dmanager-app.client
+
+      - name: Start frontend
+        run: npm run dev -- --port 3001 &
+        working-directory: 3DMANAGER-APP/3dmanager-app.client
+        env:
+          ASPNETCORE_ENVIRONMENT: CI
+
+      - name: Wait for servers
+        run: npx wait-on http://localhost:3001 
+
+      - name: Run E2E tests
+        run: npx playwright test
+        working-directory: 3DMANAGER-APP/3dmanager-app.client
+
+ 
+
+      

@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-and-test-server:
-    name: Build and Test 
+    name: Build and Test server 
     runs-on: ubuntu-latest
 
     steps:
@@ -36,7 +36,7 @@ jobs:
         run: dotnet test Code/3DMANAGER-APP/3DMANAGER-APP.TEST/3DMANAGER-APP.TEST.csproj --no-build --configuration Release --filter "Category=Unitary"
 
   build-and-test-client:
-    name: Build y Test del Cliente
+    name: Build and test client
     runs-on: ubuntu-latest
 
     steps:
