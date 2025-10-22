@@ -26,7 +26,7 @@ A common use case is the application for managing the resources of a 3D printing
 **Current Phase** : 1
 ### Grant Diagram
 
-![](Docs/Diagrams/GranttDiagram.png)
+![](Documentation/Diagrams/GranttDiagram.png)
 
 ## Methodology
 The project is developed in phases, structured as follows:
@@ -304,13 +304,13 @@ A user is able to view a 3D printed model of a 3dPrint uploaded in the group.
 An initial prototype of the application screens has been created using **Figma**.  
 The prototype provides a visual overview of the different sections of the application and their interactions. **Its not the final version**
 
-![](Docs/Screens/Screens.png)
+![](Documentation/Screens/Screens.png)
 
 ---
 
 This diagram shows the flow between screens, illustrating how users navigate through the application.
 
-![](Docs/Screens/ScreenNavigation.png)
+![](Documentation/Screens/ScreenNavigation.png)
 
 #### Interface Summary
 - **Login:** Once the user logs in:  
@@ -334,97 +334,97 @@ This diagram shows the flow between screens, illustrating how users navigate thr
   - This screen represents the entry point for users and provides access to create an account or log in as a guest if they do not have one.  
   - Users with an account are directed to the dashboard, new users or those without a group are taken to the group screens. Guests access the dashboard directly.
     
-![](Docs/Screens/LogIn.png)
+![](Documentation/Screens/LogIn.png)
 
 - **User Create**  
   - This screen is used to create a new user account.  
   - Once the required information is submitted, the user is directed to the group section as a new member.
 
-![](Docs/Screens/CreateUser.png)
+![](Documentation/Screens/CreateUser.png)
 
 - **Group**  
   - Allows viewing group invitations.  
   - Provides navigation to create a new group.
 
-![](Docs/Screens/GroupScreen.png)
+![](Documentation/Screens/GroupScreen.png)
 
 - **Create Group**  
   - Allows users to create a group via a form.  
   - Once a group is created, the user is redirected to the dashboard to start managing inventory.
 
-![](Docs/Screens/CreateGroup.png)
+![](Documentation/Screens/CreateGroup.png)
 
 - **Dashboard – Base User**  
   - Displays general data and access to main sections.  
   - Allows access to upload 3dPrints, or view lists of printers, filaments, users, and 3dPrints.
 
-![](Docs/Screens/GeneralInfo.png)
+![](Documentation/Screens/GeneralInfo.png)
 
 - **Dashboard – Manager**  
   - In addition to the base user functionalities, managers can access screens to **add inventory elements or users**.
 
-![](Docs/Screens/GeneralInfoManager.png)
+![](Documentation/Screens/GeneralInfoManager.png)
 
 - **Upload 3dPrint**  
   - Provides a form to create a new 3dPrints.  
   - From this screen, users can go to the 3dPrints detail page or return to the dashboard if they do not complete the action.
 
-![](Docs/Screens/Upload3dPrint.png)
+![](Documentation/Screens/Upload3dPrint.png)
 
 - **Upload inventory**  
   - Provides access to the uploads screens.
 
-![](Docs/Screens/UploadInventory.png)
+![](Documentation/Screens/UploadInventory.png)
 
 - **Upload Printer**  
   - Provides a form to create a new printer.  
   - Users can either return to the dashboard or, after creating a printer, navigate to its detail screen.
 
-![](Docs/Screens/CreatePrinter.png)
+![](Documentation/Screens/CreatePrinter.png)
 
 - **Upload filaments**  
   - Provides a form to create a new filament.  
   - Users can either return to the dashboard or navigate to the filament’s detail page after creation.
 
-![](Docs/Screens/CreateFilament.png)
+![](Documentation/Screens/CreateFilament.png)
 
 - **Invite Users**  
   - Allows inviting new users to the group.  
   - Users can only return to the dashboard from this screen.
 
-![](Docs/Screens/InviteUser.png)
+![](Documentation/Screens/InviteUser.png)
 
 - **Filaments List**  
   - Displays a list of filaments in the group with basic information, inviting users to view filament details.  
   - Users can navigate to the filaments details page or return to the dashboard.
    
-![](Docs/Screens/FilamentsList.png)
+![](Documentation/Screens/FilamentsList.png)
 
 - **User List**  
   - Displays a list of users in the group with basic information, inviting users to view user details.  
   - Users can navigate to the user details page or return to the dashboard.
 
-![](Docs/Screens/UsersList.png)
+![](Documentation/Screens/UsersList.png)
 
 - **3dPrints List**  
   - Displays a list of 3dPrints in the group with basic information, inviting users to view 3dPrint details.  
   - Users can navigate to the 3dPrint details page or return to the dashboard.
 
-![](Docs/Screens/3dPrintsList.png)
+![](Documentation/Screens/3dPrintsList.png)
 
 - **Filament Details**  
   - Displays details about the filament and its usage in printing.  
   - Managers can change the status (e.g., deactivate) or edit some data.  
   - Users can navigate to the list of 3dPrint printed with this filament or return to the dashboard.
 
-![](Docs/Screens/FilamentDetails.png)
+![](Documentation/Screens/FilamentDetails.png)
 
 - **Printer Details**  
   - Displays details about the printer and its usage.  
   - Managers can deactivate or edit printer information.  
   - Users can navigate to the list of 3dPrints printed with this printer or return to the dashboard.
 
-![](Docs/Screens/PrinterDetails.png)
+![](Documentation/Screens/PrinterDetails.png)
 
 - **3dPrint Details**  
   - Displays detailed information about a 3dPrint and its printing process.  
@@ -432,36 +432,36 @@ This diagram shows the flow between screens, illustrating how users navigate thr
   - Comments on the 3dPrint can also be viewed.  
   - Users can return to the dashboard from this screen.
 
-![](Docs/Screens/3DPrintDetails.png)
+![](Documentation/Screens/3DPrintDetails.png)
 
 - **User Details**  
   - Displays detailed information about the user and their printing activity.  
   - Users can view comments related to 3dPrints.  
   - Navigation to 3dPrints printed by the user or back to the dashboard is available.
 
-![](Docs/Screens/UserDetails.png)
+![](Documentation/Screens/UserDetails.png)
 
 - **Log Out Pop-ups**  
   - Pop-ups that appear when the user clicks the log out button, including confirmation messages for irreversible actions.
 
-![](Docs/Screens/LogOut.png)
+![](Documentation/Screens/LogOut.png)
 
 - **Notifications**  
   - Pop-up displaying a list of short notifications that inform the user about relevant events or notifications within the application.
 
-![](Docs/Screens/Notifications.png)
+![](Documentation/Screens/Notifications.png)
 
 - **Group Details Pop-up**  
   - Provides additional information about the group, complementing the dashboard overview.
 
-![](Docs/Screens/GroupDetails.png)
+![](Documentation/Screens/GroupDetails.png)
 
 ---
 ### Entities
 This section introduces an initial diagram designed to visually support the previously described content. Its purpose is to clearly illustrate the relationships between the system’s main entities (users, groups, printers, filaments, 3dPrints, and comments) and to provide a better understanding of the application’s logical architecture.
 Below is an initial diagram that complements the content and entity definitions.
 
-![](Docs/Diagrams/ERDiagram.png)
+![](Documentation/Diagrams/ERDiagram.png)
 
 #### 1.Users
 Types of users:
@@ -828,7 +828,7 @@ the frontend, backend, and database. Each component runs as an independent proce
 
 All communication between the client and the server occurs via **HTTP/HTTPS** using **JSON** as the message format.
 
-![](Docs/Diagrams/Communication.png)
+![](Documentation/Diagrams/Communication.png)
 
 - Frontend <-> Backend: HTTPS requests made with **Axios**.
 - Backend <-> Database: ADO.NET connections executing SQL and stored procedures.
@@ -894,7 +894,7 @@ It adopts selected practices from Kanban, focusing on continuous improvement, fr
  - In Progress
  - Done
 
-![](Docs/DocsImages/ProjectGitHub.png)
+![](Documentation/DocsImages/ProjectGitHub.png)
 
 This setup allows for a clear visual representation of the project’s status and facilitates iterative planning and progress tracking.
 
@@ -920,7 +920,7 @@ Before it is merged, it is deleted to keep the repository clean.
 |Contributors|	1 developer and 1 Supervisor .| Phase 2 |
 |Pull Requests|	Around 1 pull request .| Phase 2 |
 
-![](Docs/DocsImages/GitHubMetrics.png)
+![](Documentation/DocsImages/GitHubMetrics.png)
 
 #### Continuous Integration (CI)
 
@@ -932,24 +932,24 @@ Automated Continuous Integration is implemented through GitHub Actions, ensuring
   -  The automated workflows are designed to run on every commit pushed to the remote repository. The basic workflow is divided into two main jobs:
   - Both jobs are executed independently, ensuring that changes in either the frontend or backend are validated automatically on each commit. This structure keeps the repository in a consistent and test-verified state at all times.
     
-![](Docs/DocsImages/CIBasic.png)
+![](Documentation/DocsImages/CIBasic.png)
 
   - Frontend Job:
     - Builds the client application.
     - Runs unit tests for the frontend.
       
-![](Docs/DocsImages/CIBasicClientJob.png)
+![](Documentation/DocsImages/CIBasicClientJob.png)
 
   - Backend Job
     - Builds the server application.
     - Executes unit tests for the backend
       
-![](Docs/DocsImages/CIBasicServerJob.png)
+![](Documentation/DocsImages/CIBasicServerJob.png)
 
 - Full CI
   - A full workflow is triggered for every pull request targeting develop or main. Its goal is to ensure that all changes are fully validated before being merged into critical branches.
     
-![](Docs/DocsImages/CIFull.png)
+![](Documentation/DocsImages/CIFull.png)
 
   - Frontend Job:
     - Builds the client application.
@@ -957,13 +957,13 @@ Automated Continuous Integration is implemented through GitHub Actions, ensuring
     - Executes integration tests .
     - Runs E2E tests
       
-![](Docs/DocsImages/CIFullClientJob.png)
+![](Documentation/DocsImages/CIFullClientJob.png)
 
   - Backend Job
     - Builds the server application.
     - Executes unit, integration and e2e test, covering controllers business logic, and data access layers.
       
-![](Docs/DocsImages/CIFullServerJob.png) 
+![](Documentation/DocsImages/CIFullServerJob.png) 
 
 ---
 
@@ -1004,7 +1004,7 @@ The project repository is publicly hosted under the URJC (Universidad Rey Juan C
 - Backend automated tests are executed using Visual Studio’s Test Explorer, which provides an integrated interface for discovering, running, and debugging all test cases.
 - To enable Visual Studio test execution, the project uses the xUnit test Nuget package *xunit.runner.visualstudio*
 
-![](Docs/DocsImages/TestExplorerBackend.png) 
+![](Documentation/DocsImages/TestExplorerBackend.png) 
 
 **Frontend Tests**
 
@@ -1024,12 +1024,12 @@ On the terminal these commnads are used like :
   - `npm run test` : runs unit tests in the console
   - `npm run test:ui` : opens a graphical UI to run and debug tests
     
-  ![](Docs/DocsImages/UIVitest.png)
+  ![](Documentation/DocsImages/UIVitest.png)
 
   - `npm run test:e2e` : runs Playwright E2E tests in console mode
   - `npm run test:e2e:ui` : opens the Playwright test runner interface, showing browser execution visually
 
-  ![](Docs/DocsImages/UIPlaywright.png)
+  ![](Documentation/DocsImages/UIPlaywright.png)
 
 
 #### Release Creation
