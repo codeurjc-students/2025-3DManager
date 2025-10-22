@@ -10,12 +10,15 @@ using MySql.Data.MySqlClient;
 var builder = WebApplication.CreateBuilder(args);
 
 // Base configuration and user secrets
+var envName = builder.Environment.EnvironmentName;
+var isCI = string.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), "CI", StringComparison.OrdinalIgnoreCase);
+
 builder.Configuration
     .SetBasePath(builder.Environment.ContentRootPath)
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{envName}.json", optional: true, reloadOnChange: true)
     .AddEnvironmentVariables()
-    .AddUserSecrets<Program>(optional: builder.Environment.IsDevelopment());
+    .AddUserSecrets<Program>(optional: builder.Environment.IsDevelopment() || isCI);
 
 // Services
 builder.Services.AddControllers()
