@@ -2,7 +2,9 @@
 using _3DMANAGER_APP.BLL.Mapper;
 using _3DMANAGER_APP.BLL.Models.Base;
 using _3DMANAGER_APP.DAL.Base;
+using _3DMANAGER_APP.DAL.Interfaces;
 using _3DMANAGER_APP.DAL.Managers;
+using _3DMANAGER_APP.TEST.Models;
 using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -36,9 +38,22 @@ namespace _3DMANAGER.TEST.IntegrationTest
         [Fact]
         public void GetPrinterList_IntegrationTest_ShouldReturnPrinters()
         {
-            // Arrange
-            var dataSource = new MySQLDataSource(_connectionString, "3DMANAGER");
-            var printerDbManager = new PrinterDbManager(dataSource, NullLogger<PrinterDbManager>.Instance);
+
+            // Detectar si estamos en CI
+            var isCI = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "CI";
+
+            // Crear el manager de base de datos
+            IPrinterDbManager printerDbManager;
+            if (isCI)
+            {
+                printerDbManager = new FakePrinterDbManager();
+            }
+            else
+            {
+                var dataSource = new MySQLDataSource(_connectionString, "3DMANAGER");
+                printerDbManager = new PrinterDbManager(dataSource, NullLogger<PrinterDbManager>.Instance);
+            }
+
             var printerManager = new PrinterManager(printerDbManager, _mapper, NullLogger<PrinterManager>.Instance);
 
             // Act

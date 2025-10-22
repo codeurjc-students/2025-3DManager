@@ -1,4 +1,3 @@
-import React from 'react'
 import PrinterList from './components/PrinterList'
 
 function App() {
