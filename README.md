@@ -59,7 +59,7 @@ The project is developed in phases, structured as follows:
 
 ## [Objectives](Documentation/Readme/OBJECTIVES.md)
 
-## [Funcionalities](Documentation/Readme/FUNCIONALITIES.md)
+## [Funcionalities](Documentation/Readme/FUNCTIONALITIES.md)
 
 ## [Analysis](Documentation/Readme/ANALYSIS.md)
 
