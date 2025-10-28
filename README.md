@@ -57,10 +57,10 @@ The project is developed in phases, structured as follows:
 
 - **Phase 7 - Defense:** The final project defense will take place.
 
-## [OBJECTIVES](Documentation/Readme/OBJECTIVES.md)
+## [Objectives](Documentation/Readme/OBJECTIVES.md)
 
-## [OBJECTIVES](Documentation/Readme/FUNCIONALITIES.md)
+## [Funcionalities](Documentation/Readme/FUNCIONALITIES.md)
 
-## [OBJECTIVES](Documentation/Readme/ANALYSIS.md)
+## [Analysis](Documentation/Readme/ANALYSIS.md)
 
-## [DEVELOPMENT GUIDE](Documentation/Readme/DEV_GUIDE.md)
+## [Development guide](Documentation/Readme/DEV_GUIDE.md)

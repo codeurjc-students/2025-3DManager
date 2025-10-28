@@ -266,7 +266,7 @@ the frontend, backend, and database. Each component runs as an independent proce
 
 All communication between the client and the server occurs via **HTTP/HTTPS** using **JSON** as the message format.
 
-![](Documentation/Diagrams/Communication.png)
+![](Diagrams/Communication.png)
 
 - Frontend <-> Backend: HTTPS requests made with **Axios**.
 - Backend <-> Database: ADO.NET connections executing SQL and stored procedures.
@@ -333,7 +333,7 @@ It adopts selected practices from Kanban, focusing on continuous improvement, fr
  - In Progress
  - Done
 
-![](Documentation/DocsImages/ProjectGitHub.png)
+![](DocsImages/ProjectGitHub.png)
 
 This setup allows for a clear visual representation of the project’s status and facilitates iterative planning and progress tracking.
 
@@ -367,7 +367,7 @@ During development, each new feature or bug fix is implemented in its own branch
 |Contributors|	1 developer and 1 Supervisor .| Phase 2 |
 |Pull Requests|	Around 1 pull request .| Phase 2 |
 
-![](Documentation/DocsImages/GitHubMetrics.png)
+![](DocsImages/GitHubMetrics.png)
 
 #### Continuous Integration (CI)
 
@@ -379,24 +379,24 @@ Automated Continuous Integration is implemented through GitHub Actions, ensuring
   -  The automated workflows are designed to run on every commit pushed to the remote repository. The basic workflow is divided into two main jobs:
   - Both jobs are executed independently, ensuring that changes in either the frontend or backend are validated automatically on each commit. This structure keeps the repository in a consistent and test-verified state at all times.
     
-![](Documentation/DocsImages/CIBasic.png)
+![](DocsImages/CIBasic.png)
 
   - Frontend Job:
     - Builds the client application.
     - Runs unit tests for the frontend.
       
-![](Documentation/DocsImages/CIBasicClientJob.png)
+![](DocsImages/CIBasicClientJob.png)
 
   - Backend Job
     - Builds the server application.
     - Executes unit tests for the backend
       
-![](Documentation/DocsImages/CIBasicServerJob.png)
+![](DocsImages/CIBasicServerJob.png)
 
 - Full CI
   - A full workflow is triggered for every pull request targeting develop or main. Its goal is to ensure that all changes are fully validated before being merged into critical branches.
     
-![](Documentation/DocsImages/CIFull.png)
+![](DocsImages/CIFull.png)
 
   - Frontend Job:
     - Builds the client application.
@@ -404,13 +404,13 @@ Automated Continuous Integration is implemented through GitHub Actions, ensuring
     - Executes integration tests .
     - Runs E2E tests
       
-![](Documentation/DocsImages/CIFullClientJob.png)
+![](DocsImages/CIFullClientJob.png)
 
   - Backend Job
     - Builds the server application.
     - Executes unit, integration and e2e test, covering controllers business logic, and data access layers.
       
-![](Documentation/DocsImages/CIFullServerJob.png) 
+![](DocsImages/CIFullServerJob.png) 
 
 ---
 
@@ -451,7 +451,7 @@ The project repository is publicly hosted under the URJC (Universidad Rey Juan C
 - Backend automated tests are executed using Visual Studio’s Test Explorer, which provides an integrated interface for discovering, running, and debugging all test cases.
 - To enable Visual Studio test execution, the project uses the xUnit test Nuget package *xunit.runner.visualstudio*
 
-![](Documentation/DocsImages/TestExplorerBackend.png) 
+![](DocsImages/TestExplorerBackend.png) 
 
 - To execute de test in backend using the standard .NET CLI command:
     -`dotnet test` 
@@ -477,12 +477,12 @@ On the terminal these commnads are used like :
   - `npm run test` : runs unit tests in the console
   - `npm run test:ui` : opens a graphical UI to run and debug tests
     
-  ![](Documentation/DocsImages/UIVitest.png)
+  ![](DocsImages/UIVitest.png)
 
   - `npm run test:e2e` : runs Playwright E2E tests in console mode
   - `npm run test:e2e:ui` : opens the Playwright test runner interface, showing browser execution visually
 
-  ![](Documentation/DocsImages/UIPlaywright.png)
+  ![](DocsImages/UIPlaywright.png)
 
 
 #### Release Creation

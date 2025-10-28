@@ -4,13 +4,13 @@
 An initial prototype of the application screens has been created using **Figma**.  
 The prototype provides a visual overview of the different sections of the application and their interactions. **Its not the final version**
 
-![](Documentation/Screens/Screens.png)
+![](Screens/Screens.png)
 
 ---
 
 This diagram shows the flow between screens, illustrating how users navigate through the application.
 
-![](Documentation/Screens/ScreenNavigation.png)
+![](Screens/ScreenNavigation.png)
 
 #### Interface Summary
 - **Login:** Once the user logs in:  
@@ -34,97 +34,97 @@ This diagram shows the flow between screens, illustrating how users navigate thr
   - This screen represents the entry point for users and provides access to create an account or log in as a guest if they do not have one.  
   - Users with an account are directed to the dashboard, new users or those without a group are taken to the group screens. Guests access the dashboard directly.
     
-![](Documentation/Screens/LogIn.png)
+![](Screens/LogIn.png)
 
 - **User Create**  
   - This screen is used to create a new user account.  
   - Once the required information is submitted, the user is directed to the group section as a new member.
 
-![](Documentation/Screens/CreateUser.png)
+![](Screens/CreateUser.png)
 
 - **Group**  
   - Allows viewing group invitations.  
   - Provides navigation to create a new group.
 
-![](Documentation/Screens/GroupScreen.png)
+![](Screens/GroupScreen.png)
 
 - **Create Group**  
   - Allows users to create a group via a form.  
   - Once a group is created, the user is redirected to the dashboard to start managing inventory.
 
-![](Documentation/Screens/CreateGroup.png)
+![](Screens/CreateGroup.png)
 
 - **Dashboard – Base User**  
   - Displays general data and access to main sections.  
   - Allows access to upload 3dPrints, or view lists of printers, filaments, users, and 3dPrints.
 
-![](Documentation/Screens/GeneralInfo.png)
+![](Screens/GeneralInfo.png)
 
 - **Dashboard – Manager**  
   - In addition to the base user functionalities, managers can access screens to **add inventory elements or users**.
 
-![](Documentation/Screens/GeneralInfoManager.png)
+![](Screens/GeneralInfoManager.png)
 
 - **Upload 3dPrint**  
   - Provides a form to create a new 3dPrints.  
   - From this screen, users can go to the 3dPrints detail page or return to the dashboard if they do not complete the action.
 
-![](Documentation/Screens/Upload3dPrint.png)
+![](Screens/Upload3dPrint.png)
 
 - **Upload inventory**  
   - Provides access to the uploads screens.
 
-![](Documentation/Screens/UploadInventory.png)
+![](Screens/UploadInventory.png)
 
 - **Upload Printer**  
   - Provides a form to create a new printer.  
   - Users can either return to the dashboard or, after creating a printer, navigate to its detail screen.
 
-![](Documentation/Screens/CreatePrinter.png)
+![](Screens/CreatePrinter.png)
 
 - **Upload filaments**  
   - Provides a form to create a new filament.  
   - Users can either return to the dashboard or navigate to the filament’s detail page after creation.
 
-![](Documentation/Screens/CreateFilament.png)
+![](Screens/CreateFilament.png)
 
 - **Invite Users**  
   - Allows inviting new users to the group.  
   - Users can only return to the dashboard from this screen.
 
-![](Documentation/Screens/InviteUser.png)
+![](Screens/InviteUser.png)
 
 - **Filaments List**  
   - Displays a list of filaments in the group with basic information, inviting users to view filament details.  
   - Users can navigate to the filaments details page or return to the dashboard.
    
-![](Documentation/Screens/FilamentsList.png)
+![](Screens/FilamentsList.png)
 
 - **User List**  
   - Displays a list of users in the group with basic information, inviting users to view user details.  
   - Users can navigate to the user details page or return to the dashboard.
 
-![](Documentation/Screens/UsersList.png)
+![](Screens/UsersList.png)
 
 - **3dPrints List**  
   - Displays a list of 3dPrints in the group with basic information, inviting users to view 3dPrint details.  
   - Users can navigate to the 3dPrint details page or return to the dashboard.
 
-![](Documentation/Screens/3dPrintsList.png)
+![](Screens/3dPrintsList.png)
 
 - **Filament Details**  
   - Displays details about the filament and its usage in printing.  
   - Managers can change the status (e.g., deactivate) or edit some data.  
   - Users can navigate to the list of 3dPrint printed with this filament or return to the dashboard.
 
-![](Documentation/Screens/FilamentDetails.png)
+![](Screens/FilamentDetails.png)
 
 - **Printer Details**  
   - Displays details about the printer and its usage.  
   - Managers can deactivate or edit printer information.  
   - Users can navigate to the list of 3dPrints printed with this printer or return to the dashboard.
 
-![](Documentation/Screens/PrinterDetails.png)
+![](Screens/PrinterDetails.png)
 
 - **3dPrint Details**  
   - Displays detailed information about a 3dPrint and its printing process.  
@@ -132,36 +132,36 @@ This diagram shows the flow between screens, illustrating how users navigate thr
   - Comments on the 3dPrint can also be viewed.  
   - Users can return to the dashboard from this screen.
 
-![](Documentation/Screens/3DPrintDetails.png)
+![](Screens/3DPrintDetails.png)
 
 - **User Details**  
   - Displays detailed information about the user and their printing activity.  
   - Users can view comments related to 3dPrints.  
   - Navigation to 3dPrints printed by the user or back to the dashboard is available.
 
-![](Documentation/Screens/UserDetails.png)
+![](Screens/UserDetails.png)
 
 - **Log Out Pop-ups**  
   - Pop-ups that appear when the user clicks the log out button, including confirmation messages for irreversible actions.
 
-![](Documentation/Screens/LogOut.png)
+![](Screens/LogOut.png)
 
 - **Notifications**  
   - Pop-up displaying a list of short notifications that inform the user about relevant events or notifications within the application.
 
-![](Documentation/Screens/Notifications.png)
+![](Screens/Notifications.png)
 
 - **Group Details Pop-up**  
   - Provides additional information about the group, complementing the dashboard overview.
 
-![](Documentation/Screens/GroupDetails.png)
+![](Screens/GroupDetails.png)
 
 ---
 ### Entities
 This section introduces an initial diagram designed to visually support the previously described content. Its purpose is to clearly illustrate the relationships between the system’s main entities (users, groups, printers, filaments, 3dPrints, and comments) and to provide a better understanding of the application’s logical architecture.
 Below is an initial diagram that complements the content and entity definitions.
 
-![](Documentation/Diagrams/ERDiagram.png)
+![](Diagrams/ERDiagram.png)
 
 #### 1.Users
 Types of users:
