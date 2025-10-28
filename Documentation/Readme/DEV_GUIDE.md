@@ -48,7 +48,7 @@ Development follows an iterative and incremental approach, based on agile princi
   - **Version control:** Git (GitHub as remote repository).  
   - **Branch management:** SourceTree.  
   - **Database:** MySQL Workbench.  
-  - **Auxiliar:** Postman/Swagger (for API testing), ESLint (static code analysis on client).
+  - **Auxiliar:** Postman/Swagger (for API testing), ESLint & SonarQube(SonarLint) (static code analysis on client), .
 
 - **Quality Assurance:**  
   - Unit, integration and E2E tests both on client and server.
@@ -211,6 +211,9 @@ These tools are distinct from the runtime technologies covered in the previous s
 - **TypeScript ESLint** : Integrates TypeScript type checking with ESLint rules.  
   - [https://typescript-eslint.io/](https://typescript-eslint.io/)
     
+- **SonarQube + SonarLint (Visual Studio Extension)** : Provides live static code analysis within Visual Studio for backend projects. Highlights code smells, potential bugs, and maintainability issues. 
+  - [https://www.sonarqube.org/](https://www.sonarqube.org/)
+  - [https://www.sonarlint.org/visualstudio/](https://www.sonarlint.org/visualstudio/)
 
 ### Testing Tools
 
@@ -308,7 +311,7 @@ Two Continuous Integration (CI) workflows are configured in GitHub Actions:
 ### Static Code Analysis
 - **Tools Used**
   - Frontend: ESLint with React and TypeScript plugins (@eslint/js, typescript-eslint, eslint-plugin-react-hooks) ensures code quality, detects unused variables, and enforces consistent coding standards.
-  - Not fully tested in current phase
+  - Backend: SonarQube integrated with **Visual Studio** via the **SonarLint extension**.  This provides live code analysis within the IDE, highlighting code smells, potential bugs, and maintainability issues. 
 
 
 ## Development Process
