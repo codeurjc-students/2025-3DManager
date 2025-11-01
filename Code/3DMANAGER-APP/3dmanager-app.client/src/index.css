@@ -1,68 +1,121 @@
+/*CSS form reusable components command general classes*/
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    --colorWhite: #ffffff;
+    --colorLowGrey: #f5f6f7;
+    --colorText: #1c1c1c;
+    --colorText2: #4b5563;
+    --colorBordersAndSplitters: #e5e7eb;
+    --colorDarkGrey: #2c2c2c;
+    --colorYellow: #ffd54a;
+    --colorLowYellow: #fcdd74;
+    --colorBlack: #000000;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif, Impact;
+    line-height: 1.5;
+    font-weight: 400;
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
-a:hover {
-  color: #535bf2;
+
+.textStyleTitulos {
+    font-size: 32px;
+    font-family: Impact, sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    text-decoration: none;
+    text-transform: none;
 }
+
+.textStyleImpactNormal {
+    font-size: 12px;
+    font-family: Impact, sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    text-decoration: none;
+    text-transform: none;
+}
+
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  background-color : var(--colorWhite)
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.h-10 {
+    height: 10%;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.h-20 {
+    height: 20%;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.h-30 {
+    height: 30%;
 }
+
+.h-40 {
+    height: 40%;
+}
+.h-60 {
+    height: 60%;
+}
+
+.login-container {
+    border-color : var(--colorBordersAndSplitters);
+    background-color : var(--colorLowGrey);
+    border-radius :5px;
+
+}
+
+.title-impact{
+    font-family: Impact , sans-serif ;
+    font-size : 42px;
+}
+
+.input-value {
+    display: block;
+    width: 50%;
+    padding: 6px 12px;
+    background-color: var(--colorWhite);
+    border: 1px solid var(--colorBordersAndSplitters);
+    border-radius: 6px;
+    color : var(--colorBlack)
+}
+
+.botton-yellow {
+    background-color: var(--colorYellow); 
+    color: var(--colorText); 
+    border: 1px solid var(--colorBlack); 
+    border-radius: 8px; 
+    padding: 0.5rem 1rem; 
+    font-weight: bold;
+    transition: background-color 0.3s ease; 
+    width : 40%;
+    height : 100%;
+}
+
+.botton-darkGrey {
+    background-color: var(--colorDarkGrey);
+    color: var(--colorWhite);
+    border: 1px solid var(--colorBlack);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    width: 50%;
+    height: 100%;
+}
+
+  

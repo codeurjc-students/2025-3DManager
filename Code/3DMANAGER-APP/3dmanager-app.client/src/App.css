@@ -1,11 +1,68 @@
-﻿#root {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 2rem;
-    text-align: center;
+﻿/*CSS form general layout*/
+:root {
+    --colorWhite: #ffffff;
+    --colorLowGrey: #f5f6f7;
+    --colorText: #1c1c1c;
+    --colorText2: #4b5563;
+    --colorBordersAndSplitters: #e5e7eb;
+    --colorDarkGrey: #2c2c2c;
+    --colorYellow: #ffd54a;
+    --colorLowYellow: #fcdd74;
+    --colorBlack: #000000;
 }
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif, Impact;
+    line-height: 1.5;
+    font-weight: 400;
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
 
 th, td {
     padding-left: 1rem;
     padding-right: 1rem;
 }
+
+.header-container {
+    background-color: var(--colorDarkGrey);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+}
+.main-container {
+
+    display: "flex";
+    flex-direction: column;
+    height: 100vh;
+    overflow :hidden;
+
+}
+.pages-container {
+    flex : 1;
+    overflow: auto;
+}
+
+.app-title {
+    color: var(--colorWhite);
+    font-weight: bold;
+    font-size: 2.8rem;
+    letter-spacing: 1px;
+    font-family: Impact, sans-serif;
+}
+
+    .app-title .highlight {
+        color: var(--colorYellow);
+    }
