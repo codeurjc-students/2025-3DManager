@@ -6,11 +6,11 @@ type LoginPageProps = {
 };
 
 
-const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
-    const handleLogin = () => {
-        // simulamos login con un usuario ficticio
-        onLogin("UserName12345");
-    };
+const LoginPage: React.FC<LoginPageProps> = (/*{ onLogin }*/) => {
+    //const handleLogin = () => {
+    //    // simulamos login con un usuario ficticio
+    //    onLogin("UserName12345");
+    //};
     const navigate = useNavigate();
 
     return (

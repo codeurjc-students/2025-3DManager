@@ -38,7 +38,7 @@ Development follows an iterative and incremental approach, based on agile princi
 - **Technologies:**  
   - **Languages:** TypeScript, HTML, CSS, C#, SQL.  
   - **Frontend:** React, React DOM, Axios, Vite, @vitejs/plugin-react ,Bootstrap 
-  - **Backend:** ASP.NET Core, ADO.NET AutoMapper, Newtonsoft.Json, Swashbuckle.AspNetCore (Swagger/OpenAPI), Microsoft.Extensions.Logging.  
+  - **Backend:** ASP.NET Core, ADO.NET AutoMapper, Newtonsoft.Json, Swashbuckle.AspNetCore (Swagger/OpenAPI), Microsoft.Extensions.Logging, Microsoft.AspNetCore.Identity.  
   - **Database:** MySQL.  
   - **Testing (Frontend):** Vitest, @vitest/ui, @testing-library/react, @testing-library/jest-dom, @testing-library/user-event, jsdom, @playwright/test.  
   - **Testing (Backend):** xUnit, Moq, Microsoft.AspNetCore.Mvc.Testing, Microsoft.AspNetCore.TestHost, CoverletCollector, Microsoft.NET.Test.Sdk.
