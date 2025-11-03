@@ -35,7 +35,9 @@ builder.Services.AddScoped<IDataSource<MySqlConnection>>(provider =>
 });
 
 builder.Services.AddScoped<IPrinterManager, PrinterManager>();
+builder.Services.AddScoped<IUserManager, UserManager>();
 builder.Services.AddScoped<IPrinterDbManager, PrinterDbManager>();
+builder.Services.AddScoped<IUserDbManager, UserDbManager>();
 
 builder.Services.AddCors(options =>
 {

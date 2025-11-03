@@ -37,8 +37,8 @@ Development follows an iterative and incremental approach, based on agile princi
 
 - **Technologies:**  
   - **Languages:** TypeScript, HTML, CSS, C#, SQL.  
-  - **Frontend:** React, React DOM, Axios, Vite, @vitejs/plugin-react  
-  - **Backend:** ASP.NET Core, ADO.NET AutoMapper, Newtonsoft.Json, Swashbuckle.AspNetCore (Swagger/OpenAPI), Microsoft.Extensions.Logging.  
+  - **Frontend:** React, React DOM, Axios, Vite, @vitejs/plugin-react ,Bootstrap 
+  - **Backend:** ASP.NET Core, ADO.NET AutoMapper, Newtonsoft.Json, Swashbuckle.AspNetCore (Swagger/OpenAPI), Microsoft.Extensions.Logging, Microsoft.AspNetCore.Identity.  
   - **Database:** MySQL.  
   - **Testing (Frontend):** Vitest, @vitest/ui, @testing-library/react, @testing-library/jest-dom, @testing-library/user-event, jsdom, @playwright/test.  
   - **Testing (Backend):** xUnit, Moq, Microsoft.AspNetCore.Mvc.Testing, Microsoft.AspNetCore.TestHost, CoverletCollector, Microsoft.NET.Test.Sdk.
@@ -89,6 +89,9 @@ These technologies enable a dynamic, modular, and efficient user interface.
 
 - **Axios**: HTTP client used to handle requests between the frontend and the backend API.  
   - [https://axios-http.com/](https://axios-http.com/)
+
+- **Bootstrap**: A library for building responsive and mobile-first websites using pre-designed components and utility classes.
+  - [https://getbootstrap.com/](https://getbootstrap.com/)
 
 **Frontend Testing**
 
