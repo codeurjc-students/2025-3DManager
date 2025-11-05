@@ -59,7 +59,7 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.User
             // Assert
             Assert.True(result);
             Assert.Null(error);
-            _mapperMock.Verify(m => m.Map<UserCreateRequestDbObject>(It.IsAny<UserObject>()), Times.Once);
+            _mapperMock.Verify(m => m.Map<UserCreateRequestDbObject>(It.IsAny<UserCreateRequest>()), Times.Once);
             _userDbManagerMock.Verify(db => db.PostNewUser(It.IsAny<UserCreateRequestDbObject>(), out errorDb), Times.Once);
         }
 
