@@ -1,6 +1,6 @@
 ﻿using _3DMANAGER_APP.BLL.Interfaces;
-using _3DMANAGER_APP.BLL.Models;
 using _3DMANAGER_APP.BLL.Models.Base;
+using _3DMANAGER_APP.BLL.Models.User;
 using _3DMANAGER_APP.DAL.Interfaces;
 using _3DMANAGER_APP.DAL.Models.User;
 using AutoMapper;
@@ -22,15 +22,15 @@ namespace _3DMANAGER_APP.BLL.Managers
             _logger = logger;
         }
 
-        public bool PostNewUser(UserObject user, out BaseError? error)
+        public bool PostNewUser(UserCreateRequest user, out BaseError? error)
         {
             error = null;
 
-            var passwordHasher = new PasswordHasher<UserObject>();
+            var passwordHasher = new PasswordHasher<UserCreateRequest>();
             string hashedPassword = passwordHasher.HashPassword(user, user.UserPassword);
 
             user.UserPassword = hashedPassword;
-            UserDbObject userDbObject = _mapper.Map<UserDbObject>(user);
+            UserCreateRequestDbObject userDbObject = _mapper.Map<UserCreateRequestDbObject>(user);
             var responseDb = _userDbManager.PostNewUser(userDbObject, out int? errorDb);
 
             if (errorDb != null)
@@ -59,6 +59,40 @@ namespace _3DMANAGER_APP.BLL.Managers
 
             }
             return responseDb;
+        }
+
+        public UserObject? Login(string userName, string userPassword, out BaseError? error)
+        {
+            error = null;
+
+            // Paso 1: buscar usuario
+            var userDb = _userDbManager.Login(userName);
+            if (userDb == null)
+            {
+                error = new BaseError
+                {
+                    code = StatusCodes.Status404NotFound,
+                    message = "El usuario no existe"
+                };
+                return null;
+            }
+
+
+            var passwordHasher = new PasswordHasher<UserDbObject>();
+            var result = passwordHasher.VerifyHashedPassword(userDb, userDb.UserPassword, userPassword);
+
+            if (result != PasswordVerificationResult.Success)
+            {
+                error = new BaseError
+                {
+                    code = StatusCodes.Status401Unauthorized,
+                    message = "Contraseña incorrecta"
+                };
+                return null;
+            }
+            UserObject userResponse = _mapper.Map<UserObject>(userDb);
+            userResponse.UserPassword = string.Empty;
+            return userResponse;
         }
     }
 }

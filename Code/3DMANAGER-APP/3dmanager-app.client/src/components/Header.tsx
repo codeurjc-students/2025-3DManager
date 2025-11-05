@@ -1,11 +1,10 @@
 import React from 'react';
+import { useAuth } from '../context/AuthContext';
 
-type HeaderProps = {
-    user: string | null; // si hay usuario logueado, se muestra botón logout
-    onLogout: () => void;
-};
 
-const Header: React.FC<HeaderProps> = ({ user, onLogout }) => {
+const Header: React.FC = () => {
+    const { user, logout } = useAuth();
+
     return (
         <header className="header-container">
             <h1 className="app-title">
@@ -15,8 +14,8 @@ const Header: React.FC<HeaderProps> = ({ user, onLogout }) => {
             <div>
                 {user ? (
                     <>
-                        <span className="me-3">Hola, {user}</span>
-                        <button className="btn btn-outline-light btn-sm" onClick={onLogout}>
+                        <span className="me-3 ">Hola, {user.userName}</span>
+                        <button className="btn btn-outline-light btn-sm" onClick={logout}>
                             Logout
                         </button>
                     </>

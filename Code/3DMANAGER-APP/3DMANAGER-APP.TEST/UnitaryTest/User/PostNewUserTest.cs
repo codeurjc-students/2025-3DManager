@@ -1,6 +1,6 @@
 ﻿using _3DMANAGER_APP.BLL.Managers;
-using _3DMANAGER_APP.BLL.Models;
 using _3DMANAGER_APP.BLL.Models.Base;
+using _3DMANAGER_APP.BLL.Models.User;
 using _3DMANAGER_APP.DAL.Interfaces;
 using _3DMANAGER_APP.DAL.Models.User;
 using AutoMapper;
@@ -35,22 +35,22 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.User
         public void PostNewUser_WhenDbReturnsSuccess_ShouldReturnTrueAndNoError()
         {
             // Arrange
-            var user = new UserObject
+            var user = new UserCreateRequest
             {
                 UserName = "testuser",
                 UserEmail = "test@example.com",
                 UserPassword = "password123"
             };
 
-            var userDbObject = new UserDbObject { UserName = user.UserName, UserEmail = user.UserEmail };
+            var userDbObject = new UserCreateRequestDbObject { UserName = user.UserName, UserEmail = user.UserEmail };
 
             _mapperMock
-                .Setup(m => m.Map<UserDbObject>(It.IsAny<UserObject>()))
+                .Setup(m => m.Map<UserCreateRequestDbObject>(It.IsAny<UserCreateRequest>()))
                 .Returns(userDbObject);
 
             int? errorDb = null;
             _userDbManagerMock
-                .Setup(db => db.PostNewUser(It.IsAny<UserDbObject>(), out errorDb))
+                .Setup(db => db.PostNewUser(It.IsAny<UserCreateRequestDbObject>(), out errorDb))
                 .Returns(true);
 
             // Act
@@ -59,8 +59,8 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.User
             // Assert
             Assert.True(result);
             Assert.Null(error);
-            _mapperMock.Verify(m => m.Map<UserDbObject>(It.IsAny<UserObject>()), Times.Once);
-            _userDbManagerMock.Verify(db => db.PostNewUser(It.IsAny<UserDbObject>(), out errorDb), Times.Once);
+            _mapperMock.Verify(m => m.Map<UserCreateRequestDbObject>(It.IsAny<UserObject>()), Times.Once);
+            _userDbManagerMock.Verify(db => db.PostNewUser(It.IsAny<UserCreateRequestDbObject>(), out errorDb), Times.Once);
         }
 
         [Fact]
@@ -68,22 +68,22 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.User
         public void PostNewUser_WhenDbReturnsConflictError_ShouldSetBaseErrorAndReturnFalse()
         {
             // Arrange
-            var user = new UserObject
+            var user = new UserCreateRequest
             {
                 UserName = "existinguser",
                 UserEmail = "existing@example.com",
                 UserPassword = "password123"
             };
 
-            var userDbObject = new UserDbObject { UserName = user.UserName, UserEmail = user.UserEmail };
+            var userDbObject = new UserCreateRequestDbObject { UserName = user.UserName, UserEmail = user.UserEmail };
 
             _mapperMock
-                .Setup(m => m.Map<UserDbObject>(It.IsAny<UserObject>()))
+                .Setup(m => m.Map<UserCreateRequestDbObject>(It.IsAny<UserCreateRequest>()))
                 .Returns(userDbObject);
 
             int? errorDb = 4091; // Simula conflicto por nombre duplicado
             _userDbManagerMock
-                .Setup(db => db.PostNewUser(It.IsAny<UserDbObject>(), out errorDb))
+                .Setup(db => db.PostNewUser(It.IsAny<UserCreateRequestDbObject>(), out errorDb))
                 .Returns(false);
 
             // Act

@@ -1,5 +1,6 @@
 ﻿using _3DMANAGER_APP.BLL.Models;
 using _3DMANAGER_APP.BLL.Models.Base;
+using _3DMANAGER_APP.BLL.Models.User;
 using _3DMANAGER_APP.DAL.Base;
 using _3DMANAGER_APP.DAL.Models;
 using _3DMANAGER_APP.DAL.Models.User;
@@ -17,6 +18,8 @@ namespace _3DMANAGER_APP.BLL.Mapper
             #endregion
 
             #region User
+
+            CreateMap<UserCreateRequest, UserCreateRequestDbObject>().ReverseMap();
             CreateMap<UserObject, UserDbObject>().ReverseMap();
             #endregion 
         }

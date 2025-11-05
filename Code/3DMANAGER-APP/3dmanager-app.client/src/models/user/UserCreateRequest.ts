@@ -1,7 +1,5 @@
-export interface UserObject {
+export interface UserCreateRequest {
     userName: string;
     userEmail: string;
     userPassword: string;
-    role?: string;
-    groupId?: number;
 }
