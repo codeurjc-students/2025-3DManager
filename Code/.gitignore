@@ -69,3 +69,4 @@ desktop.ini
 ```
 ### --- Test ---
 playwright-report/
+test-results/

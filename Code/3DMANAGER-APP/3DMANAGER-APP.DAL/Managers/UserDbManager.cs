@@ -14,7 +14,7 @@ namespace _3DMANAGER_APP.DAL.Managers
         {
         }
 
-        public bool PostNewUser(UserDbObject user, out int? error)
+        public bool PostNewUser(UserCreateRequestDbObject user, out int? error)
         {
             error = null;
             try
@@ -61,6 +61,47 @@ namespace _3DMANAGER_APP.DAL.Managers
                 Logger.LogError(ex, msg);
                 error = 500;
                 return false;
+            }
+        }
+
+        public UserDbObject Login(string userName)
+        {
+            try
+            {
+                var user = new UserDbObject();
+                string procName = $"{ProcedurePrefix}_pr_USER_LOGIN";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_DS_USER_NAME", MySqlDbType.VarChar) { Value = userName });
+
+                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    return user.Create(ds.Tables[0].Rows[0]);
+                }
+
+                return null;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = "Error al crear un usurio en BBDD";
+                Logger.LogError(ex, msg);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error al crear un usurio en BBDD";
+                Logger.LogError(ex, msg);
+                return null;
             }
         }
     }

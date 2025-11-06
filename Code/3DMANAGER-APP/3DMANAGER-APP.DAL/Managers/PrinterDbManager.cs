@@ -26,7 +26,6 @@ namespace _3DMANAGER_APP.DAL.Managers
                     CommandType = CommandType.StoredProcedure
                 };
 
-                //cmd.Parameters.Add(new MySqlParameter("@CD_PARTE", MySqlDbType.Guid) { Value = reportCode });
 
                 var errorParam = CreateReturnValueParameter("@CodigoError", MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);

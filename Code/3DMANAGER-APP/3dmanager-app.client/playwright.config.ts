@@ -14,7 +14,8 @@ export default defineConfig({
     use: {
         baseURL: `${isCI ? 'http' : 'https'}://localhost:${port}`,
         headless: true,
-        viewport: { width: 1280, height: 720 }
+        viewport: { width: 1280, height: 720 },
+        ignoreHTTPSErrors: true
     },
     projects: [
         { name: 'chromium', use: { ...devices['Desktop Chrome'] } },

@@ -4,25 +4,25 @@ import { postNewUser } from "../api/userService";
 
 const CreateUserPage: React.FC = () => {
 
-    const [UserName, setUserName] = useState("");
-    const [UserEmail, setUserEmail] = useState("");
-    const [UserPassword, setUserPassword] = useState("");
+    const [userName, setUserName] = useState("");
+    const [userEmail, setUserEmail] = useState("");
+    const [userPassword, setUserPassword] = useState("");
 
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault(); // Para no recargar la página
 
-        if (!UserName || !UserEmail || !UserPassword) {
+        if (!userName || !userEmail || !userPassword) {
             alert("Todos los campos son obligatorios");
             return;
         }
         try {
             // Llamada al servicio
             const response = await postNewUser({
-                UserName,
-                UserEmail,
-                UserPassword,
+                userName,
+                userEmail,
+                userPassword,
             });
 
             if (response.data) {
@@ -46,19 +46,19 @@ const CreateUserPage: React.FC = () => {
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
                             <label htmlFor="userName" className="form-label">Nombre de usuario</label>
-                            <input id="userName" type="text" className="input-value" value={UserName} placeholder="Introduce tu nombre"
+                            <input id="userName" type="text" className="input-value" value={userName} placeholder="Introduce tu nombre"
                                 onChange={(e) => setUserName(e.target.value)}/>
                         </div>
 
                         <div className="mb-3">
                             <label htmlFor="userEmail" className="form-label">Correo electrónico</label>
-                            <input id="userEmail" type="email" className="input-value" value={UserEmail} placeholder="Introduce tu correo"
+                            <input id="userEmail" type="email" className="input-value" value={userEmail} placeholder="Introduce tu correo"
                                 onChange={(e) => setUserEmail(e.target.value)}/>
                         </div>
 
                         <div className="mb-3">
                             <label htmlFor="userPassword" className="form-label">Contraseña</label>
-                            <input id="userPassword" type="password" className="input-value" value={UserPassword} placeholder="Introduce tu contraseña"
+                            <input id="userPassword" type="password" className="input-value" value={userPassword} placeholder="Introduce tu contraseña"
                                 onChange={(e) => setUserPassword(e.target.value)}/>
                         </div>
 
