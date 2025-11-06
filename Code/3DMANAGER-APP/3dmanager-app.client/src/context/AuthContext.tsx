@@ -1,4 +1,3 @@
-// src/context/AuthContext.tsx
 import React, { createContext, useState, useEffect, useContext } from "react";
 import type { UserObject } from "../models/user/UserObject";
 
