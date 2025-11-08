@@ -34,7 +34,7 @@ const LoginPage: React.FC = () => {
             if (userLogged.user.groupId) {
                 navigate("/dashboard");
             } else {
-                navigate("/groups");
+                navigate("/group");
             }
         } catch (err) {
             console.error("Error login:", err);
@@ -48,7 +48,7 @@ const LoginPage: React.FC = () => {
         <div className="container-fluid vh-100">
             <div className="row h-50 mt-5 mb-5">
                 <div className="col-3"></div>
-                <div className="login-container col-6 ps-4 pb-4 d-flex flex-column">
+                <div className="grey-container col-6 ps-4 pb-4 d-flex flex-column">
                     <h2 className="title-impact mt-5 mb-5">Inicio sesión</h2>
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">

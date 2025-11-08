@@ -40,8 +40,10 @@ builder.Services.AddScoped<IDataSource<MySqlConnection>>(provider =>
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<IPrinterManager, PrinterManager>();
 builder.Services.AddScoped<IUserManager, UserManager>();
+builder.Services.AddScoped<IGroupManager, GroupManager>();
 builder.Services.AddScoped<IPrinterDbManager, PrinterDbManager>();
 builder.Services.AddScoped<IUserDbManager, UserDbManager>();
+builder.Services.AddScoped<IGroupDbManager, GroupDbManager>();
 
 builder.Services.AddCors(options =>
 {

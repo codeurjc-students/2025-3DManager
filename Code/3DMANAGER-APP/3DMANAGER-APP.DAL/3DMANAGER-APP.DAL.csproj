@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="Managers\GroupDbManager.cs" />
     <None Include="Managers\UserDbManager.cs" />
   </ItemGroup>
 
