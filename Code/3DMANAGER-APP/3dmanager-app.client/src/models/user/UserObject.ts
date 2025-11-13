@@ -5,4 +5,5 @@ export interface UserObject {
     userPassword: string;
     role?: string;
     groupId?: number;
+    groupName?: string;
 }

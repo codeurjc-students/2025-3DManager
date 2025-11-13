@@ -8,5 +8,6 @@
         public string? UserEmail { get; set; }
         public int? GroupId { get; set; }
         public string? RolId { get; set; }
+        public string? GroupName { get; set; }
     }
 }
