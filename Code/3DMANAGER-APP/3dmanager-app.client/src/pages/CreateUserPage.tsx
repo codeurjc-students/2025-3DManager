@@ -41,7 +41,7 @@ const CreateUserPage: React.FC = () => {
         <div className="container-fluid vh-100">         
             <div className="row h-75 mt-5">
                 <div className="col-3"></div>
-                <div className="login-container col-6 ps-4 pb-4 d-flex flex-column">
+                <div className="grey-container col-6 ps-4 pb-4 d-flex flex-column">
                     <h2 className="title-impact mt-5 mb-5">Crear cuenta</h2>
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
@@ -63,7 +63,7 @@ const CreateUserPage: React.FC = () => {
                         </div>
 
                         <div className="d-flex justify-content-between w-50 mt-5">
-                            <button type="submit" className="botton-yellow">Crear cuenta</button>
+                            <button type="submit" className="botton-yellow createUser">Crear cuenta</button>
                             <button type="button" className="botton-darkGrey" onClick={() => navigate("/login")}>Volver</button>
                         </div>
                     </form>

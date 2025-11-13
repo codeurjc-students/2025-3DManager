@@ -71,19 +71,46 @@ body {
 .h-60 {
     height: 60%;
 }
+.w-10 {
+    width: 10%;
+}
 
-.login-container {
+.w-20 {
+    width: 20%;
+}
+
+.w-30 {
+    width: 30%;
+}
+
+.w-40 {
+    width: 40%;
+}
+
+.w-60 {
+    width: 60%;
+}
+
+.grey-container {
     border-color : var(--colorBordersAndSplitters);
     background-color : var(--colorLowGrey);
     border-radius :5px;
 
 }
 
+.white-container {
+    border-color: var(--colorBordersAndSplitters);
+    background-color: var(--colorWhite);
+    border-radius: 5px;
+}
 .title-impact{
     font-family: Impact , sans-serif ;
     font-size : 42px;
 }
-
+.title-impact-2 {
+    font-family: Impact, sans-serif;
+    font-size: 30px;
+}
 .input-value {
     display: block;
     width: 50%;
@@ -102,8 +129,16 @@ body {
     padding: 0.5rem 1rem; 
     font-weight: bold;
     transition: background-color 0.3s ease; 
-    width : 40%;
-    height : 100%;
+}
+
+.botton-yellow.createUser {
+    width: 40%;
+    height: 100%;
+}
+
+.botton-yellow.createGroup {
+    width: 60%;
+    height: 60%;
 }
 
 .botton-darkGrey {

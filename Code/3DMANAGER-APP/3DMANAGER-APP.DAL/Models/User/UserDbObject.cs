@@ -16,6 +16,8 @@ namespace _3DMANAGER_APP.DAL.Models.User
         private const string GroupIdColumnName = "USER_GROUP_ID";
         public string? RolId { get; set; }
         private const string RolIdColumnName = "USER_ROLE";
+        public string? GroupName { get; set; }
+        private const string GroupNameColumnName = "GROUP_NAME";
 
 
 
@@ -29,6 +31,7 @@ namespace _3DMANAGER_APP.DAL.Models.User
             obj.UserEmail = row.Field<string>(UserEmailColumnName);
             obj.GroupId = row.Field<int?>(GroupIdColumnName);
             obj.RolId = row.Field<string?>(RolIdColumnName);
+            obj.GroupName = row.Field<string?>(GroupNameColumnName);
 
             return obj;
         }
