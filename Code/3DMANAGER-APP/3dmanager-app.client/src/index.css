@@ -153,4 +153,18 @@ body {
     height: 100%;
 }
 
-  
+.dashboard-icon-btn {
+    width : 250px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dashboard-title {
+    color: var(--colorBlack);
+    font-weight: bold;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    font-family: Impact, sans-serif;
+}
