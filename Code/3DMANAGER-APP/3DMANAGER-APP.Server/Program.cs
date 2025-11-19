@@ -41,9 +41,14 @@ builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<IPrinterManager, PrinterManager>();
 builder.Services.AddScoped<IUserManager, UserManager>();
 builder.Services.AddScoped<IGroupManager, GroupManager>();
+builder.Services.AddScoped<IPrintManager, PrintManager>();
+builder.Services.AddScoped<IFilamentManager, FilamentManager>();
 builder.Services.AddScoped<IPrinterDbManager, PrinterDbManager>();
 builder.Services.AddScoped<IUserDbManager, UserDbManager>();
 builder.Services.AddScoped<IGroupDbManager, GroupDbManager>();
+builder.Services.AddScoped<IFilamentDbManager, FilamentDbManager>();
+builder.Services.AddScoped<IPrintDbManager, PrintDbManager>();
+
 
 builder.Services.AddCors(options =>
 {

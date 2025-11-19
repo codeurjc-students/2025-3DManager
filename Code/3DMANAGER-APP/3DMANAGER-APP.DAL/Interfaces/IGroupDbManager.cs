@@ -4,6 +4,6 @@ namespace _3DMANAGER_APP.DAL.Interfaces
 {
     public interface IGroupDbManager
     {
-        bool PostNewGroup(GroupRequestDbObject request);
+        public bool PostNewGroup(GroupRequestDbObject request);
     }
 }

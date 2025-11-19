@@ -9,6 +9,7 @@ import CreateUserPage from "./pages/CreateUserPage"
 import GroupPage from "./pages/GroupPage";
 import CreateGroupPage from "./pages/CreateGroupPage";  
 import DashboardPage from './pages/DashboardPage';
+import ListPage from './pages/ListPage';
 
 
 const App: React.FC = () => {
@@ -26,6 +27,7 @@ const App: React.FC = () => {
                             <Route path="/group" element={<ProtectedRoute><GroupPage /></ProtectedRoute>} />
                             <Route path="/createGroup" element={<ProtectedRoute><CreateGroupPage /></ProtectedRoute>} />
                             <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+                            <Route path="/list/:type" element={<ProtectedRoute><ListPage /></ProtectedRoute>} />
                         </Routes>
                     </main>
                 </div>

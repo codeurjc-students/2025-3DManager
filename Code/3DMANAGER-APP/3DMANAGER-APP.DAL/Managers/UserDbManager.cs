@@ -104,6 +104,51 @@ namespace _3DMANAGER_APP.DAL.Managers
                 return null;
             }
         }
+
+        public List<UserListResponseDbObject> GetUserList(int group)
+        {
+            try
+            {
+                List<UserListResponseDbObject> list = new List<UserListResponseDbObject>();
+                string procName = $"{ProcedurePrefix}_pr_USER_LIST";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.VarChar) { Value = group });
+
+                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    foreach (DataRow row in ds.Tables[0].Rows)
+                    {
+                        UserListResponseDbObject listResponse = new UserListResponseDbObject();
+                        list.Add(listResponse.Create(ds.Tables[0].Rows[0]));
+                    }
+                }
+
+                return list;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = "Error al devolver el listado de usuarios de en BBDD";
+                Logger.LogError(ex, msg);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error al devolver el listado de usuarios de en BBDD";
+                Logger.LogError(ex, msg);
+                return null;
+            }
+        }
     }
 
 }
