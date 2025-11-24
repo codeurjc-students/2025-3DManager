@@ -4,6 +4,8 @@ namespace _3DMANAGER_APP.DAL.Models.Filament
 {
     public class FilamentListResponseDbObject
     {
+        public int FilamentId { get; set; }
+        private const string FilamentIdColumnName = "FILAMENT_ID";
         public string FilamentName { get; set; }
         private const string FilamentNameColumnName = "FILAMENT_NAME";
         public string FilamentState { get; set; }
@@ -17,6 +19,7 @@ namespace _3DMANAGER_APP.DAL.Models.Filament
         {
             var obj = new FilamentListResponseDbObject();
 
+            obj.FilamentId = row.Field<int>(FilamentIdColumnName);
             obj.FilamentName = row.Field<string>(FilamentNameColumnName);
             obj.FilamentState = row.Field<string>(FilamentStateColumnName);
             obj.FilamentConsumed = row.Field<decimal>(FilamentConsumedColumnName);

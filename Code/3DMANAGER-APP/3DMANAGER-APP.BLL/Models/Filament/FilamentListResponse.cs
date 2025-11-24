@@ -2,6 +2,7 @@
 {
     public class FilamentListResponse
     {
+        public int FilamentId { get; set; }
         public string FilamentName { get; set; }
         public string FilamentState { get; set; }
         public decimal FilamentConsumed { get; set; }

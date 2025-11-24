@@ -4,6 +4,8 @@ namespace _3DMANAGER_APP.DAL.Models.User
 {
     public class UserListResponseDbObject
     {
+        public int UserId { get; set; }
+        private const string UserIdColumnName = "USER_ID";
         public string UserName { get; set; }
         private const string UserNameColumnName = "USER_NAME";
         public decimal UserHours { get; set; }
@@ -15,6 +17,7 @@ namespace _3DMANAGER_APP.DAL.Models.User
         {
             var obj = new UserListResponseDbObject();
 
+            obj.UserId = row.Field<int>(UserIdColumnName);
             obj.UserName = row.Field<string>(UserNameColumnName);
             obj.UserHours = row.Field<decimal>(UserHoursColumnName);
             obj.UserNumberPrints = row.Field<int>(UserNumberPrintsColumnName);

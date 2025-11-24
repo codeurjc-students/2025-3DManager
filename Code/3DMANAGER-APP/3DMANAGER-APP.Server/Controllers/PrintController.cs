@@ -1,6 +1,6 @@
 ﻿using _3DMANAGER_APP.BLL.Interfaces;
 using _3DMANAGER_APP.BLL.Models.Base;
-using _3DMANAGER_APP.BLL.Models.User;
+using _3DMANAGER_APP.BLL.Models.Print;
 using _3DMANAGER_APP.Server.Models;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +11,11 @@ namespace _3DMANAGER_APP.Server.Controllers
     [ApiController]
     public class PrintController : BaseController
     {
-        private readonly IUserManager _userManager;
+        private readonly IPrintManager _printManager;
 
-        public PrintController(IUserManager userManager, ILogger<UserController> logger) : base(logger)
+        public PrintController(IPrintManager printManager, ILogger<PrintController> logger) : base(logger)
         {
-            _userManager = userManager;
+            _printManager = printManager;
         }
 
 
@@ -27,20 +27,20 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <response code="400">Conflicto en servidor</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
-        [ProducesResponseType(typeof(CommonResponse<List<UserListResponse>>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(CommonResponse<List<UserListResponse>>), StatusCodes.Status409Conflict)]
-        [ProducesResponseType(typeof(CommonResponse<List<UserListResponse>>), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(CommonResponse<List<PrintListResponse>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CommonResponse<List<PrintListResponse>>), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(CommonResponse<List<PrintListResponse>>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
-        [Tags("User")]
+        [Tags("Print")]
         [HttpGet]
-        public CommonResponse<List<UserListResponse>> GetUserList([FromQuery] int groupId, out BaseError error)
+        public CommonResponse<List<PrintListResponse>> GetPrintList([FromQuery] int groupId)
         {
-            List<UserListResponse> userList = _userManager.GetUserList(groupId, out error);
+            List<PrintListResponse> userList = _printManager.GetPrintList(groupId, out BaseError error);
 
             if (userList == null || error != null)
-                return new CommonResponse<List<UserListResponse>>(new ErrorProperties(error.code, error.message));
+                return new CommonResponse<List<PrintListResponse>>(new ErrorProperties(error.code, error.message));
 
-            return new CommonResponse<List<UserListResponse>>(userList);
+            return new CommonResponse<List<PrintListResponse>>(userList);
         }
     }
 }

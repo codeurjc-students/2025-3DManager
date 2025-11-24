@@ -4,6 +4,8 @@ namespace _3DMANAGER_APP.DAL.Models.Print
 {
     public class PrintListResponseDbObject
     {
+        public int PrintId { get; set; }
+        private const string PrintIdColumnName = "PRINT_ID";
         public string PrintName { get; set; }
         private const string PrintNameColumnName = "PRINT_NAME";
         public string PrintUserCreator { get; set; }
@@ -20,6 +22,7 @@ namespace _3DMANAGER_APP.DAL.Models.Print
         {
             var obj = new PrintListResponseDbObject();
 
+            obj.PrintId = row.Field<int>(PrintIdColumnName);
             obj.PrintName = row.Field<string>(PrintNameColumnName);
             obj.PrintUserCreator = row.Field<string>(PrintUSerCreatorColumnName);
             obj.PrintDate = row.Field<DateTime>(PrintDateColumnName);
