@@ -10,6 +10,9 @@ import GroupPage from "./pages/GroupPage";
 import CreateGroupPage from "./pages/CreateGroupPage";  
 import DashboardPage from './pages/DashboardPage';
 import ListPage from './pages/ListPage';
+import InsertInventoryPage from './pages/InsertInventoryPage';
+import CreatePrinterPage from './pages/CreatePrinterPage';
+import CreateFilamentPage from './pages/CreateFilamentPage';
 
 
 const App: React.FC = () => {
@@ -28,6 +31,9 @@ const App: React.FC = () => {
                             <Route path="/createGroup" element={<ProtectedRoute><CreateGroupPage /></ProtectedRoute>} />
                             <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
                             <Route path="/list/:type" element={<ProtectedRoute><ListPage /></ProtectedRoute>} />
+                            <Route path="/postInventory" element={<ProtectedRoute><InsertInventoryPage /></ProtectedRoute>} />
+                            <Route path="/createPrinter" element={<ProtectedRoute><CreatePrinterPage /></ProtectedRoute>} />
+                            <Route path="/createFilament" element={<ProtectedRoute><CreateFilamentPage /></ProtectedRoute>} />
                         </Routes>
                     </main>
                 </div>

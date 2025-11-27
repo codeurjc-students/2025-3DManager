@@ -133,7 +133,16 @@ body {
     border-radius: 8px; 
     padding: 0.5rem 1rem; 
     font-weight: bold;
-    transition: background-color 0.3s ease; 
+}
+
+.botton-low-yellow {
+    background-color: var(--colorLowYellow);
+    color: var(--colorText);
+    border: 1px solid var(--colorBlack);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    height : 250px;
 }
 
 .botton-yellow.createUser {

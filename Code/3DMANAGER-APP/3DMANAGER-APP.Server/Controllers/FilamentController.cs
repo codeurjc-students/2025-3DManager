@@ -15,7 +15,7 @@ namespace _3DMANAGER_APP.Server.Controllers
 
         public FilamentController(IFilamentManager filamentManager, ILogger<FilamentController> logger) : base(logger)
         {
-            _filamentManager = _filamentManager;
+            _filamentManager = filamentManager;
         }
 
 
@@ -34,7 +34,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Tags("Filament")]
         [HttpGet]
-        public CommonResponse<List<FilamentListResponse>> GetFilamentList([FromRoute] int groupId)
+        public CommonResponse<List<FilamentListResponse>> GetFilamentList([FromQuery] int groupId)
         {
             List<FilamentListResponse> userList = _filamentManager.GetFilamentList(groupId, out BaseError error);
 
