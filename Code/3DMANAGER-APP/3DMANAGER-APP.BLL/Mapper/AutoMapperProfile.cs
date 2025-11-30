@@ -1,5 +1,6 @@
 ﻿using _3DMANAGER_APP.BLL.Models;
 using _3DMANAGER_APP.BLL.Models.Base;
+using _3DMANAGER_APP.BLL.Models.Catalog;
 using _3DMANAGER_APP.BLL.Models.Filament;
 using _3DMANAGER_APP.BLL.Models.Group;
 using _3DMANAGER_APP.BLL.Models.Print;
@@ -42,6 +43,11 @@ namespace _3DMANAGER_APP.BLL.Mapper
             #region Print
 
             CreateMap<PrintListResponse, PrintListResponseDbObject>().ReverseMap();
+            #endregion
+
+            #region Catalog
+
+            CreateMap<CatalogResponse, CatalogResponseDbObject>().ReverseMap();
             #endregion
         }
     }

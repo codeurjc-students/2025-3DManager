@@ -130,7 +130,7 @@ namespace _3DMANAGER_APP.DAL.Managers
                     foreach (DataRow row in ds.Tables[0].Rows)
                     {
                         UserListResponseDbObject listResponse = new UserListResponseDbObject();
-                        list.Add(listResponse.Create(ds.Tables[0].Rows[0]));
+                        list.Add(listResponse.Create(row));
                     }
                 }
 

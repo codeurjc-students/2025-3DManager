@@ -7,7 +7,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+
   <ItemGroup>
+	<None Include="Managers\CatalogDbManager.cs" />
 	<None Include="Managers\PrintDbManager.cs" />
 	<None Include="Managers\FilamentDbManager.cs" />
     <None Include="Managers\GroupDbManager.cs" />
