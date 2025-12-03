@@ -50,14 +50,14 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al crear un usurio en BBDD";
+                string msg = "Error al crear un usuario en BBDD";
                 Logger.LogError(ex, msg);
                 error = 500;
                 return false;
             }
             catch (Exception ex)
             {
-                string msg = "Error al crear un usurio en BBDD";
+                string msg = "Error al crear un usuario en BBDD";
                 Logger.LogError(ex, msg);
                 error = 500;
                 return false;

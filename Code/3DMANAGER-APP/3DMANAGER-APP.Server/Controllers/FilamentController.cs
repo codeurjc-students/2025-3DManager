@@ -21,9 +21,9 @@ namespace _3DMANAGER_APP.Server.Controllers
 
 
         /// <summary>
-        /// Return a user list
+        /// Return a filament list
         /// </summary>
-        /// <returns>A list of basic data users for show in the dasboard user list</returns>
+        /// <returns>A list of filaments for show in the dasboard</returns>
         /// <response code="200">Respuesta correcta</response>
         /// <response code="400">Conflicto en servidor</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
@@ -42,6 +42,28 @@ namespace _3DMANAGER_APP.Server.Controllers
                 return new CommonResponse<List<FilamentListResponse>>(new ErrorProperties(error.code, error.message));
 
             return new CommonResponse<List<FilamentListResponse>>(userList);
+        }
+
+        /// <summary>
+        /// Post a user list
+        /// </summary>
+        /// <returns>bool</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="400">Conflicto en servidor</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ApiVersionNeutral]
+        [Tags("Filament")]
+        [HttpPost]
+        public CommonResponse<bool> PostFilament(FilamentRequest filament)
+        {
+            var response = _filamentManager.PostFilament(filament, out BaseError? error);
+            if (error != null)
+            {
+                return new CommonResponse<bool>(new ErrorProperties(error.code, error.message));
+            }
+            return new CommonResponse<bool>(true);
         }
     }
 }

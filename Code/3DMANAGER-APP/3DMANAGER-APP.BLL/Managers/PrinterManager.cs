@@ -1,9 +1,12 @@
 ﻿using _3DMANAGER_APP.BLL.Interfaces;
 using _3DMANAGER_APP.BLL.Models;
 using _3DMANAGER_APP.BLL.Models.Base;
+using _3DMANAGER_APP.BLL.Models.Printer;
 using _3DMANAGER_APP.DAL.Base;
 using _3DMANAGER_APP.DAL.Interfaces;
+using _3DMANAGER_APP.DAL.Models.Printer;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 namespace _3DMANAGER_APP.BLL.Managers
@@ -36,6 +39,36 @@ namespace _3DMANAGER_APP.BLL.Managers
             }
             response = _mapper.Map<List<PrinterObject>>(responseDb);
             return response;
+        }
+
+        public bool PostPrinter(PrinterRequest printer, out BaseError? error)
+        {
+            error = null;
+
+            PrinterRequestDbObject printerDbObject = _mapper.Map<PrinterRequestDbObject>(printer);
+            var responseDb = _printerDbManager.PostPrinter(printerDbObject, out int? errorDb);
+
+            if (errorDb != null)
+            {
+                string msg = "";
+                switch (errorDb)
+                {
+                    case 1:
+                        msg = $"Error al crear impresora con nombre {printer.PrinterName}";
+                        _logger.LogError(msg);
+                        error = new BaseError() { code = StatusCodes.Status409Conflict, message = msg };
+                        break;
+                    case 500:
+                        msg = $"Error al crear impresora en el servidor.";
+                        _logger.LogError(msg);
+                        error = new BaseError() { code = StatusCodes.Status500InternalServerError, message = msg };
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+            return responseDb;
         }
     }
 }
