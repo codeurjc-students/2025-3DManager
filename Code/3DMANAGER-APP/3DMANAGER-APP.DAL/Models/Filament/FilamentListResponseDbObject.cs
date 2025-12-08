@@ -10,10 +10,10 @@ namespace _3DMANAGER_APP.DAL.Models.Filament
         private const string FilamentNameColumnName = "FILAMENT_NAME";
         public string FilamentState { get; set; }
         private const string FilamentStateColumnName = "FILAMENT_STATE";
-        public decimal FilamentConsumed { get; set; }
-        private const string FilamentConsumedColumnName = "FILAMENT_CONSUMED";
-        public int FilamentPrints { get; set; }
-        private const string FilamentPrintsColumnName = "FILAMENT_NUMBER_PRINT";
+        public decimal FilamentLength { get; set; }
+        private const string FilamentLengthColumnName = "FILAMENT_LENGTH";
+        public decimal FilamentCost { get; set; }
+        private const string FilamentCostColumnName = "FILAMENT_COST";
 
         public FilamentListResponseDbObject Create(DataRow row)
         {
@@ -22,8 +22,8 @@ namespace _3DMANAGER_APP.DAL.Models.Filament
             obj.FilamentId = row.Field<int>(FilamentIdColumnName);
             obj.FilamentName = row.Field<string>(FilamentNameColumnName);
             obj.FilamentState = row.Field<string>(FilamentStateColumnName);
-            obj.FilamentConsumed = row.Field<decimal>(FilamentConsumedColumnName);
-            obj.FilamentPrints = row.Field<int>(FilamentPrintsColumnName);
+            obj.FilamentLength = row.Field<decimal>(FilamentLengthColumnName);
+            obj.FilamentCost = row.Field<decimal>(FilamentCostColumnName);
 
             return obj;
         }

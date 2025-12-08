@@ -1,7 +1,7 @@
 export interface UserListResponse {
     userId: number;
     userName: string;
-    userHours: number;
+    userHours: string;
     userNumberPrints: number;
 
 }

@@ -65,5 +65,29 @@ namespace _3DMANAGER_APP.Server.Controllers
             }
             return new CommonResponse<bool>(true);
         }
+
+        /// <summary>
+        /// Return a filament list
+        /// </summary>
+        /// <returns>A list of filaments for show in the dasboard</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="400">Conflicto en servidor</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(CommonResponse<List<PrinterListObject>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CommonResponse<List<PrinterListObject>>), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(CommonResponse<List<PrinterListObject>>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Filament")]
+        [HttpGet]
+        public CommonResponse<List<PrinterListObject>> GetPrinterDashboardList([FromQuery] int groupId)
+        {
+            List<PrinterListObject> printerList = _printerManager.GetPrinterDashboardList(groupId, out BaseError error);
+
+            if (printerList == null || error != null)
+                return new CommonResponse<List<PrinterListObject>>(new ErrorProperties(error.code, error.message));
+
+            return new CommonResponse<List<PrinterListObject>>(printerList);
+        }
     }
 }

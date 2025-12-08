@@ -4,7 +4,7 @@
     {
         public int UserId { get; set; }
         public string UserName { get; set; }
-        public decimal UserHours { get; set; }
+        public string UserHours { get; set; }
         public int UserNumberPrints { get; set; }
     }
 }

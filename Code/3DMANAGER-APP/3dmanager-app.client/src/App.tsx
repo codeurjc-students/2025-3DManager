@@ -13,6 +13,7 @@ import ListPage from './pages/ListPage';
 import InsertInventoryPage from './pages/InsertInventoryPage';
 import CreatePrinterPage from './pages/CreatePrinterPage';
 import CreateFilamentPage from './pages/CreateFilamentPage';
+import CreatePrint3DPage from './pages/CreatePrint3DPage';
 
 
 const App: React.FC = () => {
@@ -34,6 +35,7 @@ const App: React.FC = () => {
                             <Route path="/postInventory" element={<ProtectedRoute><InsertInventoryPage /></ProtectedRoute>} />
                             <Route path="/createPrinter" element={<ProtectedRoute><CreatePrinterPage /></ProtectedRoute>} />
                             <Route path="/createFilament" element={<ProtectedRoute><CreateFilamentPage /></ProtectedRoute>} />
+                            <Route path="/post3dPrint" element={<ProtectedRoute><CreatePrint3DPage /></ProtectedRoute>} />
                         </Routes>
                     </main>
                 </div>

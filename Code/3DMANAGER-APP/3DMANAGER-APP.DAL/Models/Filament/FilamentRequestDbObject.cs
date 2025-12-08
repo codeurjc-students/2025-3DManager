@@ -14,7 +14,7 @@
         private const string FilamentColorColumnName = "P_FILAMENT_COLOR";
         public int FilamentTemperature { get; set; }
         private const string FilamentTemperatureColumnName = "P_FILAMENT_TEMPERATURE";
-        public int FilamentLenght { get; set; }
+        public decimal FilamentLenght { get; set; }
         private const string FilamentLenghtColumnName = "P_FILAMENT_LENGHT";
         public decimal FilamentThickness { get; set; }
         private const string FilamentThicknessColumnName = "P_FILAMENT_THICKNESS";

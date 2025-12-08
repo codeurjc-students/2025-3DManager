@@ -11,7 +11,7 @@ namespace _3DMANAGER_APP.DAL.Models.User
         public decimal UserHours { get; set; }
         private const string UserHoursColumnName = "USER_HOURS";
         public int UserNumberPrints { get; set; }
-        private const string UserNumberPrintsColumnName = "NUMBER_PRINT";
+        private const string UserNumberPrintsColumnName = "NUMBER_PRINTS";
 
         public UserListResponseDbObject Create(DataRow row)
         {
@@ -20,7 +20,7 @@ namespace _3DMANAGER_APP.DAL.Models.User
             obj.UserId = row.Field<int>(UserIdColumnName);
             obj.UserName = row.Field<string>(UserNameColumnName);
             obj.UserHours = row.Field<decimal>(UserHoursColumnName);
-            obj.UserNumberPrints = row.Field<int>(UserNumberPrintsColumnName);
+            obj.UserNumberPrints = (int)row.Field<long>(UserNumberPrintsColumnName);
 
             return obj;
         }

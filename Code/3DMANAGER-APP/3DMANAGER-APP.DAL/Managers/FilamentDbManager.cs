@@ -78,7 +78,7 @@ namespace _3DMANAGER_APP.DAL.Managers
                 cmd.Parameters.Add(new MySqlParameter("P_FILAMENT_TEMPERATURE", MySqlDbType.Int32) { Value = request.FilamentTemperature });
                 cmd.Parameters.Add(new MySqlParameter("P_FILAMENT_THICKNESS", MySqlDbType.Float) { Value = request.FilamentThickness });
                 cmd.Parameters.Add(new MySqlParameter("P_FILAMENT_COST", MySqlDbType.Decimal) { Value = request.FilamentCost });
-                cmd.Parameters.Add(new MySqlParameter("P_FILAMENT_LENGHT", MySqlDbType.Int32) { Value = request.FilamentLenght });
+                cmd.Parameters.Add(new MySqlParameter("P_FILAMENT_LENGHT", MySqlDbType.Decimal) { Value = request.FilamentLenght });
                 cmd.Parameters.Add(new MySqlParameter("P_FILAMENT_DESCRIPTION", MySqlDbType.VarChar) { Value = request.FilamentDescription });
 
                 var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);

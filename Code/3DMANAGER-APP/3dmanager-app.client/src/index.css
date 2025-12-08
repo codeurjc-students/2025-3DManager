@@ -96,6 +96,17 @@ body {
     width: 60%;
 }
 
+.w-70 {
+    width: 70%;
+}
+.w-80 {
+    width: 80%;
+}
+.w-90 {
+    width: 90%;
+}
+
+
 .grey-container {
     border-color : var(--colorBordersAndSplitters);
     background-color : var(--colorLowGrey);
@@ -116,6 +127,7 @@ body {
     font-family: Impact, sans-serif;
     font-size: 30px;
 }
+
 .input-value {
     display: block;
     width: 50%;
@@ -189,7 +201,6 @@ body {
 
 .table-container {
     max-height: 700px;
-    overflow-y: auto;
 }
 
     
@@ -213,3 +224,16 @@ body {
         padding: 10px;
         border-bottom: 1px solid #ddd;
     }
+
+.printer-card {
+    background: white;
+    border: 1px solid var(--colorBordersAndSplitters);
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+    color: var(--colorBlack);
+    width: 100%
+}
+.printer-card:hover {
+    background-color: #ededed;
+    transition: 0.2s;
+}
+

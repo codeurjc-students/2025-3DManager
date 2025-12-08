@@ -8,5 +8,6 @@ namespace _3DMANAGER_APP.BLL.Interfaces
     {
         List<PrinterObject> GetPrinterList(out BaseError error);
         public bool PostPrinter(PrinterRequest printer, out BaseError? error);
+        List<PrinterListObject> GetPrinterDashboardList(int groupId, out BaseError error);
     }
 }

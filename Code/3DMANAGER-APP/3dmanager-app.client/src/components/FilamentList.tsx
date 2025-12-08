@@ -18,14 +18,14 @@ const FilamentList: React.FC = () => {
     }, []);
 
     return (
-        <div className="table-container">
+        <div className="table-container ">
             <table className="table">
                 <thead>
                     <tr>
                         <th>Nombre</th>
                         <th>Estado</th>
-                        <th>Gramos consumidos</th>
-                        <th>Nº Impresiones</th>
+                        <th>Filamento restante</th>
+                        <th>Coste filamento</th>
                         <th>Detalle</th>
                     </tr>
                 </thead>
@@ -34,8 +34,8 @@ const FilamentList: React.FC = () => {
                         <tr key={filament.filamentId}>
                             <td>{filament.filamentName}</td>
                             <td>{filament.filamentState}</td>
-                            <td>{filament.filamentConsumed}</td>
-                            <td>{filament.numberPrints}</td>
+                            <td>{filament.filamentLength}</td>
+                            <td>{filament.filamentCost}</td>
                             <td>
                                 <button
                                     className="botton-darkGrey w-75"

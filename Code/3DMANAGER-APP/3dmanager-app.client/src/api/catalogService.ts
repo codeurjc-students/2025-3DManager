@@ -6,3 +6,18 @@ export const getFilamentType = async (): Promise<CommonResponse<CatalogResponse[
     const response = await apiClient.get<CommonResponse<CatalogResponse[]>>("/api/Catalog/GetFilamentType");
     return response.data;
 };
+
+export const getPrintersCatalog = async ( groupId : number): Promise<CommonResponse<CatalogResponse[]>> => {
+    const response = await apiClient.get<CommonResponse<CatalogResponse[]>>("/api/Catalog/GetPrintersCatalog", { params: { groupId } });
+    return response.data;
+};
+
+export const getFilamentCatalog = async (groupId: number): Promise<CommonResponse<CatalogResponse[]>> => {
+    const response = await apiClient.get<CommonResponse<CatalogResponse[]>>("/api/Catalog/GetFilamentCatalog", { params: { groupId } });
+    return response.data;
+};
+
+export const getPrintState = async (): Promise<CommonResponse<CatalogResponse[]>> => {
+    const response = await apiClient.get<CommonResponse<CatalogResponse[]>>("/api/Catalog/GetPrintState");
+    return response.data;
+};

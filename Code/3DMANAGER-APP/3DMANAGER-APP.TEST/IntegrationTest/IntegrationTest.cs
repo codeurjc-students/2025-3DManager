@@ -20,8 +20,8 @@ namespace _3DMANAGER.TEST.IntegrationTest
         {
             // Leer appsettings.json
             var config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", optional: true) // opcional
-                .AddUserSecrets<IntegrationTests>() // lee secretos del proyecto de test
+                .AddJsonFile("appsettings.json", optional: true)
+                .AddUserSecrets<IntegrationTests>()
                 .Build();
             _connectionString = config.GetConnectionString("TestConnection");
 
@@ -56,13 +56,11 @@ namespace _3DMANAGER.TEST.IntegrationTest
 
             var printerManager = new PrinterManager(printerDbManager, _mapper, NullLogger<PrinterManager>.Instance);
 
-            // Act
             BaseError error;
             var printers = printerManager.GetPrinterList(out error);
 
-            // Assert
 
-            Assert.Null(error); // No debe haber errores
+            Assert.Null(error);
             Assert.NotNull(printers);
             Assert.True(printers.Count > 0, "Debe devolver al menos una impresora de ejemplo");
 

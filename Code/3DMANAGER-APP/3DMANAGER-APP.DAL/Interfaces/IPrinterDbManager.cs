@@ -8,5 +8,7 @@ namespace _3DMANAGER_APP.DAL.Interfaces
     {
         List<PrinterDbObject> GetPrinterList(out ErrorDbObject error);
         public bool PostPrinter(PrinterRequestDbObject request, out int? error);
+
+        public List<PrinterListDbObject> GetPrinterDashboardList(int group);
     }
 }

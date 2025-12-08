@@ -66,7 +66,6 @@ namespace _3DMANAGER_APP.BLL.Managers
         {
             error = null;
 
-            // Paso 1: buscar usuario
             var userDb = _userDbManager.Login(userName);
             if (userDb == null)
             {

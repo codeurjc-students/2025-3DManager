@@ -8,6 +8,7 @@ using _3DMANAGER_APP.DAL.Models.Printer;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using System.Net;
 
 namespace _3DMANAGER_APP.BLL.Managers
 {
@@ -69,6 +70,16 @@ namespace _3DMANAGER_APP.BLL.Managers
 
             }
             return responseDb;
+        }
+
+        public List<PrinterListObject> GetPrinterDashboardList(int group, out BaseError? error)
+        {
+            error = null;
+            List<PrinterListDbObject> list = _printerDbManager.GetPrinterDashboardList(group);
+            if (list == null)
+                error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = "Error al obtener listado de impresoras" };
+
+            return _mapper.Map<List<PrinterListObject>>(list);
         }
     }
 }

@@ -15,7 +15,7 @@ export const Login = async (data : LoginRequest): Promise<CommonResponse<LoginRe
     return response.data;
 }
 
-export const getUserList = async (type: number): Promise<CommonResponse<UserListResponse[]>> => {
-    const response = await apiClient.get<CommonResponse<UserListResponse[]>>(`/api/User/GetUserList`, { params: { type } });
+export const getUserList = async (groupId: number): Promise<CommonResponse<UserListResponse[]>> => {
+    const response = await apiClient.get<CommonResponse<UserListResponse[]>>(`/api/User/GetUserList`, { params: { groupId } });
     return response.data;
 }

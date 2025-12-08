@@ -81,8 +81,8 @@ namespace _3DMANAGER_APP.DAL.Managers
 
                 cmd.Parameters.Add(new MySqlParameter("P_GROUP_ID", MySqlDbType.Int32) { Value = request.GroupId });
                 cmd.Parameters.Add(new MySqlParameter("P_PRINTER_NAME", MySqlDbType.VarChar) { Value = request.PrinterName });
-                cmd.Parameters.Add(new MySqlParameter("P_PRINTER_DESCRIPTION", MySqlDbType.VarChar) { Value = request.PrinterModel });
-                cmd.Parameters.Add(new MySqlParameter("P_PRINTER_MODEL", MySqlDbType.VarChar) { Value = request.PrinterDescription });
+                cmd.Parameters.Add(new MySqlParameter("P_PRINTER_DESCRIPTION", MySqlDbType.VarChar) { Value = request.PrinterDescription });
+                cmd.Parameters.Add(new MySqlParameter("P_PRINTER_MODEL", MySqlDbType.VarChar) { Value = request.PrinterModel });
 
                 var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
@@ -116,6 +116,51 @@ namespace _3DMANAGER_APP.DAL.Managers
                 Logger.LogError(ex, msg);
                 error = 500;
                 return false;
+            }
+        }
+
+        public List<PrinterListDbObject> GetPrinterDashboardList(int group)
+        {
+            try
+            {
+                List<PrinterListDbObject> list = new List<PrinterListDbObject>();
+                string procName = $"{ProcedurePrefix}_pr_PRINTER_LIST";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.VarChar) { Value = group });
+
+                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    foreach (DataRow row in ds.Tables[0].Rows)
+                    {
+                        PrinterListDbObject listResponse = new PrinterListDbObject();
+                        list.Add(listResponse.Create(row));
+                    }
+                }
+
+                return list;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = "Error al devolver el listado de impresoras de en BBDD";
+                Logger.LogError(ex, msg);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error al devolver el listado de impresoras de en BBDD";
+                Logger.LogError(ex, msg);
+                return null;
             }
         }
     }
