@@ -22,5 +22,18 @@ namespace _3DMANAGER_APP.BLL.Managers
         {
             return _mapper.Map<List<CatalogResponse>>(_catalogDbManager.GetFilamentType());
         }
+        public List<CatalogResponse> GetFilamentCatalog(int groupId)
+        {
+            return _mapper.Map<List<CatalogResponse>>(_catalogDbManager.GetFilamentCatalog(groupId));
+        }
+        public List<CatalogResponse> GetPrinterCatalog(int groupId)
+        {
+            return _mapper.Map<List<CatalogResponse>>(_catalogDbManager.GetPrinterCatalog(groupId));
+        }
+        public List<CatalogResponse> GetPrintState()
+        {
+            return _mapper.Map<List<CatalogResponse>>(_catalogDbManager.GetPrintState());
+        }
+
     }
 }

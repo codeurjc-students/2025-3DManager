@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { postPrint } from "../api/printService";
-import { getFilamentCatalog, getPrintersCatalog, getPrintState } from "../api/catalogService";
+import { getFilamentCatalog, getPrinterCatalog, getPrintState } from "../api/catalogService";
 import type { CatalogResponse } from "../models/catalog/CatalogResponse";
 
 const CreatePrint3DPage: React.FC = () => {
@@ -15,7 +15,7 @@ const CreatePrint3DPage: React.FC = () => {
     const [catalogState, setCatalogState] = useState<CatalogResponse[]>([]);
     const [catalogPrinter, setCatalogPrinter] = useState<CatalogResponse[]>([]);
     const [catalogFilament, setCatalogFilament] = useState<CatalogResponse[]>([]);
-    const [gcodeFileContent, setFileContent] = useState<string>("");
+    const [gcodeFileContent, setGcodeFileContent] = useState("");
     const [printTime, setPrintTime] = useState<number>(0);
     const [printFilamentUsed, setPrintFilamentUsed] = useState<number>(0);
     const { user } = useAuth();
@@ -26,7 +26,7 @@ const CreatePrint3DPage: React.FC = () => {
         const loadCatalog = async () => {
             const responseCFilament = await getFilamentCatalog(user!.groupId!);
             setCatalogFilament(responseCFilament.data!);
-            const responseCPrinter = await getPrintersCatalog(user!.groupId!);
+            const responseCPrinter = await getPrinterCatalog(user!.groupId!);
             setCatalogPrinter(responseCPrinter.data!);
             const responseCState = await getPrintState();
             setCatalogState(responseCState.data!);
@@ -43,9 +43,9 @@ const CreatePrint3DPage: React.FC = () => {
 
         reader.onload = () => {
             const text = reader.result as string;
-            setFileContent(text);
+            setGcodeFileContent(text);
 
-            parseGcode(text); // procesar el contenido
+            parseGcode(gcodeFileContent); // procesar el contenido
         };
 
         reader.readAsText(file);

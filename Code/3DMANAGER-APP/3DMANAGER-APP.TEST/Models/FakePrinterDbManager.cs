@@ -1,5 +1,6 @@
 ﻿using _3DMANAGER_APP.DAL.Base;
 using _3DMANAGER_APP.DAL.Interfaces;
+using _3DMANAGER_APP.DAL.Models;
 using _3DMANAGER_APP.DAL.Models.Printer;
 
 namespace _3DMANAGER_APP.TEST.Models
@@ -10,6 +11,11 @@ namespace _3DMANAGER_APP.TEST.Models
     /// </summary>
     public class FakePrinterDbManager : IPrinterDbManager
     {
+        public List<PrinterListDbObject> GetPrinterDashboardList(int group)
+        {
+            throw new NotImplementedException();
+        }
+
         public List<PrinterDbObject> GetPrinterList(out ErrorDbObject error)
         {
             error = null;
@@ -19,6 +25,16 @@ namespace _3DMANAGER_APP.TEST.Models
                 new PrinterDbObject { PrinterName = "Impresora test mock 02" },
                 new PrinterDbObject { PrinterName = "Impresora test mock 03" }
             };
+        }
+
+        public bool PostPrinter(PrinterRequestDbObject request, out int? error)
+        {
+            throw new NotImplementedException();
+        }
+
+        List<PrinterDbObject> IPrinterDbManager.GetPrinterList(out ErrorDbObject error)
+        {
+            throw new NotImplementedException();
         }
     }
 }
