@@ -8,7 +8,7 @@ export const getPrintList = async (type: number): Promise<CommonResponse<PrintLi
     return response.data;
 }
 
-export const postPrint = async (data: PrintRequest): Promise<CommonResponse<PrintListResponse[]>> => {
-    const response = await apiClient.get<CommonResponse<PrintListResponse[]>>(`/api/Print/PostPrint`, { params: { data } });
+export const postPrint = async (data: PrintRequest): Promise<CommonResponse<boolean>> => {
+    const response = await apiClient.get<CommonResponse<boolean>>(`/api/Print/PostPrint`, { params: { data } });
     return response.data;
 }

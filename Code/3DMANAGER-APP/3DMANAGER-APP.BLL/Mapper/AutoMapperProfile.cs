@@ -50,6 +50,7 @@ namespace _3DMANAGER_APP.BLL.Mapper
             #region Print
 
             CreateMap<PrintListResponse, PrintListResponseDbObject>().ReverseMap();
+            CreateMap<PrintRequest, PrintRequestDbObject>().ReverseMap();
             #endregion
 
             #region Catalog

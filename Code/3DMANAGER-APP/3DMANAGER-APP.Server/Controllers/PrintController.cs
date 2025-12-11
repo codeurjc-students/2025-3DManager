@@ -42,5 +42,27 @@ namespace _3DMANAGER_APP.Server.Controllers
 
             return new CommonResponse<List<PrintListResponse>>(userList);
         }
+
+        /// <summary>
+        /// Post a print 3D 
+        /// </summary>
+        /// <returns>bool</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="400">Conflicto en servidor</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ApiVersionNeutral]
+        [Tags("Print")]
+        [HttpPost]
+        public CommonResponse<bool> PostPrint(PrintRequest print)
+        {
+            _printManager.PostPrint(print, out BaseError? error);
+            if (error != null)
+            {
+                return new CommonResponse<bool>(new ErrorProperties(error.code, error.message));
+            }
+            return new CommonResponse<bool>(true);
+        }
     }
 }

@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { postPrint } from "../api/printService";
 import { getFilamentCatalog, getPrinterCatalog, getPrintState } from "../api/catalogService";
 import type { CatalogResponse } from "../models/catalog/CatalogResponse";
+import { timePatterns, filamentPatterns } from "../models/print/GCodePatterns";
 
 const CreatePrint3DPage: React.FC = () => {
 
@@ -15,8 +16,10 @@ const CreatePrint3DPage: React.FC = () => {
     const [catalogState, setCatalogState] = useState<CatalogResponse[]>([]);
     const [catalogPrinter, setCatalogPrinter] = useState<CatalogResponse[]>([]);
     const [catalogFilament, setCatalogFilament] = useState<CatalogResponse[]>([]);
-    const [gcodeFileContent, setGcodeFileContent] = useState("");
+    //const [gcodeFileContent, setGcodeFileContent] = useState("");
     const [printTime, setPrintTime] = useState<number>(0);
+    const [printRealTimeH, setPrintRealTimeH] = useState<number>(0);
+    const [printRealTimeM, setPrintRealTimeM] = useState<number>(0);
     const [printFilamentUsed, setPrintFilamentUsed] = useState<number>(0);
     const { user } = useAuth();
 
@@ -43,9 +46,9 @@ const CreatePrint3DPage: React.FC = () => {
 
         reader.onload = () => {
             const text = reader.result as string;
-            setGcodeFileContent(text);
+            //setGcodeFileContent(text);
 
-            parseGcode(gcodeFileContent); // procesar el contenido
+            parseGcode(text); // procesar el contenido
         };
 
         reader.readAsText(file);
@@ -58,22 +61,26 @@ const CreatePrint3DPage: React.FC = () => {
         let filamentValue: number = 0;      
 
         for (let line of lines) {
-            if (line.startsWith(";TIME:")) {
-                const raw = line.replace(";TIME:", "").trim();
-                timeValue = Number(raw) || 0;
+            // Procesar tiempos
+            for (const pattern of timePatterns) {
+                const match = pattern.regex.exec(line);
+                if (match) {
+                    timeValue = pattern.parse(match[1]);
+                }
             }
 
-            if (line.startsWith(";Filament used:")) {
-                const raw = line.replace(";Filament used:", "").trim();
-                const clean = raw.replace("m", "").trim();
-                filamentValue = Number(clean) || 0;
+            // Procesar filamento
+            for (const pattern of filamentPatterns) {
+                const match = pattern.regex.exec(line);
+                if (match) {
+                    filamentValue = pattern.parse(match[1]);
+                    break;
+                }
             }
         }
+
         setPrintTime(timeValue);
         setPrintFilamentUsed(filamentValue);
-
-        console.log("Tiempo:", timeValue);
-        console.log("Filamento usado:", filamentValue);
     };
 
 
@@ -88,7 +95,10 @@ const CreatePrint3DPage: React.FC = () => {
         
         try {
             let groupId = user!.groupId!;
+            let userId = user!.userId;
+            let printRealTime = printRealTimeH * 3600 + printRealTimeM * 60;
             const response = await postPrint({
+                userId,
                 printName,
                 printFilament, 
                 printPrinter,
@@ -96,19 +106,19 @@ const CreatePrint3DPage: React.FC = () => {
                 printDescription,
                 groupId,
                 printTime,
+                printRealTime,
                 printFilamentUsed
-
             });
 
             if (response.data) {
-                alert("Impresora creada correctamente.");
+                alert("Impresión creada correctamente.");
                 navigate("/dashboard");
             } else {
-                alert(response.error?.message || "No se pudo crear la impresora.");
+                alert(response.error?.message || "No se pudo crear la impresión.");
             }
         } catch (error) {
-            console.error("Error al crear impresora:", error);
-            alert("Ha ocurrido un error en el registro del impresora.");
+            console.error("Error al crear la impresión:", error);
+            alert("Ha ocurrido un error en el registro de la impresión.");
         }
     };
 
@@ -121,7 +131,7 @@ const CreatePrint3DPage: React.FC = () => {
                     <form onSubmit={handleSubmit}>
                         <div className="white-container">
                             <div className="p-3 d-flex flex-column">
-                                <div className="row-4 d-flex flex-row">
+                                <div className="row-3 d-flex flex-row">
                                     <div className="col-6 p-2">
                                         <label htmlFor="printName" className="form-label">Nombre</label>
                                         <input id="printName" className="input-value w-100 " value={printName} placeholder="Nombre"
@@ -141,7 +151,7 @@ const CreatePrint3DPage: React.FC = () => {
                                         </select>
                                     </div>
                                 </div>
-                                <div className="row-4 d-flex flex-row">
+                                <div className="row-3 d-flex flex-row">
                                     <div className="col-6 p-2">
                                         <label htmlFor="printPrinter" className="form-label">Impresora</label>
                                         <select id="printPrinter" className="input-value w-100" value={printPrinter}
@@ -169,7 +179,19 @@ const CreatePrint3DPage: React.FC = () => {
                                         </select>
                                     </div>
                                 </div>
-                                <div className="row-4">
+                                <div className="row-3 d-flex flex-row">
+                                    <div className="col-6 p-2">
+                                        <label htmlFor="printRealTimeH" className="form-label">Tiempo real impresion (Horas)</label>
+                                        <input id="printRealTimeH" className="input-value w-100 " value={printRealTimeH}
+                                            onChange={(e) => setPrintRealTimeH(Number(e.target.value))} />
+                                    </div>
+                                    <div className="col-6 p-2">
+                                        <label htmlFor="printRealTimeM" className="form-label">Tiempo real impresion (Minutos)</label>
+                                        <input type="number" id="printRealTimeM" className="input-value w-100 " value={printRealTimeM}
+                                            onChange={(e) => setPrintRealTimeM(Number(e.target.value))} />
+                                    </div>
+                                </div>
+                                <div className="row-3">
                                     <div className="p-2">
                                         <label htmlFor="printDescription" className="form-label">Descripción</label>
                                         <textarea id="printDescription" className="input-value w-100" value={printDescription} placeholder="Descripción"

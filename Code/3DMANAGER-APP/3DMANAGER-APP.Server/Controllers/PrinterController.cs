@@ -58,7 +58,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpPost]
         public CommonResponse<bool> PostPrinter(PrinterRequest printer)
         {
-            var response = _printerManager.PostPrinter(printer, out BaseError? error);
+            _printerManager.PostPrinter(printer, out BaseError? error);
             if (error != null)
             {
                 return new CommonResponse<bool>(new ErrorProperties(error.code, error.message));

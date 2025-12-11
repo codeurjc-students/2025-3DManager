@@ -58,7 +58,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpPost]
         public CommonResponse<bool> PostFilament(FilamentRequest filament)
         {
-            var response = _filamentManager.PostFilament(filament, out BaseError? error);
+            _filamentManager.PostFilament(filament, out BaseError? error);
             if (error != null)
             {
                 return new CommonResponse<bool>(new ErrorProperties(error.code, error.message));
