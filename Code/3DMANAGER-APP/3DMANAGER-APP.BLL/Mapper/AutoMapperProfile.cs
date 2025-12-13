@@ -28,10 +28,9 @@ namespace _3DMANAGER_APP.BLL.Mapper
             CreateMap<UserObject, UserDbObject>().ReverseMap();
             CreateMap<UserListResponseDbObject, UserListResponse>()
                 .ForMember(dest => dest.UserHours,
-                           opt => opt.MapFrom(src => TimeSpan.FromSeconds((double)src.UserHours).TotalHours.ToString("F2")))
-                .ReverseMap()
-                .ForMember(dest => dest.UserHours,
-                           opt => opt.MapFrom(src => (decimal)TimeSpan.FromHours(double.Parse(src.UserHours)).TotalSeconds));
+                           opt => opt.MapFrom(src => $"{(int)TimeSpan.FromSeconds((double)src.UserHours).TotalHours}h " +
+                           $"{TimeSpan.FromSeconds((double)src.UserHours).Minutes}min"));
+
 
 
             #endregion
@@ -49,7 +48,9 @@ namespace _3DMANAGER_APP.BLL.Mapper
 
             #region Print
 
-            CreateMap<PrintListResponse, PrintListResponseDbObject>().ReverseMap();
+            CreateMap<PrintListResponseDbObject, PrintListResponse>().ForMember(dest => dest.PrintTime,
+                           opt => opt.MapFrom(src => $"{(int)TimeSpan.FromSeconds((double)src.PrintTime).TotalHours}h " +
+                           $"{TimeSpan.FromSeconds((double)src.PrintTime).Minutes}min"));
             CreateMap<PrintRequest, PrintRequestDbObject>().ReverseMap();
             #endregion
 

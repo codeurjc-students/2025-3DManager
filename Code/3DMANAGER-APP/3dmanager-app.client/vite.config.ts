@@ -40,7 +40,7 @@ const target = isCI
     ? 'http://localhost:5000'
     : env.ASPNETCORE_HTTPS_PORT
         ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}`
-        : 'https://localhost:7284';
+        : 'https://localhost:443';
 
 // https://vitejs.dev/config/
 export default defineConfig({
