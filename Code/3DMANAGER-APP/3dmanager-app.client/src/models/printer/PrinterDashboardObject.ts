@@ -3,4 +3,6 @@ export interface PrinterDashboardObject {
     printerName?: string;
     printerModel?: string;
     printerDescription?: string;
+    printerStateId?: number;
+    printerStateName?: string;
 }

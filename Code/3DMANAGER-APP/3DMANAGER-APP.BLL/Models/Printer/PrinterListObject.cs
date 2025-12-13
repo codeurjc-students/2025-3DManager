@@ -6,5 +6,7 @@
         public string? PrinterName { get; set; }
         public string? PrinterModel { get; set; }
         public string? PrinterDescription { get; set; }
+        public int? PrinterStateId { get; set; }
+        public string? PrinterStateName { get; set; }
     }
 }

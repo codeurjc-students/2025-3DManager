@@ -200,7 +200,7 @@ const CreatePrint3DPage: React.FC = () => {
                                 </div>
                             </div>
 
-                            <div className="p-2">
+                            <div className="ms-3 me-3 p-2">
                                 <label htmlFor="gcodeFile" className="form-label">Archivo GCODE</label>
                                 <input
                                     type="file"

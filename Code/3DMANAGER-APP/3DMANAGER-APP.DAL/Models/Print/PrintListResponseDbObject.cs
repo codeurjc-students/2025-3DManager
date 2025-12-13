@@ -12,7 +12,7 @@ namespace _3DMANAGER_APP.DAL.Models.Print
         private const string PrintUSerCreatorColumnName = "PRINT_USER";
         public DateTime PrintDate { get; set; }
         private const string PrintDateColumnName = "PRINT_DATE";
-        public decimal PrintTime { get; set; }
+        public int PrintTime { get; set; }
         private const string PrintTimeColumnName = "PRINT_TIME";
         public decimal PrintFilamentConsumed { get; set; }
         private const string PrintFilamentConsumedColumnName = "PRINT_FILAMENT_USED";
@@ -26,7 +26,7 @@ namespace _3DMANAGER_APP.DAL.Models.Print
             obj.PrintName = row.Field<string>(PrintNameColumnName);
             obj.PrintUserCreator = row.Field<string>(PrintUSerCreatorColumnName);
             obj.PrintDate = row.Field<DateTime>(PrintDateColumnName);
-            obj.PrintTime = row.Field<decimal>(PrintTimeColumnName);
+            obj.PrintTime = row.Field<int>(PrintTimeColumnName);
             obj.PrintFilamentConsumed = row.Field<decimal>(PrintFilamentConsumedColumnName);
 
             return obj;

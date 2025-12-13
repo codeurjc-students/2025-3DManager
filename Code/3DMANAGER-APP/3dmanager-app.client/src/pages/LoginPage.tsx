@@ -1,7 +1,8 @@
 ﻿import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Login } from "../api/userService";
+import { Login, LoginGuest } from "../api/userService";
 import { useAuth } from "../context/AuthContext";
+import type { LoginResponse } from "../models/user/LoginResponse";
 
 const LoginPage: React.FC = () => {
     const navigate = useNavigate();
@@ -20,13 +21,39 @@ const LoginPage: React.FC = () => {
         }
     }, [user]);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!userName || !password) {
-            alert("Introduce usuario y contraseña");
-            return;
-        }
+    const loginAsGuest = async () => {
 
+        setLoading(true);
+        try {
+            const result = await LoginGuest();
+
+            if (!result || result.error != null) {
+                alert(result?.error?.message || "Problema al intentar acceder como invitado");
+                return;
+            }
+
+            const userLogged = result.data!;
+            authLoad(userLogged);
+
+        } catch (err) {
+            console.error("Error login como invitado:", err);
+            alert("Error conectando con el servidor como invitado");
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const authLoad = async (userLogged: LoginResponse) => {
+        login(userLogged.user, userLogged.token);
+
+        if (userLogged.user.groupId) {
+            navigate("/dashboard");
+        } else {
+            navigate("/group");
+        }
+    }
+
+    const loginUser = async () => {
         setLoading(true);
         try {
             const result = await Login({ userName: userName, userPassword: password });
@@ -37,21 +64,24 @@ const LoginPage: React.FC = () => {
             }
 
             const userLogged = result.data!;
-
-            // Llamamos a la función del AuthContext
-            login(userLogged.user, userLogged.token);
-
-            if (userLogged.user.groupId) {
-                navigate("/dashboard");
-            } else {
-                navigate("/group");
-            }
+            authLoad(userLogged);
+            
         } catch (err) {
             console.error("Error login:", err);
             alert("Error conectando con el servidor");
         } finally {
             setLoading(false);
         }
+    }
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!userName || !password) {
+            alert("Introduce usuario y contraseña");
+            return;
+        }
+        loginUser();
+        
     };
 
     return (
@@ -89,7 +119,7 @@ const LoginPage: React.FC = () => {
                             <button type="submit" className="botton-yellow" disabled={loading}>
                                 {loading ? "Accediendo..." : "Acceder"}
                             </button>
-                            <button type="button" className="botton-darkGrey">
+                            <button type="button" className="botton-darkGrey" onClick={() => loginAsGuest() }>
                                 Acceder como invitado
                             </button>
                         </div>

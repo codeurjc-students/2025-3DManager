@@ -1,11 +1,17 @@
-﻿import React from 'react';
+﻿import React, { useEffect, useState } from "react";
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from "react-router-dom";
 
 const DashboardActions: React.FC = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
-    
+    const [ permission, setPermission ] = useState<boolean>(true);
+
+    useEffect(() => {
+        if (user!.rolId == "Usuario-Base" || user!.rolId == "Usuario-Manager")
+            setPermission(true);
+        else setPermission(false);
+    }, []);
 
     return (
         <div>
@@ -53,9 +59,10 @@ const DashboardActions: React.FC = () => {
                             </svg>
                             </button>
                         </div>
-                    ) : ( /* Usuario sin permisos de creación*/
-                        <div className="d-flex align-items-center mt-1">
-                            <button type="button" className="botton-yellow col-11 mt-4 justify-content-center" onClick={() => navigate("/post3dPrint")}>
+                    ) : ( 
+                        <div className="d-flex align-items-center justify-content-center mt-1">
+                            <button disabled={!permission} type="button" className={`col-11 mt-4 justify-content-center ${!permission ? ".botton-darkGrey" : "botton-yellow"
+                                }`} onClick={() => navigate("/post3dPrint")}>
                                 <span className="dashboard-title pe-5">Subir archivo G-Code</span>
                                 <svg width="45" height="42" viewBox="0 0 45 42" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M5.625 26.25V33.25C5.625 34.1783 6.02009 35.0685 6.72335 35.7249C7.42661 36.3813 8.38044 36.75 9.375 36.75L35.625 36.75C36.6196 36.75 37.5734 36.3813 38.2767 35.7249C38.9799 35.0685 39.375 34.1783 39.375 33.25V26.25M13.125 14L22.5 5.25M22.5 5.25L31.875 14M22.5 5.25L22.5 26.25" stroke="#2C2C2C" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />

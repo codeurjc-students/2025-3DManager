@@ -16,6 +16,19 @@ const DashboardPage: React.FC = () => {
         });
     }, []);
 
+    const renderPrinterStatus = (state: number,stateName : string) => {
+        switch (state) {
+            case 1:
+                return <span className="status-badge status-active">{stateName}</span>;
+            case 2:
+                return <span className="status-badge status-out">{stateName}</span>;
+            case 3:
+                return <span className="status-badge status-maintenance">{stateName}</span>;
+            default:
+                return <span className="status-badge status-maintenance">{stateName}</span>;
+        }
+    };
+
     return (
         <div id="dashboard" className="d-flex vh-100">
             <div className="grey-container col-6 vh-100 scroll-container">
@@ -25,7 +38,7 @@ const DashboardPage: React.FC = () => {
                     {printers.map((printer) => (
                         <button
                             key={printer.printerId}
-                            className="printer-card mb-3 p-3 d-flex flex-row text-start"
+                            className="printer-card mb-5 p-3 d-flex flex-row text-start"
                             onClick={() => navigate(`/printer/${printer.printerId}`)}
                         >
                             <div className="col-5">
@@ -35,6 +48,7 @@ const DashboardPage: React.FC = () => {
                                 <p>{printer.printerName}</p>
                                 <p>{printer.printerModel}</p>
                                 <p>{printer.printerDescription}</p>
+                                {renderPrinterStatus(printer.printerStateId!, printer.printerStateName!)}
                             </div>
                         </button>
                     ))}

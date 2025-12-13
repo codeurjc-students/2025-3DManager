@@ -35,7 +35,7 @@ const PrintList: React.FC = () => {
                         <tr key={print.printId}>
                             <td>{print.printName}</td>
                             <td>{print.printUserCreator}</td>
-                            <td>{print.printDate.toDateString()}</td>
+                            <td>{print.printDate.toString()}</td>
                             <td>{print.printTime}</td>
                             <td>{print.printFilamentConsumed}</td>
                             <td>
