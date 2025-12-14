@@ -17,7 +17,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         [Fact]
         public async Task GetPrintList_ShouldReturnPrintsList()
         {
-            var response = await _client.GetAsync("/api/v1/Print/GetPrintList?groupId=4");
+            var response = await _client.GetAsync("/api/v1/prints/GetPrintList?groupId=4");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
