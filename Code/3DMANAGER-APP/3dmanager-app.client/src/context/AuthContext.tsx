@@ -4,6 +4,7 @@ import type { UserObject } from "../models/user/UserObject";
 type AuthContextType = {
     user: UserObject | null;
     token: string | null;
+    loading: boolean;
     login: (user: UserObject, token: string) => void;
     logout: () => void;
 };
@@ -13,6 +14,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<UserObject | null>(null);
     const [token, setToken] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
@@ -21,7 +23,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setUser(JSON.parse(storedUser));
             setToken(storedToken);
         }
+        setLoading(false);
     }, []);
+
 
     const login = (user: UserObject, token: string) => {
         setUser(user);
@@ -38,7 +42,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     return (
-        <AuthContext.Provider value={{ user, token, login, logout }}>
+        <AuthContext.Provider value={{ user, token,loading, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

@@ -4,7 +4,8 @@ namespace _3DMANAGER_APP.DAL.Interfaces
 {
     public interface IUserDbManager
     {
-        bool PostNewUser(UserCreateRequestDbObject user, out int? error);
-        UserDbObject Login(string userName);
+        public bool PostNewUser(UserCreateRequestDbObject user, out int? error);
+        public UserDbObject Login(string userName);
+        public List<UserListResponseDbObject> GetUserList(int group);
     }
 }

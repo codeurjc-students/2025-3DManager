@@ -1,7 +1,7 @@
 ﻿import { test, expect } from '@playwright/test'
 
 
-test('redirige al login y muestra el título', async ({ page }) => {
+test('LoginRender', async ({ page }) => {
   await page.goto('/');
 
   // Verifica que se muestra el título de la pantalla de login

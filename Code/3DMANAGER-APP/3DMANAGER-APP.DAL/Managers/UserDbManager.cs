@@ -50,14 +50,14 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al crear un usurio en BBDD";
+                string msg = "Error al crear un usuario en BBDD";
                 Logger.LogError(ex, msg);
                 error = 500;
                 return false;
             }
             catch (Exception ex)
             {
-                string msg = "Error al crear un usurio en BBDD";
+                string msg = "Error al crear un usuario en BBDD";
                 Logger.LogError(ex, msg);
                 error = 500;
                 return false;
@@ -100,6 +100,51 @@ namespace _3DMANAGER_APP.DAL.Managers
             catch (Exception ex)
             {
                 string msg = "Error al crear un usurio en BBDD";
+                Logger.LogError(ex, msg);
+                return null;
+            }
+        }
+
+        public List<UserListResponseDbObject> GetUserList(int group)
+        {
+            try
+            {
+                List<UserListResponseDbObject> list = new List<UserListResponseDbObject>();
+                string procName = $"{ProcedurePrefix}_pr_USER_LIST";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.VarChar) { Value = group });
+
+                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    foreach (DataRow row in ds.Tables[0].Rows)
+                    {
+                        UserListResponseDbObject listResponse = new UserListResponseDbObject();
+                        list.Add(listResponse.Create(row));
+                    }
+                }
+
+                return list;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = "Error al devolver el listado de usuarios de en BBDD";
+                Logger.LogError(ex, msg);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error al devolver el listado de usuarios de en BBDD";
                 Logger.LogError(ex, msg);
                 return null;
             }

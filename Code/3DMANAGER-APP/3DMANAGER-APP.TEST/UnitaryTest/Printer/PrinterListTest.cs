@@ -16,12 +16,11 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest
         [Trait("Category", "Unitary")]
         public void GetPrinterList_WhenDbReturnsData_ShouldReturnMappedPrinters()
         {
-            // Arrange
             var mockDb = new Mock<IPrinterDbManager>();
             var mockLogger = new Mock<ILogger<PrinterManager>>();
             var mockMapper = new Mock<IMapper>();
 
-            // Simulación de lo que devuelve la BBDD
+
             var dbPrinters = new List<PrinterDbObject>
         {
             new PrinterDbObject { PrinterName = "HP" },
@@ -35,7 +34,6 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest
                   return dbPrinters;
               }));
 
-            // Configuramos el mapper
             mockMapper.Setup(m => m.Map<List<PrinterObject>>(dbPrinters))
                       .Returns(new List<PrinterObject>
                       {
@@ -45,10 +43,8 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest
 
             var manager = new PrinterManager(mockDb.Object, mockMapper.Object, mockLogger.Object);
 
-            // Act
             var result = manager.GetPrinterList(out BaseError error);
 
-            // Assert
             Assert.NotNull(result);
             Assert.Equal(2, result.Count);
             Assert.Equal("Impresora 1", result[0].PrinterName);
@@ -59,7 +55,6 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest
         [Trait("Category", "Unitary")]
         public void GetPrinterList_WhenDbReturnsError_ShouldSetBaseError()
         {
-            // Arrange
             var mockDb = new Mock<IPrinterDbManager>();
             var mockLogger = new Mock<ILogger<PrinterManager>>();
             var mockMapper = new Mock<IMapper>();
@@ -75,11 +70,9 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest
 
             var manager = new PrinterManager(mockDb.Object, mockMapper.Object, mockLogger.Object);
 
-            // Act
             var result = manager.GetPrinterList(out BaseError error);
 
-            // Assert
-            Assert.Null(result); // no hay lista
+            Assert.Null(result);
             Assert.NotNull(error);
             Assert.Equal(500, error.code);
             Assert.Equal("DB Error", error.message);

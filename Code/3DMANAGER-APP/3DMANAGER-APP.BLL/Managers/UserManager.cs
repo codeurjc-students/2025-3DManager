@@ -7,6 +7,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using System.Net;
 
 namespace _3DMANAGER_APP.BLL.Managers
 {
@@ -65,7 +66,6 @@ namespace _3DMANAGER_APP.BLL.Managers
         {
             error = null;
 
-            // Paso 1: buscar usuario
             var userDb = _userDbManager.Login(userName);
             if (userDb == null)
             {
@@ -93,6 +93,16 @@ namespace _3DMANAGER_APP.BLL.Managers
             UserObject userResponse = _mapper.Map<UserObject>(userDb);
             userResponse.UserPassword = string.Empty;
             return userResponse;
+        }
+
+        public List<UserListResponse> GetUserList(int group, out BaseError? error)
+        {
+            error = null;
+            List<UserListResponseDbObject> list = _userDbManager.GetUserList(group);
+            if (list == null)
+                error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = "Error al obtener listado de usuarios" };
+
+            return _mapper.Map<List<UserListResponse>>(list);
         }
     }
 }

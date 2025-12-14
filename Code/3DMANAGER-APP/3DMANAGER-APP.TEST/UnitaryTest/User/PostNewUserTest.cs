@@ -34,7 +34,6 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.User
         [Trait("Category", "Unitary")]
         public void PostNewUser_WhenDbReturnsSuccess_ShouldReturnTrueAndNoError()
         {
-            // Arrange
             var user = new UserCreateRequest
             {
                 UserName = "testuser",
@@ -53,10 +52,8 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.User
                 .Setup(db => db.PostNewUser(It.IsAny<UserCreateRequestDbObject>(), out errorDb))
                 .Returns(true);
 
-            // Act
             var result = _manager.PostNewUser(user, out BaseError? error);
 
-            // Assert
             Assert.True(result);
             Assert.Null(error);
             _mapperMock.Verify(m => m.Map<UserCreateRequestDbObject>(It.IsAny<UserCreateRequest>()), Times.Once);
@@ -67,7 +64,6 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.User
         [Trait("Category", "Unitary")]
         public void PostNewUser_WhenDbReturnsConflictError_ShouldSetBaseErrorAndReturnFalse()
         {
-            // Arrange
             var user = new UserCreateRequest
             {
                 UserName = "existinguser",
@@ -86,10 +82,8 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.User
                 .Setup(db => db.PostNewUser(It.IsAny<UserCreateRequestDbObject>(), out errorDb))
                 .Returns(false);
 
-            // Act
             var result = _manager.PostNewUser(user, out BaseError? error);
 
-            // Assert
             Assert.False(result);
             Assert.NotNull(error);
             Assert.Equal(StatusCodes.Status409Conflict, error.code);
