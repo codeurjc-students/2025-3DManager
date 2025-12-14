@@ -73,13 +73,13 @@ jobs:
         run: npx playwright install --with-deps
         working-directory: Code/3DMANAGER-APP/3dmanager-app.client
         
-      - name: Start backend server
-        run: dotnet run --project Code/3DMANAGER-APP/3DMANAGER-APP.Server/3DMANAGER-APP.Server.csproj --urls "http://localhost:5000" &
-        env:
-          ASPNETCORE_ENVIRONMENT: CI
+      #- name: Start backend server
+      #  run: dotnet run --project Code/3DMANAGER-APP/3DMANAGER-APP.Server/3DMANAGER-APP.Server.csproj --urls "http://localhost:5000" &
+      #  env:
+      #    ASPNETCORE_ENVIRONMENT: CI
           
-      - name: Wait for backend
-        run: npx wait-on http://localhost:5000/health
+      #- name: Wait for backend
+      #  run: npx wait-on http://localhost:5000/health
 
       - name: Start frontend
         run: npm run dev -- --port 3001 &
