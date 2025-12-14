@@ -27,15 +27,15 @@ const App: React.FC = () => {
                         <Routes>
                             <Route path="*" element={<Navigate to="/login" replace />} />
                             <Route path="/login" element={<LoginPage />} />
-                            <Route path="/createUser" element={<CreateUserPage />} />
+                            <Route path="/user-create" element={<CreateUserPage />} />
                             <Route path="/group" element={<ProtectedRoute><GroupPage /></ProtectedRoute>} />
-                            <Route path="/createGroup" element={<ProtectedRoute><CreateGroupPage /></ProtectedRoute>} />
+                            <Route path="/group-create" element={<ProtectedRoute><CreateGroupPage /></ProtectedRoute>} />
                             <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-                            <Route path="/list/:type" element={<ProtectedRoute><ListPage /></ProtectedRoute>} />
-                            <Route path="/postInventory" element={<ProtectedRoute><InsertInventoryPage /></ProtectedRoute>} />
-                            <Route path="/createPrinter" element={<ProtectedRoute><CreatePrinterPage /></ProtectedRoute>} />
-                            <Route path="/createFilament" element={<ProtectedRoute><CreateFilamentPage /></ProtectedRoute>} />
-                            <Route path="/post3dPrint" element={<ProtectedRoute><CreatePrint3DPage /></ProtectedRoute>} />
+                            <Route path="dashboard/lists/:type" element={<ProtectedRoute><ListPage /></ProtectedRoute>} />
+                            <Route path="/dashboard/add" element={<ProtectedRoute><InsertInventoryPage /></ProtectedRoute>} />
+                            <Route path="/dashboard/printer-create" element={<ProtectedRoute><CreatePrinterPage /></ProtectedRoute>} />
+                            <Route path="/dashboard/filament-create" element={<ProtectedRoute><CreateFilamentPage /></ProtectedRoute>} />
+                            <Route path="/dashboard/print-create" element={<ProtectedRoute><CreatePrint3DPage /></ProtectedRoute>} />
                         </Routes>
                     </main>
                 </div>

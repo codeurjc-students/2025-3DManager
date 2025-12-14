@@ -12,7 +12,7 @@ const CreateGroupPage: React.FC = () => {
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault(); // Para no recargar la página
+        e.preventDefault(); 
 
         if (!groupName || !groupDescription) {
             alert("Todos los campos son obligatorios");
@@ -21,7 +21,7 @@ const CreateGroupPage: React.FC = () => {
         
         try {
             let userId = user!.userId;
-            // Llamada al servicio
+            
             const response = await postNewGroup({
                 groupName,
                 groupDescription,
@@ -64,7 +64,7 @@ const CreateGroupPage: React.FC = () => {
                         </div>
                         <div className="d-flex justify-content-between  m-5">
                             <button type="submit" className="botton-yellow createUser">Crear grupo</button>
-                            <button type="button" className="botton-darkGrey" onClick={() => navigate("/group")}>Cancelar</button>
+                            <button type="button" className="botton-darkGrey" onClick={() => navigate("/group-create")}>Cancelar</button>
                         </div>                                      
                     </form>
                 </div>

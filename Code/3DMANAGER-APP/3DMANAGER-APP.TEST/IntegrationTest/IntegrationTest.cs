@@ -18,14 +18,14 @@ namespace _3DMANAGER.TEST.IntegrationTest
 
         public IntegrationTests()
         {
-            // Leer appsettings.json
+
             var config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: true)
                 .AddUserSecrets<IntegrationTests>()
                 .Build();
             _connectionString = config.GetConnectionString("TestConnection");
 
-            // Configurar AutoMapper
+
             var loggerFactory = NullLoggerFactory.Instance;
 
             var expression = new MapperConfigurationExpression();
@@ -39,10 +39,10 @@ namespace _3DMANAGER.TEST.IntegrationTest
         public void GetPrinterList_IntegrationTest_ShouldReturnPrinters()
         {
 
-            // Detectar si estamos en CI
+
             var isCI = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "CI";
 
-            // Crear el manager de base de datos
+
             IPrinterDbManager printerDbManager;
             if (isCI)
             {

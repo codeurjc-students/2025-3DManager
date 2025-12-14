@@ -9,6 +9,7 @@ using static _3DMANAGER_APP.Server.Models.Response;
 namespace _3DMANAGER_APP.Server.Controllers
 {
     [ApiController]
+    [Route("api/v1/prints/[action]")]
     public class PrintController : BaseController
     {
         private readonly IPrintManager _printManager;
@@ -31,7 +32,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(CommonResponse<List<PrintListResponse>>), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(CommonResponse<List<PrintListResponse>>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
-        [Tags("Print")]
+        [Tags("Prints")]
         [HttpGet]
         public CommonResponse<List<PrintListResponse>> GetPrintList([FromQuery] int groupId)
         {
@@ -53,9 +54,9 @@ namespace _3DMANAGER_APP.Server.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(CommonResponse<bool>), StatusCodes.Status200OK)]
         [ApiVersionNeutral]
-        [Tags("Print")]
+        [Tags("Prints")]
         [HttpPost]
-        public CommonResponse<bool> PostPrint(PrintRequest print)
+        public CommonResponse<bool> PostPrint([FromBody] PrintRequest print)
         {
             _printManager.PostPrint(print, out BaseError? error);
             if (error != null)

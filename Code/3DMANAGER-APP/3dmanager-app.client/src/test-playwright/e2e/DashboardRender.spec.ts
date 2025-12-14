@@ -4,7 +4,7 @@ test.describe('DashboardActionsE2E', () => {
 
 
     test('DashboardManager', async ({ page }) => {
-        // login como manager
+        
         await page.goto('/');
         await page.fill('#userLogin', 'ivicenter');
         await page.fill('#userPass', '12345');

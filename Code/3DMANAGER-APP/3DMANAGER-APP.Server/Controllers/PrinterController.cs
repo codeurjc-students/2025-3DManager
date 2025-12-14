@@ -10,6 +10,7 @@ using static _3DMANAGER_APP.Server.Models.Response;
 namespace _3DMANAGER_APP.Server.Controllers
 {
     [ApiController]
+    [Route("api/v1/printers/[action]")]
     public class PrinterController : BaseController
     {
         private readonly IPrinterManager _printerManager;
@@ -30,7 +31,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(CommonResponse<List<PrinterObject>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(CommonResponse<List<PrinterObject>>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
-        [Tags("Printer")]
+        [Tags("Printers")]
         [HttpGet]
         public IActionResult GetPrinterList()
         {
@@ -54,7 +55,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(CommonResponse<bool>), StatusCodes.Status200OK)]
         [ApiVersionNeutral]
-        [Tags("Printer")]
+        [Tags("Printers")]
         [HttpPost]
         public CommonResponse<bool> PostPrinter(PrinterRequest printer)
         {
@@ -78,7 +79,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(CommonResponse<List<PrinterListObject>>), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(CommonResponse<List<PrinterListObject>>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
-        [Tags("Filament")]
+        [Tags("Printers")]
         [HttpGet]
         public CommonResponse<List<PrinterListObject>> GetPrinterDashboardList([FromQuery] int groupId)
         {

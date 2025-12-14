@@ -107,7 +107,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "3DManager API v1"));
 }
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsEnvironment("CI"))
+{
+    app.UseHttpsRedirection();
+}
 app.UseStaticFiles();
 app.UseRouting();
 app.UseCors("AllowFrontend");
@@ -116,8 +119,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.MapGet("/health", () => Results.Ok("OK"));
 app.MapFallbackToFile("/index.html");
+
 
 app.Run();
 

@@ -6,7 +6,7 @@ test.describe('ListRenderE2E', () => {
         await page.goto('/');
         await page.click('button:text("Acceder como invitado")');
         await page.waitForURL('/dashboard');
-        await page.goto('/list/filament');
+        await page.goto('dashboard/lists/filaments');
 
         const headers = page.locator('table thead th');
         await expect(headers.nth(0)).toHaveText('Nombre');
@@ -27,13 +27,13 @@ test.describe('ListRenderE2E', () => {
     });
 
     test('PrintListPageRender', async ({ page }) => {
-        // Acceder como invitado
+        
         await page.goto('/');
         await page.click('button:text("Acceder como invitado")');
         await page.waitForURL('/dashboard');
-        await page.goto('/list/print');
+        await page.goto('dashboard/lists/prints');
 
-        // Verificar encabezados
+        
         const headers = page.locator('table thead th');
         await expect(headers.nth(0)).toHaveText('Nombre');
         await expect(headers.nth(1)).toHaveText('Usuario');
@@ -42,7 +42,7 @@ test.describe('ListRenderE2E', () => {
         await expect(headers.nth(4)).toHaveText('Filamento consumido');
         await expect(headers.nth(5)).toHaveText('Detalle');
 
-        // Verificar filas
+        
         const rows = page.locator('table tbody tr');
         const rowCount = await rows.count();
         expect(rowCount).toBeGreaterThan(0);
@@ -54,20 +54,20 @@ test.describe('ListRenderE2E', () => {
     });
 
     test('UserListPageRender', async ({ page }) => {
-        // Acceder como invitado
+        
         await page.goto('/');
         await page.click('button:text("Acceder como invitado")');
         await page.waitForURL('/dashboard');
-        await page.goto('/list/user');
+        await page.goto('dashboard/lists/users');
 
-        // Verificar encabezados
+        
         const headers = page.locator('table thead th');
         await expect(headers.nth(0)).toHaveText('Nombre');
         await expect(headers.nth(1)).toHaveText('Horas mes actual');
         await expect(headers.nth(2)).toHaveText('Piezas mes actual');
         await expect(headers.nth(3)).toHaveText('Detalle');
 
-        // Verificar filas
+        
         const rows = page.locator('table tbody tr');
         const rowCount = await rows.count();
         expect(rowCount).toBeGreaterThan(0);

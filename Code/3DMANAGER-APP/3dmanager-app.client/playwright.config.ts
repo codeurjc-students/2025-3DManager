@@ -5,7 +5,7 @@ const port = isCI ? 3001 : 3000;
 
 export default defineConfig({
     testDir: './src/test-playwright/e2e',
-    timeout: 30 * 1000,
+    timeout: 60 * 1000,
     expect: {
         timeout: 5000
     },

@@ -13,8 +13,7 @@ const CreatePrinterPage: React.FC = () => {
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault(); // Para no recargar la página
-
+        e.preventDefault(); 
         if (!printerName || !printerModel) {
             alert("El nombre y el modelo son campos obligatorios");
             return;
@@ -22,7 +21,7 @@ const CreatePrinterPage: React.FC = () => {
         
         try {
             let groupId = user!.groupId!;
-            // Llamada al servicio
+            
             const response = await postPrinter({
                 printerName,
                 printerDescription,

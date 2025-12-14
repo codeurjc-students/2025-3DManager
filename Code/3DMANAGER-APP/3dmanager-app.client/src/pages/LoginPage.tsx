@@ -131,7 +131,7 @@ const LoginPage: React.FC = () => {
             <div className="row mt-5">
                 <div className="col-3"></div>
                 <div className="col-6 mt-2 d-flex flex-column">
-                    <button type="button" className="botton-darkGrey" onClick={() => navigate("/createUser")}>
+                    <button type="button" className="botton-darkGrey" onClick={() => navigate("/user-create")}>
                         Crear cuenta
                     </button>
                 </div>

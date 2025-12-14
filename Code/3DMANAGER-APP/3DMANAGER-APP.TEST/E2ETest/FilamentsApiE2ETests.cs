@@ -17,7 +17,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         [Fact]
         public async Task GetFilamentList_ShouldReturnFilamentsList()
         {
-            var response = await _client.GetAsync("/api/Filament/GetFilamentList?groupId=4");
+            var response = await _client.GetAsync("/api/v1/filaments/GetFilamentList?groupId=4");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 

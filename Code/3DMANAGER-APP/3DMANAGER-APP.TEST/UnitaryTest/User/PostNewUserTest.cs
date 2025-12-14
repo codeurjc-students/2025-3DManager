@@ -77,7 +77,7 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.User
                 .Setup(m => m.Map<UserCreateRequestDbObject>(It.IsAny<UserCreateRequest>()))
                 .Returns(userDbObject);
 
-            int? errorDb = 4091; // Simula conflicto por nombre duplicado
+            int? errorDb = 4091;
             _userDbManagerMock
                 .Setup(db => db.PostNewUser(It.IsAny<UserCreateRequestDbObject>(), out errorDb))
                 .Returns(false);

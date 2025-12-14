@@ -1,4 +1,4 @@
-//Comento este test por que deja de tener sentido una vez comenzado el proyecto real
+//Commented test because its not useful with teh real proyect
 /*
 import { render, screen } from '@testing-library/react'
 import App from '../../App'

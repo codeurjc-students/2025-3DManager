@@ -46,9 +46,9 @@ const CreatePrint3DPage: React.FC = () => {
 
         reader.onload = () => {
             const text = reader.result as string;
-            //setGcodeFileContent(text);
+            
 
-            parseGcode(text); // procesar el contenido
+            parseGcode(text); 
         };
 
         reader.readAsText(file);
@@ -63,8 +63,7 @@ const CreatePrint3DPage: React.FC = () => {
 
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault(); // Para no recargar la página
-
+        e.preventDefault(); 
         if (!printName || !printState || !printFilament || !printPrinter) {
             alert("Todos los campos son obligatorios");
             return;

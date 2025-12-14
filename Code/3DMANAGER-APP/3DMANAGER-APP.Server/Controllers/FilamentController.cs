@@ -9,6 +9,7 @@ using static _3DMANAGER_APP.Server.Models.Response;
 namespace _3DMANAGER_APP.Server.Controllers
 {
     [ApiController]
+    [Route("api/v1/filaments/[action]")]
     public class FilamentController : BaseController
     {
         private readonly IFilamentManager _filamentManager;
@@ -32,7 +33,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(CommonResponse<List<FilamentListResponse>>), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(CommonResponse<List<FilamentListResponse>>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
-        [Tags("Filament")]
+        [Tags("Filaments")]
         [HttpGet]
         public CommonResponse<List<FilamentListResponse>> GetFilamentList([FromQuery] int groupId)
         {
@@ -54,7 +55,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(CommonResponse<bool>), StatusCodes.Status200OK)]
         [ApiVersionNeutral]
-        [Tags("Filament")]
+        [Tags("Filaments")]
         [HttpPost]
         public CommonResponse<bool> PostFilament(FilamentRequest filament)
         {

@@ -3,6 +3,7 @@ using _3DMANAGER_APP.TEST.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace _3DMANAGER_APP.TEST
 {
@@ -12,21 +13,23 @@ namespace _3DMANAGER_APP.TEST
         {
             builder.ConfigureServices(services =>
             {
-                // Detectar si estamos en CI (GitHub Actions u otro entorno sin BBDD)
+
                 var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
                 bool isCI = string.Equals(environment, "CI", StringComparison.OrdinalIgnoreCase);
 
                 if (isCI)
                 {
-                    // Buscar y eliminar la implementación real del DAL
-                    var descriptor = services.SingleOrDefault(
-                        d => d.ServiceType == typeof(IPrinterDbManager));
+                    services.RemoveAll(typeof(IPrinterDbManager));
+                    services.RemoveAll(typeof(IFilamentDbManager));
+                    services.RemoveAll(typeof(IPrintDbManager));
+                    services.RemoveAll(typeof(IUserDbManager));
+                    services.RemoveAll(typeof(ICatalogDbManager));
 
-                    if (descriptor != null)
-                        services.Remove(descriptor);
-
-                    // Registrar una fake implementation que no use MySQL
                     services.AddSingleton<IPrinterDbManager, FakePrinterDbManager>();
+                    services.AddSingleton<IFilamentDbManager, FakeFilamentDbManager>();
+                    services.AddSingleton<IPrintDbManager, FakePrintDbManager>();
+                    services.AddSingleton<IUserDbManager, FakeUserDbManager>();
+                    services.AddSingleton<ICatalogDbManager, FakeCatalogDbManager>();
                 }
             });
         }

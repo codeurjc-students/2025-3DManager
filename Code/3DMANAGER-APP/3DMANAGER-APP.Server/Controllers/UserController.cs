@@ -9,6 +9,7 @@ using static _3DMANAGER_APP.Server.Models.Response;
 namespace _3DMANAGER_APP.Server.Controllers
 {
     [ApiController]
+    [Route("api/v1/users/[action]")]
     public class UserController : BaseController
     {
         private readonly IUserManager _userManager;
@@ -32,7 +33,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(CommonResponse<bool>), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
-        [Tags("User")]
+        [Tags("Users")]
         [HttpPost]
         public CommonResponse<bool> PostNewUser(UserCreateRequest user)
         {
@@ -46,7 +47,7 @@ namespace _3DMANAGER_APP.Server.Controllers
 
 
         /// <summary>
-        /// Los as  user 
+        /// Log as  user 
         /// </summary>
         /// <returns>A boolean that indicates if the creation has been successful</returns>
         /// <response code="200">Respuesta correcta</response>
@@ -57,7 +58,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(CommonResponse<LoginResponse>), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(CommonResponse<LoginResponse>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
-        [Tags("User")]
+        [Tags("Users")]
         [HttpPost]
         public CommonResponse<LoginResponse> Login(BLL.Models.User.LoginRequest request)
         {
@@ -87,7 +88,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(CommonResponse<LoginResponse>), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(CommonResponse<LoginResponse>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
-        [Tags("User")]
+        [Tags("Users")]
         [HttpPost]
         public CommonResponse<LoginResponse> LoginGuest()
         {
@@ -119,7 +120,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(CommonResponse<List<UserListResponse>>), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(CommonResponse<List<UserListResponse>>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
-        [Tags("User")]
+        [Tags("Users")]
         [HttpGet]
         public CommonResponse<List<UserListResponse>> GetUserList([FromQuery] int groupId)
         {
