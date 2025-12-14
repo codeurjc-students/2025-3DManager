@@ -5,17 +5,17 @@ import type { PrinterRequest } from '../models/printer/PrinterRequest'
 import type { PrinterDashboardObject } from '../models/printer/PrinterDashboardObject'
 
 export const getPrinterList = async (): Promise<CommonResponse<PrinterObject[]>> => {
-    const response = await apiClient.get<CommonResponse<PrinterObject[]>>('/api/Printer/GetPrinterList')
+    const response = await apiClient.get<CommonResponse<PrinterObject[]>>('/api/v1/printers/GetPrinterList')
     return response.data
 }
 
 export const postPrinter = async (data: PrinterRequest): Promise<CommonResponse<boolean>> => {
-    const response = await apiClient.post<CommonResponse<boolean>>('/api/Printer/PostPrinter', data)
+    const response = await apiClient.post<CommonResponse<boolean>>('/api/v1/printers/PostPrinter', data)
     return response.data
 }
 
 export const getPrinterDahsboardList = async (groupId: number): Promise<CommonResponse<PrinterDashboardObject[]>> => {
-    const response = await apiClient.get<CommonResponse<PrinterDashboardObject[]>>(`/api/Printer/GetPrinterDashboardList`, { params: { groupId } });
+    const response = await apiClient.get<CommonResponse<PrinterDashboardObject[]>>(`/api/v1/printers/GetPrinterDashboardList`, { params: { groupId } });
     return response.data;
 }
 

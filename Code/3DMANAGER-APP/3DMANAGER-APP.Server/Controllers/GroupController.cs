@@ -8,6 +8,7 @@ using static _3DMANAGER_APP.Server.Models.Response;
 namespace _3DMANAGER_APP.Server.Controllers
 {
     [ApiController]
+    [Route("api/v1/groups/[action]")]
     public class GroupController : BaseController
     {
         private readonly BLL.Interfaces.IGroupManager _groupManager;
@@ -29,7 +30,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(CommonResponse<bool>), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
-        [Tags("User")]
+        [Tags("Groups")]
         [HttpPost]
         public CommonResponse<bool> PostNewGroup(GroupRequest request)
         {

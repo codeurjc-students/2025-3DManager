@@ -6,9 +6,9 @@ import UserList from "../components/UserList";
 
 
 const TITLES: Record<string, string> = {
-    filament: "filamentos",
-    user: "Usuarios",
-    print: "Piezas"
+    filaments: "filamentos",
+    users: "Usuarios",
+    prints: "Piezas"
 };
 
 const ListPage: React.FC = () => {
@@ -36,9 +36,9 @@ const ListPage: React.FC = () => {
             <div className="row h-70 d-flex mt-4">
                 <div className="col-1"></div>
                 <div className="col-10 grey-container">
-                    {type === "filament" && <FilamentList />}
-                    {type === "user" && <UserList />}
-                    {type === "print" && <PrintList />}
+                    {type === "filaments" && <FilamentList />}
+                    {type === "users" && <UserList />}
+                    {type === "prints" && <PrintList />}
                 </div>
                 <div className="col-1"></div>
             </div>

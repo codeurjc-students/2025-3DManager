@@ -17,7 +17,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         [Fact]
         public async Task GetFilamentsTypes_ShouldReturnCatalogFilamentTypesUsersList()
         {
-            var response = await _client.GetAsync("/api/Catalog/GetFilamentType");
+            var response = await _client.GetAsync("/api/v1/Catalog/GetFilamentType");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
@@ -28,7 +28,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         [Fact]
         public async Task GetPrintStates_ShouldReturnCatalogPrintStatesList()
         {
-            var response = await _client.GetAsync("/api/Catalog/GetPrintState");
+            var response = await _client.GetAsync("/api/v1/Catalog/GetPrintState");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
@@ -39,7 +39,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         [Fact]
         public async Task GetFilamentsCatalog_ShouldReturnCatalogFilamentsList()
         {
-            var response = await _client.GetAsync("/api/Catalog/GetFilamentCatalog?groupId=4");
+            var response = await _client.GetAsync("/api/v1/Catalog/GetFilamentCatalog?groupId=4");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
@@ -50,7 +50,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         [Fact]
         public async Task GetPrintersCatalog_ShouldReturnCatalogPrintersList()
         {
-            var response = await _client.GetAsync("/api/Catalog/GetPrinterCatalog?groupId=4");
+            var response = await _client.GetAsync("/api/v1/Catalog/GetPrinterCatalog?groupId=4");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 

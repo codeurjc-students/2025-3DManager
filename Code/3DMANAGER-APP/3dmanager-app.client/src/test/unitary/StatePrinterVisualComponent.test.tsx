@@ -1,7 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
-// Simulamos la función tal como está en tu componente
 const renderPrinterStatus = (state: number, stateName: string) => {
     switch (state) {
         case 1:

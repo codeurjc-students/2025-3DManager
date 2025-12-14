@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace _3DMANAGER_APP.Server.Controllers
 {
     [ApiController]
+    [Route("api/v1/catalogs/[action]")]
     public class CatalogController : BaseController
     {
         private readonly ICatalogManager _catalogManager;
@@ -28,7 +29,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(CommonResponse<List<CatalogResponse>>), StatusCodes.Status200OK)]
         [ApiVersionNeutral]
-        [Tags("Catalog")]
+        [Tags("Catalogs")]
         [HttpGet]
         public CommonResponse<List<CatalogResponse>> GetFilamentType()
         {
@@ -46,7 +47,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(CommonResponse<List<CatalogResponse>>), StatusCodes.Status200OK)]
         [ApiVersionNeutral]
-        [Tags("Catalog")]
+        [Tags("Catalogs")]
         [HttpGet]
         public CommonResponse<List<CatalogResponse>> GetPrintState()
         {
@@ -64,7 +65,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(CommonResponse<List<CatalogResponse>>), StatusCodes.Status200OK)]
         [ApiVersionNeutral]
-        [Tags("Catalog")]
+        [Tags("Catalogs")]
         [HttpGet]
         public CommonResponse<List<CatalogResponse>> GetFilamentCatalog(int groupId)
         {
@@ -82,7 +83,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(CommonResponse<List<CatalogResponse>>), StatusCodes.Status200OK)]
         [ApiVersionNeutral]
-        [Tags("Catalog")]
+        [Tags("Catalogs")]
         [HttpGet]
         public CommonResponse<List<CatalogResponse>> GetPrinterCatalog(int groupId)
         {

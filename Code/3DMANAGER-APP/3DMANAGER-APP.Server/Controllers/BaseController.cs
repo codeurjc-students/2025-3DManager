@@ -2,7 +2,7 @@
 
 namespace _3DMANAGER_APP.Server.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/v1/[controller]/[action]")]
     [ApiController]
     public abstract class BaseController : ControllerBase
     {

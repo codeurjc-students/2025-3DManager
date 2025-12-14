@@ -7,7 +7,7 @@ namespace _3DMANAGER_APP.TEST.Models
 {
 
     /// <summary>
-    /// Fake del acceso a datos para CI: simula la respuesta de la BBDD
+    /// Fake DAL CI: a mock response from BBDD
     /// </summary>
     public class FakePrinterDbManager : IPrinterDbManager
     {

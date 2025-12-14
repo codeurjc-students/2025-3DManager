@@ -11,14 +11,14 @@ const CreateUserPage: React.FC = () => {
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault(); // Para no recargar la página
+        e.preventDefault(); 
 
         if (!userName || !userEmail || !userPassword) {
             alert("Todos los campos son obligatorios");
             return;
         }
         try {
-            // Llamada al servicio
+            
             const response = await postNewUser({
                 userName,
                 userEmail,

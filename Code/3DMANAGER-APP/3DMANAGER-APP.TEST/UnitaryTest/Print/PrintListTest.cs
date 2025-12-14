@@ -34,7 +34,7 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Print
         [Trait("Category", "Unitary")]
         public void GetPrintList_WhenDbReturnsData_ShouldConvertPrintTimeFromSecondsToFormattedString()
         {
-            // Arrange
+
             int groupId = 1;
 
             var dbResponse = new List<PrintListResponseDbObject>
@@ -63,7 +63,7 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Print
                 .Setup(db => db.GetPrintList(groupId))
                 .Returns(dbResponse);
 
-            // AutoMapper REAL
+
             var mapperConfig = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<PrintListResponseDbObject, PrintListResponse>()
@@ -81,10 +81,10 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Print
                 _loggerMock.Object
             );
 
-            // Act
+
             var result = manager.GetPrintList(groupId, out BaseError? error);
 
-            // Assert
+
             Assert.NotNull(result);
             Assert.Equal(2, result.Count);
             Assert.Null(error);

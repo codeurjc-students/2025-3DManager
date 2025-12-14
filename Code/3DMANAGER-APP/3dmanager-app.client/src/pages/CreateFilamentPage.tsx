@@ -31,7 +31,7 @@ const CreateFilamentPage: React.FC = () => {
     }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault(); // Para no recargar la página
+        e.preventDefault(); 
 
         if (!filamentName || !filamentType || !filamentWeight || !filamentColor || !filamentTemperature || !filamentLenght
             || !filamentThickness || !filamentCost ) {
@@ -41,7 +41,7 @@ const CreateFilamentPage: React.FC = () => {
         
         try {
             let groupId = user!.groupId!;
-            // Llamada al servicio
+            
             const response = await postFilament({
                 groupId,
                 filamentName, 

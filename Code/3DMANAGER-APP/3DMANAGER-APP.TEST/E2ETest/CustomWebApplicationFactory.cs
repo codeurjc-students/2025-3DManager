@@ -12,20 +12,19 @@ namespace _3DMANAGER_APP.TEST
         {
             builder.ConfigureServices(services =>
             {
-                // Detectar si estamos en CI (GitHub Actions u otro entorno sin BBDD)
+
                 var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
                 bool isCI = string.Equals(environment, "CI", StringComparison.OrdinalIgnoreCase);
 
                 if (isCI)
                 {
-                    // Buscar y eliminar la implementación real del DAL
                     var descriptor = services.SingleOrDefault(
                         d => d.ServiceType == typeof(IPrinterDbManager));
 
                     if (descriptor != null)
                         services.Remove(descriptor);
 
-                    // Registrar una fake implementation que no use MySQL
+
                     services.AddSingleton<IPrinterDbManager, FakePrinterDbManager>();
                 }
             });
