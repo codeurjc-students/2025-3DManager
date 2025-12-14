@@ -13,7 +13,27 @@ namespace _3DMANAGER_APP.TEST.Models
     {
         public List<PrinterListDbObject> GetPrinterDashboardList(int group)
         {
-            throw new NotImplementedException();
+            return new List<PrinterListDbObject>
+            {
+                new PrinterListDbObject
+                {
+                    PrinterId = 1,
+                    PrinterName = $"Impresora Dashboard 01 - Grupo {group}",
+                    PrinterModel = "Ender 3",
+                    PrinterDescription = "Impresora de prueba 3D",
+                    PrinterStateId = 1,
+                    PrinterStateName = "Disponible"
+                },
+                new PrinterListDbObject
+                {
+                    PrinterId = 2,
+                    PrinterName = $"Impresora Dashboard 02 - Grupo {group}",
+                    PrinterModel = "CR-10",
+                    PrinterDescription = "Impresora de prueba 3D",
+                    PrinterStateId = 2,
+                    PrinterStateName = "En uso"
+                }
+            };
         }
 
         public List<PrinterDbObject> GetPrinterList(out ErrorDbObject error)
