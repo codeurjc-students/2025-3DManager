@@ -119,9 +119,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.MapFallbackToFile("/index.html");
 app.MapGet("/health", () => Results.Ok("OK"));
+app.MapFallbackToFile("/index.html");
+
 
 app.Run();
 
