@@ -37,3 +37,33 @@ export function convertHumanTimeToSeconds(text: string): number {
 
     return total;
 }
+
+export function parseGcodeData(text: string) {
+    const lines = text.split("\n");
+
+    let timeValue = 0;
+    let filamentValue = 0;
+
+    for (let line of lines) {
+        const cleanLine = line.trim();
+        for (const pattern of timePatterns) {
+            const match = pattern.regex.exec(cleanLine);
+            if (match) {
+                timeValue = pattern.parse(match[1]);
+            }
+        }
+
+        for (const pattern of filamentPatterns) {
+            const match = pattern.regex.exec(cleanLine);
+            if (match) {
+                filamentValue = pattern.parse(match[1]);
+                break;
+            }
+        }
+    }
+
+    return {
+        time: timeValue,
+        filament: filamentValue
+    };
+}

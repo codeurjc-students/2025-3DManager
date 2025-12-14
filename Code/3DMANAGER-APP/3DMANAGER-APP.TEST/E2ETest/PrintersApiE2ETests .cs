@@ -5,11 +5,11 @@ using System.Net.Http.Json;
 
 namespace _3DMANAGER_APP.TEST.E2ETest
 {
-    public class PrinterApiE2ETests : IClassFixture<CustomWebApplicationFactory<Program>>
+    public class PrintersApiE2ETests : IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private readonly HttpClient _client;
 
-        public PrinterApiE2ETests(CustomWebApplicationFactory<Program> factory)
+        public PrintersApiE2ETests(CustomWebApplicationFactory<Program> factory)
         {
             _client = factory.CreateClient();
         }
@@ -17,7 +17,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         [Fact]
         public async Task GetPrinters_ShouldReturnPrinterList()
         {
-            var response = await _client.GetAsync("/api/Printer/GetPrinterList");
+            var response = await _client.GetAsync("/api/Printer/GetPrinterDashboardList?groupId=4");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 

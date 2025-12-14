@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { postPrint } from "../api/printService";
 import { getFilamentCatalog, getPrinterCatalog, getPrintState } from "../api/catalogService";
 import type { CatalogResponse } from "../models/catalog/CatalogResponse";
-import { timePatterns, filamentPatterns } from "../models/print/GCodePatterns";
+import { parseGcodeData } from "../models/print/GCodePatterns";
 
 const CreatePrint3DPage: React.FC = () => {
 
@@ -16,7 +16,6 @@ const CreatePrint3DPage: React.FC = () => {
     const [catalogState, setCatalogState] = useState<CatalogResponse[]>([]);
     const [catalogPrinter, setCatalogPrinter] = useState<CatalogResponse[]>([]);
     const [catalogFilament, setCatalogFilament] = useState<CatalogResponse[]>([]);
-    //const [gcodeFileContent, setGcodeFileContent] = useState("");
     const [printTime, setPrintTime] = useState<number>(0);
     const [printRealTimeH, setPrintRealTimeH] = useState<number>(0);
     const [printRealTimeM, setPrintRealTimeM] = useState<number>(0);
@@ -24,6 +23,7 @@ const CreatePrint3DPage: React.FC = () => {
     const { user } = useAuth();
 
     const navigate = useNavigate();
+    
 
     useEffect(() => {
         const loadCatalog = async () => {
@@ -55,32 +55,9 @@ const CreatePrint3DPage: React.FC = () => {
     };
 
     const parseGcode = (text: string) => {
-        const lines = text.split("\n");
-
-        let timeValue: number = 0;         
-        let filamentValue: number = 0;      
-
-        for (let line of lines) {
-            // Procesar tiempos
-            for (const pattern of timePatterns) {
-                const match = pattern.regex.exec(line);
-                if (match) {
-                    timeValue = pattern.parse(match[1]);
-                }
-            }
-
-            // Procesar filamento
-            for (const pattern of filamentPatterns) {
-                const match = pattern.regex.exec(line);
-                if (match) {
-                    filamentValue = pattern.parse(match[1]);
-                    break;
-                }
-            }
-        }
-
-        setPrintTime(timeValue);
-        setPrintFilamentUsed(filamentValue);
+        const { time, filament } = parseGcodeData(text);
+        setPrintTime(time);
+        setPrintFilamentUsed(filament);
     };
 
 
