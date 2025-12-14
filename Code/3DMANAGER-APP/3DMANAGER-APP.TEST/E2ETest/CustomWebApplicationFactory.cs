@@ -3,6 +3,7 @@ using _3DMANAGER_APP.TEST.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace _3DMANAGER_APP.TEST
 {
@@ -18,18 +19,17 @@ namespace _3DMANAGER_APP.TEST
 
                 if (isCI)
                 {
-                    var descriptor = services.SingleOrDefault(
-                        d => d.ServiceType == typeof(IPrinterDbManager));
-
-                    if (descriptor != null)
-                        services.Remove(descriptor);
-
+                    services.RemoveAll(typeof(IPrinterDbManager));
+                    services.RemoveAll(typeof(IFilamentDbManager));
+                    services.RemoveAll(typeof(IPrintDbManager));
+                    services.RemoveAll(typeof(IUserDbManager));
+                    services.RemoveAll(typeof(ICatalogDbManager));
 
                     services.AddSingleton<IPrinterDbManager, FakePrinterDbManager>();
                     services.AddSingleton<IFilamentDbManager, FakeFilamentDbManager>();
-                    services.AddSingleton<ICatalogDbManager, FakeCatalogDbManager>();
                     services.AddSingleton<IPrintDbManager, FakePrintDbManager>();
                     services.AddSingleton<IUserDbManager, FakeUserDbManager>();
+                    services.AddSingleton<ICatalogDbManager, FakeCatalogDbManager>();
                 }
             });
         }
