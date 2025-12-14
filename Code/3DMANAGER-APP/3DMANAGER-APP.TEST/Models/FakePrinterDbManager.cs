@@ -53,10 +53,5 @@ namespace _3DMANAGER_APP.TEST.Models
             return true;
         }
 
-        List<PrinterDbObject> IPrinterDbManager.GetPrinterList(out ErrorDbObject error)
-        {
-            error = null;
-            return new List<PrinterDbObject>();
-        }
     }
 }
