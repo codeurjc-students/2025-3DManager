@@ -26,6 +26,10 @@ namespace _3DMANAGER_APP.TEST
 
 
                     services.AddSingleton<IPrinterDbManager, FakePrinterDbManager>();
+                    services.AddSingleton<IFilamentDbManager, FakeFilamentDbManager>();
+                    services.AddSingleton<ICatalogDbManager, FakeCatalogDbManager>();
+                    services.AddSingleton<IPrintDbManager, FakePrintDbManager>();
+                    services.AddSingleton<IUserDbManager, FakeUserDbManager>();
                 }
             });
         }

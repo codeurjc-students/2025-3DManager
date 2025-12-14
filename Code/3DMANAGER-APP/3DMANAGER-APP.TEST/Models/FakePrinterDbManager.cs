@@ -29,12 +29,14 @@ namespace _3DMANAGER_APP.TEST.Models
 
         public bool PostPrinter(PrinterRequestDbObject request, out int? error)
         {
-            throw new NotImplementedException();
+            error = null;
+            return true;
         }
 
         List<PrinterDbObject> IPrinterDbManager.GetPrinterList(out ErrorDbObject error)
         {
-            throw new NotImplementedException();
+            error = null;
+            return new List<PrinterDbObject>();
         }
     }
 }
