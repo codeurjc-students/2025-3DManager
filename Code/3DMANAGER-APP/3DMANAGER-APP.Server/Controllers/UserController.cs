@@ -131,5 +131,46 @@ namespace _3DMANAGER_APP.Server.Controllers
 
             return new CommonResponse<List<UserListResponse>>(userList);
         }
+
+        /// <summary>
+        /// Return a user list
+        /// </summary>
+        /// <returns>A list of basic data users to invite for show in the dasboard user list invitation</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="400">Conflicto en servidor</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(CommonResponse<List<UserListResponse>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CommonResponse<List<UserListResponse>>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Users")]
+        [HttpGet]
+        public CommonResponse<List<UserListResponse>> GetUserInvitationList()
+        {
+            List<UserListResponse> userList = _userManager.GetUserInvitationList(out BaseError error);
+
+            if (userList == null || error != null)
+                return new CommonResponse<List<UserListResponse>>(new ErrorProperties(error.code, error.message));
+
+            return new CommonResponse<List<UserListResponse>>(userList);
+        }
+
+        /// <summary>
+        /// Return a user list
+        /// </summary>
+        /// <returns>A list of basic data users to invite for show in the dasboard user list invitation</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(CommonResponse<List<UserListResponse>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CommonResponse<List<UserListResponse>>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Users")]
+        [HttpPost]
+        public IActionResult PostUserInvitation([FromQuery] int groupId, [FromQuery] int userId)
+        {
+            _userManager.PostUserInvitation(groupId, userId);
+            return Ok();
+        }
     }
 }

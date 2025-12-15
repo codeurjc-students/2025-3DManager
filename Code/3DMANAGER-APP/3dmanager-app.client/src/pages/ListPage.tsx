@@ -3,19 +3,21 @@ import { useNavigate, useParams } from "react-router-dom";
 import FilamentList from "../components/FilamentList";
 import PrintList from "../components/PrintList";
 import UserList from "../components/UserList";
+import UserInvitationList from "../components/UserInvitationList";
 
 
 const TITLES: Record<string, string> = {
     filaments: "filamentos",
     users: "Usuarios",
-    prints: "Piezas"
+    prints: "Piezas",
+    invitation: "invitaciones usuario"
 };
 
 const ListPage: React.FC = () => {
 
     const { type } = useParams();
     const navigate = useNavigate();
-    const title = TITLES[type ?? ""] ?? "Listado";
+    const title = TITLES[type ?? ""] ?? "Iventario";
 
     return (
         <div className="container-fluid vh-100">
@@ -39,6 +41,7 @@ const ListPage: React.FC = () => {
                     {type === "filaments" && <FilamentList />}
                     {type === "users" && <UserList />}
                     {type === "prints" && <PrintList />}
+                    {type === "invitations" && <UserInvitationList />}
                 </div>
                 <div className="col-1"></div>
             </div>

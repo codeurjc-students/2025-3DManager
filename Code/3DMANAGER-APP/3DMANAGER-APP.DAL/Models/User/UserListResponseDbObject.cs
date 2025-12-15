@@ -19,8 +19,8 @@ namespace _3DMANAGER_APP.DAL.Models.User
 
             obj.UserId = row.Field<int>(UserIdColumnName);
             obj.UserName = row.Field<string>(UserNameColumnName);
-            obj.UserHours = row.Field<decimal>(UserHoursColumnName);
-            obj.UserNumberPrints = (int)row.Field<long>(UserNumberPrintsColumnName);
+            obj.UserHours = row.Table.Columns.Contains(UserHoursColumnName) ? row.Field<decimal>(UserHoursColumnName) : 0;
+            obj.UserNumberPrints = row.Table.Columns.Contains(UserHoursColumnName) ? (int)row.Field<long>(UserNumberPrintsColumnName) : 0;
 
             return obj;
         }
