@@ -6,12 +6,11 @@ import { getUserList } from '../api/userService';
 
 const UserList: React.FC = () => {
     
-    const { user } = useAuth();
     const [items, setItems] = useState<UserListResponse[]>([]);
     const navigate = useNavigate();
 
     useEffect(() => {
-        getUserList(user!.groupId!).then(response => {
+        getUserList().then(response => {
             setItems(response.data ?? []);
         });
     }, []);

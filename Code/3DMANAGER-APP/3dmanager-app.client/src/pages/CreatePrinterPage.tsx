@@ -20,7 +20,7 @@ const CreatePrinterPage: React.FC = () => {
         }
         
         try {
-            let groupId = user!.groupId!;
+            let groupId = -1;
             
             const response = await postPrinter({
                 printerName,

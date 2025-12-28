@@ -40,7 +40,7 @@ const CreateFilamentPage: React.FC = () => {
         }
         
         try {
-            let groupId = user!.groupId!;
+            let groupId = -1; //It is loaded from the authentication header on API. Its not send a real value
             
             const response = await postFilament({
                 groupId,

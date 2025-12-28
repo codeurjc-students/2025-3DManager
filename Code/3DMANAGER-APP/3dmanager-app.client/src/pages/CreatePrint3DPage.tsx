@@ -27,9 +27,9 @@ const CreatePrint3DPage: React.FC = () => {
 
     useEffect(() => {
         const loadCatalog = async () => {
-            const responseCFilament = await getFilamentCatalog(user!.groupId!);
+            const responseCFilament = await getFilamentCatalog();
             setCatalogFilament(responseCFilament.data!);
-            const responseCPrinter = await getPrinterCatalog(user!.groupId!);
+            const responseCPrinter = await getPrinterCatalog();
             setCatalogPrinter(responseCPrinter.data!);
             const responseCState = await getPrintState();
             setCatalogState(responseCState.data!);
@@ -70,8 +70,8 @@ const CreatePrint3DPage: React.FC = () => {
         }
         
         try {
-            let groupId = user!.groupId!;
-            let userId = user!.userId;
+            let groupId = -1;
+            let userId = -1;
             let printRealTime = printRealTimeH * 3600 + printRealTimeM * 60;
             const response = await postPrint({
                 userId,

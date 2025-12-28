@@ -34,6 +34,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpPost]
         public CommonResponse<bool> PostNewGroup(GroupRequest request)
         {
+            request.UserId = UserId;
             var response = _groupManager.PostNewGroup(request, out BaseError? error);
             if (error != null)
             {

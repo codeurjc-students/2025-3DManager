@@ -1,13 +1,11 @@
 ﻿import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 import { postNewGroup } from "../api/groupService";
 
 const CreateGroupPage: React.FC = () => {
 
     const [groupName, setGroupName] = useState("");
     const [groupDescription, setGroupDescription] = useState("");
-    const { user } = useAuth();
 
     const navigate = useNavigate();
 
@@ -20,7 +18,7 @@ const CreateGroupPage: React.FC = () => {
         }
         
         try {
-            let userId = user!.userId;
+            let userId = -1; //The real user id is loaded on API with the authentication header.
             
             const response = await postNewGroup({
                 groupName,

@@ -7,12 +7,11 @@ import { useNavigate } from 'react-router-dom';
 
 
 const FilamentList: React.FC = () => {
-    const { user } = useAuth();
     const [items, setItems] = useState<FilamentListResponse[]>([]);
     const navigate = useNavigate();
 
     useEffect(() => {
-        getFilamentList(user!.groupId!).then(response => {
+        getFilamentList().then(response => {
             setItems(response.data ?? []);
         });
     }, []);
