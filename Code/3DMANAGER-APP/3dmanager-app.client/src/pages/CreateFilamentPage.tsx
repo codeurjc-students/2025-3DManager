@@ -1,6 +1,5 @@
 ﻿import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 import { postFilament } from "../api/filamentService";
 import type { CatalogResponse } from "../models/catalog/CatalogResponse";
 import { getFilamentType } from "../api/catalogService";
@@ -18,7 +17,6 @@ const CreateFilamentPage: React.FC = () => {
     const [filamentDescription, setFilamentDescription] = useState("");
     const [catalogTypes, setCatalogTypes] = useState<CatalogResponse[]>([]);
 
-    const { user } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {

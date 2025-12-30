@@ -1,6 +1,5 @@
 ﻿import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 import type { UserListResponse } from '../models/user/UserListResponse';
 import { getUserList } from '../api/userService';
 

@@ -1,6 +1,5 @@
 ﻿import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 import { postPrinter } from "../api/printerService";
 
 const CreatePrinterPage: React.FC = () => {
@@ -8,7 +7,6 @@ const CreatePrinterPage: React.FC = () => {
     const [printerName, setPrinterName] = useState("");
     const [printerDescription, setPrinterDescription] = useState("");
     const [printerModel, setPrinterModel] = useState("");
-    const { user } = useAuth();
 
     const navigate = useNavigate();
 

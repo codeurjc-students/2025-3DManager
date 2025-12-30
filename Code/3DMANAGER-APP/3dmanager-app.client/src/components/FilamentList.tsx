@@ -1,5 +1,4 @@
 ﻿import React, { useEffect, useState } from 'react';
-import { useAuth } from '../context/AuthContext';
 import { getFilamentList } from '../api/filamentService';
 import type { FilamentListResponse } from '../models/filament/FilamentListResponse';
 import { useNavigate } from 'react-router-dom';
