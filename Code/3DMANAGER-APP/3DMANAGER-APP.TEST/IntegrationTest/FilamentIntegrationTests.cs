@@ -29,7 +29,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
         }
 
         [Fact]
-        public void Printer_ShouldReturnPrintersAndCreate()
+        public void Filament_ShouldReturnFilamentsAndCreate()
         {
             var dataSource = new MySQLDataSource(
                 _fixture.ConnectionString,

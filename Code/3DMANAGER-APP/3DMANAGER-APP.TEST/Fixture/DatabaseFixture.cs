@@ -18,6 +18,12 @@ namespace _3DMANAGER_APP.TEST.Fixture
 
             ConnectionString = config.GetConnectionString("TestConnection")
                 ?? throw new InvalidOperationException("ConnectionString para test no definida");
+            if (!ConnectionString.Contains("3dmanagerCI"))
+            {
+                throw new InvalidOperationException(
+                    "DatabaseFixture solo puede usarse contra la BBDD de CI/Test"
+                );
+            }
         }
 
         public async Task InitializeAsync()
@@ -88,11 +94,9 @@ namespace _3DMANAGER_APP.TEST.Fixture
             ('Grupo Test', 'Grupo de pruebas CI');
 
             INSERT INTO `3DMANAGER_USER`
-            (3DMANAGER_USER_NAME, 3DMANAGER_USER_PASSWORD, 3DMANAGER_USER_EMAIL, 3DMANAGER_USER_ROLE, 3DMANAGER_USER_GROUP_ID)
+            (USER_NAME,USER_PASSWORD,USER_EMAIL, USER_ROLE, USER_GROUP_ID)
             VALUES
-            ('user_test','password123','user@test.com',1,1),
-            ('userM_test','password123','userM@test.com',2,1),
-            ('userI_test','password123','userI@test.com',3,1);
+            ('user_test','AQAAAAIAAYagAAAAENxwolbYGMFDoMUv/KEjKYtH7Vg1yQ3J5BKFMYp30ZrCXD5Xz0bxofJaat+FUBgCDQ==','user@test.com',2,1);
 
             INSERT INTO `3DMANAGER_PRINTER`
             (3DMANAGER_PRINTER_NAME, 3DMANAGER_PRINTER_MODEL, 3DMANAGER_PRINTER_TIME_VARIATION, 3DMANAGER_PRINTER_STATE,
@@ -112,11 +116,12 @@ namespace _3DMANAGER_APP.TEST.Fixture
                 3DMANAGER_FILAMENT_TEMPERATURE,
                 3DMANAGER_FILAMENT_COLOR,
                 3DMANAGER_FILAMENT_GROUP_ID,
-                3DMANAGER_FILAMENT_MATERIAL_TYPE
+                3DMANAGER_FILAMENT_MATERIAL_TYPE,
+                3DMANAGER_FILAMENT_COST
             )
             VALUES
-            ('PLA Negro','Filamento de prueba',1,1000,800,1.75,200,'000000',1,1),
-            ('PLA Blanco','Filamento de prueba',1,1000,800,1.75,200,'000000',1,1);
+            ('PLA Negro','Filamento de prueba',1,1000,800,1.75,200,'000000',1,1,10),
+            ('PLA Blanco','Filamento de prueba',1,1000,800,1.75,200,'000000',1,1,20);
 
             INSERT INTO `3DMANAGER_3DPRINT`
             (
@@ -216,15 +221,15 @@ namespace _3DMANAGER_APP.TEST.Fixture
         {
             var sql = """
             CREATE TABLE IF NOT EXISTS `3DMANAGER_USER` (
-                `3DMANAGER_USER_ID` INT AUTO_INCREMENT PRIMARY KEY,
-                `3DMANAGER_USER_NAME` VARCHAR(100) NOT NULL,
-                `3DMANAGER_USER_PASSWORD` VARCHAR(100) NOT NULL,
-                `3DMANAGER_USER_EMAIL` VARCHAR(100) NOT NULL,
-                `3DMANAGER_USER_ROLE` INT NULL,
-                `3DMANAGER_USER_GROUP_ID` INT NOT NULL,
-                `3DMANAGER_USER_PHOTO_URL` VARCHAR(255),
-                `3DMANAGER_USER_REGISTER_DATE` DATETIME DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (`3DMANAGER_USER_GROUP_ID`)
+                `USER_ID` INT AUTO_INCREMENT PRIMARY KEY,
+                `USER_NAME` VARCHAR(100) NOT NULL,
+                `USER_PASSWORD` VARCHAR(100) NOT NULL,
+                `USER_EMAIL` VARCHAR(100) NOT NULL,
+                `USER_ROLE` INT NULL,
+                `USER_GROUP_ID` INT NOT NULL,
+                `USER_PHOTO_URL` VARCHAR(255),
+                `USER_REGISTER_DATE` DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (`USER_GROUP_ID`)
                     REFERENCES `3DMANAGER_GROUP` (`3DMANAGER_GROUP_ID`)
             );
             """;

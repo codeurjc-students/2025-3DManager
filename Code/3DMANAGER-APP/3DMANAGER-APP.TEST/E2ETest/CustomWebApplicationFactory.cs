@@ -1,9 +1,11 @@
-﻿using _3DMANAGER_APP.DAL.Interfaces;
-using _3DMANAGER_APP.TEST.Models;
+﻿using _3DMANAGER_APP.DAL.Base;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+
+using MySql.Data.MySqlClient;
 
 namespace _3DMANAGER_APP.TEST
 {
@@ -11,26 +13,28 @@ namespace _3DMANAGER_APP.TEST
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+            builder.UseEnvironment("CI");
+
+            builder.ConfigureAppConfiguration((context, config) =>
+            {
+                config.AddInMemoryCollection(new Dictionary<string, string?>
+                {
+                    ["ConnectionStrings:DefaultConnection"] =
+                        "Server=localhost;Port=3307;Database=3dmanagerCI;User=root;Password=password;"
+                });
+            });
+
             builder.ConfigureServices(services =>
             {
+                services.RemoveAll(typeof(IDataSource<MySqlConnection>));
 
-                var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-                bool isCI = string.Equals(environment, "CI", StringComparison.OrdinalIgnoreCase);
-
-                if (isCI)
+                services.AddScoped<IDataSource<MySqlConnection>>(sp =>
                 {
-                    services.RemoveAll(typeof(IPrinterDbManager));
-                    services.RemoveAll(typeof(IFilamentDbManager));
-                    services.RemoveAll(typeof(IPrintDbManager));
-                    services.RemoveAll(typeof(IUserDbManager));
-                    services.RemoveAll(typeof(ICatalogDbManager));
+                    var configuration = sp.GetRequiredService<IConfiguration>();
+                    var cs = configuration.GetConnectionString("DefaultConnection");
 
-                    services.AddSingleton<IPrinterDbManager, FakePrinterDbManager>();
-                    services.AddSingleton<IFilamentDbManager, FakeFilamentDbManager>();
-                    services.AddSingleton<IPrintDbManager, FakePrintDbManager>();
-                    services.AddSingleton<IUserDbManager, FakeUserDbManager>();
-                    services.AddSingleton<ICatalogDbManager, FakeCatalogDbManager>();
-                }
+                    return new MySQLDataSource(cs!, "3DMANAGER");
+                });
             });
         }
     }
