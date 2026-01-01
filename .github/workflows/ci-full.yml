@@ -16,6 +16,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Start MySQL BBDD docker
+        run: docker run -d --name mysql-ci -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=3dmanagerCI -p 3307:3306 mysql:8.0   
+      
+      - name: Wait for MySQL docker
+        run: until docker exec mysql-ci mysqladmin ping -h "127.0.0.1" --silent; do sleep 2 done
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
