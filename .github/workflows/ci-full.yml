@@ -42,6 +42,7 @@ jobs:
       - name: Run full test suite (.NET)
         env:
           ASPNETCORE_ENVIRONMENT: CI
+          ConnectionStrings__TestConnection: "Server=localhost;Port=3307;Database=3dmanagerCI;User=root;Password=password;"
         run: dotnet test Code/3DMANAGER-APP/3DMANAGER-APP.TEST/3DMANAGER-APP.TEST.csproj --no-build --configuration Release
         
 
