@@ -65,10 +65,14 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Run API (CI)
-        run: dotnet run --project Code/3DMANAGER-APP/3DMANAGER-APP.Server/3DMANAGER-APP.Server.csproj --urls http://localhost:5000 &
+        run: |
+          nohup dotnet run \
+          --project Code/3DMANAGER-APP/3DMANAGER-APP.Server/3DMANAGER-APP.Server.csproj \
+          --urls http://localhost:5000 \
+          > api.log 2>&1 &
         env:
           ASPNETCORE_ENVIRONMENT: CI
-          ConnectionStrings__TestConnection: "Server=localhost;Port=3307;Database=3dmanagerCI;User=root;Password=password;"
+          ConnectionStrings__DefaultConnection: "Server=localhost;Port=3307;Database=3dmanagerCI;User=root;Password=password;"
     
       - name: Wait for API
         run: npx wait-on http://localhost:5000/health
