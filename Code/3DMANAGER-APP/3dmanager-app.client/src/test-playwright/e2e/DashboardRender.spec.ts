@@ -1,4 +1,5 @@
 ﻿import { test, expect } from '@playwright/test';
+import { loginIfCI } from './AuthHelperTest';
 
 test.describe('DashboardActionsE2E', () => {
 
@@ -6,10 +7,7 @@ test.describe('DashboardActionsE2E', () => {
     test('DashboardManager', async ({ page }) => {
         
         await page.goto('/');
-        await page.fill('#userLogin', 'ivicenter');
-        await page.fill('#userPass', '12345');
-        await page.click('button[type="submit"]');
-        await page.waitForURL('/dashboard');
+        await loginIfCI(page);
 
         await expect(page.locator('text=Subir archivo G-Code')).toBeVisible();
         await expect(page.locator('text=Añadir')).toBeVisible();

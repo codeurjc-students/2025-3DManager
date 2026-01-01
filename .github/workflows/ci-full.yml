@@ -53,6 +53,26 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Start MySQL BBDD docker
+        run: docker run -d --name mysql-ci -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=3dmanagerCI -p 3307:3306 mysql:8.0   
+      
+      - name: Wait for MySQL docker
+        run: until docker exec mysql-ci mysqladmin ping -h "127.0.0.1" --silent; do sleep 2; done
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Run API (CI)
+        run: dotnet run --project Code/3DMANAGER-APP/3DMANAGER-APP.Server/3DMANAGER-APP.Server.csproj --urls http://localhost:5000 &
+        env:
+          ASPNETCORE_ENVIRONMENT: CI
+          ConnectionStrings__TestConnection: "Server=localhost;Port=3307;Database=3dmanagerCI;User=root;Password=password;"
+    
+      - name: Wait for API
+        run: npx wait-on http://localhost:5000/health
+
       - uses: actions/setup-node@v3
         with:
           node-version: '20'
@@ -79,14 +99,6 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
         working-directory: Code/3DMANAGER-APP/3dmanager-app.client
-        
-      #- name: Start backend server
-      #  run: dotnet run --project Code/3DMANAGER-APP/3DMANAGER-APP.Server/3DMANAGER-APP.Server.csproj --urls "http://localhost:5000" &
-      #  env:
-      #    ASPNETCORE_ENVIRONMENT: CI
-          
-      #- name: Wait for backend
-      #  run: npx wait-on http://localhost:5000/health
 
       - name: Start frontend
         run: npm run dev -- --port 3001 &

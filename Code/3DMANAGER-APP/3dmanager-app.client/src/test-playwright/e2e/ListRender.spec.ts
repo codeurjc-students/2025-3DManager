@@ -1,11 +1,11 @@
 ﻿import { test, expect } from '@playwright/test';
+import { loginIfCI } from './AuthHelperTest';
 
 test.describe('ListRenderE2E', () => {
 
     test('FilamentListPageRender', async ({ page }) => {
         await page.goto('/');
-        await page.click('button:text("Acceder como invitado")');
-        await page.waitForURL('/dashboard');
+        await loginIfCI(page);
         await page.goto('dashboard/lists/filaments');
 
         const headers = page.locator('table thead th');
@@ -29,8 +29,7 @@ test.describe('ListRenderE2E', () => {
     test('PrintListPageRender', async ({ page }) => {
         
         await page.goto('/');
-        await page.click('button:text("Acceder como invitado")');
-        await page.waitForURL('/dashboard');
+        await loginIfCI(page);
         await page.goto('dashboard/lists/prints');
 
         
@@ -56,8 +55,7 @@ test.describe('ListRenderE2E', () => {
     test('UserListPageRender', async ({ page }) => {
         
         await page.goto('/');
-        await page.click('button:text("Acceder como invitado")');
-        await page.waitForURL('/dashboard');
+        await loginIfCI(page);
         await page.goto('dashboard/lists/users');
 
         
