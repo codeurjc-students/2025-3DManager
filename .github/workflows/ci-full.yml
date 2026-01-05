@@ -63,20 +63,43 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.0.x'
+          
+      - name: Restore Server project
+        run: dotnet restore Code/3DMANAGER-APP/3DMANAGER-APP.Server/3DMANAGER-APP.Server.csproj
 
+      - name: Build Server project
+        run: dotnet build Code/3DMANAGER-APP/3DMANAGER-APP.Server/3DMANAGER-APP.Server.csproj --no-restore --configuration Release
+        
       - name: Run API (CI)
         run: |
-          nohup dotnet run \
+          dotnet run \
           --project Code/3DMANAGER-APP/3DMANAGER-APP.Server/3DMANAGER-APP.Server.csproj \
           --urls http://localhost:5000 \
           > api.log 2>&1 &
         env:
           ASPNETCORE_ENVIRONMENT: CI
           ConnectionStrings__DefaultConnection: "Server=localhost;Port=3307;Database=3dmanagerCI;User=root;Password=password;"
-    
+          
+      - name: Sleep for API startup
+        run: sleep 10
+        
       - name: Wait for API
-        run: npx wait-on http://localhost:5000/health
+        run: npx wait-on http://localhost:5000/health --timeout 30000
 
+      - name: Print API log on failure
+        if: failure()
+        run: |
+          echo "========== API LOG =========="
+          cat api.log || echo "api.log not found"
+          echo "============================="
+          
+      - name: Print API log (always)
+        if: always()
+        run: |
+          echo "========== API LOG =========="
+          cat api.log || echo "api.log not found"
+          echo "============================="    
+          
       - uses: actions/setup-node@v3
         with:
           node-version: '20'
