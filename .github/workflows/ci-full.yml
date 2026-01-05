@@ -82,10 +82,10 @@ jobs:
           ConnectionStrings__DefaultConnection: "Server=localhost;Port=3307;Database=3dmanagerCI;User=root;Password=password;"
           
       - name: Sleep for API startup
-        run: sleep 10
+        run: sleep 5
         
       - name: Wait for API
-        run: npx wait-on http://localhost:5000/swagger
+        npx wait-on http://localhost:5000/health --timeout 60000
 
       - name: Print API log on failure
         if: failure()
