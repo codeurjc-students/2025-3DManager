@@ -85,7 +85,7 @@ jobs:
         run: sleep 10
         
       - name: Wait for API
-        run: npx wait-on http://localhost:5000/health --timeout 30000
+        run: npx wait-on http://localhost:5000/swagger
 
       - name: Print API log on failure
         if: failure()
