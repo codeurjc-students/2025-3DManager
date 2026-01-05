@@ -73,6 +73,7 @@ jobs:
       - name: Run API (CI)
         run: |
           dotnet run \
+          --no-launch-profile \
           --project Code/3DMANAGER-APP/3DMANAGER-APP.Server/3DMANAGER-APP.Server.csproj \
           --urls http://localhost:5000 \
           > api.log 2>&1 &
@@ -92,13 +93,6 @@ jobs:
           echo "========== API LOG =========="
           cat api.log || echo "api.log not found"
           echo "============================="
-          
-      - name: Print API log (always)
-        if: always()
-        run: |
-          echo "========== API LOG =========="
-          cat api.log || echo "api.log not found"
-          echo "============================="    
           
       - uses: actions/setup-node@v3
         with:
