@@ -50,6 +50,10 @@ jobs:
     name: Build and Test client
     runs-on: ubuntu-latest
 
+    env:
+      ASPNETCORE_ENVIRONMENT: CI
+      ConnectionStrings__DefaultConnection: "Server=localhost;Port=3307;Database=3dmanagerCI;User=root;Password=password;"
+
     steps:
       - uses: actions/checkout@v3
 
