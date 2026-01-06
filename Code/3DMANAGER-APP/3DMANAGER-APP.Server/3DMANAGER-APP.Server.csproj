@@ -37,6 +37,7 @@
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
     <ProjectReference Include="..\3DMANAGER-APP.DAL\3DMANAGER-APP.DAL.csproj" />
+    <ProjectReference Include="..\TestingSupport\3DMANAGER-APP.TestingSupport.csproj" />
   </ItemGroup>
 
   <ItemGroup>
