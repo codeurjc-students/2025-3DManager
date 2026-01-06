@@ -7,9 +7,9 @@ export async function loginIfCI(page: Page) {
         await page.click('button:text("Acceder como invitado")');
         return;
     }
-
-    await page.fill('#userLogin', 'ci_user');
-    await page.fill('#userPass', 'ci_password');
+    
+    await page.fill('#userLogin', 'user_test');
+    await page.fill('#userPass', 'password123');
     await page.click('button[type="submit"]');
     await page.waitForURL('/dashboard');
 }
