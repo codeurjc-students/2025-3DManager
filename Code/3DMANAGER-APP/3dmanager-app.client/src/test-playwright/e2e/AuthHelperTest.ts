@@ -1,4 +1,4 @@
-import { request, type APIRequestContext, type Page } from "@playwright/test";
+import { request} from "@playwright/test";
 
 const API_URL = process.env.CI
     ? 'http://localhost:5000'
