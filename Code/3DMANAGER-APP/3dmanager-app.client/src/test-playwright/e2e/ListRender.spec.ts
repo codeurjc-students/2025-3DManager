@@ -1,12 +1,11 @@
 ﻿import { test, expect } from '@playwright/test';
-import { loginIfCI } from './AuthHelperTest';
 
 test.describe('ListRenderE2E', () => {
 
     test('FilamentListPageRender', async ({ page }) => {
-        await page.goto('/');
-        await loginIfCI(page);
         await page.goto('dashboard/lists/filaments');
+
+        await page.waitForSelector('#listContainer');
 
         const headers = page.locator('table thead th');
         await expect(headers.nth(0)).toHaveText('Nombre');
@@ -17,6 +16,7 @@ test.describe('ListRenderE2E', () => {
 
     
         const rows = page.locator('table tbody tr');
+        await expect(rows.first()).toBeVisible({ timeout: 10000 });
         const rowCount = await rows.count();
         expect(rowCount).toBeGreaterThan(0);
  
@@ -28,10 +28,8 @@ test.describe('ListRenderE2E', () => {
 
     test('PrintListPageRender', async ({ page }) => {
         
-        await page.goto('/');
-        await loginIfCI(page);
         await page.goto('dashboard/lists/prints');
-
+        await page.waitForSelector('#listContainer');
         
         const headers = page.locator('table thead th');
         await expect(headers.nth(0)).toHaveText('Nombre');
@@ -43,6 +41,7 @@ test.describe('ListRenderE2E', () => {
 
         
         const rows = page.locator('table tbody tr');
+        await expect(rows.first()).toBeVisible({ timeout: 10000 });
         const rowCount = await rows.count();
         expect(rowCount).toBeGreaterThan(0);
 
@@ -54,10 +53,9 @@ test.describe('ListRenderE2E', () => {
 
     test('UserListPageRender', async ({ page }) => {
         
-        await page.goto('/');
-        await loginIfCI(page);
         await page.goto('dashboard/lists/users');
 
+        await page.waitForSelector('#listContainer');
         
         const headers = page.locator('table thead th');
         await expect(headers.nth(0)).toHaveText('Nombre');
@@ -67,6 +65,7 @@ test.describe('ListRenderE2E', () => {
 
         
         const rows = page.locator('table tbody tr');
+        await expect(rows.first()).toBeVisible({ timeout: 10000 });
         const rowCount = await rows.count();
         expect(rowCount).toBeGreaterThan(0);
 

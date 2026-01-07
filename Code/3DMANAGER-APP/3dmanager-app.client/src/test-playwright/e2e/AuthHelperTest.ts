@@ -1,15 +1,32 @@
-import type { Page } from "@playwright/test";
+import { request, type APIRequestContext, type Page } from "@playwright/test";
 
-export async function loginIfCI(page: Page) {
-    const isCI = process.env.VITE_CI === 'true';
+const API_URL = process.env.CI
+    ? 'http://localhost:5000'
+    : 'https://localhost:443';
 
-    if (!isCI) {
-        await page.click('button:text("Acceder como invitado")');
-        return;
-    }
+export async function loginByApi() {
+    const context = await request.newContext({
+        ignoreHTTPSErrors: true,
+    });
     
-    await page.fill('#userLogin', 'user_test');
-    await page.fill('#userPass', 'password123');
-    await page.click('button[type="submit"]');
-    await page.waitForURL('/dashboard');
+    const response = process.env.CI ? await context.post(
+        `${API_URL}/api/v1/users/Login`,
+        {
+            data: {
+                userName: 'user_test',
+                userPassword: 'password123'
+            }
+        }
+    ) : await context.post(`${API_URL}/api/v1/users/LoginGuest`);
+
+    if (!response.ok()) {
+        throw new Error('Login por API falló');
+    }
+
+    const body = await response.json();
+
+    return {
+        user: body.data.user,
+        token: body.data.token
+    };
 }

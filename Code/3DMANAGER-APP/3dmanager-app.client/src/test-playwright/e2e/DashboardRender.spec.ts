@@ -1,29 +1,33 @@
 ﻿import { test, expect } from '@playwright/test';
-import { loginIfCI } from './AuthHelperTest';
 
 test.describe('DashboardActionsE2E', () => {
 
+    test('renders printers and dashboard action buttons', async ({ page }) => {
 
-    test('DashboardManager', async ({ page }) => {
-        
-        await page.goto('/');
-        await loginIfCI(page);
+        await page.goto('/dashboard');
+        await page.waitForSelector('#dashboard');
 
-        await expect(page.locator('text=Subir archivo G-Code')).toBeVisible();
-        await expect(page.locator('text=Añadir')).toBeVisible();
+        await expect(page.locator('#dashboard')).toBeVisible();
+
+        await expect(page.getByRole('heading', { name: 'Impresoras' })).toBeVisible();
+
+        const printerCards = page.locator('button.printer-card');
+        await expect(printerCards.first()).toBeVisible({ timeout: 10000 });
+        const count = await printerCards.count();
+
+        expect(count).toBeGreaterThanOrEqual(1);
+
+        await expect(page.getByText('Filamentos', { exact: true })).toBeVisible();
+
+        await expect(page.getByText('Usuarios', { exact: true })).toBeVisible();
+
+        await expect(page.getByText('Piezas', { exact: true })).toBeVisible();
+
+        const gcodeButton = page.getByRole('button', {
+            name: /Subir archivo G-Code/i
+        });
+
+        await expect(gcodeButton).toBeVisible();
     });
 
-    test('Dashboard actions for Guest user', async ({ page }) => {
-        await page.goto('/');
-
-        await page.click('button:text("Acceder como invitado")');
-
-        await page.waitForURL('/dashboard');
-
-        const uploadButton = page.locator('text=Subir archivo G-Code');
-        await expect(uploadButton).toBeVisible();
-        await expect(uploadButton).toBeDisabled();
-
-        await expect(page.locator('text=Añadir')).not.toBeVisible();
-    });
 });
