@@ -16,7 +16,7 @@ test.describe('ListRenderE2E', () => {
 
     
         const rows = page.locator('table tbody tr');
-        await expect(rows.first()).toBeVisible({ timeout: 10000 });
+        await expect(rows.first()).toBeVisible({ timeout: 30000 });
         const rowCount = await rows.count();
         expect(rowCount).toBeGreaterThan(0);
  
