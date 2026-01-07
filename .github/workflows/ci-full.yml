@@ -130,7 +130,10 @@ jobs:
         working-directory: Code/3DMANAGER-APP/3dmanager-app.client
         env:
           VITE_CI: "true"
-
+      - name: Print sample data
+        run: |
+          echo "Users:"
+          curl -s http://localhost:5000/api/v1/users | head -n 20
       - name: Wait for frontend
         run: npx wait-on http://localhost:3001
 
