@@ -3,7 +3,7 @@
 test.describe('ListRenderE2E', () => {
 
     test('FilamentListPageRender', async ({ page }) => {
-        await page.goto('dashboard/lists/filaments');
+        await page.goto('/dashboard/lists/filaments');
 
         await page.waitForSelector('#listContainer');
 
@@ -28,7 +28,7 @@ test.describe('ListRenderE2E', () => {
 
     test('PrintListPageRender', async ({ page }) => {
         
-        await page.goto('dashboard/lists/prints');
+        await page.goto('/dashboard/lists/prints');
         await page.waitForSelector('#listContainer');
         
         const headers = page.locator('table thead th');
@@ -53,7 +53,7 @@ test.describe('ListRenderE2E', () => {
 
     test('UserListPageRender', async ({ page }) => {
         
-        await page.goto('dashboard/lists/users');
+        await page.goto('/dashboard/lists/users');
 
         await page.waitForSelector('#listContainer');
         
