@@ -92,7 +92,7 @@ jobs:
         run: npx wait-on http-get://localhost:5000/health --timeout 60000
 
       - name: Seed database explicitly
-        run: dotnet run --project Code/3DMANAGER-APP/3DMANAGER-APP.TestingSupport/3DMANAGER-APP.TestingSupport.csproj
+        run: dotnet run --project Code/3DMANAGER-APP/TestingSupport/3DMANAGER-APP.TestingSupport.csproj
         env:
           ConnectionStrings__DefaultConnection: "Server=localhost;Port=3307;Database=3dmanagerCI;User=root;Password=password;"
           
