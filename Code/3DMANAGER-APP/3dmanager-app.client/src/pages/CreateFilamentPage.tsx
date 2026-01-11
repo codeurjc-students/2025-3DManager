@@ -1,6 +1,5 @@
 ﻿import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 import { postFilament } from "../api/filamentService";
 import type { CatalogResponse } from "../models/catalog/CatalogResponse";
 import { getFilamentType } from "../api/catalogService";
@@ -18,7 +17,6 @@ const CreateFilamentPage: React.FC = () => {
     const [filamentDescription, setFilamentDescription] = useState("");
     const [catalogTypes, setCatalogTypes] = useState<CatalogResponse[]>([]);
 
-    const { user } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -40,7 +38,7 @@ const CreateFilamentPage: React.FC = () => {
         }
         
         try {
-            let groupId = user!.groupId!;
+            let groupId = -1; //It is loaded from the authentication header on API. Its not send a real value
             
             const response = await postFilament({
                 groupId,

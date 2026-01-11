@@ -14,8 +14,8 @@ export const postPrinter = async (data: PrinterRequest): Promise<CommonResponse<
     return response.data
 }
 
-export const getPrinterDahsboardList = async (groupId: number): Promise<CommonResponse<PrinterDashboardObject[]>> => {
-    const response = await apiClient.get<CommonResponse<PrinterDashboardObject[]>>(`/api/v1/printers/GetPrinterDashboardList`, { params: { groupId } });
+export const getPrinterDahsboardList = async (): Promise<CommonResponse<PrinterDashboardObject[]>> => {
+    const response = await apiClient.get<CommonResponse<PrinterDashboardObject[]>>("/api/v1/printers/GetPrinterDashboardList");
     return response.data;
 }
 

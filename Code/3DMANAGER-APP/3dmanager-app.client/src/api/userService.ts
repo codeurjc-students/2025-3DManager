@@ -20,7 +20,7 @@ export const LoginGuest = async (): Promise<CommonResponse<LoginResponse>> => {
     return response.data;
 }
 
-export const getUserList = async (groupId: number): Promise<CommonResponse<UserListResponse[]>> => {
-    const response = await apiClient.get<CommonResponse<UserListResponse[]>>(`/api/v1/users/GetUserList`, { params: { groupId } });
+export const getUserList = async (): Promise<CommonResponse<UserListResponse[]>> => {
+    const response = await apiClient.get<CommonResponse<UserListResponse[]>>("/api/v1/users/GetUserList");
     return response.data;
 }

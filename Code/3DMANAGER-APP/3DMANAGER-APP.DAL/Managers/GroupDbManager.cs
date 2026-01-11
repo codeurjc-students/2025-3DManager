@@ -25,7 +25,7 @@ namespace _3DMANAGER_APP.DAL.Managers
 
                 cmd.Parameters.Add(new MySqlParameter("P_DS_GROUP_NAME", MySqlDbType.VarChar) { Value = request.GroupName });
                 cmd.Parameters.Add(new MySqlParameter("P_DS_GROUP_DESCRIPTION", MySqlDbType.VarChar) { Value = request.GroupDescription });
-                cmd.Parameters.Add(new MySqlParameter("P_CD_USER_ID", MySqlDbType.VarChar) { Value = request.UserId });
+                cmd.Parameters.Add(new MySqlParameter("P_CD_USER_ID", MySqlDbType.Int32) { Value = request.UserId });
 
                 var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);

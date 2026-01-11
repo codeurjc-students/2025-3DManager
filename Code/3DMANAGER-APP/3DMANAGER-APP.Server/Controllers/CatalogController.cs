@@ -67,9 +67,9 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Tags("Catalogs")]
         [HttpGet]
-        public CommonResponse<List<CatalogResponse>> GetFilamentCatalog(int groupId)
+        public CommonResponse<List<CatalogResponse>> GetFilamentCatalog()
         {
-            List<CatalogResponse> catalog = _catalogManager.GetFilamentCatalog(groupId);
+            List<CatalogResponse> catalog = _catalogManager.GetFilamentCatalog(GroupId);
             return new CommonResponse<List<CatalogResponse>>(catalog);
         }
 
@@ -85,9 +85,9 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Tags("Catalogs")]
         [HttpGet]
-        public CommonResponse<List<CatalogResponse>> GetPrinterCatalog(int groupId)
+        public CommonResponse<List<CatalogResponse>> GetPrinterCatalog()
         {
-            List<CatalogResponse> catalog = _catalogManager.GetPrinterCatalog(groupId);
+            List<CatalogResponse> catalog = _catalogManager.GetPrinterCatalog(GroupId);
             return new CommonResponse<List<CatalogResponse>>(catalog);
         }
     }

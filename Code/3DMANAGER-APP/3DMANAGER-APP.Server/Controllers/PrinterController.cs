@@ -59,6 +59,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpPost]
         public CommonResponse<bool> PostPrinter(PrinterRequest printer)
         {
+            printer.GroupId = GroupId;
             _printerManager.PostPrinter(printer, out BaseError? error);
             if (error != null)
             {
@@ -81,9 +82,9 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Tags("Printers")]
         [HttpGet]
-        public CommonResponse<List<PrinterListObject>> GetPrinterDashboardList([FromQuery] int groupId)
+        public CommonResponse<List<PrinterListObject>> GetPrinterDashboardList()
         {
-            List<PrinterListObject> printerList = _printerManager.GetPrinterDashboardList(groupId, out BaseError error);
+            List<PrinterListObject> printerList = _printerManager.GetPrinterDashboardList(GroupId, out BaseError error);
 
             if (printerList == null || error != null)
                 return new CommonResponse<List<PrinterListObject>>(new ErrorProperties(error.code, error.message));

@@ -3,8 +3,8 @@ import type { CommonResponse } from '../models/base/CommonResponse'
 import type { FilamentListResponse } from '../models/filament/FilamentListResponse';
 import type { FilamentRequest } from '../models/filament/FilamentRequest';
 
-export const getFilamentList = async (groupId: number): Promise<CommonResponse<FilamentListResponse[]>> => {
-    const response = await apiClient.get<CommonResponse<FilamentListResponse[]>>(`/api/v1/filaments/GetFilamentList`, { params: { groupId } });
+export const getFilamentList = async (): Promise<CommonResponse<FilamentListResponse[]>> => {
+    const response = await apiClient.get<CommonResponse<FilamentListResponse[]>>(`/api/v1/filaments/GetFilamentList`);
     return response.data;
 }
 

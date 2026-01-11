@@ -34,9 +34,9 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Tags("Prints")]
         [HttpGet]
-        public CommonResponse<List<PrintListResponse>> GetPrintList([FromQuery] int groupId)
+        public CommonResponse<List<PrintListResponse>> GetPrintList()
         {
-            List<PrintListResponse> userList = _printManager.GetPrintList(groupId, out BaseError error);
+            List<PrintListResponse> userList = _printManager.GetPrintList(GroupId, out BaseError error);
 
             if (userList == null || error != null)
                 return new CommonResponse<List<PrintListResponse>>(new ErrorProperties(error.code, error.message));
@@ -58,6 +58,8 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpPost]
         public CommonResponse<bool> PostPrint([FromBody] PrintRequest print)
         {
+            print.GroupId = GroupId;
+            print.UserId = UserId;
             _printManager.PostPrint(print, out BaseError? error);
             if (error != null)
             {

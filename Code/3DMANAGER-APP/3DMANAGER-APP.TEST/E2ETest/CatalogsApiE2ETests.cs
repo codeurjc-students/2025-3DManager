@@ -1,17 +1,19 @@
 ﻿using _3DMANAGER_APP.BLL.Models.Catalog;
 using _3DMANAGER_APP.Server.Models;
+using _3DMANAGER_APP.TEST.Fixture;
 using System.Net;
 using System.Net.Http.Json;
 
 namespace _3DMANAGER_APP.TEST.E2ETest
 {
-    public class CatalogsApiE2ETests : IClassFixture<CustomWebApplicationFactory<Program>>
+    [Collection("Database")]
+    public class CatalogsApiE2ETests : IClassFixture<AuthenticatedClientFixture>
     {
         private readonly HttpClient _client;
 
-        public CatalogsApiE2ETests(CustomWebApplicationFactory<Program> factory)
+        public CatalogsApiE2ETests(AuthenticatedClientFixture authFixture)
         {
-            _client = factory.CreateClient();
+            _client = authFixture.Client;
         }
 
         [Fact]
@@ -39,7 +41,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         [Fact]
         public async Task GetFilamentsCatalog_ShouldReturnCatalogFilamentsList()
         {
-            var response = await _client.GetAsync("/api/v1/catalogs/GetFilamentCatalog?groupId=4");
+            var response = await _client.GetAsync("/api/v1/catalogs/GetFilamentCatalog");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
@@ -50,7 +52,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         [Fact]
         public async Task GetPrintersCatalog_ShouldReturnCatalogPrintersList()
         {
-            var response = await _client.GetAsync("/api/v1/catalogs/GetPrinterCatalog?groupId=4");
+            var response = await _client.GetAsync("/api/v1/catalogs/GetPrinterCatalog");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 

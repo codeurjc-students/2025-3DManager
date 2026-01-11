@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace _3DMANAGER_APP.Server.Controllers
 {
@@ -12,5 +13,13 @@ namespace _3DMANAGER_APP.Server.Controllers
         {
             _logger = logger;
         }
+        protected int UserId =>
+        int.Parse(User.FindFirst("userId")!.Value);
+
+        protected int GroupId =>
+            int.Parse(User.FindFirst("groupId")!.Value);
+
+        protected string UserRole =>
+            User.FindFirst(ClaimTypes.Role)?.Value ?? "";
     }
 }

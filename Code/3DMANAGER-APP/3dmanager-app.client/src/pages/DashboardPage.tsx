@@ -2,16 +2,14 @@
 import DashboardActions from "../components/DashboardActions";
 import { useNavigate } from "react-router-dom";
 import { getPrinterDahsboardList } from "../api/printerService";
-import { useAuth } from "../context/AuthContext";
 import type { PrinterDashboardObject } from "../models/printer/PrinterDashboardObject";
 
 const DashboardPage: React.FC = () => {
-    const { user } = useAuth();
     const [printers, setPrinters] = useState<PrinterDashboardObject[]>([]);
     const navigate = useNavigate();
 
     useEffect(() => {
-        getPrinterDahsboardList(user!.groupId!).then(response => {
+        getPrinterDahsboardList().then(response => {
             setPrinters(response.data ?? []);
         });
     }, []);

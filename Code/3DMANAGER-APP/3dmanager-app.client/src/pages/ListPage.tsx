@@ -18,7 +18,7 @@ const ListPage: React.FC = () => {
     const title = TITLES[type ?? ""] ?? "Listado";
 
     return (
-        <div className="container-fluid vh-100">
+        <div id="listContainer" className="container-fluid vh-100">
             <div className="row h-10">
                 <div className="col-10">
                     <h2 className="title-impact-2 mt-3 mb-1">Listado {title}</h2>
