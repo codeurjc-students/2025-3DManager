@@ -34,8 +34,8 @@ if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
     }
 }
 
-const isCI = process.env.ASPNETCORE_ENVIRONMENT === 'CI';
 
+const isCI = process.env.VITE_CI === 'true';
 const target = isCI
     ? 'http://localhost:5000'
     : env.ASPNETCORE_HTTPS_PORT

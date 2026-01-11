@@ -1,23 +1,25 @@
 ﻿using _3DMANAGER_APP.BLL.Models.Printer;
 using _3DMANAGER_APP.Server.Models;
+using _3DMANAGER_APP.TEST.Fixture;
 using System.Net;
 using System.Net.Http.Json;
 
 namespace _3DMANAGER_APP.TEST.E2ETest
 {
-    public class PrintersApiE2ETests : IClassFixture<CustomWebApplicationFactory<Program>>
+    [Collection("Database")]
+    public class PrintersApiE2ETests : IClassFixture<AuthenticatedClientFixture>
     {
         private readonly HttpClient _client;
 
-        public PrintersApiE2ETests(CustomWebApplicationFactory<Program> factory)
+        public PrintersApiE2ETests(AuthenticatedClientFixture authFixture)
         {
-            _client = factory.CreateClient();
+            _client = authFixture.Client;
         }
 
         [Fact]
         public async Task GetPrinters_ShouldReturnPrinterList()
         {
-            var response = await _client.GetAsync("/api/v1/printers/GetPrinterDashboardList?groupId=4");
+            var response = await _client.GetAsync("/api/v1/printers/GetPrinterDashboardList");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 

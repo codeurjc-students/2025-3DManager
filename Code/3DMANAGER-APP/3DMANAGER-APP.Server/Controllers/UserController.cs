@@ -122,9 +122,9 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Tags("Users")]
         [HttpGet]
-        public CommonResponse<List<UserListResponse>> GetUserList([FromQuery] int groupId)
+        public CommonResponse<List<UserListResponse>> GetUserList()
         {
-            List<UserListResponse> userList = _userManager.GetUserList(groupId, out BaseError error);
+            List<UserListResponse> userList = _userManager.GetUserList(GroupId, out BaseError error);
 
             if (userList == null || error != null)
                 return new CommonResponse<List<UserListResponse>>(new ErrorProperties(error.code, error.message));

@@ -3,6 +3,7 @@ using _3DMANAGER_APP.BLL.Models.Base;
 using _3DMANAGER_APP.BLL.Models.Filament;
 using _3DMANAGER_APP.Server.Models;
 using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static _3DMANAGER_APP.Server.Models.Response;
 
@@ -34,10 +35,11 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(CommonResponse<List<FilamentListResponse>>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Filaments")]
+        [Authorize]
         [HttpGet]
-        public CommonResponse<List<FilamentListResponse>> GetFilamentList([FromQuery] int groupId)
+        public CommonResponse<List<FilamentListResponse>> GetFilamentList()
         {
-            List<FilamentListResponse> userList = _filamentManager.GetFilamentList(groupId, out BaseError error);
+            List<FilamentListResponse> userList = _filamentManager.GetFilamentList(GroupId, out BaseError error);
 
             if (userList == null || error != null)
                 return new CommonResponse<List<FilamentListResponse>>(new ErrorProperties(error.code, error.message));
@@ -59,6 +61,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpPost]
         public CommonResponse<bool> PostFilament(FilamentRequest filament)
         {
+            filament.GroupId = GroupId;
             _filamentManager.PostFilament(filament, out BaseError? error);
             if (error != null)
             {

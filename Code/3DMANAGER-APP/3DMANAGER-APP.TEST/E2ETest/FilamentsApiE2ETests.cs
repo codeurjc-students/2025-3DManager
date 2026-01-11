@@ -1,23 +1,25 @@
 ﻿using _3DMANAGER_APP.BLL.Models.Filament;
 using _3DMANAGER_APP.Server.Models;
+using _3DMANAGER_APP.TEST.Fixture;
 using System.Net;
 using System.Net.Http.Json;
 
 namespace _3DMANAGER_APP.TEST.E2ETest
 {
-    public class FilamentsApiE2ETests : IClassFixture<CustomWebApplicationFactory<Program>>
+    [Collection("Database")]
+    public class FilamentsApiE2ETests : IClassFixture<AuthenticatedClientFixture>
     {
         private readonly HttpClient _client;
 
-        public FilamentsApiE2ETests(CustomWebApplicationFactory<Program> factory)
+        public FilamentsApiE2ETests(AuthenticatedClientFixture authFixture)
         {
-            _client = factory.CreateClient();
+            _client = authFixture.Client;
         }
 
         [Fact]
         public async Task GetFilamentList_ShouldReturnFilamentsList()
         {
-            var response = await _client.GetAsync("/api/v1/filaments/GetFilamentList?groupId=4");
+            var response = await _client.GetAsync("/api/v1/filaments/GetFilamentList");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 

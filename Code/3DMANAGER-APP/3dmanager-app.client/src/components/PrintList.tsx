@@ -2,17 +2,15 @@
 import type { PrintListResponse } from '../models/print/PrintListResponse';
 import { getPrintList } from '../api/printService';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 
 const PrintList: React.FC = () => {
     
 
-    const { user } = useAuth();
     const [items, setItems] = useState<PrintListResponse[]>([]);
     const navigate = useNavigate();
 
     useEffect(() => {
-        getPrintList(user!.groupId!).then(response => {
+        getPrintList().then(response => {
             setItems(response.data ?? []);
         });
     }, []);

@@ -4,6 +4,7 @@ using _3DMANAGER_APP.BLL.Mapper;
 using _3DMANAGER_APP.DAL.Base;
 using _3DMANAGER_APP.DAL.Interfaces;
 using _3DMANAGER_APP.DAL.Managers;
+using _3DMANAGER_APP.TestingSupport.Database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -55,7 +56,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("https://localhost:3000", "http://localhost:3000")
+        policy.WithOrigins("https://localhost:3000", "http://localhost:3000", "http://localhost:3001")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -99,6 +100,16 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+if (app.Environment.IsEnvironment("CI"))
+{
+    using var scope = app.Services.CreateScope();
+    var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+    var cs = config.GetConnectionString("DefaultConnection");
+
+    var seeder = new DatabaseSeeder(cs!);
+    await seeder.SeedAsync();
+}
+
 
 // Middleware
 if (app.Environment.IsDevelopment())
@@ -121,7 +132,6 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapGet("/health", () => Results.Ok("OK"));
 app.MapFallbackToFile("/index.html");
-
 
 app.Run();
 

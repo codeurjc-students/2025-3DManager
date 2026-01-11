@@ -1,6 +1,5 @@
 ﻿import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 import { postPrint } from "../api/printService";
 import { getFilamentCatalog, getPrinterCatalog, getPrintState } from "../api/catalogService";
 import type { CatalogResponse } from "../models/catalog/CatalogResponse";
@@ -20,16 +19,15 @@ const CreatePrint3DPage: React.FC = () => {
     const [printRealTimeH, setPrintRealTimeH] = useState<number>(0);
     const [printRealTimeM, setPrintRealTimeM] = useState<number>(0);
     const [printFilamentUsed, setPrintFilamentUsed] = useState<number>(0);
-    const { user } = useAuth();
 
     const navigate = useNavigate();
     
 
     useEffect(() => {
         const loadCatalog = async () => {
-            const responseCFilament = await getFilamentCatalog(user!.groupId!);
+            const responseCFilament = await getFilamentCatalog();
             setCatalogFilament(responseCFilament.data!);
-            const responseCPrinter = await getPrinterCatalog(user!.groupId!);
+            const responseCPrinter = await getPrinterCatalog();
             setCatalogPrinter(responseCPrinter.data!);
             const responseCState = await getPrintState();
             setCatalogState(responseCState.data!);
@@ -70,8 +68,8 @@ const CreatePrint3DPage: React.FC = () => {
         }
         
         try {
-            let groupId = user!.groupId!;
-            let userId = user!.userId;
+            let groupId = -1;
+            let userId = -1;
             let printRealTime = printRealTimeH * 3600 + printRealTimeM * 60;
             const response = await postPrint({
                 userId,

@@ -1,5 +1,4 @@
 ﻿import React, { useEffect, useState } from 'react';
-import { useAuth } from '../context/AuthContext';
 import { getFilamentList } from '../api/filamentService';
 import type { FilamentListResponse } from '../models/filament/FilamentListResponse';
 import { useNavigate } from 'react-router-dom';
@@ -7,12 +6,11 @@ import { useNavigate } from 'react-router-dom';
 
 
 const FilamentList: React.FC = () => {
-    const { user } = useAuth();
     const [items, setItems] = useState<FilamentListResponse[]>([]);
     const navigate = useNavigate();
 
     useEffect(() => {
-        getFilamentList(user!.groupId!).then(response => {
+        getFilamentList().then(response => {
             setItems(response.data ?? []);
         });
     }, []);

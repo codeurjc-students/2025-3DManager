@@ -1,23 +1,25 @@
 ﻿using _3DMANAGER_APP.BLL.Models.User;
 using _3DMANAGER_APP.Server.Models;
+using _3DMANAGER_APP.TEST.Fixture;
 using System.Net;
 using System.Net.Http.Json;
 
 namespace _3DMANAGER_APP.TEST.E2ETest
 {
-    public class UsersApiE2ETests : IClassFixture<CustomWebApplicationFactory<Program>>
+    [Collection("Database")]
+    public class UsersApiE2ETests : IClassFixture<AuthenticatedClientFixture>
     {
         private readonly HttpClient _client;
 
-        public UsersApiE2ETests(CustomWebApplicationFactory<Program> factory)
+        public UsersApiE2ETests(AuthenticatedClientFixture authFixture)
         {
-            _client = factory.CreateClient();
+            _client = authFixture.Client;
         }
 
         [Fact]
         public async Task GetUserList_ShouldReturnUsersList()
         {
-            var response = await _client.GetAsync("/api/v1/users/GetUserList?groupId=4");
+            var response = await _client.GetAsync("/api/v1/users/GetUserList");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
