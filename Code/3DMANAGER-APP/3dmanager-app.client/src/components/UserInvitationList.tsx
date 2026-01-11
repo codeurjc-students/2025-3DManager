@@ -1,13 +1,9 @@
 ﻿import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 import type { UserListResponse } from '../models/user/UserListResponse';
 import { getUserInvitationList, postUserInvitation } from '../api/userService';
 
 const UserInvitationList: React.FC = () => {
-    const { user } = useAuth();
     const [items, setItems] = useState<UserListResponse[]>([]);
-    const navigate = useNavigate();
 
     useEffect(() => {
         getUserInvitationList().then(response => {
@@ -31,7 +27,7 @@ const UserInvitationList: React.FC = () => {
                             <td>
                                 <button
                                     className="botton-darkGrey justify-content-end"
-                                    onClick={() => postUserInvitation(user!.groupId!, userList.userId)}>
+                                    onClick={() => postUserInvitation(userList.userId)}>
                                     Invitar
                                 </button>
                             </td>

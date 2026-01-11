@@ -1,8 +1,17 @@
-﻿import React from "react";
+﻿import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import type { GroupInvitation } from "../models/group/GroupInvitation";
+import { getGroupInvitations, postAcceptInvitation } from "../api/groupService";
+
 
 const GroupPage: React.FC = () => {
+    const [items, setItems] = useState<GroupInvitation[]>([]);
 
+    useEffect(() => {
+        getGroupInvitations().then(response => {
+            setItems(response.data ?? []);
+        });
+    }, []);
 
     const navigate = useNavigate();
 
@@ -22,8 +31,26 @@ const GroupPage: React.FC = () => {
                         </div>
                         <div className="col-8 ms-2 me-2">
                             <h4 className="title-impact-2" >Invitaciones</h4>
-                            <div className="white-container m-2 w-100 h-100">
-                                
+                            <div className="white-container m-2 w-90 h-100">
+                                <div className="invitation-container">
+                                    <table className="table">
+                                        <tbody>
+                                            {items.map((groupInvitations) => (
+                                                <tr key={groupInvitations.groupId}>
+                                                    <td className="w-75">El usuario {groupInvitations.userGroupManager} le ha invitado a participar
+                                                        en el grupo {groupInvitations.groupName}</td>
+                                                    <td>
+                                                        <button
+                                                            className="botton-darkGrey justify-content-end w-100"
+                                                            onClick={() => postAcceptInvitation(groupInvitations.groupId)}>
+                                                            Aceptar invitación
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>                   
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -35,3 +62,5 @@ const GroupPage: React.FC = () => {
     );
 };
 export default GroupPage;
+
+

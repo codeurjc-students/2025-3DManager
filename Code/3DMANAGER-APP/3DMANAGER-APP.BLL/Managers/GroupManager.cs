@@ -2,7 +2,7 @@
 using _3DMANAGER_APP.BLL.Models.Base;
 using _3DMANAGER_APP.BLL.Models.Group;
 using _3DMANAGER_APP.DAL.Interfaces;
-using _3DMANAGER_APP.DAL.Models.User;
+using _3DMANAGER_APP.DAL.Models.Group;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 
@@ -18,6 +18,11 @@ namespace _3DMANAGER_APP.BLL.Managers
             _groupDbManager = groupDbManager;
             _mapper = mapper;
             _logger = logger;
+        }
+
+        public List<GroupInvitation> GetGroupInvitations(int userId)
+        {
+            return _mapper.Map<List<GroupInvitation>>(_groupDbManager.GetGroupInvitations(userId));
         }
 
         public bool PostNewGroup(GroupRequest request, out BaseError? error)

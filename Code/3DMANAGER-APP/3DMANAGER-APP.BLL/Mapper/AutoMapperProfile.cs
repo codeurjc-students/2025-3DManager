@@ -9,6 +9,7 @@ using _3DMANAGER_APP.BLL.Models.User;
 using _3DMANAGER_APP.DAL.Base;
 using _3DMANAGER_APP.DAL.Models;
 using _3DMANAGER_APP.DAL.Models.Filament;
+using _3DMANAGER_APP.DAL.Models.Group;
 using _3DMANAGER_APP.DAL.Models.Print;
 using _3DMANAGER_APP.DAL.Models.Printer;
 using _3DMANAGER_APP.DAL.Models.User;
@@ -39,6 +40,7 @@ namespace _3DMANAGER_APP.BLL.Mapper
 
             #region Group
             CreateMap<GroupRequest, GroupRequestDbObject>().ReverseMap();
+            CreateMap<GroupInvitation, GroupInvitationDbObject>().ReverseMap();
 
             #endregion
 

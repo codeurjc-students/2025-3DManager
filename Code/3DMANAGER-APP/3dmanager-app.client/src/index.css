@@ -203,7 +203,12 @@ body {
     max-height: 700px;
 }
 
-    
+.invitation-container {
+    overflow-y: auto;
+    max-height: 300px;
+}
+
+
 .table-container table thead {
     position: sticky;
     top: 0;

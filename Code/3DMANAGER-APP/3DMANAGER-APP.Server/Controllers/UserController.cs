@@ -167,8 +167,9 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Tags("Users")]
         [HttpPost]
-        public IActionResult PostUserInvitation([FromQuery] int groupId, [FromQuery] int userId)
+        public IActionResult PostUserInvitation([FromQuery] int userId)
         {
+            var groupId = GroupId;
             _userManager.PostUserInvitation(groupId, userId);
             return Ok();
         }

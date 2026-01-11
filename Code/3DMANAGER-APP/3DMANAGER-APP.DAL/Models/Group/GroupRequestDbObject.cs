@@ -1,4 +1,4 @@
-﻿namespace _3DMANAGER_APP.DAL.Models.User
+﻿namespace _3DMANAGER_APP.DAL.Models.Group
 {
     public class GroupRequestDbObject
     {
