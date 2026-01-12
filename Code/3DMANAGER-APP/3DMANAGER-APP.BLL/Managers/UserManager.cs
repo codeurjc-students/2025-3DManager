@@ -104,5 +104,19 @@ namespace _3DMANAGER_APP.BLL.Managers
 
             return _mapper.Map<List<UserListResponse>>(list);
         }
+        public List<UserListResponse> GetUserInvitationList(out BaseError? error)
+        {
+            error = null;
+            List<UserListResponseDbObject> list = _userDbManager.GetUserInvitationList();
+            if (list == null)
+                error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = "Error al obtener listado de usuarios para invitar" };
+
+            return _mapper.Map<List<UserListResponse>>(list);
+        }
+
+        public void PostUserInvitation(int groupId, int userId)
+        {
+            _userDbManager.PostUserInvitation(groupId, userId);
+        }
     }
 }

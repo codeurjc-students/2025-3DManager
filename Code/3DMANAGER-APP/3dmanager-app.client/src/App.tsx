@@ -36,6 +36,7 @@ const App: React.FC = () => {
                             <Route path="/dashboard/printer-create" element={<ProtectedRoute><CreatePrinterPage /></ProtectedRoute>} />
                             <Route path="/dashboard/filament-create" element={<ProtectedRoute><CreateFilamentPage /></ProtectedRoute>} />
                             <Route path="/dashboard/print-create" element={<ProtectedRoute><CreatePrint3DPage /></ProtectedRoute>} />
+                            <Route path="/dashboard/user-invitation/:type" element={<ProtectedRoute><ListPage /></ProtectedRoute>} />
                         </Routes>
                     </main>
                 </div>

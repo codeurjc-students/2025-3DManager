@@ -149,6 +149,76 @@ namespace _3DMANAGER_APP.DAL.Managers
                 return null;
             }
         }
+
+        public List<UserListResponseDbObject> GetUserInvitationList()
+        {
+            try
+            {
+                List<UserListResponseDbObject> list = new List<UserListResponseDbObject>();
+                string procName = $"{ProcedurePrefix}_pr_USER_INVITATION_LIST";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    foreach (DataRow row in ds.Tables[0].Rows)
+                    {
+                        UserListResponseDbObject listResponse = new UserListResponseDbObject();
+                        list.Add(listResponse.Create(row));
+                    }
+                }
+
+                return list;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = "Error al devolver el listado de usuarios para invitar de en BBDD";
+                Logger.LogError(ex, msg);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error al devolver el listado de usuarios para invitar de en BBDD";
+                Logger.LogError(ex, msg);
+                return null;
+            }
+        }
+
+        public void PostUserInvitation(int groupId, int userId)
+        {
+            try
+            {
+                string procName = $"{ProcedurePrefix}_pr_USER_INVITATION";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
+                cmd.Parameters.Add(new MySqlParameter("P_CD_USER", MySqlDbType.Int32) { Value = userId });
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+            }
+            catch (MySqlException ex)
+            {
+                string msg = "Error al devolver el listado de usuarios de en BBDD";
+                Logger.LogError(ex, msg);
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error al devolver el listado de usuarios de en BBDD";
+                Logger.LogError(ex, msg);
+            }
+        }
     }
 
 }

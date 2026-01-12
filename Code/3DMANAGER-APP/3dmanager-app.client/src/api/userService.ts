@@ -24,3 +24,13 @@ export const getUserList = async (): Promise<CommonResponse<UserListResponse[]>>
     const response = await apiClient.get<CommonResponse<UserListResponse[]>>("/api/v1/users/GetUserList");
     return response.data;
 }
+
+export const getUserInvitationList = async (): Promise<CommonResponse<UserListResponse[]>> => {
+    const response = await apiClient.get<CommonResponse<UserListResponse[]>>('/api/v1/users/GetUserInvitationList');
+    return response.data;
+}
+
+export const postUserInvitation = async ( userId: number): Promise<void> => {
+    const response = await apiClient.post(`/api/v1/users/PostUserInvitation?userId=${userId}`);
+    return response.data;
+}

@@ -6,5 +6,8 @@ namespace _3DMANAGER_APP.BLL.Interfaces
     public interface IGroupManager
     {
         public bool PostNewGroup(GroupRequest request, out BaseError? error);
+        public List<GroupInvitation> GetGroupInvitations(int userId);
+        public bool PostAcceptInvitation(int groupId, bool isAccepted, int userId, out BaseError? error);
+
     }
 }
