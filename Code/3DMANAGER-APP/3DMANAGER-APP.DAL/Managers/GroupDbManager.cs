@@ -101,5 +101,54 @@ namespace _3DMANAGER_APP.DAL.Managers
                 return null;
             }
         }
+
+        public bool PostAcceptInvitation(int groupId, bool isAccepted, int userId, out int? errorDb)
+        {
+            errorDb = null;
+            try
+            {
+                string procName = $"{ProcedurePrefix}_pr_GROUP_ACCEPT_INVITATION";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
+                cmd.Parameters.Add(new MySqlParameter("P_IT_ACCEPTED", MySqlDbType.Bit) { Value = isAccepted });
+                cmd.Parameters.Add(new MySqlParameter("P_CD_USER", MySqlDbType.Int32) { Value = userId });
+
+                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                var error = Convert.ToInt32(errorParam.Value);
+                if (error != 0)
+                {
+                    errorDb = error;
+                    return false;
+                }
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = "Error al aceptar invitacion de grupo en BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error al aceptar invitacion de grupo en BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+        }
     }
 }

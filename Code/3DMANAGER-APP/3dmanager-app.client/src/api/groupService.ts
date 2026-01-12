@@ -13,8 +13,8 @@ export const getGroupInvitations = async (): Promise<CommonResponse<GroupInvitat
     return response.data
 }
 
-export const postAcceptInvitation = async (groupId : number): Promise<CommonResponse<boolean>> => {
-    const response = await apiClient.post<CommonResponse<boolean>>(`/api/v1/groups/postAcceptInvitation?groupId=${groupId}`)
+export const postAcceptInvitation = async (groupId: number, isAccepted: boolean): Promise<CommonResponse<boolean>> => {
+    const response = await apiClient.post<CommonResponse<boolean>>(`/api/v1/groups/postAcceptInvitation?groupId=${groupId}&isAccepted=${isAccepted}`)
     return response.data
 }
 

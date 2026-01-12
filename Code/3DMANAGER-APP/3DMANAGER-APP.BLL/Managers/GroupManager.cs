@@ -5,6 +5,7 @@ using _3DMANAGER_APP.DAL.Interfaces;
 using _3DMANAGER_APP.DAL.Models.Group;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
+using System.Net;
 
 namespace _3DMANAGER_APP.BLL.Managers
 {
@@ -31,6 +32,18 @@ namespace _3DMANAGER_APP.BLL.Managers
 
             GroupRequestDbObject groupDbObject = _mapper.Map<GroupRequestDbObject>(request);
             return _groupDbManager.PostNewGroup(groupDbObject);
+        }
+
+        public bool PostAcceptInvitation(int groupId, bool isAccepted, int userId, out BaseError? error)
+        {
+            error = null;
+            bool response = _groupDbManager.PostAcceptInvitation(groupId, isAccepted, userId, out int? errorDb);
+            if (errorDb != null || errorDb > 0)
+            {
+                error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = "Error al tratar de aceptar la invitacion del grupo" };
+                return false;
+            }
+            return response;
         }
     }
 }

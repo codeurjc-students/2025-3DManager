@@ -60,5 +60,28 @@ namespace _3DMANAGER_APP.Server.Controllers
             var response = _groupManager.GetGroupInvitations(UserId);
             return new CommonResponse<List<GroupInvitation>>(response);
         }
+
+        /// <summary>
+        /// Accept invitations for a group
+        /// </summary>
+        /// <returns>True if the operation result was succesfull</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Groups")]
+        [HttpPost]
+        public CommonResponse<bool> postAcceptInvitation(int groupId, bool isAccepted)
+        {
+            var response = _groupManager.PostAcceptInvitation(groupId, isAccepted, UserId, out BaseError? error);
+
+            if (error != null)
+            {
+                return new CommonResponse<bool>(new ErrorProperties(error.code, error.message));
+            }
+            return new CommonResponse<bool>(true);
+        }
     }
 }

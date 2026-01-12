@@ -6,5 +6,6 @@ namespace _3DMANAGER_APP.DAL.Interfaces
     {
         public bool PostNewGroup(GroupRequestDbObject request);
         public List<GroupInvitationDbObject> GetGroupInvitations(int userId);
+        public bool PostAcceptInvitation(int groupId, bool isAccepted, int userId, out int? errorDb);
     }
 }
