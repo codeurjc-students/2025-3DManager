@@ -5,6 +5,7 @@ using _3DMANAGER_APP.DAL.Base;
 using _3DMANAGER_APP.DAL.Interfaces;
 using _3DMANAGER_APP.DAL.Managers;
 using _3DMANAGER_APP.TestingSupport.Database;
+using Amazon.S3;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -96,6 +97,13 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key!))
     };
 });
+
+//Amazon S3 service
+builder.Services.AddDefaultAWSOptions(
+    builder.Configuration.GetAWSOptions()
+);
+builder.Services.AddAWSService<IAmazonS3>();
+builder.Services.AddScoped<IAwsS3Service, AwsS3Service>();
 
 builder.Services.AddAuthorization();
 
