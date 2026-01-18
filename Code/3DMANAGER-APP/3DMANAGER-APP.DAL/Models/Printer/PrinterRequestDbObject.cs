@@ -13,6 +13,13 @@
         private const string PrinterDescriptionColumnName = "P_PRINTER_DESCRIPTION";
         public string PrinterModel { get; set; }
 
-        private const string PrinterModelwawwwwColumnName = "P_PRINTER_MODEL";
+        private const string PrinterModelColumnName = "P_PRINTER_MODEL";
+        public string PrinterImageUrl { get; set; }
+
+        private const string PrinterImageUrlColumnName = "P_PRINTER_IMAGE_URL";
+        public string PrinterImageKey { get; set; }
+
+        private const string PrinterImageKeyColumnName = "P_PRINTER_IMAGE_KEY";
+
     }
 }

@@ -1,10 +1,11 @@
-﻿using _3DMANAGER_APP.DAL.Base;
+﻿using _3DMANAGER_APP.BLL.Interfaces;
+using _3DMANAGER_APP.DAL.Base;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-
+using Moq;
 using MySql.Data.MySqlClient;
 
 namespace _3DMANAGER_APP.TEST
@@ -35,6 +36,13 @@ namespace _3DMANAGER_APP.TEST
 
                     return new MySQLDataSource(cs!, "3DMANAGER");
                 });
+
+            });
+            builder.ConfigureServices(services =>
+            {
+                var s3Mock = new Mock<IAwsS3Service>();
+                s3Mock.Setup(x => x.GetPresignedUrl(It.IsAny<string>(), It.IsAny<int>())).Returns("https://fake-url.com/presigned/test.jpg");
+                services.AddSingleton<IAwsS3Service>(s3Mock.Object);
             });
         }
     }

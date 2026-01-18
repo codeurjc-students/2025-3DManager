@@ -1,9 +1,11 @@
 ﻿using _3DMANAGER_APP.BLL.Interfaces;
 using _3DMANAGER_APP.BLL.Models;
 using _3DMANAGER_APP.BLL.Models.Base;
+using _3DMANAGER_APP.BLL.Models.File;
 using _3DMANAGER_APP.BLL.Models.Printer;
 using _3DMANAGER_APP.DAL.Base;
 using _3DMANAGER_APP.DAL.Interfaces;
+using _3DMANAGER_APP.DAL.Models.File;
 using _3DMANAGER_APP.DAL.Models.Printer;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -17,11 +19,13 @@ namespace _3DMANAGER_APP.BLL.Managers
         private IPrinterDbManager _printerDbManager;
         private IMapper _mapper;
         private ILogger<PrinterManager> _logger;
-        public PrinterManager(IPrinterDbManager printerDbManager, IMapper mapper, ILogger<PrinterManager> logger)
+        private IAwsS3Service _awsS3Service;
+        public PrinterManager(IPrinterDbManager printerDbManager, IMapper mapper, ILogger<PrinterManager> logger, IAwsS3Service awsS3Service)
         {
             _printerDbManager = printerDbManager;
             _mapper = mapper;
             _logger = logger;
+            _awsS3Service = awsS3Service;
         }
 
         public List<PrinterObject> GetPrinterList(out BaseError error)
@@ -42,14 +46,14 @@ namespace _3DMANAGER_APP.BLL.Managers
             return response;
         }
 
-        public bool PostPrinter(PrinterRequest printer, out BaseError? error)
+        public async Task<CommonResponse<bool>> PostPrinter(PrinterRequest printer)
         {
-            error = null;
 
+            CommonResponse<bool> response = new CommonResponse<bool>();
             PrinterRequestDbObject printerDbObject = _mapper.Map<PrinterRequestDbObject>(printer);
             var responseDb = _printerDbManager.PostPrinter(printerDbObject, out int? errorDb);
 
-            if (errorDb != null)
+            if (errorDb != null && errorDb > 0)
             {
                 string msg = "";
                 switch (errorDb)
@@ -57,21 +61,48 @@ namespace _3DMANAGER_APP.BLL.Managers
                     case 1:
                         msg = $"Error al crear impresora con nombre {printer.PrinterName}";
                         _logger.LogError(msg);
-                        error = new BaseError() { code = StatusCodes.Status409Conflict, message = msg };
+                        response.Error = new Response.ErrorProperties() { Code = StatusCodes.Status409Conflict, Message = msg };
                         break;
                     case 500:
                         msg = $"Error al crear impresora en el servidor.";
                         _logger.LogError(msg);
-                        error = new BaseError() { code = StatusCodes.Status500InternalServerError, message = msg };
+                        response.Error = new Response.ErrorProperties() { Code = StatusCodes.Status500InternalServerError, Message = msg };
                         break;
                     default:
                         break;
                 }
-
+                return response;
             }
-            return responseDb;
+            if (printer.ImageFile != null)
+            {
+                bool responseImage = await UpdateS3PrinterImage(responseDb, printer.ImageFile);
+                if (!responseImage)
+                {
+                    string msg = "La impresora se ha creado correctamente, pero la imagen ha fallado al ser guardada.";
+                    _logger.LogError(msg);
+                    response.Error = new Response.ErrorProperties() { Code = StatusCodes.Status409Conflict, Message = msg };
+                }
+            }
+            return response;
         }
+        public async Task<bool> UpdateS3PrinterImage(int printerId, IFormFile imageFile)
+        {
+            FileResponse? image = null;
 
+            if (imageFile != null)
+            {
+                image = await _awsS3Service.UploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName,
+                    imageFile.ContentType, "printers");
+                if (image != null)
+                    return _printerDbManager.UpdatePrinterImageData(printerId, _mapper.Map<FileResponseDbObject>(image));
+                else return false;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
         public List<PrinterListObject> GetPrinterDashboardList(int group, out BaseError? error)
         {
             error = null;
@@ -79,7 +110,19 @@ namespace _3DMANAGER_APP.BLL.Managers
             if (list == null)
                 error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = "Error al obtener listado de impresoras" };
 
-            return _mapper.Map<List<PrinterListObject>>(list);
+            List<PrinterListObject> response = _mapper.Map<List<PrinterListObject>>(list);
+            if (response != null)
+            {
+                foreach (PrinterListObject p in response)
+                {
+                    if (p.PrinterImageData != null && p.PrinterImageData.FileUrl != null && p.PrinterImageData.FileKey != null)
+                        p.PrinterImageData.FileUrl = _awsS3Service.GetPresignedUrl(p.PrinterImageData.FileKey, 1);
+                    else
+                        p.PrinterImageData.FileUrl = _awsS3Service.GetPresignedUrl("default/3dmanager-default-printer.jpg", 1);
+                }
+            }
+
+            return response;
         }
     }
 }

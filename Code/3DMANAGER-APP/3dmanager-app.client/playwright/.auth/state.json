@@ -1,0 +1,18 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "https://localhost:3000",
+      "localStorage": [
+        {
+          "name": "user",
+          "value": "{\"userId\":3,\"userName\":\"Invitado\",\"userPassword\":\"\",\"userEmail\":\"3dmanagerInvitado@gmail.com\",\"groupId\":4,\"rolId\":\"Usuario-Invitado\",\"groupName\":\"Grupo Invitado\"}"
+        },
+        {
+          "name": "token",
+          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJJbnZpdGFkbyIsInVzZXJFbWFpbCI6IjNkbWFuYWdlckludml0YWRvQGdtYWlsLmNvbSIsInVzZXJJZCI6IjMiLCJqdGkiOiJjMzA4ZmM5OC1hMDEwLTRmZDQtODhhOC0zOTYxNzg1N2EyNWEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJVc3VhcmlvLUludml0YWRvIiwiZ3JvdXBJZCI6IjQiLCJleHAiOjE3Njg3NTI2MTcsImlzcyI6IjNETUFOQUdFUiIsImF1ZCI6IjNETUFOQUdFUiJ9.pw5xeBFwByqhQJNbTfITlXAFKBPavOw-GslSlgnBJuE"
+        }
+      ]
+    }
+  ]
+}

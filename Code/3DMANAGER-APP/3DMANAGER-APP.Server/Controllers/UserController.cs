@@ -1,7 +1,6 @@
 ﻿using _3DMANAGER_APP.BLL.Interfaces;
 using _3DMANAGER_APP.BLL.Models.Base;
 using _3DMANAGER_APP.BLL.Models.User;
-using _3DMANAGER_APP.Server.Models;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using static _3DMANAGER_APP.Server.Models.Response;
@@ -29,20 +28,20 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <response code="400">Conflicto en servidor</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
-        [ProducesResponseType(typeof(CommonResponse<bool>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(CommonResponse<bool>), StatusCodes.Status409Conflict)]
-        [ProducesResponseType(typeof(CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Users")]
         [HttpPost]
-        public CommonResponse<bool> PostNewUser(UserCreateRequest user)
+        public Models.CommonResponse<bool> PostNewUser(UserCreateRequest user)
         {
             var response = _userManager.PostNewUser(user, out BaseError? error);
             if (error != null)
             {
-                return new CommonResponse<bool>(new ErrorProperties(error.code, error.message));
+                return new Models.CommonResponse<bool>(new ErrorProperties(error.code, error.message));
             }
-            return new CommonResponse<bool>(true);
+            return new Models.CommonResponse<bool>(true);
         }
 
 
@@ -54,18 +53,18 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <response code="400">Conflicto en servidor</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
-        [ProducesResponseType(typeof(CommonResponse<LoginResponse>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(CommonResponse<LoginResponse>), StatusCodes.Status409Conflict)]
-        [ProducesResponseType(typeof(CommonResponse<LoginResponse>), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(Models.CommonResponse<LoginResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<LoginResponse>), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(Models.CommonResponse<LoginResponse>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Users")]
         [HttpPost]
-        public CommonResponse<LoginResponse> Login(BLL.Models.User.LoginRequest request)
+        public Models.CommonResponse<LoginResponse> Login(BLL.Models.User.LoginRequest request)
         {
             UserObject user = _userManager.Login(request.UserName, request.UserPassword, out BaseError error);
 
             if (user == null || error != null)
-                return new CommonResponse<LoginResponse>(new ErrorProperties(error.code, error.message));
+                return new Models.CommonResponse<LoginResponse>(new ErrorProperties(error.code, error.message));
 
             var token = _jwtService.GenerateToken(user);
 
@@ -73,7 +72,7 @@ namespace _3DMANAGER_APP.Server.Controllers
             response.User = user;
             response.Token = token;
 
-            return new CommonResponse<LoginResponse>(response);
+            return new Models.CommonResponse<LoginResponse>(response);
         }
 
         /// <summary>
@@ -84,20 +83,20 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <response code="400">Conflicto en servidor</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
-        [ProducesResponseType(typeof(CommonResponse<LoginResponse>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(CommonResponse<LoginResponse>), StatusCodes.Status409Conflict)]
-        [ProducesResponseType(typeof(CommonResponse<LoginResponse>), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(Models.CommonResponse<LoginResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<LoginResponse>), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(Models.CommonResponse<LoginResponse>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Users")]
         [HttpPost]
-        public CommonResponse<LoginResponse> LoginGuest()
+        public Models.CommonResponse<LoginResponse> LoginGuest()
         {
             string userName = "Invitado";
             string userPassword = "invitado3dmanager";
             UserObject user = _userManager.Login(userName, userPassword, out BaseError error);
 
             if (user == null || error != null)
-                return new CommonResponse<LoginResponse>(new ErrorProperties(error.code, error.message));
+                return new Models.CommonResponse<LoginResponse>(new ErrorProperties(error.code, error.message));
 
             var token = _jwtService.GenerateToken(user);
 
@@ -105,7 +104,7 @@ namespace _3DMANAGER_APP.Server.Controllers
             response.User = user;
             response.Token = token;
 
-            return new CommonResponse<LoginResponse>(response);
+            return new Models.CommonResponse<LoginResponse>(response);
         }
 
         /// <summary>
@@ -116,20 +115,20 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <response code="400">Conflicto en servidor</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
-        [ProducesResponseType(typeof(CommonResponse<List<UserListResponse>>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(CommonResponse<List<UserListResponse>>), StatusCodes.Status409Conflict)]
-        [ProducesResponseType(typeof(CommonResponse<List<UserListResponse>>), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(Models.CommonResponse<List<UserListResponse>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<List<UserListResponse>>), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(Models.CommonResponse<List<UserListResponse>>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Users")]
         [HttpGet]
-        public CommonResponse<List<UserListResponse>> GetUserList()
+        public Models.CommonResponse<List<UserListResponse>> GetUserList()
         {
             List<UserListResponse> userList = _userManager.GetUserList(GroupId, out BaseError error);
 
             if (userList == null || error != null)
-                return new CommonResponse<List<UserListResponse>>(new ErrorProperties(error.code, error.message));
+                return new Models.CommonResponse<List<UserListResponse>>(new ErrorProperties(error.code, error.message));
 
-            return new CommonResponse<List<UserListResponse>>(userList);
+            return new Models.CommonResponse<List<UserListResponse>>(userList);
         }
 
         /// <summary>
@@ -140,19 +139,19 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <response code="400">Conflicto en servidor</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
-        [ProducesResponseType(typeof(CommonResponse<List<UserListResponse>>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(CommonResponse<List<UserListResponse>>), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(Models.CommonResponse<List<UserListResponse>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<List<UserListResponse>>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Users")]
         [HttpGet]
-        public CommonResponse<List<UserListResponse>> GetUserInvitationList()
+        public Models.CommonResponse<List<UserListResponse>> GetUserInvitationList()
         {
             List<UserListResponse> userList = _userManager.GetUserInvitationList(out BaseError error);
 
             if (userList == null || error != null)
-                return new CommonResponse<List<UserListResponse>>(new ErrorProperties(error.code, error.message));
+                return new Models.CommonResponse<List<UserListResponse>>(new ErrorProperties(error.code, error.message));
 
-            return new CommonResponse<List<UserListResponse>>(userList);
+            return new Models.CommonResponse<List<UserListResponse>>(userList);
         }
 
         /// <summary>
@@ -162,8 +161,8 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <response code="200">Respuesta correcta</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
-        [ProducesResponseType(typeof(CommonResponse<List<UserListResponse>>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(CommonResponse<List<UserListResponse>>), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(Models.CommonResponse<List<UserListResponse>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<List<UserListResponse>>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Users")]
         [HttpPost]

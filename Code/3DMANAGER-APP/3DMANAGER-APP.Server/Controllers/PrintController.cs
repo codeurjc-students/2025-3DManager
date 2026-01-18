@@ -1,7 +1,6 @@
 ﻿using _3DMANAGER_APP.BLL.Interfaces;
 using _3DMANAGER_APP.BLL.Models.Base;
 using _3DMANAGER_APP.BLL.Models.Print;
-using _3DMANAGER_APP.Server.Models;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using static _3DMANAGER_APP.Server.Models.Response;
@@ -28,20 +27,20 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <response code="400">Conflicto en servidor</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
-        [ProducesResponseType(typeof(CommonResponse<List<PrintListResponse>>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(CommonResponse<List<PrintListResponse>>), StatusCodes.Status409Conflict)]
-        [ProducesResponseType(typeof(CommonResponse<List<PrintListResponse>>), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(Models.CommonResponse<List<PrintListResponse>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<List<PrintListResponse>>), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(Models.CommonResponse<List<PrintListResponse>>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Prints")]
         [HttpGet]
-        public CommonResponse<List<PrintListResponse>> GetPrintList()
+        public Models.CommonResponse<List<PrintListResponse>> GetPrintList()
         {
             List<PrintListResponse> userList = _printManager.GetPrintList(GroupId, out BaseError error);
 
             if (userList == null || error != null)
-                return new CommonResponse<List<PrintListResponse>>(new ErrorProperties(error.code, error.message));
+                return new Models.CommonResponse<List<PrintListResponse>>(new ErrorProperties(error.code, error.message));
 
-            return new CommonResponse<List<PrintListResponse>>(userList);
+            return new Models.CommonResponse<List<PrintListResponse>>(userList);
         }
 
         /// <summary>
@@ -52,20 +51,20 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <response code="400">Conflicto en servidor</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
-        [ProducesResponseType(typeof(CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
         [ApiVersionNeutral]
         [Tags("Prints")]
         [HttpPost]
-        public CommonResponse<bool> PostPrint([FromBody] PrintRequest print)
+        public Models.CommonResponse<bool> PostPrint([FromBody] PrintRequest print)
         {
             print.GroupId = GroupId;
             print.UserId = UserId;
             _printManager.PostPrint(print, out BaseError? error);
             if (error != null)
             {
-                return new CommonResponse<bool>(new ErrorProperties(error.code, error.message));
+                return new Models.CommonResponse<bool>(new ErrorProperties(error.code, error.message));
             }
-            return new CommonResponse<bool>(true);
+            return new Models.CommonResponse<bool>(true);
         }
     }
 }

@@ -2,7 +2,6 @@
 using _3DMANAGER_APP.BLL.Models;
 using _3DMANAGER_APP.BLL.Models.Base;
 using _3DMANAGER_APP.BLL.Models.Printer;
-using _3DMANAGER_APP.Server.Models;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using static _3DMANAGER_APP.Server.Models.Response;
@@ -28,8 +27,8 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <response code="200">Respuesta correcta</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
-        [ProducesResponseType(typeof(CommonResponse<List<PrinterObject>>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(CommonResponse<List<PrinterObject>>), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(Models.CommonResponse<List<PrinterObject>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<List<PrinterObject>>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Printers")]
         [HttpGet]
@@ -41,7 +40,7 @@ namespace _3DMANAGER_APP.Server.Controllers
             {
                 return BadRequest(error);
             }
-            return Ok(new CommonResponse<List<PrinterObject>>(response));
+            return Ok(new Models.CommonResponse<List<PrinterObject>>(response));
 
         }
 
@@ -53,19 +52,19 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <response code="400">Conflicto en servidor</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
-        [ProducesResponseType(typeof(CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
         [ApiVersionNeutral]
         [Tags("Printers")]
         [HttpPost]
-        public CommonResponse<bool> PostPrinter(PrinterRequest printer)
+        public async Task<Models.CommonResponse<bool>> PostPrinter([FromForm] PrinterRequest printer)
         {
             printer.GroupId = GroupId;
-            _printerManager.PostPrinter(printer, out BaseError? error);
-            if (error != null)
+            BLL.Models.Base.CommonResponse<bool> response = await _printerManager.PostPrinter(printer);
+            if (response.Error != null)
             {
-                return new CommonResponse<bool>(new ErrorProperties(error.code, error.message));
+                return new Models.CommonResponse<bool>(new ErrorProperties(response.Error.Code, response.Error.Message));
             }
-            return new CommonResponse<bool>(true);
+            return new Models.CommonResponse<bool>(true);
         }
 
         /// <summary>
@@ -76,20 +75,20 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <response code="400">Conflicto en servidor</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
-        [ProducesResponseType(typeof(CommonResponse<List<PrinterListObject>>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(CommonResponse<List<PrinterListObject>>), StatusCodes.Status409Conflict)]
-        [ProducesResponseType(typeof(CommonResponse<List<PrinterListObject>>), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(Models.CommonResponse<List<PrinterListObject>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<List<PrinterListObject>>), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(Models.CommonResponse<List<PrinterListObject>>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Printers")]
         [HttpGet]
-        public CommonResponse<List<PrinterListObject>> GetPrinterDashboardList()
+        public Models.CommonResponse<List<PrinterListObject>> GetPrinterDashboardList()
         {
             List<PrinterListObject> printerList = _printerManager.GetPrinterDashboardList(GroupId, out BaseError error);
 
             if (printerList == null || error != null)
-                return new CommonResponse<List<PrinterListObject>>(new ErrorProperties(error.code, error.message));
+                return new Models.CommonResponse<List<PrinterListObject>>(new ErrorProperties(error.code, error.message));
 
-            return new CommonResponse<List<PrinterListObject>>(printerList);
+            return new Models.CommonResponse<List<PrinterListObject>>(printerList);
         }
     }
 }

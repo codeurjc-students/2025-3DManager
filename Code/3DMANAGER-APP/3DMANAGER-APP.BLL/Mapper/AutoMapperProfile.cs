@@ -2,6 +2,7 @@
 using _3DMANAGER_APP.BLL.Models.Base;
 using _3DMANAGER_APP.BLL.Models.Catalog;
 using _3DMANAGER_APP.BLL.Models.Filament;
+using _3DMANAGER_APP.BLL.Models.File;
 using _3DMANAGER_APP.BLL.Models.Group;
 using _3DMANAGER_APP.BLL.Models.Print;
 using _3DMANAGER_APP.BLL.Models.Printer;
@@ -9,6 +10,7 @@ using _3DMANAGER_APP.BLL.Models.User;
 using _3DMANAGER_APP.DAL.Base;
 using _3DMANAGER_APP.DAL.Models;
 using _3DMANAGER_APP.DAL.Models.Filament;
+using _3DMANAGER_APP.DAL.Models.File;
 using _3DMANAGER_APP.DAL.Models.Group;
 using _3DMANAGER_APP.DAL.Models.Print;
 using _3DMANAGER_APP.DAL.Models.Printer;
@@ -68,6 +70,10 @@ namespace _3DMANAGER_APP.BLL.Mapper
             CreateMap<PrinterListObject, PrinterListDbObject>().ReverseMap();
             CreateMap<PrinterRequest, PrinterRequestDbObject>().ReverseMap();
             CreateMap<PrinterObject, PrinterDbObject>().ReverseMap();
+            #endregion
+
+            #region File
+            CreateMap<FileResponse, FileResponseDbObject>().ReverseMap();
             #endregion
         }
     }

@@ -1,6 +1,5 @@
 ﻿using _3DMANAGER_APP.BLL.Models.Base;
 using _3DMANAGER_APP.BLL.Models.Group;
-using _3DMANAGER_APP.Server.Models;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using static _3DMANAGER_APP.Server.Models.Response;
@@ -26,21 +25,21 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <response code="400">Conflicto en servidor</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
-        [ProducesResponseType(typeof(CommonResponse<bool>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(CommonResponse<bool>), StatusCodes.Status409Conflict)]
-        [ProducesResponseType(typeof(CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Groups")]
         [HttpPost]
-        public CommonResponse<bool> PostNewGroup(GroupRequest request)
+        public Models.CommonResponse<bool> PostNewGroup(GroupRequest request)
         {
             request.UserId = UserId;
             var response = _groupManager.PostNewGroup(request, out BaseError? error);
             if (error != null)
             {
-                return new CommonResponse<bool>(new ErrorProperties(error.code, error.message));
+                return new Models.CommonResponse<bool>(new ErrorProperties(error.code, error.message));
             }
-            return new CommonResponse<bool>(true);
+            return new Models.CommonResponse<bool>(true);
         }
 
         /// <summary>
@@ -50,15 +49,15 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <response code="200">Respuesta correcta</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
-        [ProducesResponseType(typeof(CommonResponse<List<GroupInvitation>>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(CommonResponse<List<GroupInvitation>>), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(Models.CommonResponse<List<GroupInvitation>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<List<GroupInvitation>>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Groups")]
         [HttpPost]
-        public CommonResponse<List<GroupInvitation>> GetGroupInvitations()
+        public Models.CommonResponse<List<GroupInvitation>> GetGroupInvitations()
         {
             var response = _groupManager.GetGroupInvitations(UserId);
-            return new CommonResponse<List<GroupInvitation>>(response);
+            return new Models.CommonResponse<List<GroupInvitation>>(response);
         }
 
         /// <summary>
@@ -68,20 +67,20 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <response code="200">Respuesta correcta</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
-        [ProducesResponseType(typeof(CommonResponse<bool>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Groups")]
         [HttpPost]
-        public CommonResponse<bool> postAcceptInvitation(int groupId, bool isAccepted)
+        public Models.CommonResponse<bool> postAcceptInvitation(int groupId, bool isAccepted)
         {
             var response = _groupManager.PostAcceptInvitation(groupId, isAccepted, UserId, out BaseError? error);
 
             if (error != null)
             {
-                return new CommonResponse<bool>(new ErrorProperties(error.code, error.message));
+                return new Models.CommonResponse<bool>(new ErrorProperties(error.code, error.message));
             }
-            return new CommonResponse<bool>(true);
+            return new Models.CommonResponse<bool>(true);
         }
     }
 }

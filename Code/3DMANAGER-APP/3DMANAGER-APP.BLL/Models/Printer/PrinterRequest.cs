@@ -1,4 +1,6 @@
-﻿namespace _3DMANAGER_APP.BLL.Models.Printer
+﻿using Microsoft.AspNetCore.Http;
+
+namespace _3DMANAGER_APP.BLL.Models.Printer
 {
     public class PrinterRequest
     {
@@ -6,5 +8,7 @@
         public string PrinterName { get; set; }
         public string PrinterDescription { get; set; }
         public string PrinterModel { get; set; }
+        public IFormFile? ImageFile { get; set; }
+
     }
 }

@@ -1,7 +1,6 @@
 ﻿using _3DMANAGER_APP.BLL.Interfaces;
 using _3DMANAGER_APP.BLL.Models.Base;
 using _3DMANAGER_APP.BLL.Models.Filament;
-using _3DMANAGER_APP.Server.Models;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -30,21 +29,21 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <response code="400">Conflicto en servidor</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
-        [ProducesResponseType(typeof(CommonResponse<List<FilamentListResponse>>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(CommonResponse<List<FilamentListResponse>>), StatusCodes.Status409Conflict)]
-        [ProducesResponseType(typeof(CommonResponse<List<FilamentListResponse>>), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(Models.CommonResponse<List<FilamentListResponse>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<List<FilamentListResponse>>), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(Models.CommonResponse<List<FilamentListResponse>>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Filaments")]
         [Authorize]
         [HttpGet]
-        public CommonResponse<List<FilamentListResponse>> GetFilamentList()
+        public Models.CommonResponse<List<FilamentListResponse>> GetFilamentList()
         {
             List<FilamentListResponse> userList = _filamentManager.GetFilamentList(GroupId, out BaseError error);
 
             if (userList == null || error != null)
-                return new CommonResponse<List<FilamentListResponse>>(new ErrorProperties(error.code, error.message));
+                return new Models.CommonResponse<List<FilamentListResponse>>(new ErrorProperties(error.code, error.message));
 
-            return new CommonResponse<List<FilamentListResponse>>(userList);
+            return new Models.CommonResponse<List<FilamentListResponse>>(userList);
         }
 
         /// <summary>
@@ -55,19 +54,19 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <response code="400">Conflicto en servidor</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
-        [ProducesResponseType(typeof(CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
         [ApiVersionNeutral]
         [Tags("Filaments")]
         [HttpPost]
-        public CommonResponse<bool> PostFilament(FilamentRequest filament)
+        public Models.CommonResponse<bool> PostFilament(FilamentRequest filament)
         {
             filament.GroupId = GroupId;
             _filamentManager.PostFilament(filament, out BaseError? error);
             if (error != null)
             {
-                return new CommonResponse<bool>(new ErrorProperties(error.code, error.message));
+                return new Models.CommonResponse<bool>(new ErrorProperties(error.code, error.message));
             }
-            return new CommonResponse<bool>(true);
+            return new Models.CommonResponse<bool>(true);
         }
     }
 }

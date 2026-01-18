@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using _3DMANAGER_APP.DAL.Models.File;
+using System.Data;
 
 namespace _3DMANAGER_APP.DAL.Models.Printer
 {
@@ -16,7 +17,12 @@ namespace _3DMANAGER_APP.DAL.Models.Printer
         private const string PrinterStateIdColumnName = "PRINTER_STATE_ID";
         public string? PrinterStateName { get; set; }
         private const string PrinterStateNameColumnName = "PRINTER_STATE_NAME";
+        public FileResponseDbObject PrinterImageData;
 
+        public PrinterListDbObject()
+        {
+            PrinterImageData = new FileResponseDbObject();
+        }
 
         public PrinterListDbObject Create(DataRow row)
         {
@@ -27,6 +33,7 @@ namespace _3DMANAGER_APP.DAL.Models.Printer
             obj.PrinterDescription = row.Field<string>(PrinterDescriptionColumnName);
             obj.PrinterStateId = row.Field<int>(PrinterStateIdColumnName);
             obj.PrinterStateName = row.Field<string>(PrinterStateNameColumnName);
+            obj.PrinterImageData = PrinterImageData.Create(row);
             return obj;
         }
     }

@@ -10,11 +10,22 @@ export const getPrinterList = async (): Promise<CommonResponse<PrinterObject[]>>
 }
 
 export const postPrinter = async (data: PrinterRequest): Promise<CommonResponse<boolean>> => {
-    const response = await apiClient.post<CommonResponse<boolean>>('/api/v1/printers/PostPrinter', data)
+    const formData = new FormData();
+
+    formData.append("printerName", data.printerName);
+    formData.append("printerDescription", data.printerDescription);
+    formData.append("printerModel", data.printerModel);
+    formData.append("groupId", data.groupId.toString());
+
+    if (data.imageFile) {
+        formData.append("imageFile", data.imageFile);
+    }
+    const response = await apiClient.post<CommonResponse<boolean>>('/api/v1/printers/PostPrinter', formData,
+        { headers: { "Content-Type": "multipart/form-data" } })
     return response.data
 }
 
-export const getPrinterDahsboardList = async (): Promise<CommonResponse<PrinterDashboardObject[]>> => {
+export const getPrinterDashboardList = async (): Promise<CommonResponse<PrinterDashboardObject[]>> => {
     const response = await apiClient.get<CommonResponse<PrinterDashboardObject[]>>("/api/v1/printers/GetPrinterDashboardList");
     return response.data;
 }

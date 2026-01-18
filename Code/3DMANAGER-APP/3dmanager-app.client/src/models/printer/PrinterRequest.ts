@@ -3,4 +3,5 @@ export interface PrinterRequest {
     printerName: string;
     printerDescription: string;
     printerModel: string;
+    imageFile?: File | null;
 }
