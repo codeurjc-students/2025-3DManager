@@ -1,3 +1,5 @@
+import type { FileResponse } from "../file/fileResponse";
+
 export interface PrinterDashboardObject {
     printerId?: number;
     printerName?: string;
@@ -5,4 +7,5 @@ export interface PrinterDashboardObject {
     printerDescription?: string;
     printerStateId?: number;
     printerStateName?: string;
+    printerImageData?: FileResponse;
 }

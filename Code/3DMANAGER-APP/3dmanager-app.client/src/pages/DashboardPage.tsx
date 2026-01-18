@@ -1,7 +1,7 @@
 ﻿import React, { useEffect, useState } from "react";
 import DashboardActions from "../components/DashboardActions";
 import { useNavigate } from "react-router-dom";
-import { getPrinterDahsboardList } from "../api/printerService";
+import { getPrinterDashboardList } from "../api/printerService";
 import type { PrinterDashboardObject } from "../models/printer/PrinterDashboardObject";
 
 const DashboardPage: React.FC = () => {
@@ -9,7 +9,7 @@ const DashboardPage: React.FC = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        getPrinterDahsboardList().then(response => {
+        getPrinterDashboardList().then(response => {
             setPrinters(response.data ?? []);
         });
     }, []);
@@ -40,7 +40,7 @@ const DashboardPage: React.FC = () => {
                             onClick={() => navigate(`/printer/${printer.printerId}`)}
                         >
                             <div className="col-5">
-                                
+                                <img src={printer.printerImageData?.fileUrl} alt={printer.printerName} className="image-container" />
                             </div>
                             <div className="col-6">
                                 <p>{printer.printerName}</p>

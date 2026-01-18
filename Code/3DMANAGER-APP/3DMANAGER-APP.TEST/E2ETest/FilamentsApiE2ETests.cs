@@ -1,5 +1,4 @@
 ﻿using _3DMANAGER_APP.BLL.Models.Filament;
-using _3DMANAGER_APP.Server.Models;
 using _3DMANAGER_APP.TEST.Fixture;
 using System.Net;
 using System.Net.Http.Json;
@@ -23,7 +22,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            var content = await response.Content.ReadFromJsonAsync<CommonResponse<List<FilamentListResponse>>>();
+            var content = await response.Content.ReadFromJsonAsync<Server.Models.CommonResponse<List<FilamentListResponse>>>();
             Assert.NotNull(content);
             Assert.True(content.Data.Count > 0);
         }

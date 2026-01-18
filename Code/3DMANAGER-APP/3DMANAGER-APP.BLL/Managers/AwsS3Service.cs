@@ -1,7 +1,8 @@
 ﻿using _3DMANAGER_APP.BLL.Interfaces;
+using _3DMANAGER_APP.BLL.Models.File;
 using Amazon.S3;
 using Amazon.S3.Model;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace _3DMANAGER_APP.BLL.Managers
 {
@@ -9,11 +10,12 @@ namespace _3DMANAGER_APP.BLL.Managers
     {
         private readonly IAmazonS3 _s3Client;
         private readonly string _bucketName;
-
-        public AwsS3Service(IAmazonS3 s3Client, IConfiguration config)
+        private ILogger<AwsS3Service> _logger;
+        public AwsS3Service(IAmazonS3 s3Client, string bucketName, ILogger<AwsS3Service> logger)
         {
             _s3Client = s3Client;
-            _bucketName = config["AWS:BucketName"]!;
+            _bucketName = bucketName;
+            _logger = logger;
         }
         public async Task DeleteImageAsync(string key)
         {
@@ -26,21 +28,54 @@ namespace _3DMANAGER_APP.BLL.Managers
             await _s3Client.DeleteObjectAsync(request);
         }
 
-        public async Task<string> UploadImageAsync(Stream fileStream, string fileName, string contentType, string folder)
+        public async Task<FileResponse> UploadImageAsync(Stream fileStream, string fileName, string contentType, string folder)
         {
-            var key = $"{folder}/{Guid.NewGuid()}_{fileName}";
+            try
+            {
+                var key = $"{folder}/{Guid.NewGuid()}_{fileName}";
 
-            var request = new PutObjectRequest
+                if (fileStream.CanSeek)
+                    fileStream.Position = 0;
+
+                var request = new PutObjectRequest
+                {
+                    BucketName = _bucketName,
+                    Key = key,
+                    InputStream = fileStream,
+                    ContentType = contentType
+                };
+
+                await _s3Client.PutObjectAsync(request);
+
+                return new FileResponse
+                {
+                    FileKey = key,
+                    FileUrl = $"https://{_bucketName}.s3.amazonaws.com/{key}"
+                };
+            }
+            catch (AmazonS3Exception ex)
+            {
+                _logger.LogError("AWS ERROR: " + ex.Message);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("AWS ERROR: " + ex.Message);
+                return null;
+            }
+        }
+        public string GetPresignedUrl(string key, int hours = 1)
+        {
+            var request = new GetPreSignedUrlRequest
             {
                 BucketName = _bucketName,
                 Key = key,
-                InputStream = fileStream,
-                ContentType = contentType
+                Expires = DateTime.UtcNow.AddHours(hours)
             };
-
-            await _s3Client.PutObjectAsync(request);
-
-            return $"https://{_bucketName}.s3.amazonaws.com/{key}";
+            string responseURL = _s3Client.GetPreSignedURL(request);
+            return responseURL;
         }
+
     }
 }
+

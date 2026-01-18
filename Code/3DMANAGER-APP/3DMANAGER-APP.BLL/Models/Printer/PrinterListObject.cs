@@ -1,4 +1,6 @@
-﻿namespace _3DMANAGER_APP.BLL.Models.Printer
+﻿using _3DMANAGER_APP.BLL.Models.File;
+
+namespace _3DMANAGER_APP.BLL.Models.Printer
 {
     public class PrinterListObject
     {
@@ -8,5 +10,6 @@
         public string? PrinterDescription { get; set; }
         public int? PrinterStateId { get; set; }
         public string? PrinterStateName { get; set; }
+        public FileResponse? PrinterImageData { get; set; }
     }
 }

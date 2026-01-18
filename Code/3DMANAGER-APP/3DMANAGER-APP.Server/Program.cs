@@ -5,6 +5,8 @@ using _3DMANAGER_APP.DAL.Base;
 using _3DMANAGER_APP.DAL.Interfaces;
 using _3DMANAGER_APP.DAL.Managers;
 using _3DMANAGER_APP.TestingSupport.Database;
+using Amazon;
+using Amazon.Runtime;
 using Amazon.S3;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -53,6 +55,7 @@ builder.Services.AddScoped<IFilamentDbManager, FilamentDbManager>();
 builder.Services.AddScoped<IPrintDbManager, PrintDbManager>();
 builder.Services.AddScoped<ICatalogDbManager, CatalogDbManager>();
 
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
@@ -99,14 +102,30 @@ builder.Services.AddAuthentication(options =>
 });
 
 //Amazon S3 service
-builder.Services.AddDefaultAWSOptions(
-    builder.Configuration.GetAWSOptions()
-);
-builder.Services.AddAWSService<IAmazonS3>();
-builder.Services.AddScoped<IAwsS3Service, AwsS3Service>();
+builder.Services.AddSingleton<IAmazonS3>(sp =>
+{
+    var config = sp.GetRequiredService<IConfiguration>();
+    var awsAccessKey = config["AWS:AccessKey"];
+    var awsSecretKey = config["AWS:SecretKey"];
+    var awsRegion = config["AWS:Region"];
+
+    var credentials = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
+    var region = RegionEndpoint.GetBySystemName(awsRegion);
+
+    return new AmazonS3Client(credentials, region);
+});
+builder.Services.AddScoped<IAwsS3Service>(sp =>
+{
+    var config = sp.GetRequiredService<IConfiguration>();
+    var bucketName = config["AWS:BucketName"];
+    var s3 = sp.GetRequiredService<IAmazonS3>();
+    var logger = sp.GetRequiredService<ILogger<AwsS3Service>>();
+    return new AwsS3Service(s3, bucketName, logger);
+});
 
 builder.Services.AddAuthorization();
 
+//CI configuration
 var app = builder.Build();
 if (app.Environment.IsEnvironment("CI"))
 {

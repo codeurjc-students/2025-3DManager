@@ -7,6 +7,7 @@ const CreatePrinterPage: React.FC = () => {
     const [printerName, setPrinterName] = useState("");
     const [printerDescription, setPrinterDescription] = useState("");
     const [printerModel, setPrinterModel] = useState("");
+    const [imageFile, setImageFile] = useState<File | null>(null);
 
     const navigate = useNavigate();
 
@@ -18,13 +19,13 @@ const CreatePrinterPage: React.FC = () => {
         }
         
         try {
-            let groupId = -1;
-            
+
             const response = await postPrinter({
                 printerName,
                 printerDescription,
                 printerModel,
-                groupId,
+                groupId: -1,
+                imageFile
             });
 
             if (response.data) {
@@ -62,6 +63,19 @@ const CreatePrinterPage: React.FC = () => {
                                     <label htmlFor="printerDescription" className="form-label">Descripción</label>
                                     <textarea id="printerDescription" className="input-value w-75" value={printerDescription} placeholder="Descripción"
                                         onChange={(e) => setPrinterDescription(e.target.value)} />
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Imagen de la impresora</label>
+                                    <input
+                                        type="file"
+                                        className="form-control w-75"
+                                        accept="image/*"
+                                        onChange={(e) => {
+                                            if (e.target.files && e.target.files.length > 0) {
+                                                setImageFile(e.target.files[0]);
+                                            }
+                                        }}
+                                    />
                                 </div>
                             </div>                           
                         </div>
