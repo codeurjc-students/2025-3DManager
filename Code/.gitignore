@@ -44,6 +44,7 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
+.env.production
 
 ### --- IDEs ---
 .vscode/*
@@ -70,3 +71,6 @@ desktop.ini
 ### --- Test ---
 playwright-report/
 test-results/
+
+### --- Docker env ---
+docker/.env

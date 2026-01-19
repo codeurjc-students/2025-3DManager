@@ -1,0 +1,37 @@
+services:
+  app:
+    image: ivicenter2018/3dmanager-app:dev
+    depends_on:
+      db:
+        condition: service_healthy
+    environment: 
+      ASPNETCORE_ENVIRONMENT: "Development" 
+      ASPNETCORE_URLS: "https://+:443" 
+      ConnectionStrings__DefaultConnection: ${DB_CONNECTION} 
+      ConnectionStrings__TestConnection: ${DB_TEST_CONNECTION} 
+      Jwt__Key: ${JWT_KEY} 
+      Jwt__Issuer: ${JWT_ISSUER} 
+      AWS__Region: ${AWS_REGION} 
+      AWS__BucketName: ${AWS_BUCKET} 
+      AWS__AccessKey: ${AWS_ACCESS_KEY} 
+      AWS__SecretKey: ${AWS_SECRET_KEY} 
+    ports: 
+      - "8443:443"
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: "3dmanagerpass"
+      MYSQL_DATABASE: "3dmanager_dev"
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-pexample"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    volumes:
+      - db_data_dev:/var/lib/mysql
+
+volumes:
+  db_data_dev:
