@@ -10,6 +10,11 @@
     <SpaProxyServerUrl>https://localhost:3000</SpaProxyServerUrl>
     <UserSecretsId>e438ecc7-4e05-47e6-b559-1d5ce4a6677c</UserSecretsId>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <SpaProxyLaunchCommand></SpaProxyLaunchCommand>
+    <SpaProxyServerUrl></SpaProxyServerUrl>
+    <SpaRoot></SpaRoot>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
@@ -34,9 +39,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\3DMANAGER-APP.BLL\3DMANAGER-APP.BLL.csproj" />
-    <ProjectReference Include="..\3dmanager-app.client\3dmanager-app.client.esproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
     <ProjectReference Include="..\3DMANAGER-APP.DAL\3DMANAGER-APP.DAL.csproj" />
     <ProjectReference Include="..\TestingSupport\3DMANAGER-APP.TestingSupport.csproj" />
   </ItemGroup>

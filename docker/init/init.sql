@@ -44,7 +44,7 @@ CREATE TABLE `3DMANAGER_GROUP` (
   `3DMANAGER_GROUP_NAME` varchar(100) NOT NULL,
   `3DMANAGER_GROUP_DESCRIPTION` varchar(500) DEFAULT NULL,
   `3DMANAGER_PRINTER_REGISTER_DATE` datetime DEFAULT CURRENT_TIMESTAMP,
-  `3DMANAGER_USER_OWNER` int NOT NULL DEFAULT '1',
+  `3DMANAGER_USER_OWNER` int NOT NULL,
   PRIMARY KEY (`3DMANAGER_GROUP_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -179,10 +179,93 @@ CREATE TABLE `3DMANAGER_SYSTEM_LOGS` (
 
 
 -- INSERT INITIAL DATA
+INSERT INTO `3DMANAGER_C_STATE_PRINTER`
+(`3DMANAGER_C_STATE_PRINTER_NAME`)
+VALUES ('Activo'),('En mantenimiento'),('Fuera de servicio');
 
+INSERT INTO `3DMANAGER_C_STATE_FILAMENT`
+(`3DMANAGER_C_STATE_FILAMENT_NAME`)
+VALUES ('Disponible'),('Agotado');
+
+INSERT INTO `3DMANAGER_C_ROLES`
+(`3DMANAGER_C_ROLES_NAME`)
+VALUES ('Usuario-Base'),('Usuario-Manager'),('Usuario-Invitado');
+
+INSERT INTO `3DMANAGER_C_TYPE_FILAMENT`
+(`3DMANAGER_C_TYPE_FILAMENT_NAME`)
+VALUES ('PLA'),('PLA +'),('ABS'),('PETG'),('TPU'),('TPE'),('Nylon'),('PC'),('ASA'),('POM'),('PLA-CF'),('Nylon-CF'),('PETG-CF'),('PVA'),('HIPS');
+
+INSERT INTO `3DMANAGER_C_STATE_PRINT`
+(`3DMANAGER_C_STATE_PRINT_NAME`)
+VALUES ('Pendiente'),('Completada'),('No Completada');
+
+INSERT INTO `3DMANAGER_C_TYPE_NOTIFICATION`
+(`3DMANAGER_C_TYPE_NOTIFICATION_NAME`)
+VALUES ('Aviso'),('Invitacion a grupo'),('Comentario en impresión');
+
+INSERT INTO `3DMANAGER_USER`
+(`USER_NAME`,`USER_PASSWORD`,`USER_EMAIL`, `USER_ROLE`, `USER_GROUP_ID`)
+VALUES
+('Invitado-Manager','AQAAAAIAAYagAAAAEHVWbM6i/sYDtYJHqlPW+ckpGV8Et/QzZcY8eA9BgwWfF7OwWNSd6cl+FXv1hjlAvg==','3dmanagerGuestManager@gmail.com',2,1),
+('Invitado','AQAAAAIAAYagAAAAEDCPWazVXs+DAkPUp1LN0+PBiBgEwCTtNzcd1ywjabTt8wgq73xFhTe4n2Yr8/rH5A==','3dmanagerInvitado@gmail.com',2,1);
+
+INSERT INTO `3DMANAGER_GROUP`
+(`3DMANAGER_GROUP_NAME`,`3DMANAGER_GROUP_DESCRIPTION`,`3DMANAGER_USER_OWNER`)
+VALUES
+('Grupo Invitado', 'Este es un grupo del invitado, creado para proporcionar al usuario una vision de la app',1);		
+
+INSERT INTO `3DMANAGER_FILAMENT`
+(`3DMANAGER_FILAMENT_NAME`,
+ `3DMANAGER_FILAMENT_DESCRIPTION`,
+ `3DMANAGER_FILAMENT_STATE`,
+ `3DMANAGER_FILAMENT_MATERIAL_LENGTH`,
+ `3DMANAGER_FILAMENT_MATERIAL_REMAINING_LENGTH`,
+ `3DMANAGER_FILAMENT_MATERIAL_THICKNESS`,
+ `3DMANAGER_FILAMENT_TEMPERATURE`,
+ `3DMANAGER_FILAMENT_COLOR`,
+ `3DMANAGER_FILAMENT_GROUP_ID`,
+ `3DMANAGER_FILAMENT_MATERIAL_TYPE`,
+ `3DMANAGER_FILAMENT_WEIGHT`,
+ `3DMANAGER_FILAMENT_COST`)
+VALUES
+('Filamento ELEGOO PLA','Bobina de color negro, compatible con la mayoría de impresoras. Comprada en amazon por rebaja',
+ 1,300.0000, 295.4200, 1.75, 195, '#000000', 1, 2, 1, 15.00),
+('Filamento Blaco eSUN','Bobina de buena calidad, pero el material es muy útil para estructuras fuertes, no recomendable para detalles de alto nivel',
+ 1,325.000, 320.4200, 1.75, 205, '#ffffff', 1, 1, 1, 12.00),		
+('SOLEYIN verde','Bobina especialmente útil para impresiones de alta velocidad. Compatible con mayoría de impresoras',
+ 1,300.000, 295.4200, 1.75, 205, '#7edd91', 1, 1, 1, 9.19);	
+ 		
+INSERT INTO `3DMANAGER_PRINTER`
+(`3DMANAGER_PRINTER_NAME`,
+`3DMANAGER_PRINTER_MODEL`,
+`3DMANAGER_PRINTER_STATE`,
+`3DMANAGER_PRINTER_GROUP_ID`,
+`3DMANAGER_PRINTER_DESCRIPTION`)
+VALUES
+('Impresora invitado 1','Creality Ender V1 SE',1,1,'Esta es la impresora 1 de invitado.'),
+('Impresora invitado 2','Creality Ender V2 SE',2,1,'Esta es la impresora 2 de invitado.'),
+('Impresora invitado 3','Creality Ender V3 SE',3,1,'Esta es la impresora 3 de invitado.')
+;
+
+INSERT INTO `3DMANAGER_3DPRINT`
+(`3DMANAGER_3DPRINT_NAME`,
+`3DMANAGER_3DPRINT_STATE`,
+`3DMANAGER_3DPRINT_IMPRESSION_TIME`,
+`3DMANAGER_3DPRINT_REAL_IMPRESSION_TIME`,
+`3DMANAGER_3DPRINT_MATERIAL_CONSUMED`,
+`3DMANAGER_3DPRINT_GROUP_ID`,
+`3DMANAGER_3DPRINT_PRINTER_ID`,
+`3DMANAGER_3DPRINT_USER_ID`,
+`3DMANAGER_3DPRINT_FILAMENT_ID`,
+`3DMANAGER_3DPRINT_DESCRIPTION`)
+VALUES
+('Impresion 1',2,5184,4380,4.58,1,1,2,1,'Benchy test 1 con filamento 1'),
+('Impresion 2',2,5184,4800,4.74,1,1,2,2,'Benchy test 2 con filamento 2'),
+('Impresion 3',2,5184,5180,4.96,1,2,2,3,'Benchy test 3 con filamento 3')
+;
 
 -- STORED PROCEDURES
-
+		
 DELIMITER $$
 
 CREATE PROCEDURE `3DMANAGER_pr_C_FILAMENT`(

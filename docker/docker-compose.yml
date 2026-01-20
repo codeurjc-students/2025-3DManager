@@ -1,5 +1,8 @@
 services:
   app:
+    build: 
+      context: .. 
+      dockerfile: docker/Dockerfile
     image: ivicenter2018/3dmanager-app:0.1
     depends_on:
       db:
