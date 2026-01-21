@@ -25,7 +25,7 @@ builder.Configuration
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddJsonFile($"appsettings.{envName}.json", optional: true, reloadOnChange: true)
     .AddEnvironmentVariables()
-    .AddUserSecrets<Program>(optional: builder.Environment.IsDevelopment() || isCI);
+    .AddUserSecrets<Program>(optional: true);
 
 // Services
 builder.Services.AddControllers()
@@ -145,10 +145,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "3DManager API v1"));
 }
 
-if (!app.Environment.IsEnvironment("CI"))
+if (app.Environment.IsDevelopment())
 {
     app.UseHttpsRedirection();
 }
+
 app.UseStaticFiles();
 app.UseRouting();
 app.UseCors("AllowFrontend");

@@ -6,7 +6,6 @@ services:
         condition: service_healthy
     environment: 
       ASPNETCORE_ENVIRONMENT: "Development" 
-      ASPNETCORE_URLS: "https://+:443" 
       ConnectionStrings__DefaultConnection: ${DB_CONNECTION} 
       ConnectionStrings__TestConnection: ${DB_TEST_CONNECTION} 
       Jwt__Key: ${JWT_KEY} 
