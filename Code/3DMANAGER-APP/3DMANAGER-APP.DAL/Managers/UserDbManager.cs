@@ -93,13 +93,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al crear un usurio en BBDD";
+                string msg = "Error al acceder con un usuario en BBDD";
                 Logger.LogError(ex, msg);
                 return null;
             }
             catch (Exception ex)
             {
-                string msg = "Error al crear un usurio en BBDD";
+                string msg = "Error al acceder con un usuario en BBDD";
                 Logger.LogError(ex, msg);
                 return null;
             }

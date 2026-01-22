@@ -20,6 +20,7 @@ var builder = WebApplication.CreateBuilder(args);
 var envName = builder.Environment.EnvironmentName;
 var isCI = string.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), "CI", StringComparison.OrdinalIgnoreCase);
 
+
 builder.Configuration
     .SetBasePath(builder.Environment.ContentRootPath)
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -32,8 +33,11 @@ builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
         options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
-builder.Services.AddAutoMapper(cfg => cfg.AddProfile<AutoMapperProfile>());
-
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddProfile<AutoMapperProfile>();
+    cfg.LicenseKey = builder.Configuration["Automapper:License"];
+});
 builder.Services.AddScoped<IDataSource<MySqlConnection>>(provider =>
 {
     var configuration = provider.GetRequiredService<IConfiguration>();

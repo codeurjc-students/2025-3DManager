@@ -44,10 +44,10 @@ RUN mkdir -p /https && \
         -password pass:3dmanagerPASS1234
 
 # Environment variables
-ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/https/https.pfx
-ENV ASPNETCORE_Kestrel__Certificates__Default__Password=3dmanagerPASS1234
 ENV ASPNETCORE_URLS=https://+:443
 ENV ASPNETCORE_ENVIRONMENT=Production
+ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/https/https.pfx
+ENV ASPNETCORE_URLS=https://+:443
 
 COPY --from=build /app/publish ./
 
