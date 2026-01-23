@@ -1,12 +1,13 @@
 ﻿import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { postNewGroup } from "../api/groupService";
+import { useAuth } from '../context/AuthContext';
 
 const CreateGroupPage: React.FC = () => {
 
     const [groupName, setGroupName] = useState("");
     const [groupDescription, setGroupDescription] = useState("");
-
+    const { logout } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -27,8 +28,8 @@ const CreateGroupPage: React.FC = () => {
             });
 
             if (response.data) {
-                alert("Grupo creado correctamente.");
-                navigate("/dashboard");
+                alert("Grupo creado correctamente. Se va a proceder a hacer un logout para entrar al nuevo grupo");
+                logout();
             } else {
                 alert(response.error?.message || "No se pudo crear el grupo.");
             }
@@ -62,7 +63,7 @@ const CreateGroupPage: React.FC = () => {
                         </div>
                         <div className="d-flex justify-content-between  m-5">
                             <button type="submit" className="botton-yellow createUser">Crear grupo</button>
-                            <button type="button" className="botton-darkGrey" onClick={() => navigate("/group-create")}>Cancelar</button>
+                            <button type="button" className="botton-darkGrey" onClick={() => navigate("/group")}>Cancelar</button>
                         </div>                                      
                     </form>
                 </div>

@@ -20,20 +20,24 @@ var builder = WebApplication.CreateBuilder(args);
 var envName = builder.Environment.EnvironmentName;
 var isCI = string.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), "CI", StringComparison.OrdinalIgnoreCase);
 
+
 builder.Configuration
     .SetBasePath(builder.Environment.ContentRootPath)
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddJsonFile($"appsettings.{envName}.json", optional: true, reloadOnChange: true)
     .AddEnvironmentVariables()
-    .AddUserSecrets<Program>(optional: builder.Environment.IsDevelopment() || isCI);
+    .AddUserSecrets<Program>(optional: true);
 
 // Services
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
         options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
-builder.Services.AddAutoMapper(cfg => cfg.AddProfile<AutoMapperProfile>());
-
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddProfile<AutoMapperProfile>();
+    cfg.LicenseKey = builder.Configuration["Automapper:License"];
+});
 builder.Services.AddScoped<IDataSource<MySqlConnection>>(provider =>
 {
     var configuration = provider.GetRequiredService<IConfiguration>();
@@ -145,10 +149,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "3DManager API v1"));
 }
 
-if (!app.Environment.IsEnvironment("CI"))
+if (app.Environment.IsDevelopment())
 {
     app.UseHttpsRedirection();
 }
+
 app.UseStaticFiles();
 app.UseRouting();
 app.UseCors("AllowFrontend");

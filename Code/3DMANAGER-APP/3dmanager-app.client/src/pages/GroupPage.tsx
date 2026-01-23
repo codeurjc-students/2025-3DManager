@@ -53,7 +53,7 @@ const GroupPage: React.FC = () => {
                     <span > La aplicación se gestiona mediante grupos. Para su uso tendrá que ser invitado a participar en un grupo o crear uno.</span>
                     <div className= "d-flex mt-3 h-50">
                         <div className="col-2 m-3 p-2" >
-                            <button type="button" className="botton-yellow createGroup" onClick={() => navigate("/createGroups")}>
+                            <button type="button" className="botton-yellow createGroup" onClick={() => navigate("/group-create")}>
                                 Crear grupo
                             </button>
                         </div>
