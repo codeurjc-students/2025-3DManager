@@ -1,5 +1,9 @@
 services:
   app:
+    container_name: 3dmanager-app-dev
+    build: 
+      context: .. 
+      dockerfile: docker/Dockerfile
     image: ivicenter2018/3dmanager-app:dev
     depends_on:
       db:
@@ -13,14 +17,22 @@ services:
       AWS__Region: ${AWS_REGION} 
       AWS__BucketName: ${AWS_BUCKET} 
       AWS__AccessKey: ${AWS_ACCESS_KEY} 
-      AWS__SecretKey: ${AWS_SECRET_KEY} 
+      AWS__SecretKey: ${AWS_SECRET_KEY}   
+      ASPNETCORE_Kestrel__Certificates__Default__Password: ${CERT_PASSWORD}
+      AUTOMAPPER__LICENSE: "${AUTOMAPPER__LICENSE}"
     ports: 
-      - "8443:443"
+      - "443:443"
+    healthcheck:
+      test: ["CMD", "curl", "-k", "https://localhost/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 20s
   db:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: "3dmanagerpass"
-      MYSQL_DATABASE: "3dmanager_dev"
+      MYSQL_DATABASE: "3dmanager"
     ports:
       - "3307:3306"
     healthcheck:
@@ -31,6 +43,7 @@ services:
       start_period: 20s
     volumes:
       - db_data_dev:/var/lib/mysql
+      - ./init:/docker-entrypoint-initdb.d
 
 volumes:
   db_data_dev:

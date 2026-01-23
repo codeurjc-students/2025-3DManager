@@ -45,9 +45,7 @@ RUN mkdir -p /https && \
 
 # Environment variables
 ENV ASPNETCORE_URLS=https://+:443
-ENV ASPNETCORE_ENVIRONMENT=Production
 ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/https/https.pfx
-ENV ASPNETCORE_URLS=https://+:443
 
 COPY --from=build /app/publish ./
 

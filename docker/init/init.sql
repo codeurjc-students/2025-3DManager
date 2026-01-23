@@ -344,11 +344,21 @@ CREATE PROCEDURE `3DMANAGER_pr_FILAMENT_POST`(
 BEGIN
     DECLARE NEW_ID INT;
 
+    -- If an the proc have an error SQL while running, goes to handler, do a rollback and set "CodigoError" -1
+    DECLARE v_err_msg TEXT;
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        SET CodigoError = -1;
-    END;
+	BEGIN
+		GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
+
+		-- Independant commit
+		START TRANSACTION;
+		INSERT INTO `3DMANAGER_SYSTEM_LOGS`(PROCEDURE_NAME, ERROR_MESSAGE)
+		VALUES('3DMANAGER_pr_FILAMENT_POST', v_err_msg);
+		COMMIT;
+
+		SET CodigoError = -1;
+		ROLLBACK;
+	END;
 
     SET CodigoError = 0;
     START TRANSACTION;
@@ -447,15 +457,15 @@ CREATE PROCEDURE `3DMANAGER_pr_GROUP_POST`(
 )
 BEGIN
 
-	-- Si hay un error SQL, se entra al handler, se hace rollback y se asigna el código -1
+	-- If an the proc have an error SQL while running, goes to handler, do a rollback and set "CodigoError" -1
     DECLARE v_err_msg TEXT;
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
 	BEGIN
 		GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
 
-		-- Forzar un commit independiente
+		-- Independant commit
 		START TRANSACTION;
-		INSERT INTO 3DMANAGER_SYSTEM_LOGS(PROCEDURE_NAME, ERROR_MESSAGE)
+		INSERT INTO `3DMANAGER_SYSTEM_LOGS`(PROCEDURE_NAME, ERROR_MESSAGE)
 		VALUES('3DMANAGER_pr_GROUP_POST', v_err_msg);
 		COMMIT;
 
@@ -522,7 +532,7 @@ BEGIN
 	BEGIN
 		GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
 
-		-- Forzar un commit independiente
+		-- Independant commit
 		START TRANSACTION;
 		INSERT INTO `3DMANAGER_SYSTEM_LOGS`(PROCEDURE_NAME, ERROR_MESSAGE)
 		VALUES('3DMANAGER_pr_PRINT_POST', v_err_msg);
@@ -608,12 +618,21 @@ CREATE PROCEDURE `3DMANAGER_pr_PRINTER_POST`(
 BEGIN
 	DECLARE NEW_ID INT;
     
-     -- Si hay un error SQL, se entra al handler, se hace rollback y se asigna el código -1
+    -- If an the proc have an error SQL while running, goes to handler, do a rollback and set "CodigoError" -1
+    DECLARE v_err_msg TEXT;
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        SET CodigoError = -1;
-    END;
+	BEGIN
+		GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
+
+		-- Independant commit
+		START TRANSACTION;
+		INSERT INTO `3DMANAGER_SYSTEM_LOGS`(PROCEDURE_NAME, ERROR_MESSAGE)
+		VALUES('3DMANAGER_pr_PRINTER_POST', v_err_msg);
+		COMMIT;
+
+		SET CodigoError = -1;
+		ROLLBACK;
+	END;
     
     SET CodigoError = 0;
     IF EXISTS(SELECT 1 FROM `3DMANAGER_PRINTER` WHERE `3DMANAGER_PRINTER_NAME` = P_PRINTER_NAME AND `3DMANAGER_PRINTER_GROUP_ID` = P_GROUP_ID )
@@ -648,12 +667,21 @@ CREATE PROCEDURE `3DMANAGER_pr_PRINTER_POST_IMAGE`(
     OUT CodigoError INT
 )
 BEGIN
-     -- Si hay un error SQL, se entra al handler, se hace rollback y se asigna el código -1
+    -- If an the proc have an error SQL while running, goes to handler, do a rollback and set "CodigoError" -1
+    DECLARE v_err_msg TEXT;
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        SET CodigoError = -1;
-    END;
+	BEGIN
+		GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
+
+		-- Independant commit
+		START TRANSACTION;
+		INSERT INTO `3DMANAGER_SYSTEM_LOGS`(PROCEDURE_NAME, ERROR_MESSAGE)
+		VALUES('3DMANAGER_pr_PRINTER_POST_IMAGE', v_err_msg);
+		COMMIT;
+
+		SET CodigoError = -1;
+		ROLLBACK;
+	END;
     
     SET CodigoError = 0;
     
@@ -739,12 +767,21 @@ CREATE PROCEDURE `3DMANAGER_pr_USER_POST`(
 )
 BEGIN
 
-	-- Si hay un error SQL, se entra al handler, se hace rollback y se asigna el código -1
+	-- If an the proc have an error SQL while running, goes to handler, do a rollback and set "CodigoError" -1
+    DECLARE v_err_msg TEXT;
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        SET CodigoError = -1;
-    END;
+	BEGIN
+		GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
+
+		-- Independant commit
+		START TRANSACTION;
+		INSERT INTO `3DMANAGER_SYSTEM_LOGS`(PROCEDURE_NAME, ERROR_MESSAGE)
+		VALUES('3DMANAGER_pr_USER_POST', v_err_msg);
+		COMMIT;
+
+		SET CodigoError = -1;
+		ROLLBACK;
+	END;
     
     SET CodigoError = 0;
 	START TRANSACTION;
