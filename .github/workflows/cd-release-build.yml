@@ -1,0 +1,13 @@
+name: Release Build
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  call-reusable:
+    uses: ./.github/workflows/cd-build-and-push.yml
+    with:
+      tag: ${{ github.event.release.tag_name }}
+      isLatest: true
+      composeTag: ${{ github.event.release.tag_name | split('.') | slice(0,2) | join('.') }}
