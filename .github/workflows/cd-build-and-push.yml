@@ -52,12 +52,23 @@ jobs:
         if: ${{ inputs.isLatest == true }}
         run: docker push ${{ secrets.DOCKERHUB_REPOSITORY }}:latest
         
-      - name: Setup ORAS CLI 
+      - name: Setup ORAS CLI
         uses: oras-project/setup-oras@v1
-        
-      - name: Publish docker-compose.yml as OCI artifact
-        if: ${{ inputs.composeTag != '' }}
+
+      - name: Login to Docker Hub with ORAS
+        env:
+          REGISTRY: registry-1.docker.io
+          USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
         run: |
-          oras push ${{ secrets.DOCKERHUB_REPOSITORY }}:${{ inputs.composeTag }} \
-            --artifact-type application/vnd.docker.compose \
-            docker/docker-compose.yml
+          echo "${TOKEN}" | oras login "${REGISTRY}" -u "${USERNAME}" --password-stdin
+      
+      - name: Push docker-compose as OCI artifact
+        env:
+          REGISTRY: registry-1.docker.io
+          COMPOSE_REPO: ivicenter2018/3dmanager-app
+          TAG: ${{ inputs.composeTag }}
+        run: |
+          oras push "${REGISTRY}/${COMPOSE_REPO}:${TAG}" \
+            docker/docker-compose.yml:application/vnd.docker.compose.config.v1+yaml
+
