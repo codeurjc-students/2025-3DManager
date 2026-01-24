@@ -5,9 +5,10 @@ on:
     types: [published]
 
 jobs:
-  call-reusable:
+  prepare:
     runs-on: ubuntu-latest
-
+    outputs:
+      compose_tag: ${{ steps.version.outputs.compose_tag }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -19,10 +20,11 @@ jobs:
           COMPOSE_TAG=$(echo "$TAG" | cut -d'.' -f1,2)
           echo "compose_tag=$COMPOSE_TAG" >> $GITHUB_OUTPUT
 
-      - name: Call reusable workflow
-        uses: ./.github/workflows/cd-build-and-push.yml
-        secrets: inherit
-        with:
-          tag: ${{ github.event.release.tag_name }}
-          isLatest: true
-          composeTag: ${{ steps.version.outputs.compose_tag }}
+  call-reusable:
+    needs: prepare
+    uses: ./.github/workflows/cd-build-and-push.yml
+    secrets: inherit
+    with:
+      tag: ${{ github.event.release.tag_name }}
+      isLatest: true
+      composeTag: ${{ needs.prepare.outputs.compose_tag }}
