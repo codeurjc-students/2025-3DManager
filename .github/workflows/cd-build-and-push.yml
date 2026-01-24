@@ -52,11 +52,9 @@ jobs:
         if: ${{ inputs.isLatest == true }}
         run: docker push ${{ secrets.DOCKERHUB_REPOSITORY }}:latest
         
-      - name: Install ORAS CLI 
-        run: | 
-          curl -sSfL https://github.com/oras-project/oras/releases/latest/download/oras_1.2.0_linux_amd64.tar.gz -o oras.tar.gz 
-          tar -xzf oras.tar.gz oras 
-          sudo mv oras /usr/local/bin/
+      - name: Setup ORAS CLI 
+        uses: oras-project/setup-oras@v1
+        
       - name: Publish docker-compose.yml as OCI artifact
         if: ${{ inputs.composeTag != '' }}
         run: |
