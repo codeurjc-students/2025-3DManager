@@ -21,6 +21,7 @@ jobs:
 
       - name: Call reusable workflow
         uses: ./.github/workflows/cd-build-and-push.yml
+        secrets: inherit
         with:
           tag: ${{ github.event.release.tag_name }}
           isLatest: true

@@ -32,6 +32,7 @@ jobs:
 
       - name: Call reusable workflow
         uses: ./.github/workflows/cd-build-and-push.yml
+        secrets: inherit
         with:
           tag: "${{ inputs.branch }}-${{ github.run_id }}-${{ steps.sha.outputs.value }}"
           isLatest: false
