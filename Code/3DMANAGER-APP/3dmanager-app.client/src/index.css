@@ -1,0 +1,271 @@
+/*CSS form reusable components command general classes*/
+:root {
+    --colorWhite: #ffffff;
+    --colorLowGrey: #f5f6f7;
+    --colorText: #1c1c1c;
+    --colorText2: #4b5563;
+    --colorBordersAndSplitters: #e5e7eb;
+    --colorDarkGrey: #2c2c2c;
+    --colorYellow: #ffd54a;
+    --colorLowYellow: #fcdd74;
+    --colorBlack: #000000;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif, Impact;
+    line-height: 1.5;
+    font-weight: 400;
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.textStyleTitulos {
+    font-size: 32px;
+    font-family: Impact, sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    text-decoration: none;
+    text-transform: none;
+}
+
+.textStyleImpactNormal {
+    font-size: 12px;
+    font-family: Impact, sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    text-decoration: none;
+    text-transform: none;
+}
+
+
+body {
+  margin: 0;
+  background-color : var(--colorWhite)
+}
+
+.h-10 {
+    height: 10%;
+}
+
+.h-20 {
+    height: 20%;
+}
+
+.h-30 {
+    height: 30%;
+}
+
+.h-40 {
+    height: 40%;
+}
+.h-60 {
+    height: 60%;
+}
+
+.h-70 {
+    height: 70%;
+}
+
+.w-10 {
+    width: 10%;
+}
+
+.w-20 {
+    width: 20%;
+}
+
+.w-30 {
+    width: 30%;
+}
+
+.w-40 {
+    width: 40%;
+}
+
+.w-60 {
+    width: 60%;
+}
+
+.w-70 {
+    width: 70%;
+}
+.w-80 {
+    width: 80%;
+}
+.w-90 {
+    width: 90%;
+}
+
+
+.grey-container {
+    border-color : var(--colorBordersAndSplitters);
+    background-color : var(--colorLowGrey);
+    border-radius :5px;
+
+}
+
+.white-container {
+    border-color: var(--colorBordersAndSplitters);
+    background-color: var(--colorWhite);
+    border-radius: 5px;
+}
+.title-impact{
+    font-family: Impact , sans-serif ;
+    font-size : 42px;
+}
+.title-impact-2 {
+    font-family: Impact, sans-serif;
+    font-size: 30px;
+}
+
+.input-value {
+    display: block;
+    width: 50%;
+    padding: 6px 12px;
+    background-color: var(--colorWhite);
+    border: 1px solid var(--colorBordersAndSplitters);
+    border-radius: 6px;
+    color : var(--colorBlack)
+}
+
+.botton-yellow {
+    background-color: var(--colorYellow); 
+    color: var(--colorText); 
+    border: 1px solid var(--colorBlack); 
+    border-radius: 8px; 
+    padding: 0.5rem 1rem; 
+    font-weight: bold;
+}
+
+.botton-low-yellow {
+    background-color: var(--colorLowYellow);
+    color: var(--colorText);
+    border: 1px solid var(--colorBlack);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    height : 250px;
+}
+
+.botton-yellow.createUser {
+    width: 40%;
+    height: 100%;
+}
+
+.botton-yellow.createGroup {
+    width: 100%;
+    height: 30%;
+}
+
+.botton-darkGrey {
+    background-color: var(--colorDarkGrey);
+    color: var(--colorWhite);
+    border: 1px solid var(--colorBlack);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    width: 50%;
+    height: 100%;
+}
+
+.dashboard-icon-btn {
+    width : 250px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dashboard-title {
+    color: var(--colorBlack);
+    font-weight: bold;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    font-family: Impact, sans-serif;
+}
+.white-container-button {
+    background-color: var(--colorWhite);
+    border: none;
+}
+
+.table-container {
+    max-height: 700px;
+}
+
+.invitation-container {
+    overflow-y: auto;
+    max-height: 300px;
+}
+
+
+.table-container table thead {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1;
+}
+
+.table {
+    border-collapse: collapse;
+}
+
+    .table th {
+        background-color: #f5f5f5;
+        text-align: left;
+    }
+
+    .table td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+
+.printer-card {
+    background: white;
+    border: 1px solid var(--colorBordersAndSplitters);
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+    color: var(--colorBlack);
+    width: 100%;
+    height : 300px;
+    
+}
+.printer-card:hover {
+    background-color: #ededed;
+    transition: 0.2s;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1.5px solid;
+    background-color: transparent;
+    text-align: center;
+}
+
+.status-active {
+    color: #2e7d32;
+    border-color: #2e7d32;
+}
+
+.status-out {
+    color: #c62828;
+    border-color: #c62828;
+}
+
+.status-maintenance {
+    color: #616161;
+    border-color: #9e9e9e;
+}

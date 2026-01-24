@@ -1,0 +1,170 @@
+using _3DMANAGER_APP.BLL.Interfaces;
+using _3DMANAGER_APP.BLL.Managers;
+using _3DMANAGER_APP.BLL.Mapper;
+using _3DMANAGER_APP.DAL.Base;
+using _3DMANAGER_APP.DAL.Interfaces;
+using _3DMANAGER_APP.DAL.Managers;
+using _3DMANAGER_APP.TestingSupport.Database;
+using Amazon;
+using Amazon.Runtime;
+using Amazon.S3;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using MySql.Data.MySqlClient;
+using System.Text;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Base configuration and user secrets
+var envName = builder.Environment.EnvironmentName;
+var isCI = string.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"), "CI", StringComparison.OrdinalIgnoreCase);
+
+
+builder.Configuration
+    .SetBasePath(builder.Environment.ContentRootPath)
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{envName}.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables()
+    .AddUserSecrets<Program>(optional: true);
+
+// Services
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddProfile<AutoMapperProfile>();
+    cfg.LicenseKey = builder.Configuration["Automapper:License"];
+});
+builder.Services.AddScoped<IDataSource<MySqlConnection>>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var connectionString = configuration.GetConnectionString("DefaultConnection");
+    return new MySQLDataSource(connectionString, "3DMANAGER");
+});
+
+builder.Services.AddScoped<JwtService>();
+builder.Services.AddScoped<IPrinterManager, PrinterManager>();
+builder.Services.AddScoped<IUserManager, UserManager>();
+builder.Services.AddScoped<IGroupManager, GroupManager>();
+builder.Services.AddScoped<IPrintManager, PrintManager>();
+builder.Services.AddScoped<IFilamentManager, FilamentManager>();
+builder.Services.AddScoped<ICatalogManager, CatalogManager>();
+builder.Services.AddScoped<IPrinterDbManager, PrinterDbManager>();
+builder.Services.AddScoped<IUserDbManager, UserDbManager>();
+builder.Services.AddScoped<IGroupDbManager, GroupDbManager>();
+builder.Services.AddScoped<IFilamentDbManager, FilamentDbManager>();
+builder.Services.AddScoped<IPrintDbManager, PrintDbManager>();
+builder.Services.AddScoped<ICatalogDbManager, CatalogDbManager>();
+
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("https://localhost:3000", "http://localhost:3000", "http://localhost:3001")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+//Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "3DManager API",
+        Version = "v1"
+    });
+});
+
+//JWT configuration
+
+var key = builder.Configuration["Jwt:Key"];
+var issuer = builder.Configuration["Jwt:Issuer"];
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = issuer,
+        ValidAudience = issuer,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key!))
+    };
+});
+
+//Amazon S3 service
+builder.Services.AddSingleton<IAmazonS3>(sp =>
+{
+    var config = sp.GetRequiredService<IConfiguration>();
+    var awsAccessKey = config["AWS:AccessKey"];
+    var awsSecretKey = config["AWS:SecretKey"];
+    var awsRegion = config["AWS:Region"];
+
+    var credentials = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
+    var region = RegionEndpoint.GetBySystemName(awsRegion);
+
+    return new AmazonS3Client(credentials, region);
+});
+builder.Services.AddScoped<IAwsS3Service>(sp =>
+{
+    var config = sp.GetRequiredService<IConfiguration>();
+    var bucketName = config["AWS:BucketName"];
+    var s3 = sp.GetRequiredService<IAmazonS3>();
+    var logger = sp.GetRequiredService<ILogger<AwsS3Service>>();
+    return new AwsS3Service(s3, bucketName, logger);
+});
+
+builder.Services.AddAuthorization();
+
+//CI configuration
+var app = builder.Build();
+if (app.Environment.IsEnvironment("CI"))
+{
+    using var scope = app.Services.CreateScope();
+    var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+    var cs = config.GetConnectionString("DefaultConnection");
+
+    var seeder = new DatabaseSeeder(cs!);
+    await seeder.SeedAsync();
+}
+
+
+// Middleware
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "3DManager API v1"));
+}
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
+
+app.UseStaticFiles();
+app.UseRouting();
+app.UseCors("AllowFrontend");
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
+app.MapGet("/health", () => Results.Ok("OK"));
+app.MapFallbackToFile("/index.html");
+
+app.Run();
+
+public partial class Program { }

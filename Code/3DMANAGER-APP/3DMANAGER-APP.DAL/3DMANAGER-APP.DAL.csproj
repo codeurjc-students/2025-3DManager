@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>_3DMANAGER_APP.DAL</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+	<None Include="Managers\CatalogDbManager.cs" />
+	<None Include="Managers\PrintDbManager.cs" />
+	<None Include="Managers\FilamentDbManager.cs" />
+    <None Include="Managers\GroupDbManager.cs" />
+    <None Include="Managers\FilamentDbManager.cs" />
+    <None Include="Managers\UserDbManager.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="9.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.3" />
+    <PackageReference Include="MySql.Data" Version="9.4.0" />
+    <PackageReference Include="NSwag.AspNetCore" Version="14.6.1" />
+  </ItemGroup>
+
+</Project>

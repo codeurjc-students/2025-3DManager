@@ -1,0 +1,5 @@
+Code/3DMANAGER-APP/3dmanager-app.client/test-results/
+Code/3DMANAGER-APP/3dmanager-app.client/playwright-report/
+
+# Docker env
+docker/.env

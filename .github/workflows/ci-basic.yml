@@ -1,0 +1,74 @@
+name: CI Basic
+
+on:
+  push:
+    branches:
+      - 'feature/*'
+  workflow_dispatch:
+
+jobs:
+  build-and-test-server:
+    name: Build and Test server 
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore Server project
+        run: dotnet restore Code/3DMANAGER-APP/3DMANAGER-APP.Server/3DMANAGER-APP.Server.csproj
+
+      - name: Build Server project
+        run: dotnet build Code/3DMANAGER-APP/3DMANAGER-APP.Server/3DMANAGER-APP.Server.csproj --no-restore --configuration Release
+
+      - name: Restore Test project
+        run: dotnet restore Code/3DMANAGER-APP/3DMANAGER-APP.TEST/3DMANAGER-APP.TEST.csproj
+
+      - name: Build Test project
+        run: dotnet build Code/3DMANAGER-APP/3DMANAGER-APP.TEST/3DMANAGER-APP.TEST.csproj --no-restore --configuration Release
+
+      - name: Run unitary tests 
+        run: dotnet test Code/3DMANAGER-APP/3DMANAGER-APP.TEST/3DMANAGER-APP.TEST.csproj --no-build --configuration Release --filter "Category=Unitary"
+
+  build-and-test-client:
+    name: Build and test client
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: Code/3DMANAGER-APP/3dmanager-app.client
+
+      - name: Clean Vitest cache
+        run: rm -rf .vitest
+        
+      - name: Debug and run unit tests (Vitest)
+        working-directory: Code/3DMANAGER-APP/3dmanager-app.client
+        run: npm run test:ci-basic
+
+      - name: Build client
+        run: npm run build --if-present
+        working-directory: Code/3DMANAGER-APP/3dmanager-app.client
+
+

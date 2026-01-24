@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "3dmanager-app.client", "3dmanager-app.client\3dmanager-app.client.esproj", "{9A913102-568F-AE0E-8F90-91A3BC126702}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3DMANAGER-APP.Server", "3DMANAGER-APP.Server\3DMANAGER-APP.Server.csproj", "{F207F2ED-0EA7-460D-91B7-C80D8206CB88}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3DMANAGER-APP.BLL", "3DMANAGER-APP.BLL\3DMANAGER-APP.BLL.csproj", "{ABE889FB-0F81-4F49-A3EB-3DE631386547}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3DMANAGER-APP.DAL", "3DMANAGER-APP.DAL\3DMANAGER-APP.DAL.csproj", "{77BBFC78-9BDC-421A-A7FC-69EAB021A9DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3DMANAGER-APP.TEST", "3DMANAGER-APP.TEST\3DMANAGER-APP.TEST.csproj", "{8D6DA23A-6CAC-47A3-8076-55284F47439F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{ABE889FB-0F81-4F49-A3EB-3DE631386547} = {ABE889FB-0F81-4F49-A3EB-3DE631386547}
+		{F207F2ED-0EA7-460D-91B7-C80D8206CB88} = {F207F2ED-0EA7-460D-91B7-C80D8206CB88}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3DMANAGER-APP.TestingSupport", "TestingSupport\3DMANAGER-APP.TestingSupport.csproj", "{E9D7F378-1CFF-471B-AE21-C1BC9270B5A3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9A913102-568F-AE0E-8F90-91A3BC126702}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A913102-568F-AE0E-8F90-91A3BC126702}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A913102-568F-AE0E-8F90-91A3BC126702}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{9A913102-568F-AE0E-8F90-91A3BC126702}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A913102-568F-AE0E-8F90-91A3BC126702}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A913102-568F-AE0E-8F90-91A3BC126702}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{F207F2ED-0EA7-460D-91B7-C80D8206CB88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F207F2ED-0EA7-460D-91B7-C80D8206CB88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F207F2ED-0EA7-460D-91B7-C80D8206CB88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F207F2ED-0EA7-460D-91B7-C80D8206CB88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABE889FB-0F81-4F49-A3EB-3DE631386547}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABE889FB-0F81-4F49-A3EB-3DE631386547}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABE889FB-0F81-4F49-A3EB-3DE631386547}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABE889FB-0F81-4F49-A3EB-3DE631386547}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77BBFC78-9BDC-421A-A7FC-69EAB021A9DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77BBFC78-9BDC-421A-A7FC-69EAB021A9DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77BBFC78-9BDC-421A-A7FC-69EAB021A9DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77BBFC78-9BDC-421A-A7FC-69EAB021A9DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D6DA23A-6CAC-47A3-8076-55284F47439F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D6DA23A-6CAC-47A3-8076-55284F47439F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D6DA23A-6CAC-47A3-8076-55284F47439F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D6DA23A-6CAC-47A3-8076-55284F47439F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9D7F378-1CFF-471B-AE21-C1BC9270B5A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9D7F378-1CFF-471B-AE21-C1BC9270B5A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9D7F378-1CFF-471B-AE21-C1BC9270B5A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9D7F378-1CFF-471B-AE21-C1BC9270B5A3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E9F68BDF-66ED-4EF8-94A9-C375B8465321}
+	EndGlobalSection
+EndGlobal

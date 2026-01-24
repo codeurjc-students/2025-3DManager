@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>_3DMANAGER_APP.Server</RootNamespace>
+    <SpaRoot>..\3dmanager-app.client</SpaRoot>
+    <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
+    <SpaProxyServerUrl>https://localhost:3000</SpaProxyServerUrl>
+    <UserSecretsId>e438ecc7-4e05-47e6-b559-1d5ce4a6677c</UserSecretsId>
+	  <Version>0.1.0</Version>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <SpaProxyLaunchCommand></SpaProxyLaunchCommand>
+    <SpaProxyServerUrl></SpaProxyServerUrl>
+    <SpaRoot></SpaRoot>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
+    <PackageReference Include="AutoMapper" Version="15.0.1" />
+    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="4.0.3.19" />
+    <PackageReference Include="coverlet.collector" Version="6.0.4">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.21" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.20" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.20" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaProxy">
+      <Version>8.*-*</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="NSwag.AspNetCore" Version="14.6.1" />
+    <PackageReference Include="RestSharp" Version="112.1.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\3DMANAGER-APP.BLL\3DMANAGER-APP.BLL.csproj" />
+    <ProjectReference Include="..\3DMANAGER-APP.DAL\3DMANAGER-APP.DAL.csproj" />
+    <ProjectReference Include="..\TestingSupport\3DMANAGER-APP.TestingSupport.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="SwaggerDoc\" />
+  </ItemGroup>
+
+</Project>
+
