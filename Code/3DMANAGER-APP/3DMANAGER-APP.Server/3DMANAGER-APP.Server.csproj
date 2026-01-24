@@ -9,6 +9,7 @@
     <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
     <SpaProxyServerUrl>https://localhost:3000</SpaProxyServerUrl>
     <UserSecretsId>e438ecc7-4e05-47e6-b559-1d5ce4a6677c</UserSecretsId>
+	  <Version>0.1.0</Version>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <SpaProxyLaunchCommand></SpaProxyLaunchCommand>

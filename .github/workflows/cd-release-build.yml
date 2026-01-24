@@ -1,0 +1,27 @@
+name: Release Build
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  call-reusable:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract compose tag (major.minor)
+        id: version
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          COMPOSE_TAG=$(echo "$TAG" | cut -d'.' -f1,2)
+          echo "compose_tag=$COMPOSE_TAG" >> $GITHUB_OUTPUT
+
+      - name: Call reusable workflow
+        uses: ./.github/workflows/cd-build-and-push.yml
+        with:
+          tag: ${{ github.event.release.tag_name }}
+          isLatest: true
+          composeTag: ${{ steps.version.outputs.compose_tag }}
