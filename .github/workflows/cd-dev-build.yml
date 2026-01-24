@@ -8,6 +8,7 @@ on:
 jobs:
   call-reusable:
     uses: ./.github/workflows/cd-build-and-push.yml
+    secrets: inherit
     with:
       tag: dev
       isLatest: false

@@ -8,13 +8,15 @@ on:
         required: true
         type: string
       commit:
-        description: "Commit SHA "
+        description: "Commit SHA"
         required: false
         type: string
 
 jobs:
-  call-reusable:
+  prepare:
     runs-on: ubuntu-latest
+    outputs:
+      sha: ${{ steps.sha.outputs.value }}
     steps:
       - name: Checkout selected branch
         uses: actions/checkout@v4
@@ -30,9 +32,11 @@ jobs:
             echo "value=${{ inputs.commit }}" >> $GITHUB_OUTPUT
           fi
 
-      - name: Call reusable workflow
-        uses: ./.github/workflows/cd-build-and-push.yml
-        with:
-          tag: "${{ inputs.branch }}-${{ github.run_id }}-${{ steps.sha.outputs.value }}"
-          isLatest: false
-          composeTag: ""
+  call-reusable:
+    needs: prepare
+    uses: ./.github/workflows/cd-build-and-push.yml
+    secrets: inherit
+    with:
+      tag: "${{ inputs.branch }}-${{ github.run_id }}-${{ needs.prepare.outputs.sha }}"
+      isLatest: false
+      composeTag: ""
