@@ -20,10 +20,34 @@ Ultimately, the goal is to centralize collaboration, monitoring, and optimizatio
 
 A common use case is the application for managing the resources of a 3D printing shop. In this scenario, a group is created to centralize the administration of the shop’s resources and maintain accurate inventory control. This includes monitoring printer usage time, tracking filament and material consumption, as well as recording 3dPrints and the resources utilized, whether in terms of time or supplies.
 
-> At this stage, only the functional and technical objectives of the application have been defined. The development process has not yet started.
+### Version 0.1
+
+In version 0.1, the application introduces the foundational features for user and group management. After registering, each user can choose to create a new group or join an existing one.
+If the user creates a group, they automatically become its owner and gain permissions to manage the group’s inventory, including adding printers, filaments, and inviting new members.
+
+If the user joins an existing group, they will have access to the shared resources and be able to browse the group’s inventory, although they will not be allowed to add new items—except for printed parts, which any group member is permitted to create.
+
+Additionally, this first version includes a guest mode, allowing users to explore the application through a demo environment populated with simulated data. In this mode, users can navigate the interface and view example content, but they cannot modify or add any information.
+
+These are several screenshots of the current version of the application, illustrating the progress made so far and the effort invested in faithfully reproducing the mockups designed during phase 1 of the project. The images showcase the main screens, navigation flow, and core components, demonstrating how the implementation is evolving to match the original design specifications.
+
+#### Dashboard
+![](Documentation/Screensv01/Dashboard.png)
+
+#### List of filaments and prints
+![](Documentation/Screensv01/FilamentList.png)
+
+![](Documentation/Screensv01/PrintList.png)
+
+#### Video Demo
+
+> [!IMPORTANT]  
+> The application is currently under development in phase 4.
+> [!NOTE]  
+>  For version 0.2, the goal is to deliver a significantly more complete feature set, enabling full editing capabilities across all content managed by the platform. This upcoming release will also introduce intermediate algorithms designed to enhance the information displayed to users, providing a more contextual, dynamic, and insightful experience throughout the application.
 
 ## Progress
-**Current Phase** : 3
+**Current Phase** : 4
 ### Grant Diagram
 
 ![](Documentation/Diagrams/GranttDiagram.png)
