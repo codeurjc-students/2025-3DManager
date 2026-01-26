@@ -35,11 +35,15 @@ These are several screenshots of the current version of the application, illustr
 ![](Documentation/Screensv01/Dashboard.png)
 
 #### List of filaments and prints
-![](Documentation/Screensv01/FilamentList.png)
+![](Documentation/Screensv01/FilamentsList.png)
 
 ![](Documentation/Screensv01/PrintList.png)
 
+#### Add print form
+![](Documentation/Screensv01/UploadPrint.png)
+
 #### Video Demo
+[Ver video](Documentation/Screensv01/3dmanager_V01.mp4)
 
 > [!IMPORTANT]  
 > The application is currently under development in phase 4.
