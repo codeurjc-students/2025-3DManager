@@ -93,3 +93,5 @@ The project is developed in phases, structured as follows:
 ## [Analysis](Documentation/Readme/ANALYSIS.md)
 
 ## [Development guide](Documentation/Readme/DEV_GUIDE.md)
+
+## [Execution Instructions](Documentation/Readme/EXECUTION_INSTRUCTIONS.md)
