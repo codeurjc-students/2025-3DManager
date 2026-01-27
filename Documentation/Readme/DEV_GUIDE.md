@@ -53,12 +53,12 @@ Development follows an iterative and incremental approach, based on agile princi
 - **Quality Assurance:**  
   - Unit, integration and E2E tests both on client and server.
   - Code coverage and automatic validation through CI/CD flows (GitHub Actions).  
-  - Static analysis and code reviews in pull requests.
+  - Static analysis with SonarQube and code reviews in pull requests.
 
 - **Deployment:**  
-  - Current stage: local execution.
+  - Current stage: local execution and docker deploy.
   - Planned deployment: cloud environment **Microsoft Azure**.
-  - Future packaging via Docker (containers for frontend, backend and database).
+  - Packing via Docker (containers for frontend, backend and database).
 
 - **Development Process:**  
   - Iterative and incremental approach.  
@@ -131,6 +131,15 @@ The server is developed with **ASP.NET Core 8.0** using **C#**, following a laye
 - **ADO.NET** : .NET framework components for connecting to data sources and executing SQL queries or stored procedures. Normally used for SQL Server connections, but it can also be used with MySQL via the appropriate MySQL connector
   - [https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/](https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/)
 
+- **JWT (JSON Web Tokens)** : Used for secure authentication and authorization. JWT ensures that user identity and permissions are validated on every request, enabling controlled access to group‑based resources.
+   - https://jwt.io/
+
+- **AWS SDK for .NET (Amazon S3) **: Integrated to manage cloud storage of images (e.g., printer photos). The backend uploads, retrieves and manages files in an S3 bucket, enabling scalable and reliable media storage.
+   - https://aws.amazon.com/sdk-for-net/ (aws.amazon.com in Bing)
+
+- **SonarQube (NuGet integration)** : Static code analysis is performed using SonarQube through its .NET NuGet package, ensuring code quality, detecting vulnerabilities, and enforcing clean‑code practices during development.
+   - https://www.sonarsource.com/products/sonarqube/
+     
 **Backend Testing**
 
 The backend includes multiple frameworks and tools for automated unit and integration testing:
@@ -244,11 +253,17 @@ This section describes the **deployment architecture** of the project and the **
 The system is structured as a **monolithic Single Page Application (SPA)** consisting of three main components:  
 the frontend, backend, and database. Each component runs as an independent process and communicates using well-defined protocols.
 
+
+
 1. **Frontend (Client)**
    - Developed with **React**, **TypeScript**, and **Vite**.
    - Structured into services (for communicating with the API), models (data structures), and components (rendered UI elements)
    - Runs locally on the Vite development server during development.
    - Deployed as a static web app in production, in the future will be hosted through **Azure App Service**.
+
+#### Client Architecture
+
+![](../Screensv01/ArquitecturaCliente.png)
 
 2. **Backend (Server)**
    - Implemented using **ASP.NET Core 8.0** (C#).
@@ -258,10 +273,21 @@ the frontend, backend, and database. Each component runs as an independent proce
      - **Business Logic Layer (BLL)**: Encapsulates the core application logic and validation,transforming objects received from the frontend (matching client-side structure) into objects used by the Data Access Layer for database operations.
      - **Data Access Layer (DAL)**: Interacts with the database through **ADO.NET** and stored procedures.
 
+#### Server Architecture
+
+![](../Screensv01/ArquitecturaServidor_v01.png)
+
 3. **Database**
    - Managed with **MySQL**, running locally during development.
    - Accessed through a **connection string** defined in the backend configuration.
    - Communication occurs via SQL commands and stored procedures executed from the DAL.
+   
+#### Domain Model
+The domain model represents the persistent entities of the application, their main attributes, and the relationships between them. This diagram provides a clear view of how data is structured within the system.
+The illustration shown corresponds to the EER diagram used during the database design phase.
+
+![](../Screensv01/ERR_3DMANAGER_BBDD_v01.png)
+
 
 ### Communication and Protocols
 
@@ -364,11 +390,18 @@ During development, each new feature or bug fix is implemented in its own branch
 |Metric |	Description |Phase|
 |-------|-------------|-----|
 |Commits|	Approximately 12 commits across all branches.| Phase 2 |
+|Commits|	Approximately 120-125 commits across all branches.| Phase 3 |
 |Branches|	Around 4 active branches during development.| Phase 2 |
-|Contributors|	1 developer and 1 Supervisor .| Phase 2 |
+|Branches|	Around 14 branches created during development.| Phase 2 |
 |Pull Requests|	Around 1 pull request .| Phase 2 |
+|Pull Requests|	Around 12 pull request .| Phase 2 |
+|Contributors|	1 developer and 1 Supervisor .| Phase 2 and 3 |
 
+Phase 2 metrics:
 ![](../DocsImages/GitHubMetrics.png)
+
+Phase 3 metrics (Last month of the phase) 
+![](../DocsImages/GitHubMetricsP3.png)
 
 ### Continuous Integration (CI)
 
@@ -484,6 +517,15 @@ On the terminal these commnads are used like :
 
   ![](../DocsImages/UIPlaywright.png)
 
+### Deployment
+**Packaging and Distribution**
+The application is packaged into a single Docker image that includes both the client and the server.
+Deployment is coordinated using Docker Compose, which simplifies local execution and service orchestration.
+The application artifact is published on DockerHub, from where Docker automatically pulls the image when running the provided docker-compose.yml.
+
+[Link to DockerHub](https://hub.docker.com/r/ivicenter2018/3dmanager-app/tags)
+
+Download artifact ```oras pull docker.io/ivicenter2018/3dmanager-app:0.1```
 
 ### Release Creation
 
@@ -500,7 +542,7 @@ Since the project follows the **GitFlow branching model**, releases will be gene
 
 3. **Release Finalization**  
    Once the release has been tested and validated, it will be merged into both the `main` and `develop` branches.  
-   - The merge into `main` marks the official release and will be tagged with a version number (for example, `v1.0.0`).  
+   - The merge into `main` marks the official release and will be tagged with a version number (for example, `v0.1.0`).  
    - The merge back into `develop` ensures that if there are any fixes or updates made during the release process remain consistent with ongoing development.
 
 4. **Deployment and Packaging**  
