@@ -43,7 +43,9 @@ These are several screenshots of the current version of the application, illustr
 ![](Documentation/Screensv01/UploadPrint.png)
 
 #### Video Demo v0.1
+
 [Download video](Documentation/Screensv01/3dmanager_V01.mp4)
+
 Description of functionality shown: ## [Funcionalities v.01](Documentation/Readme/FUNCTIONALITIES.md#functionality-v-01)
 
 > [!IMPORTANT]  
