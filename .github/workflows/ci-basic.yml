@@ -5,6 +5,7 @@ on:
     branches:
       - 'feature/*'
       - 'release/*'
+
   workflow_dispatch:
 
 jobs:
