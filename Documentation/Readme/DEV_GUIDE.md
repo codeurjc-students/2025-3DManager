@@ -261,8 +261,7 @@ the frontend, backend, and database. Each component runs as an independent proce
    - Runs locally on the Vite development server during development.
    - Deployed as a static web app in production, in the future will be hosted through **Azure App Service**.
 
-#### Client Architecture
-
+**Client Architecture**
 ![](../Screensv01/ArquitecturaCliente.png)
 
 2. **Backend (Server)**
@@ -273,8 +272,7 @@ the frontend, backend, and database. Each component runs as an independent proce
      - **Business Logic Layer (BLL)**: Encapsulates the core application logic and validation,transforming objects received from the frontend (matching client-side structure) into objects used by the Data Access Layer for database operations.
      - **Data Access Layer (DAL)**: Interacts with the database through **ADO.NET** and stored procedures.
 
-#### Server Architecture
-
+**Server Architecture**
 ![](../Screensv01/ArquitecturaServidor_v01.png)
 
 3. **Database**
@@ -282,7 +280,7 @@ the frontend, backend, and database. Each component runs as an independent proce
    - Accessed through a **connection string** defined in the backend configuration.
    - Communication occurs via SQL commands and stored procedures executed from the DAL.
    
-#### Domain Model
+**Domain Model**
 The domain model represents the persistent entities of the application, their main attributes, and the relationships between them. This diagram provides a clear view of how data is structured within the system.
 The illustration shown corresponds to the EER diagram used during the database design phase.
 
@@ -305,6 +303,16 @@ All communication between the client and the server occurs via **HTTP/HTTPS** us
 - This approach allows API documentation to be browsed directly in GitHub Pages or the repository :
 
 >Current swagger version : https://codeurjc-students.github.io/2025-3DManager/swagger.html  
+
+### API Initialization and inyection dependencies
+
+The server initialization is handled through the Program.cs file, which centralizes service registration, dependency injection, and middleware configuration using the native ASP.NET Core dependency injection container. During startup, the application loads its configuration from base appsettings.json files, environment-specific configuration files, and environment variables, allowing the server behavior to adapt seamlessly across development, CI, and production environments. User secrets are also supported to securely manage sensitive credentials in local setups.
+
+All application components are registered with explicit lifetimes (Scoped or Singleton), clearly separating business logic (BLL), data access (DAL), and external services. This includes domain managers, database managers, JWT services, and integrations such as Amazon S3 for file storage. This design promotes modularity, testability, and easy replacement of implementations depending on the execution context.
+
+Authentication is implemented using JWT (JSON Web Tokens), with issuer, audience, lifetime, and signing key validation configured through middleware. Additionally, Swagger is enabled in development environments to provide interactive API documentation and facilitate endpoint inspection and authentication testing during development. The licenses like the automapper uses load in this file too.
+
+Finally, a dedicated CI environment configuration ensures that the database seeding process runs automatically when the application starts in CI. This guarantees that the API is always launched with a known and consistent initial state, enabling fully autonomous and reproducible end-to-end test execution without external dependencies or manual intervention.
 
 
 ## Quality Assurance
@@ -477,6 +485,15 @@ The project repository is publicly hosted under the URJC (Universidad Rey Juan C
   - Press F5 or click Run to start both services.
   - The backend will automatically launch the Swagger UI to test API endpoints.
 
+### Generate OpenAPI file (swagger.json)
+
+- Downloads the OpenAPI document directly from the running API and saves it into the SwaggerDoc folder.
+   ```Invoke-WebRequest -Uri "https://localhost:7284/swagger/v1/swagger.json" -OutFile .\SwaggerDoc\openapi.json```
+
+- Generate HTML documentation with Redocly
+   ```npx @redocly/cli build-docs SwaggerDoc/openapi.json --output SwaggerDoc/swagger.html```
+
+
 ### Test Execution
 
 **Backend Tests**
@@ -499,7 +516,7 @@ Frontend tests can be executed either:
 - On terminal commands:
 - Through an interactive UI mode (for both unit tests and E2E tests)
 
-To execute the test on both forms, you can use teh following script writed on the package.json:
+To execute the test on both forms, you can use the following script writed on the package.json:
 
   - "test": "vitest",
   - "test:ui": "vitest --ui", 
@@ -517,7 +534,28 @@ On the terminal these commnads are used like :
 
   ![](../DocsImages/UIPlaywright.png)
 
+#### Test Architecture
+
+A fully isolated and self-contained testing architecture was designed for end-to-end testing. A dedicated support project was created to handle database initialization for tests, including schema creation, table definitions, stored procedures, and controlled data seeding. This process is strictly limited to the CI/Test database through explicit safety checks, preventing accidental execution in non-test environments.
+
+The testing setup relies on asynchronous fixtures and a custom WebApplicationFactory to automatically prepare the environment before test execution. These fixtures initialize the database, bootstrap the API with test-specific configuration, and provide an authenticated HTTP client shared across tests. This approach ensures that E2E tests are independent from external data or previous state, delivering reproducible and reliable results both locally and in CI pipelines.
+
+**Fixtures**
+Fixtures are used to manage shared setup and teardown logic across tests. In this project, asynchronous fixtures are responsible for initializing and cleaning up the test database, as well as creating authenticated HTTP clients. They run automatically before and after the test suite (or test collection), ensuring a consistent and isolated environment while reducing duplication and improving test stability.
+
+---
+
 ### Deployment
+
+**Docker Image Generation**
+The Docker image for the application is produced through a unified build process that packages both the backend (ASP.NET Core 8) and the frontend into a single container. During the build stage, the server is compiled and published using the .NET SDK, while the client is built with its corresponding tooling. 
+
+In local for test the correct build, the Docker image is generated through a standardized build process that must be executed from the folder containing both the docker-compose.yml and the .env file, ensuring that all environment variables are correctly injected during the build.
+
+- In local to test the image is created , it used: ```docker compose build --no-cache```
+- Once built, the application can be started with : ```docker compose up -d```
+- Is stopped or fully removed (including volumes) with: ```docker compose down -v```
+
 **Packaging and Distribution**
 The application is packaged into a single Docker image that includes both the client and the server.
 Deployment is coordinated using Docker Compose, which simplifies local execution and service orchestration.
@@ -529,7 +567,10 @@ Download artifact ```oras pull docker.io/ivicenter2018/3dmanager-app:0.1```
 
 ### Release Creation
 
-At the current stage of the project, the release creation process is planned but not yet implemented.
+#### Docker
+For production releases, automated GitHub workflows were created to handle the entire pipeline. These workflows are triggered by specific events—such as pushing a tagged commit or merging into the release branch—and are responsible for building the Docker image, running static analysis, packaging the final artifact, and publishing the image to DockerHub. This ensures that every release is reproducible, versioned, and deployed consistently across environments.
+
+#### Branches managment
 
 Since the project follows the **GitFlow branching model**, releases will be generated using a dedicated `release/*` branch derived from `develop`. This approach allows for stable and controlled version management. The planned workflow is as follows:
 

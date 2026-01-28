@@ -64,8 +64,8 @@ The project is developed in phases, structured as follows:
 |-------|-------------|-----------|---------|----------|
 | Phase 1 | Definition of functionalities and screens |September 01 |September 14 | September 15 |
 | Phase 2 | Repository, testing, and CI |September 16 | October 28 | October 15 |
-| Phase 3 | Version 0.1 - Basic functionality and Docker | October 29| | December 15 |
-| Phase 4 | Version 0.2 - Intermediate functionality | | | March 1 |
+| Phase 3 | Version 0.1 - Basic functionality and Docker | October 29| | December 15 | January 28
+| Phase 4 | Version 0.2 - Intermediate functionality | January 28 | | March 1 |
 | Phase 5 | Version 1.0 - Advanced functionality | | | April 15 |
 | Phase 6 | Report | | | May 15 |
 | Phase 7 | Defense | | | June 15 |
