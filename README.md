@@ -48,6 +48,7 @@ Description of functionality shown: ## [Funcionalities v.01](Documentation/Readm
 
 > [!IMPORTANT]  
 > The application is currently under development in phase 4.
+
 > [!NOTE]  
 >  For version 0.2, the goal is to deliver a significantly more complete feature set, enabling full editing capabilities across all content managed by the platform. This upcoming release will also introduce intermediate algorithms designed to enhance the information displayed to users, providing a more contextual, dynamic, and insightful experience throughout the application.
 
