@@ -53,12 +53,12 @@ Development follows an iterative and incremental approach, based on agile princi
 - **Quality Assurance:**  
   - Unit, integration and E2E tests both on client and server.
   - Code coverage and automatic validation through CI/CD flows (GitHub Actions).  
-  - Static analysis and code reviews in pull requests.
+  - Static analysis with SonarQube and code reviews in pull requests.
 
 - **Deployment:**  
-  - Current stage: local execution.
+  - Current stage: local execution and docker deploy.
   - Planned deployment: cloud environment **Microsoft Azure**.
-  - Future packaging via Docker (containers for frontend, backend and database).
+  - Packing via Docker (containers for frontend, backend and database).
 
 - **Development Process:**  
   - Iterative and incremental approach.  
@@ -131,6 +131,15 @@ The server is developed with **ASP.NET Core 8.0** using **C#**, following a laye
 - **ADO.NET** : .NET framework components for connecting to data sources and executing SQL queries or stored procedures. Normally used for SQL Server connections, but it can also be used with MySQL via the appropriate MySQL connector
   - [https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/](https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/)
 
+- **JWT (JSON Web Tokens)** : Used for secure authentication and authorization. JWT ensures that user identity and permissions are validated on every request, enabling controlled access to group‑based resources.
+   - https://jwt.io/
+
+- **AWS SDK for .NET (Amazon S3) **: Integrated to manage cloud storage of images (e.g., printer photos). The backend uploads, retrieves and manages files in an S3 bucket, enabling scalable and reliable media storage.
+   - https://aws.amazon.com/sdk-for-net/ (aws.amazon.com in Bing)
+
+- **SonarQube (NuGet integration)** : Static code analysis is performed using SonarQube through its .NET NuGet package, ensuring code quality, detecting vulnerabilities, and enforcing clean‑code practices during development.
+   - https://www.sonarsource.com/products/sonarqube/
+     
 **Backend Testing**
 
 The backend includes multiple frameworks and tools for automated unit and integration testing:
@@ -244,11 +253,17 @@ This section describes the **deployment architecture** of the project and the **
 The system is structured as a **monolithic Single Page Application (SPA)** consisting of three main components:  
 the frontend, backend, and database. Each component runs as an independent process and communicates using well-defined protocols.
 
+
+
 1. **Frontend (Client)**
    - Developed with **React**, **TypeScript**, and **Vite**.
    - Structured into services (for communicating with the API), models (data structures), and components (rendered UI elements)
    - Runs locally on the Vite development server during development.
    - Deployed as a static web app in production, in the future will be hosted through **Azure App Service**.
+
+**Client Architecture**
+
+![](../Screensv01/ArquitecturaCliente.png)
 
 2. **Backend (Server)**
    - Implemented using **ASP.NET Core 8.0** (C#).
@@ -258,10 +273,21 @@ the frontend, backend, and database. Each component runs as an independent proce
      - **Business Logic Layer (BLL)**: Encapsulates the core application logic and validation,transforming objects received from the frontend (matching client-side structure) into objects used by the Data Access Layer for database operations.
      - **Data Access Layer (DAL)**: Interacts with the database through **ADO.NET** and stored procedures.
 
+**Server Architecture**
+
+![](../Screensv01/ArquitecturaServidor_v01.png)
+
 3. **Database**
    - Managed with **MySQL**, running locally during development.
    - Accessed through a **connection string** defined in the backend configuration.
    - Communication occurs via SQL commands and stored procedures executed from the DAL.
+   
+**Domain Model**
+The domain model represents the persistent entities of the application, their main attributes, and the relationships between them. This diagram provides a clear view of how data is structured within the system.
+The illustration shown corresponds to the EER diagram used during the database design phase.
+
+![](../Screensv01/ERR_3DMANAGER_BBDD_v01.png)
+
 
 ### Communication and Protocols
 
@@ -279,6 +305,16 @@ All communication between the client and the server occurs via **HTTP/HTTPS** us
 - This approach allows API documentation to be browsed directly in GitHub Pages or the repository :
 
 >Current swagger version : https://codeurjc-students.github.io/2025-3DManager/swagger.html  
+
+### API Initialization and inyection dependencies
+
+The server initialization is handled through the Program.cs file, which centralizes service registration, dependency injection, and middleware configuration using the native ASP.NET Core dependency injection container. During startup, the application loads its configuration from base appsettings.json files, environment-specific configuration files, and environment variables, allowing the server behavior to adapt seamlessly across development, CI, and production environments. User secrets are also supported to securely manage sensitive credentials in local setups.
+
+All application components are registered with explicit lifetimes (Scoped or Singleton), clearly separating business logic (BLL), data access (DAL), and external services. This includes domain managers, database managers, JWT services, and integrations such as Amazon S3 for file storage. This design promotes modularity, testability, and easy replacement of implementations depending on the execution context.
+
+Authentication is implemented using JWT (JSON Web Tokens), with issuer, audience, lifetime, and signing key validation configured through middleware. Additionally, Swagger is enabled in development environments to provide interactive API documentation and facilitate endpoint inspection and authentication testing during development. The licenses like the automapper uses load in this file too.
+
+Finally, a dedicated CI environment configuration ensures that the database seeding process runs automatically when the application starts in CI. This guarantees that the API is always launched with a known and consistent initial state, enabling fully autonomous and reproducible end-to-end test execution without external dependencies or manual intervention.
 
 
 ## Quality Assurance
@@ -364,11 +400,18 @@ During development, each new feature or bug fix is implemented in its own branch
 |Metric |	Description |Phase|
 |-------|-------------|-----|
 |Commits|	Approximately 12 commits across all branches.| Phase 2 |
+|Commits|	Approximately 120-125 commits across all branches.| Phase 3 |
 |Branches|	Around 4 active branches during development.| Phase 2 |
-|Contributors|	1 developer and 1 Supervisor .| Phase 2 |
+|Branches|	Around 14 branches created during development.| Phase 3 |
 |Pull Requests|	Around 1 pull request .| Phase 2 |
+|Pull Requests|	Around 14 pull request .| Phase 3 |
+|Contributors|	1 developer and 1 Supervisor .| Phase 2 and 3 |
 
+Phase 2 metrics:
 ![](../DocsImages/GitHubMetrics.png)
+
+Phase 3 metrics (Last month of the phase) 
+![](../DocsImages/GitHubMetricsP3.png)
 
 ### Continuous Integration (CI)
 
@@ -444,6 +487,15 @@ The project repository is publicly hosted under the URJC (Universidad Rey Juan C
   - Press F5 or click Run to start both services.
   - The backend will automatically launch the Swagger UI to test API endpoints.
 
+### Generate OpenAPI file (swagger.json)
+
+- Downloads the OpenAPI document directly from the running API and saves it into the SwaggerDoc folder.
+   ```Invoke-WebRequest -Uri "https://localhost:7284/swagger/v1/swagger.json" -OutFile .\SwaggerDoc\openapi.json```
+
+- Generate HTML documentation with Redocly
+   ```npx @redocly/cli build-docs SwaggerDoc/openapi.json --output SwaggerDoc/swagger.html```
+
+
 ### Test Execution
 
 **Backend Tests**
@@ -452,6 +504,10 @@ The project repository is publicly hosted under the URJC (Universidad Rey Juan C
 - To enable Visual Studio test execution, the project uses the xUnit test Nuget package *xunit.runner.visualstudio*
 
 ![](../DocsImages/TestExplorerBackend.png) 
+
+Another picture of tests explorer in version 0.1.0 
+
+![](../DocsImages/TestExplorerBackend_v01.png) 
 
 - To execute de test in backend using the standard .NET CLI command:
     -`dotnet test` 
@@ -466,7 +522,7 @@ Frontend tests can be executed either:
 - On terminal commands:
 - Through an interactive UI mode (for both unit tests and E2E tests)
 
-To execute the test on both forms, you can use teh following script writed on the package.json:
+To execute the test on both forms, you can use the following script writed on the package.json:
 
   - "test": "vitest",
   - "test:ui": "vitest --ui", 
@@ -479,15 +535,56 @@ On the terminal these commnads are used like :
     
   ![](../DocsImages/UIVitest.png)
 
+  A picture on 0.1.0 version:
+
+  ![](../DocsImages/UIVitest_v01.png)
+
   - `npm run test:e2e` : runs Playwright E2E tests in console mode
   - `npm run test:e2e:ui` : opens the Playwright test runner interface, showing browser execution visually
 
   ![](../DocsImages/UIPlaywright.png)
 
+  A picture on 0.1.0 version:
+
+    ![](../DocsImages/UIPlaywright_v01.png)
+
+#### Test Architecture
+
+A fully isolated and self-contained testing architecture was designed for end-to-end testing. A dedicated support project was created to handle database initialization for tests, including schema creation, table definitions, stored procedures, and controlled data seeding. This process is strictly limited to the CI/Test database through explicit safety checks, preventing accidental execution in non-test environments.
+
+The testing setup relies on asynchronous fixtures and a custom WebApplicationFactory to automatically prepare the environment before test execution. These fixtures initialize the database, bootstrap the API with test-specific configuration, and provide an authenticated HTTP client shared across tests. This approach ensures that E2E tests are independent from external data or previous state, delivering reproducible and reliable results both locally and in CI pipelines.
+
+**Fixtures**
+Fixtures are used to manage shared setup and teardown logic across tests. In this project, asynchronous fixtures are responsible for initializing and cleaning up the test database, as well as creating authenticated HTTP clients. They run automatically before and after the test suite (or test collection), ensuring a consistent and isolated environment while reducing duplication and improving test stability.
+
+---
+
+### Deployment
+
+**Docker Image Generation**
+The Docker image for the application is produced through a unified build process that packages both the backend (ASP.NET Core 8) and the frontend into a single container. During the build stage, the server is compiled and published using the .NET SDK, while the client is built with its corresponding tooling. 
+
+In local for test the correct build, the Docker image is generated through a standardized build process that must be executed from the folder containing both the docker-compose.yml and the .env file, ensuring that all environment variables are correctly injected during the build.
+
+- In local to test the image is created , it used: ```docker compose build --no-cache```
+- Once built, the application can be started with : ```docker compose up -d```
+- Is stopped or fully removed (including volumes) with: ```docker compose down -v```
+
+**Packaging and Distribution**
+The application is packaged into a single Docker image that includes both the client and the server.
+Deployment is coordinated using Docker Compose, which simplifies local execution and service orchestration.
+The application artifact is published on DockerHub, from where Docker automatically pulls the image when running the provided docker-compose.yml.
+
+[Link to DockerHub](https://hub.docker.com/r/ivicenter2018/3dmanager-app/tags)
+
+Download artifact ```oras pull docker.io/ivicenter2018/3dmanager-app:0.1```
 
 ### Release Creation
 
-At the current stage of the project, the release creation process is planned but not yet implemented.
+#### Docker
+For production releases, automated GitHub workflows were created to handle the entire pipeline. These workflows are triggered by specific events—such as pushing a tagged commit or merging into the release branch—and are responsible for building the Docker image, running static analysis, packaging the final artifact, and publishing the image to DockerHub. This ensures that every release is reproducible, versioned, and deployed consistently across environments.
+
+#### Branches managment
 
 Since the project follows the **GitFlow branching model**, releases will be generated using a dedicated `release/*` branch derived from `develop`. This approach allows for stable and controlled version management. The planned workflow is as follows:
 
@@ -500,7 +597,7 @@ Since the project follows the **GitFlow branching model**, releases will be gene
 
 3. **Release Finalization**  
    Once the release has been tested and validated, it will be merged into both the `main` and `develop` branches.  
-   - The merge into `main` marks the official release and will be tagged with a version number (for example, `v1.0.0`).  
+   - The merge into `main` marks the official release and will be tagged with a version number (for example, `v0.1.0`).  
    - The merge back into `develop` ensures that if there are any fixes or updates made during the release process remain consistent with ongoing development.
 
 4. **Deployment and Packaging**  
