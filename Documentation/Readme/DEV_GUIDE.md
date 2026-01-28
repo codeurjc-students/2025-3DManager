@@ -262,6 +262,7 @@ the frontend, backend, and database. Each component runs as an independent proce
    - Deployed as a static web app in production, in the future will be hosted through **Azure App Service**.
 
 **Client Architecture**
+
 ![](../Screensv01/ArquitecturaCliente.png)
 
 2. **Backend (Server)**
@@ -273,6 +274,7 @@ the frontend, backend, and database. Each component runs as an independent proce
      - **Data Access Layer (DAL)**: Interacts with the database through **ADO.NET** and stored procedures.
 
 **Server Architecture**
+
 ![](../Screensv01/ArquitecturaServidor_v01.png)
 
 3. **Database**
@@ -400,9 +402,9 @@ During development, each new feature or bug fix is implemented in its own branch
 |Commits|	Approximately 12 commits across all branches.| Phase 2 |
 |Commits|	Approximately 120-125 commits across all branches.| Phase 3 |
 |Branches|	Around 4 active branches during development.| Phase 2 |
-|Branches|	Around 14 branches created during development.| Phase 2 |
+|Branches|	Around 14 branches created during development.| Phase 3 |
 |Pull Requests|	Around 1 pull request .| Phase 2 |
-|Pull Requests|	Around 12 pull request .| Phase 2 |
+|Pull Requests|	Around 14 pull request .| Phase 3 |
 |Contributors|	1 developer and 1 Supervisor .| Phase 2 and 3 |
 
 Phase 2 metrics:
