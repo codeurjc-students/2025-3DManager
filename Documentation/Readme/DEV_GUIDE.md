@@ -505,6 +505,10 @@ The project repository is publicly hosted under the URJC (Universidad Rey Juan C
 
 ![](../DocsImages/TestExplorerBackend.png) 
 
+Another picture of tests explorer in version 0.1.0 
+
+![](../DocsImages/TestExplorerBackend_v01.png) 
+
 - To execute de test in backend using the standard .NET CLI command:
     -`dotnet test` 
 
@@ -531,10 +535,18 @@ On the terminal these commnads are used like :
     
   ![](../DocsImages/UIVitest.png)
 
+  A picture on 0.1.0 version:
+
+  ![](../DocsImages/UIVitest_v01.png)
+
   - `npm run test:e2e` : runs Playwright E2E tests in console mode
   - `npm run test:e2e:ui` : opens the Playwright test runner interface, showing browser execution visually
 
   ![](../DocsImages/UIPlaywright.png)
+
+  A picture on 0.1.0 version:
+
+    ![](../DocsImages/UIPlaywright_v01.png)
 
 #### Test Architecture
 
