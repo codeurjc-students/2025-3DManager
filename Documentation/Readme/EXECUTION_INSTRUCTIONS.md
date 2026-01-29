@@ -24,10 +24,24 @@ Once installed, the environment is ready to run the application.
 
 ---
 
+## Components
+
+| Repository | Purpose | 
+|-------|-------------|
+| ivicenter2018/3dmanager-app | Application image |
+| ivicenter2018/3dmanager-db  | MySQL image with embedded init.sql |
+| ivicenter2018/3dmanager-app-compose | OCI artifact containing docker-compose.yml |
+
 ## Downloading the published docker‑compose
 The docker-compose.yml file is distributed as an OCI artifact and can be downloaded using ORAS:
 
-```oras pull registry-1.docker.io/ivicenter2018/3dmanager-app:0.1```
+- **Install ORAS**
+
+ ```curl -sSL https://oras.land/install.sh | sh```
+
+- Pull the production docker-compose file
+
+```oras pull registry-1.docker.io/ivicenter2018/3dmanager-app-compose:0.1```
 
 This command retrieves the docker-compose.yml for the selected version.
 
@@ -35,7 +49,7 @@ This command retrieves the docker-compose.yml for the selected version.
 > It is not necessary to manually download the image from DockerHub.
 When running docker compose up, Docker will automatically pull the image specified in the docker-compose.yml, using the repository URL defined in the file.
 
-## Running the application
+## Before running the application
 
 Create a .env file in the same directory as the docker-compose.yml, including the required environment variables (database configuration, JWT keys, etc.).
 
@@ -57,7 +71,7 @@ AWS_SECRET_KEY=<your AWS secret key>
 # AUTOMAPPER
 AUTOMAPPER__LICENSE=<your License of Automapper>
 # Certs
-CERT_PASSWORD=<your password>
+CERT_PASSWORD=3dmanagerPASS1234
 
 ```
 
