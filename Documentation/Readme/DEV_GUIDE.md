@@ -562,6 +562,7 @@ Fixtures are used to manage shared setup and teardown logic across tests. In thi
 ### Deployment
 
 **Docker Image Generation**
+
 The Docker image for the application is produced through a unified build process that packages both the backend (ASP.NET Core 8) and the frontend into a single container. During the build stage, the server is compiled and published using the .NET SDK, while the client is built with its corresponding tooling. 
 
 In local for test the correct build, the Docker image is generated through a standardized build process that must be executed from the folder containing both the docker-compose.yml and the .env file, ensuring that all environment variables are correctly injected during the build.
@@ -577,7 +578,7 @@ The application artifact is published on DockerHub, from where Docker automatica
 
 [Link to DockerHub](https://hub.docker.com/r/ivicenter2018/3dmanager-app/tags)
 
-Download artifact ```oras pull docker.io/ivicenter2018/3dmanager-app:0.1```
+To see how to download visit this part of the Readme : ## [Execution Instructions](./EXECUTION_INSTRUCTIONS.md)
 
 ### Release Creation
 
