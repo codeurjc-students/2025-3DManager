@@ -29,7 +29,7 @@ services:
       start_period: 20s
 
   db:
-    image: mysql:8.0
+    image: ivicenter2018/3dmanager-db:v0.1
     environment:
       MYSQL_ROOT_PASSWORD: "3dmanagerpass"
       MYSQL_DATABASE: "3dmanager"
@@ -43,6 +43,5 @@ services:
       start_period: 20s
     volumes:
       - db_data:/var/lib/mysql
-      - ./init:/docker-entrypoint-initdb.d
 volumes:
   db_data:
