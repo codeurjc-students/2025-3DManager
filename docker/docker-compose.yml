@@ -1,10 +1,8 @@
 services:
   app:
     container_name: 3dmanager-app
-    build: 
-      context: .. 
-      dockerfile: docker/Dockerfile
-    image: ivicenter2018/3dmanager-app:0.1
+    image: ivicenter2018/3dmanager-app:v0.1
+    command: ["dotnet", "3dmanager-app.dll"]
     depends_on:
       db:
         condition: service_healthy
