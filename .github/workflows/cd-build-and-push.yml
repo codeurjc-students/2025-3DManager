@@ -27,36 +27,61 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build Docker image
+      - name: Build App Image
         run: |
           docker build \
             -f docker/Dockerfile \
             -t ${{ secrets.DOCKERHUB_REPOSITORY }}:${{ inputs.tag }} \
             .
 
-      - name: Tag as latest (only for releases)
+      - name: Tag App as composeTag
+        run: |
+          docker tag \
+            ${{ secrets.DOCKERHUB_REPOSITORY }}:${{ inputs.tag }} \
+            ${{ secrets.DOCKERHUB_REPOSITORY }}:${{ inputs.composeTag }}
+
+      - name: Tag App as latest
         if: ${{ inputs.isLatest == true }}
         run: |
           docker tag \
             ${{ secrets.DOCKERHUB_REPOSITORY }}:${{ inputs.tag }} \
             ${{ secrets.DOCKERHUB_REPOSITORY }}:latest
 
-      - name: Push image
-        run: docker push ${{ secrets.DOCKERHUB_REPOSITORY }}:${{ inputs.tag }}
+      - name: Push App Images
+        run: |
+          docker push ${{ secrets.DOCKERHUB_REPOSITORY }}:${{ inputs.tag }}
+          docker push ${{ secrets.DOCKERHUB_REPOSITORY }}:${{ inputs.composeTag }}
+          if [ "${{ inputs.isLatest }}" = "true" ]; then
+            docker push ${{ secrets.DOCKERHUB_REPOSITORY }}:latest
+          fi
 
-      - name: Push latest tag
-        if: ${{ inputs.isLatest == true }}
-        run: docker push ${{ secrets.DOCKERHUB_REPOSITORY }}:latest
-        
-      - name: Build DB Image 
+      - name: Build DB Image
         run: |
           docker build \
             -f docker/Dockerfile.db \
             -t ivicenter2018/3dmanager-db:${{ inputs.tag }} \
             .
 
-      - name: Push DB Image 
-        run: docker push ivicenter2018/3dmanager-db:${{ inputs.tag }}
+      - name: Tag DB as composeTag
+        run: |
+          docker tag \
+            ivicenter2018/3dmanager-db:${{ inputs.tag }} \
+            ivicenter2018/3dmanager-db:${{ inputs.composeTag }}
+
+      - name: Tag DB as latest
+        if: ${{ inputs.isLatest == true }}
+        run: |
+          docker tag \
+            ivicenter2018/3dmanager-db:${{ inputs.tag }} \
+            ivicenter2018/3dmanager-db:latest
+
+      - name: Push DB Images
+        run: |
+          docker push ivicenter2018/3dmanager-db:${{ inputs.tag }}
+          docker push ivicenter2018/3dmanager-db:${{ inputs.composeTag }}
+          if [ "${{ inputs.isLatest }}" = "true" ]; then
+            docker push ivicenter2018/3dmanager-db:latest
+          fi
 
       - name: Setup ORAS CLI
         uses: oras-project/setup-oras@v1
@@ -68,13 +93,11 @@ jobs:
           TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
         run: |
           echo "${TOKEN}" | oras login "${REGISTRY}" -u "${USERNAME}" --password-stdin
-      
+
       - name: Push docker-compose as OCI artifact
         env:
           REGISTRY: registry-1.docker.io
           COMPOSE_REPO: ivicenter2018/3dmanager-app-compose
-          TAG: ${{ inputs.composeTag }}
         run: |
-          oras push "${REGISTRY}/${COMPOSE_REPO}:${TAG}" \
+          oras push "${REGISTRY}/${COMPOSE_REPO}:${{ inputs.composeTag }}" \
             docker/docker-compose.yml:application/vnd.docker.compose.config.v1+yaml
-
