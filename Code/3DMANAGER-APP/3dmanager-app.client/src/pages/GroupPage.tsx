@@ -3,11 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from '../context/AuthContext';
 import type { GroupInvitation } from "../models/group/GroupInvitation";
 import { getGroupInvitations, postAcceptInvitation } from "../api/groupService";
+import { usePopupContext } from "../context/PopupContext";
 
 
 const GroupPage: React.FC = () => {
     const [items, setItems] = useState<GroupInvitation[]>([]);
     const { logout } = useAuth();
+    const { showPopup } = usePopupContext();
 
     useEffect(() => {
         getGroupInvitations().then(response => {
@@ -27,19 +29,21 @@ const GroupPage: React.FC = () => {
 
             if (response) {
                 if (accepted) {
-                    alert("Se va a proceder a hacer un logout para entrar al nuevo grupo");
+                    showPopup({ type: "info", title: "Operación realizada", description: "Te has unido al grupo. Se va a proceder a hacer un logout para entrar al nuevo grupo" });
                     logout();
                 } else {
-                    alert("Invitacion rechazada correctamente");
+                    showPopup({ type: "info", title: "Operación realizada", description: "Invitacion rechazada correctamente" });
                     reloadInvitations();
                 }
                 
             } else {
-                alert("No se ha podido procesar la respuesta a la invitación");
+                showPopup({ type: "error", title: "Operación cancelada", description: "No se ha podido procesar la respuesta a la invitación" });
+
             }
 
         } catch (error) {
             console.error("Error procesando la invitación:", error);
+            showPopup({ type: "error", title: "Operación cancelada", description: "No se ha podido procesar la respuesta a la invitación" });
         }
     };
 

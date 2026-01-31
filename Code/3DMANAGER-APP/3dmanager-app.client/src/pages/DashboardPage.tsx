@@ -58,10 +58,10 @@ const DashboardPage: React.FC = () => {
                 <div className="h-40"></div>
                 <div>
                     <DashboardActions />
-                </div>
-                
+                </div>  
             </div>
         </div> 
+
     );
 
 };

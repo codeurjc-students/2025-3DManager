@@ -1,5 +1,4 @@
-﻿/*CSS form general layout*/
-:root {
+﻿:root {
     --colorWhite: #ffffff;
     --colorLowGrey: #f5f6f7;
     --colorText: #1c1c1c;
@@ -118,4 +117,65 @@ th, td {
 
     .scroll-container::-webkit-scrollbar-thumb:hover {
         background-color: #9a9a9a;
+    }
+
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.45);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.popup-container {
+    width: 40%;
+    min-width: 350px;
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0px 4px 20px rgba(0,0,0,0.25);
+}
+
+.popup-info {
+    border-top: 6px solid #007bff;
+}
+
+.popup-warning {
+    border-top: 6px solid #ffc107;
+}
+
+.popup-error {
+    border-top: 6px solid #dc3545;
+}
+
+.popup-title {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    font-family: Impact, sans-serif;
+}
+
+.popup-description {
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+.popup-button {
+    background-color: var(--colorDarkGrey);
+    color: var(--colorWhite);
+    padding: 10px 25px;
+    border: 1px solid var(--colorBlack);
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+    .popup-button:hover {
+        background-color: #1a1a1a;
     }

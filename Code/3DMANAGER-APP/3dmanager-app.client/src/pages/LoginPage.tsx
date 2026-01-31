@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Login, LoginGuest } from "../api/userService";
 import { useAuth } from "../context/AuthContext";
 import type { LoginResponse } from "../models/user/LoginResponse";
+import { usePopupContext } from "../context/PopupContext";
 
 const LoginPage: React.FC = () => {
     const navigate = useNavigate();
@@ -10,6 +11,7 @@ const LoginPage: React.FC = () => {
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const { showPopup } = usePopupContext();
 
     useEffect(() => {
         if (user) {
@@ -28,7 +30,7 @@ const LoginPage: React.FC = () => {
             const result = await LoginGuest();
 
             if (!result || result.error != null) {
-                alert(result?.error?.message || "Problema al intentar acceder como invitado");
+                showPopup({ type: "warning", title: "Operación cancelada", description: result?.error?.message || "Problema al intentar acceder como invitado" });
                 return;
             }
 
@@ -37,7 +39,7 @@ const LoginPage: React.FC = () => {
 
         } catch (err) {
             console.error("Error login como invitado:", err);
-            alert("Error conectando con el servidor como invitado");
+            showPopup({ type: "error", title: "Operación cancelada", description: "Error conectando con el servidor como invitado" });
         } finally {
             setLoading(false);
         }
@@ -59,7 +61,7 @@ const LoginPage: React.FC = () => {
             const result = await Login({ userName: userName, userPassword: password });
 
             if (!result || result.error != null) {
-                alert(result?.error?.message || "Problema al intentar acceder");
+                showPopup({ type: "error", title: "Problema de acceso", description: result?.error?.message || "Problema al intentar acceder" });
                 return;
             }
 
@@ -68,7 +70,7 @@ const LoginPage: React.FC = () => {
             
         } catch (err) {
             console.error("Error login:", err);
-            alert("Error conectando con el servidor");
+            showPopup({ type: "error", title: "Problema de acceso", description: "Error conectando con el servidor" });
         } finally {
             setLoading(false);
         }
@@ -77,7 +79,7 @@ const LoginPage: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!userName || !password) {
-            alert("Introduce usuario y contraseña");
+            showPopup({ type: "error", title: "Completa autenticación", description: "Debes introducir usuario y contraseña" });
             return;
         }
         loginUser();

@@ -4,6 +4,7 @@ import { postPrint } from "../api/printService";
 import { getFilamentCatalog, getPrinterCatalog, getPrintState } from "../api/catalogService";
 import type { CatalogResponse } from "../models/catalog/CatalogResponse";
 import { parseGcodeData } from "../models/print/GCodePatterns";
+import { usePopupContext } from "../context/PopupContext";
 
 const CreatePrint3DPage: React.FC = () => {
 
@@ -20,6 +21,7 @@ const CreatePrint3DPage: React.FC = () => {
     const [printRealTimeM, setPrintRealTimeM] = useState<number>(0);
     const [printFilamentUsed, setPrintFilamentUsed] = useState<number>(0);
 
+    const { showPopup } = usePopupContext();
     const navigate = useNavigate();
     
 
@@ -63,7 +65,7 @@ const CreatePrint3DPage: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault(); 
         if (!printName || !printState || !printFilament || !printPrinter) {
-            alert("Todos los campos son obligatorios");
+            showPopup({ type: "warning", title: "Completar formulario", description: "Debe rellenar todos los campos" });
             return;
         }
         
@@ -85,14 +87,14 @@ const CreatePrint3DPage: React.FC = () => {
             });
 
             if (response.data) {
-                alert("Impresión creada correctamente.");
+                showPopup({ type: "info", title: "Operacion realizada", description: "La impresión ha sido guardada correctamente" });
                 navigate("/dashboard");
             } else {
-                alert(response.error?.message || "No se pudo crear la impresión.");
+                showPopup({ type: "error", title: "Operacion cancelada", description: response.error?.message || "No se pudo crear la impresión." });
             }
         } catch (error) {
             console.error("Error al crear la impresión:", error);
-            alert("Ha ocurrido un error en el registro de la impresión.");
+            showPopup({ type: "error", title: "Operacion cancelada", description: "Ha ocurrido un error en el registro de la impresión." });
         }
     };
 
