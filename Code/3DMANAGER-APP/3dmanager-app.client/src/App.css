@@ -51,7 +51,6 @@ th, td {
 }
 .pages-container {
     flex : 1;
-    overflow: auto;
 }
 
 .image-container{
@@ -179,3 +178,4 @@ th, td {
     .popup-button:hover {
         background-color: #1a1a1a;
     }
+

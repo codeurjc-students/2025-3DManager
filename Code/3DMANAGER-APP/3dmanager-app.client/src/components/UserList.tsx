@@ -2,10 +2,13 @@
 import { useNavigate } from 'react-router-dom';
 import type { UserListResponse } from '../models/user/UserListResponse';
 import { getUserList } from '../api/userService';
+import Pagination from './Pagination';
 
 const UserList: React.FC = () => {
     
     const [items, setItems] = useState<UserListResponse[]>([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -13,6 +16,9 @@ const UserList: React.FC = () => {
             setItems(response.data ?? []);
         });
     }, []);
+
+    const totalPages = Math.ceil(items.length / pageSize);
+    const paginatedItems = items.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
     return (
         <div className="table-container">
@@ -26,7 +32,7 @@ const UserList: React.FC = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {items.map((userList) => (
+                    {paginatedItems.map((userList) => (
                         <tr key={userList.userId}>
                             <td>{userList.userName}</td>
                             <td>{userList.userHours}</td>
@@ -43,6 +49,11 @@ const UserList: React.FC = () => {
                     ))}
                 </tbody>
             </table>
+            <Pagination currentPage={currentPage} totalPages={totalPages} pageSize={pageSize} onPageChange={setCurrentPage} onPageSizeChange={(size) => {
+                setPageSize(size);
+                setCurrentPage(1); 
+            }}
+            />
         </div>
     );
 };
