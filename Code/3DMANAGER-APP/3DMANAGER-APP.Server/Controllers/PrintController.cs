@@ -27,20 +27,20 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <response code="400">Conflicto en servidor</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Models.CommonResponse<List<PrintListResponse>>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(Models.CommonResponse<List<PrintListResponse>>), StatusCodes.Status409Conflict)]
-        [ProducesResponseType(typeof(Models.CommonResponse<List<PrintListResponse>>), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(Models.CommonResponse<PrintListResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<PrintListResponse>), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(Models.CommonResponse<PrintListResponse>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Prints")]
         [HttpGet]
-        public Models.CommonResponse<List<PrintListResponse>> GetPrintList()
+        public Models.CommonResponse<PrintListResponse> GetPrintList([FromQuery] PagedRequest pagination)
         {
-            List<PrintListResponse> userList = _printManager.GetPrintList(GroupId, out BaseError error);
+            PrintListResponse printList = _printManager.GetPrintList(GroupId, pagination, out BaseError error);
 
-            if (userList == null || error != null)
-                return new Models.CommonResponse<List<PrintListResponse>>(new ErrorProperties(error.code, error.message));
+            if (printList == null || error != null)
+                return new Models.CommonResponse<PrintListResponse>(new ErrorProperties(error.code, error.message));
 
-            return new Models.CommonResponse<List<PrintListResponse>>(userList);
+            return new Models.CommonResponse<PrintListResponse>(printList);
         }
 
         /// <summary>

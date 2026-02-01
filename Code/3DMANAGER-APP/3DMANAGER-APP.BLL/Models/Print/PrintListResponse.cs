@@ -1,6 +1,12 @@
-﻿namespace _3DMANAGER_APP.BLL.Models.Print
+﻿using _3DMANAGER_APP.BLL.Models.Base;
+
+namespace _3DMANAGER_APP.BLL.Models.Print
 {
-    public class PrintListResponse
+    public class PrintListResponse : PagedResponse
+    {
+        public List<PrintResponse> prints { get; set; }
+    }
+    public class PrintResponse
     {
         public int PrintId { get; set; }
         public string PrintName { get; set; }

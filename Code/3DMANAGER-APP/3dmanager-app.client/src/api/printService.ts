@@ -3,8 +3,8 @@ import type { CommonResponse } from '../models/base/CommonResponse'
 import type { PrintListResponse } from '../models/print/PrintListResponse';
 import type { PrintRequest } from '../models/print/PrintRequest';
 
-export const getPrintList = async (): Promise<CommonResponse<PrintListResponse[]>> => {
-    const response = await apiClient.get<CommonResponse<PrintListResponse[]>>("/api/v1/prints/GetPrintList");
+export const getPrintList = async (pageNumber: number, pageSize: number): Promise<CommonResponse<PrintListResponse>> => {
+    const response = await apiClient.get<CommonResponse<PrintListResponse>>(`/api/v1/prints/GetPrintList?pageNumber=${pageNumber}&pageSize=${pageSize}`);
     return response.data;
 }
 

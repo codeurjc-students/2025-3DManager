@@ -22,14 +22,26 @@ namespace _3DMANAGER_APP.BLL.Managers
             _logger = logger;
         }
 
-        public List<PrintListResponse> GetPrintList(int group, out BaseError? error)
+        public PrintListResponse GetPrintList(int group, PagedRequest pagination, out BaseError? error)
         {
             error = null;
-            List<PrintListResponseDbObject> list = _printDbManager.GetPrintList(group);
-            if (list == null)
-                error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = "Error al obtener listado de impresiones" };
+            var result = _printDbManager.GetPrintList(group, pagination.PageNumber, pagination.PageSize, out int totalItems);
+            if (result == null)
+            {
+                error = new BaseError()
+                {
+                    code = (int)HttpStatusCode.InternalServerError,
+                    message = "Error al obtener listado de impresiones"
+                };
+            }
+            var printsList = _mapper.Map<List<PrintResponse>>(result);
 
-            return _mapper.Map<List<PrintListResponse>>(list);
+            return new PrintListResponse
+            {
+                prints = printsList,
+                TotalItems = totalItems,
+                TotalPages = (int)Math.Ceiling((double)totalItems / pagination.PageSize)
+            };
         }
 
         public bool PostPrint(PrintRequest print, out BaseError? error)

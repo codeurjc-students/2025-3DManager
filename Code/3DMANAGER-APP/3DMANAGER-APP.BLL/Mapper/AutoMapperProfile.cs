@@ -54,10 +54,11 @@ namespace _3DMANAGER_APP.BLL.Mapper
 
             #region Print
 
-            CreateMap<PrintListResponseDbObject, PrintListResponse>().ForMember(dest => dest.PrintTime,
+            CreateMap<PrintListResponseDbObject, PrintResponse>().ForMember(dest => dest.PrintTime,
                            opt => opt.MapFrom(src => $"{(int)TimeSpan.FromSeconds((double)src.PrintTime).TotalHours}h " +
                            $"{TimeSpan.FromSeconds((double)src.PrintTime).Minutes}min"));
             CreateMap<PrintRequest, PrintRequestDbObject>().ReverseMap();
+
             #endregion
 
             #region Catalog
