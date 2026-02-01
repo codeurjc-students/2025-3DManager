@@ -14,8 +14,9 @@ namespace _3DMANAGER_APP.DAL.Managers
         {
         }
 
-        public List<PrintListResponseDbObject> GetPrintList(int group)
+        public List<PrintListResponseDbObject> GetPrintList(int group, int pageNumber, int pageSize, out int totalItems)
         {
+            totalItems = 0;
             try
             {
                 List<PrintListResponseDbObject> list = new List<PrintListResponseDbObject>();
@@ -26,6 +27,8 @@ namespace _3DMANAGER_APP.DAL.Managers
                 };
 
                 cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.VarChar) { Value = group });
+                cmd.Parameters.Add(new MySqlParameter("P_PAGE_NUMBER", MySqlDbType.Int32) { Value = pageNumber });
+                cmd.Parameters.Add(new MySqlParameter("P_PAGE_SIZE", MySqlDbType.Int32) { Value = pageSize });
 
                 var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
@@ -41,6 +44,11 @@ namespace _3DMANAGER_APP.DAL.Managers
                         PrintListResponseDbObject listResponse = new PrintListResponseDbObject();
                         list.Add(listResponse.Create(row));
                     }
+                }
+
+                if (ds.Tables.Count > 1 && ds.Tables[1].Rows.Count > 0)
+                {
+                    totalItems = Convert.ToInt32(ds.Tables[1].Rows[0]["TOTAL_ITEMS"]);
                 }
 
                 return list;

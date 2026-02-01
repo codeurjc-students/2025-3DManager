@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { postFilament } from "../api/filamentService";
 import type { CatalogResponse } from "../models/catalog/CatalogResponse";
 import { getFilamentType } from "../api/catalogService";
+import { usePopupContext } from "../context/PopupContext";
 
 const CreateFilamentPage: React.FC = () => {
 
@@ -17,6 +18,7 @@ const CreateFilamentPage: React.FC = () => {
     const [filamentDescription, setFilamentDescription] = useState("");
     const [catalogTypes, setCatalogTypes] = useState<CatalogResponse[]>([]);
 
+    const { showPopup } = usePopupContext();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -32,8 +34,8 @@ const CreateFilamentPage: React.FC = () => {
         e.preventDefault(); 
 
         if (!filamentName || !filamentType || !filamentWeight || !filamentColor || !filamentTemperature || !filamentLenght
-            || !filamentThickness || !filamentCost ) {
-            alert("Todos los campos salvo la descripción son campos obligatorios");
+            || !filamentThickness || !filamentCost) {
+            showPopup({ type: "warning", title: "Completar formulario", description: "Todos los campos salvo la descripción son campos obligatorios" });
             return;
         }
         
@@ -54,14 +56,14 @@ const CreateFilamentPage: React.FC = () => {
             });
 
             if (response.data) {
-                alert("Filamento creado correctamente.");
+                showPopup({ type: "info", title: "Operacion realizada", description: "Flamento creado correctamente" });
                 navigate("/dashboard");
             } else {
-                alert(response.error?.message || "No se pudo crear el filamento.");
+                showPopup({ type: "error", title: "Operación cancelada", description: response.error?.message || "No se pudo crear el filamento." });
             }
         } catch (error) {
-            console.error("Error al crear el filamento:", error);
-            alert("Ha ocurrido un error en el registro del filamento.");
+            console.log( "Error al crear el filamento:" + error)
+            showPopup({ type: "error", title: "Operación cancelada", description: "No se pudo crear el filamento. "});
         }
     };
 

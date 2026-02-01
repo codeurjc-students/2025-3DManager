@@ -1,20 +1,21 @@
 ﻿import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { postNewUser } from "../api/userService";
+import { usePopupContext } from "../context/PopupContext";
 
 const CreateUserPage: React.FC = () => {
 
     const [userName, setUserName] = useState("");
     const [userEmail, setUserEmail] = useState("");
     const [userPassword, setUserPassword] = useState("");
-
+    const { showPopup } = usePopupContext();
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault(); 
 
         if (!userName || !userEmail || !userPassword) {
-            alert("Todos los campos son obligatorios");
+            showPopup({ type: "warning", title: "Completar formulario", description: "Todos los campos son obligatorios" });
             return;
         }
         try {
@@ -26,14 +27,14 @@ const CreateUserPage: React.FC = () => {
             });
 
             if (response.data) {
-                alert("Cuenta creada correctamente. Ahora puedes iniciar sesión.");
+                showPopup({ type: "info", title: "Operación realizada", description: "Cuenta creada correctamente. Ahora puedes iniciar sesión." });
                 navigate("/login");
             } else {
-                alert(response.error?.message || "No se pudo crear el usuario.");
+                showPopup({ type: "error", title: "Operación cancelada", description: response.error?.message || "No se pudo crear el usuario." });
             }
         } catch (error) {
             console.error("Error al crear usuario:", error);
-            alert("Ha ocurrido un error en el registro del usuario.");
+            showPopup({type: "error", title: "Operación cancelada", description: "Ha ocurrido un error en la creación de un nuevo usuario." });
         }
     };
 

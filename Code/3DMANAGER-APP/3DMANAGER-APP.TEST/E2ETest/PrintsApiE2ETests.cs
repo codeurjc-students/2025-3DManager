@@ -22,9 +22,9 @@ namespace _3DMANAGER_APP.TEST.E2ETest
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            var content = await response.Content.ReadFromJsonAsync<Server.Models.CommonResponse<List<PrintListResponse>>>();
+            var content = await response.Content.ReadFromJsonAsync<Server.Models.CommonResponse<PrintListResponse>>();
             Assert.NotNull(content);
-            Assert.True(content.Data.Count > 0);
+            Assert.True(content.Data.prints.Count > 0);
         }
     }
 }

@@ -48,11 +48,12 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
             );
 
             BaseError error;
-            var prints = manager.GetPrintList(1, out error);
+            PagedRequest pagedRequest = new PagedRequest { PageNumber = 1, PageSize = 10 };
+            var prints = manager.GetPrintList(1, pagedRequest, out error);
 
             Assert.Null(error);
-            Assert.NotNull(prints);
-            Assert.NotEmpty(prints);
+            Assert.NotNull(prints.prints);
+            Assert.NotEmpty(prints.prints);
 
             PrintRequest newPrint = new PrintRequest()
             {
@@ -71,11 +72,11 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
             Assert.Null(error);
             Assert.True(printPost);
 
-            var printsAfterPost = manager.GetPrintList(1, out error);
+            var printsAfterPost = manager.GetPrintList(1, pagedRequest, out error);
             Assert.Null(error);
-            Assert.Equal(prints.Count + 1, printsAfterPost.Count);
+            Assert.Equal(prints.prints.Count + 1, printsAfterPost.prints.Count);
             Assert.NotNull(printsAfterPost);
-            Assert.NotEmpty(printsAfterPost);
+            Assert.NotEmpty(printsAfterPost.prints);
 
         }
     }
