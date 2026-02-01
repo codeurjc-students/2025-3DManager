@@ -1,5 +1,6 @@
 import { useState } from "react";
-import type { PopupData } from "./popupData";
+import type { PopupData } from "./PopupData";
+
 
 
 export const usePopup = () => {

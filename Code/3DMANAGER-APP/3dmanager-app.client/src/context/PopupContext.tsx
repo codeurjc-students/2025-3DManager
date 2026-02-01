@@ -1,7 +1,7 @@
 import React, { createContext, useContext } from "react";
 import { usePopup } from "../models/popup/usePopup";
-import type { PopupData } from "../models/popup/popupData";
 import Popup from "../components/Popup";
+import type { PopupData } from "../models/popup/PopupData";
 
 interface PopupContextType {
     showPopup: (data: PopupData) => void;

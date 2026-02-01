@@ -1,6 +1,5 @@
 import React from "react";
-import type { PopupData } from "../models/popup/popupData";
-
+import type { PopupData } from "../models/popup/PopupData";
 
 interface PopupProps {
     data: PopupData | null;
