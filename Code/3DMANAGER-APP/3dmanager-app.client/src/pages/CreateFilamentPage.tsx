@@ -17,6 +17,7 @@ const CreateFilamentPage: React.FC = () => {
     const [filamentCost, setFilamentCost] = useState<number>(0);
     const [filamentDescription, setFilamentDescription] = useState("");
     const [catalogTypes, setCatalogTypes] = useState<CatalogResponse[]>([]);
+    const [imageFile, setImageFile] = useState<File | null>(null);
 
     const { showPopup } = usePopupContext();
     const navigate = useNavigate();
@@ -53,13 +54,14 @@ const CreateFilamentPage: React.FC = () => {
                 filamentThickness, 
                 filamentCost, 
                 filamentDescription,
+                imageFile
             });
 
-            if (response.data) {
-                showPopup({ type: "info", title: "Operacion realizada", description: "Flamento creado correctamente" });
-                navigate("/dashboard");
-            } else {
+            if (response.data == 0) {
                 showPopup({ type: "error", title: "Operación cancelada", description: response.error?.message || "No se pudo crear el filamento." });
+            } else {
+                showPopup({ type: "info", title: "Operacion realizada", description: "Filamento creado correctamente" });
+                navigate("/dashboard");
             }
         } catch (error) {
             console.log( "Error al crear el filamento:" + error)
@@ -133,13 +135,27 @@ const CreateFilamentPage: React.FC = () => {
                                     </div>
                                 </div>
                                 <div className="row-3">
-                                    <div className="">
+                                    <div className="mt-2">
                                         <label htmlFor="filamentDescription" className="form-label">Descripción</label>
                                         <textarea id="filamentDescription" className="input-value w-75" value={filamentDescription} placeholder="Descripción"
                                             onChange={(e) => setFilamentDescription(e.target.value)} />
                                     </div>
+                                    <div className="mb-3">
+                                        <label className="form-label mt-2">Imagen del filamento(Opcional)</label>
+                                        <input
+                                            type="file"
+                                            className="form-control w-75"
+                                            accept="image/*"
+                                            onChange={(e) => {
+                                                if (e.target.files && e.target.files.length > 0) {
+                                                    setImageFile(e.target.files[0]);
+                                                }
+                                            }}
+                                        />
+                                    </div>
                                 </div>
-                            </div>                           
+                            </div>  
+                            
                         </div>
                         <div className="col-6 d-flex justify-content-between mt-3 p-2">
                             <button type="submit" className="botton-yellow createUser h-70">Crear filamento</button>

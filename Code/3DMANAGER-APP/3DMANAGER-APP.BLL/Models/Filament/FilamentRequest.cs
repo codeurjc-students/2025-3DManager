@@ -1,4 +1,6 @@
-﻿namespace _3DMANAGER_APP.BLL.Models.Filament
+﻿using Microsoft.AspNetCore.Http;
+
+namespace _3DMANAGER_APP.BLL.Models.Filament
 {
     public class FilamentRequest
     {
@@ -12,6 +14,7 @@
         public decimal FilamentThickness { get; set; }
         public decimal FilamentCost { get; set; }
         public string FilamentDescription { get; set; }
+        public IFormFile? ImageFile { get; set; }
 
     }
 }

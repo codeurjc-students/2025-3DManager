@@ -64,13 +64,8 @@ const CreateUserPage: React.FC = () => {
                             <input id="userPassword" type="password" className="input-value" value={userPassword} placeholder="Introduce tu contraseña"
                                 onChange={(e) => setUserPassword(e.target.value)}/>
                         </div>
-
-                        <div className="d-flex justify-content-between w-50 mt-5">
-                            <button type="submit" className="botton-yellow createUser">Crear cuenta</button>
-                            <button type="button" className="botton-darkGrey" onClick={() => navigate("/login")}>Volver</button>
-                        </div>
                         <div className="mb-3">
-                            <label className="form-label">Imagen de la impresora</label>
+                            <label className="form-label">Imagen de usuario (Opcional)</label>
                             <input
                                 type="file"
                                 className="form-control w-75"
@@ -82,6 +77,11 @@ const CreateUserPage: React.FC = () => {
                                 }}
                             />
                         </div>
+                        <div className="d-flex justify-content-between w-50 mt-5">
+                            <button type="submit" className="botton-yellow createUser">Crear cuenta</button>
+                            <button type="button" className="botton-darkGrey" onClick={() => navigate("/login")}>Volver</button>
+                        </div>
+                        
                     </form>
                 </div>
                 <div className="col-3"></div>
