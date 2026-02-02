@@ -1,10 +1,13 @@
-﻿namespace _3DMANAGER_APP.BLL.Models.User
+﻿using Microsoft.AspNetCore.Http;
+
+namespace _3DMANAGER_APP.BLL.Models.User
 {
     public class UserCreateRequest
     {
         public string UserName { get; set; }
         public string UserPassword { get; set; }
         public string UserEmail { get; set; }
+        public IFormFile? ImageFile { get; set; }
 
     }
 }

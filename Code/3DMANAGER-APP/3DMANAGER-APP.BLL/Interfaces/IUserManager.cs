@@ -5,7 +5,7 @@ namespace _3DMANAGER_APP.BLL.Interfaces
 {
     public interface IUserManager
     {
-        public bool PostNewUser(UserCreateRequest user, out BaseError? error);
+        public Task<CommonResponse<int>> PostNewUser(UserCreateRequest user);
         public UserObject Login(string userName, string userPassword, out BaseError? error);
         public List<UserListResponse> GetUserList(int group, out BaseError? error);
         public List<UserListResponse> GetUserInvitationList(out BaseError? error);

@@ -28,20 +28,20 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <response code="400">Conflicto en servidor</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status409Conflict)]
-        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Users")]
         [HttpPost]
-        public Models.CommonResponse<bool> PostNewUser(UserCreateRequest user)
+        public async Task<Models.CommonResponse<int>> PostNewUser([FromForm] UserCreateRequest user)
         {
-            var response = _userManager.PostNewUser(user, out BaseError? error);
-            if (error != null)
+            BLL.Models.Base.CommonResponse<int> response = await _userManager.PostNewUser(user);
+            if (response.Error != null)
             {
-                return new Models.CommonResponse<bool>(new ErrorProperties(error.code, error.message));
+                return new Models.CommonResponse<int>(new ErrorProperties(response.Error.Code, response.Error.Message));
             }
-            return new Models.CommonResponse<bool>(true);
+            return new Models.CommonResponse<int>(response.Data);
         }
 
 

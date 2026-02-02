@@ -8,6 +8,7 @@ const CreateUserPage: React.FC = () => {
     const [userName, setUserName] = useState("");
     const [userEmail, setUserEmail] = useState("");
     const [userPassword, setUserPassword] = useState("");
+    const [imageFile, setImageFile] = useState<File | null>(null);
     const { showPopup } = usePopupContext();
     const navigate = useNavigate();
 
@@ -24,13 +25,14 @@ const CreateUserPage: React.FC = () => {
                 userName,
                 userEmail,
                 userPassword,
+                imageFile
             });
 
-            if (response.data) {
+            if (response.data == 0) {
+                showPopup({ type: "error", title: "Operación cancelada", description: response.error?.message || "No se pudo crear el usuario." });
+            } else {
                 showPopup({ type: "info", title: "Operación realizada", description: "Cuenta creada correctamente. Ahora puedes iniciar sesión." });
                 navigate("/login");
-            } else {
-                showPopup({ type: "error", title: "Operación cancelada", description: response.error?.message || "No se pudo crear el usuario." });
             }
         } catch (error) {
             console.error("Error al crear usuario:", error);
@@ -66,6 +68,19 @@ const CreateUserPage: React.FC = () => {
                         <div className="d-flex justify-content-between w-50 mt-5">
                             <button type="submit" className="botton-yellow createUser">Crear cuenta</button>
                             <button type="button" className="botton-darkGrey" onClick={() => navigate("/login")}>Volver</button>
+                        </div>
+                        <div className="mb-3">
+                            <label className="form-label">Imagen de la impresora</label>
+                            <input
+                                type="file"
+                                className="form-control w-75"
+                                accept="image/*"
+                                onChange={(e) => {
+                                    if (e.target.files && e.target.files.length > 0) {
+                                        setImageFile(e.target.files[0]);
+                                    }
+                                }}
+                            />
                         </div>
                     </form>
                 </div>

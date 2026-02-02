@@ -1,7 +1,9 @@
 ﻿using _3DMANAGER_APP.BLL.Interfaces;
 using _3DMANAGER_APP.BLL.Models.Base;
+using _3DMANAGER_APP.BLL.Models.File;
 using _3DMANAGER_APP.BLL.Models.User;
 using _3DMANAGER_APP.DAL.Interfaces;
+using _3DMANAGER_APP.DAL.Models.File;
 using _3DMANAGER_APP.DAL.Models.User;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -16,17 +18,19 @@ namespace _3DMANAGER_APP.BLL.Managers
         private readonly IUserDbManager _userDbManager;
         private readonly IMapper _mapper;
         private readonly ILogger<UserManager> _logger;
-        public UserManager(IUserDbManager userDbManager, IMapper mapper, ILogger<UserManager> logger)
+        private IAwsS3Service _awsS3Service;
+        public UserManager(IUserDbManager userDbManager, IMapper mapper, ILogger<UserManager> logger, IAwsS3Service awsS3Service)
         {
             _userDbManager = userDbManager;
             _mapper = mapper;
             _logger = logger;
+            _awsS3Service = awsS3Service;
         }
 
-        public bool PostNewUser(UserCreateRequest user, out BaseError? error)
+        public async Task<CommonResponse<int>> PostNewUser(UserCreateRequest user)
         {
-            error = null;
 
+            CommonResponse<int> response = new CommonResponse<int>();
             var passwordHasher = new PasswordHasher<UserCreateRequest>();
             string hashedPassword = passwordHasher.HashPassword(user, user.UserPassword);
 
@@ -42,26 +46,55 @@ namespace _3DMANAGER_APP.BLL.Managers
                     case 4091:
                         msg = $"Error al crear usuario con nombre {user.UserName}. Ya existe una cuenta con ese nombre";
                         _logger.LogError(msg);
-                        error = new BaseError() { code = StatusCodes.Status409Conflict, message = msg };
+                        response.Error = new Response.ErrorProperties() { Code = StatusCodes.Status409Conflict, Message = msg };
                         break;
                     case 4092:
                         msg = $"Error al crear usuario con email {user.UserEmail}. Ya existe una cuenta con ese correo";
                         _logger.LogError(msg);
-                        error = new BaseError() { code = StatusCodes.Status409Conflict, message = msg };
+                        response.Error = new Response.ErrorProperties() { Code = StatusCodes.Status409Conflict, Message = msg };
                         break;
                     case 500:
                         msg = $"Error al crear usuario en el servidor.";
                         _logger.LogError(msg);
-                        error = new BaseError() { code = StatusCodes.Status500InternalServerError, message = msg };
+                        response.Error = new Response.ErrorProperties() { Code = StatusCodes.Status500InternalServerError, Message = msg };
                         break;
                     default:
                         break;
                 }
-
+                return response;
             }
-            return responseDb;
+            response.Data = responseDb;
+            if (user.ImageFile != null)
+            {
+                bool responseImage = await UpdateS3UserImage(responseDb, user.ImageFile);
+                if (!responseImage)
+                {
+                    string msg = "El usuario se ha creado correctamente, pero la imagen ha fallado al ser guardada.";
+                    _logger.LogError(msg);
+                    response.Error = new Response.ErrorProperties() { Code = StatusCodes.Status409Conflict, Message = msg };
+                }
+            }
+            return response;
         }
 
+        public async Task<bool> UpdateS3UserImage(int userId, IFormFile imageFile)
+        {
+            FileResponse? image = null;
+
+            if (imageFile != null)
+            {
+                image = await _awsS3Service.UploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName,
+                    imageFile.ContentType, "users");
+                if (image != null)
+                    return _userDbManager.UpdateUserImageData(userId, _mapper.Map<FileResponseDbObject>(image));
+                else return false;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
         public UserObject? Login(string userName, string userPassword, out BaseError? error)
         {
             error = null;
