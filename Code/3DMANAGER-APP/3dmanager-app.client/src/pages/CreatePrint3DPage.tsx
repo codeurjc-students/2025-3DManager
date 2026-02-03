@@ -20,6 +20,7 @@ const CreatePrint3DPage: React.FC = () => {
     const [printRealTimeH, setPrintRealTimeH] = useState<number>(0);
     const [printRealTimeM, setPrintRealTimeM] = useState<number>(0);
     const [printFilamentUsed, setPrintFilamentUsed] = useState<number>(0);
+    const [imageFile, setImageFile] = useState<File | null>(null);
 
     const { showPopup } = usePopupContext();
     const navigate = useNavigate();
@@ -83,7 +84,8 @@ const CreatePrint3DPage: React.FC = () => {
                 groupId,
                 printTime,
                 printRealTime,
-                printFilamentUsed
+                printFilamentUsed,
+                imageFile
             });
 
             if (response.data) {
@@ -184,6 +186,19 @@ const CreatePrint3DPage: React.FC = () => {
                                     accept=".gcode,.txt"
                                     className="input-value w-100"
                                     onChange={handleFileUpload}
+                                />
+                            </div>
+                            <div className="ms-3 me-3 p-2">
+                                <label className="form-label">Imagen de la impresora</label>
+                                <input
+                                    type="file"
+                                    className="form-control input-value w-100"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        if (e.target.files && e.target.files.length > 0) {
+                                            setImageFile(e.target.files[0]);
+                                        }
+                                    }}
                                 />
                             </div>
                         </div>

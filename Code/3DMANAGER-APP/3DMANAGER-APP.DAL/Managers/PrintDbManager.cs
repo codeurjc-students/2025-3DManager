@@ -1,5 +1,6 @@
 ﻿using _3DMANAGER_APP.DAL.Base;
 using _3DMANAGER_APP.DAL.Interfaces;
+using _3DMANAGER_APP.DAL.Models.File;
 using _3DMANAGER_APP.DAL.Models.Print;
 using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
@@ -67,7 +68,7 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
         }
 
-        public bool PostPrint(PrintRequestDbObject request, out int? error)
+        public int PostPrint(PrintRequestDbObject request, out int? error)
         {
             error = null;
             try
@@ -96,30 +97,74 @@ namespace _3DMANAGER_APP.DAL.Managers
                 var ds = new DataSet();
                 adapter.Fill(ds);
 
-                error = Convert.ToInt32(errorParam.Value);
-                if (error != 0)
+                var errorDb = Convert.ToInt32(errorParam.Value);
+                if (errorDb != 0)
                 {
-                    return false;
+                    error = errorDb;
+                    return 0;
                 }
                 if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                 {
-                    return true;
+                    return ds.Tables[0].Rows[0].Field<int>("3DMANAGER_3DPRINT_ID");
                 }
 
-                return false;
+
+                return 0;
             }
             catch (MySqlException ex)
             {
                 string msg = "Error al crear una impresión en BBDD";
                 Logger.LogError(ex, msg);
                 error = 500;
-                return false;
+                return 0;
             }
             catch (Exception ex)
             {
                 string msg = "Error al crear una impresión en BBDD";
                 Logger.LogError(ex, msg);
                 error = 500;
+                return 0;
+            }
+        }
+
+        public bool UpdatePrintImageData(int printId, FileResponseDbObject image)
+        {
+            try
+            {
+                string procName = $"{ProcedurePrefix}_pr_PRINT_POST_IMAGE";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_KEY", MySqlDbType.VarChar) { Value = image.FileKey });
+                cmd.Parameters.Add(new MySqlParameter("P_URL", MySqlDbType.VarChar) { Value = image.FileUrl });
+                cmd.Parameters.Add(new MySqlParameter("P_PRINT_ID", MySqlDbType.Int32) { Value = printId });
+                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    return true;
+                }
+
+                return false;
+
+            }
+            catch (MySqlException ex)
+            {
+                string msg = "Error al guardar los datos de la imagen en BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error al guardar los datos de la imagen en BBDD";
+                Logger.LogError(ex, msg);
                 return false;
             }
         }

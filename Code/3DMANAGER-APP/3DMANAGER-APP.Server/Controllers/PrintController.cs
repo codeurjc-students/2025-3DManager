@@ -48,23 +48,25 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// </summary>
         /// <returns>bool</returns>
         /// <response code="200">Respuesta correcta</response>
-        /// <response code="400">Conflicto en servidor</response>
+        /// /// <response code="409">Conflicto en servidor</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Prints")]
         [HttpPost]
-        public Models.CommonResponse<bool> PostPrint([FromBody] PrintRequest print)
+        public async Task<Models.CommonResponse<int>> PostPrint([FromForm] PrintRequest print)
         {
             print.GroupId = GroupId;
             print.UserId = UserId;
-            _printManager.PostPrint(print, out BaseError? error);
-            if (error != null)
+            BLL.Models.Base.CommonResponse<int> response = await _printManager.PostPrint(print);
+            if (response.Error != null)
             {
-                return new Models.CommonResponse<bool>(new ErrorProperties(error.code, error.message));
+                return new Models.CommonResponse<int>(new ErrorProperties(response.Error.Code, response.Error.Message));
             }
-            return new Models.CommonResponse<bool>(true);
+            return new Models.CommonResponse<int>(response.Data);
         }
     }
 }

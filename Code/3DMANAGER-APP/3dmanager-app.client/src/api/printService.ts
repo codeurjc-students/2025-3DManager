@@ -8,7 +8,23 @@ export const getPrintList = async (pageNumber: number, pageSize: number): Promis
     return response.data;
 }
 
-export const postPrint = async (data: PrintRequest): Promise<CommonResponse<boolean>> => {
-    const response = await apiClient.post<CommonResponse<boolean>>('/api/v1/prints/PostPrint', data );
+export const postPrint = async (data: PrintRequest): Promise<CommonResponse<number>> => {
+    const formData = new FormData();
+
+    formData.append("groupId", data.groupId.toString());
+    formData.append("userId", data.userId.toString());
+    formData.append("printDescription", data.printDescription);
+    formData.append("printFilament", data.printFilament.toString());
+    formData.append("printFilamentUsed", data.printFilamentUsed.toString());
+    formData.append("printName", data.printName);
+    formData.append("printPrinter", data.printPrinter.toString());
+    formData.append("printRealTime", data.printRealTime.toString());
+    formData.append("printState", data.printState.toString());
+    formData.append("printTime", data.printTime.toString());
+    if (data.imageFile) {
+        formData.append("imageFile", data.imageFile);
+    }
+    const response = await apiClient.post<CommonResponse<number>>(`/api/v1/prints/PostPrint`, formData,
+        { headers: { "Content-Type": "multipart/form-data" } })
     return response.data;
 }
