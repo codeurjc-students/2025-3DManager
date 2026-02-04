@@ -1,9 +1,11 @@
-﻿using _3DMANAGER_APP.BLL.Managers;
+﻿using _3DMANAGER_APP.BLL.Interfaces;
+using _3DMANAGER_APP.BLL.Managers;
 using _3DMANAGER_APP.BLL.Mapper;
 using _3DMANAGER_APP.BLL.Models.Base;
 using _3DMANAGER_APP.BLL.Models.Print;
 using _3DMANAGER_APP.DAL.Base;
 using _3DMANAGER_APP.DAL.Managers;
+using _3DMANAGER_APP.TEST.E2ETest;
 using _3DMANAGER_APP.TEST.Fixture;
 using AutoMapper;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -15,6 +17,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
     {
         private readonly DatabaseFixture _fixture;
         private readonly IMapper _mapper;
+        private readonly IAwsS3Service _fakeS3Service;
 
         public PrintIntegrationTests(DatabaseFixture fixture)
         {
@@ -26,6 +29,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
             }, NullLoggerFactory.Instance);
 
             _mapper = config.CreateMapper();
+            _fakeS3Service = new FakeAwsS3Service();
         }
 
         [Fact]
@@ -44,7 +48,8 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
             var manager = new PrintManager(
                 printDbManager,
                 _mapper,
-                NullLogger<PrintManager>.Instance
+                NullLogger<PrintManager>.Instance,
+                _fakeS3Service
             );
 
             BaseError error;
@@ -68,9 +73,9 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 PrintState = 1,
                 UserId = 1
             };
-            var printPost = manager.PostPrint(newPrint, out error);
+            var printPost = manager.PostPrint(newPrint);
             Assert.Null(error);
-            Assert.True(printPost);
+            Assert.NotEqual(0, printPost.Result.Data);
 
             var printsAfterPost = manager.GetPrintList(1, pagedRequest, out error);
             Assert.Null(error);

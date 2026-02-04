@@ -1,9 +1,11 @@
-﻿using _3DMANAGER_APP.BLL.Managers;
+﻿using _3DMANAGER_APP.BLL.Interfaces;
+using _3DMANAGER_APP.BLL.Managers;
 using _3DMANAGER_APP.BLL.Mapper;
 using _3DMANAGER_APP.BLL.Models.Base;
 using _3DMANAGER_APP.BLL.Models.Filament;
 using _3DMANAGER_APP.DAL.Base;
 using _3DMANAGER_APP.DAL.Managers;
+using _3DMANAGER_APP.TEST.E2ETest;
 using _3DMANAGER_APP.TEST.Fixture;
 using AutoMapper;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -15,7 +17,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
     {
         private readonly DatabaseFixture _fixture;
         private readonly IMapper _mapper;
-
+        private readonly IAwsS3Service _fakeService;
         public FilamentIntegrationTests(DatabaseFixture fixture)
         {
             _fixture = fixture;
@@ -26,6 +28,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
             }, NullLoggerFactory.Instance);
 
             _mapper = config.CreateMapper();
+            _fakeService = new FakeAwsS3Service();
         }
 
         [Fact]
@@ -44,7 +47,8 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
             var manager = new FilamentManager(
                 filamentDbManager,
                 _mapper,
-                NullLogger<FilamentManager>.Instance
+                NullLogger<FilamentManager>.Instance,
+                _fakeService
             );
 
             BaseError error;
@@ -69,10 +73,10 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
 
 
             };
-            var filamentPost = manager.PostFilament(newFilament, out error);
+            var filamentPost = manager.PostFilament(newFilament);
             Assert.Null(error);
-            Assert.True(filamentPost);
-
+            Assert.NotNull(filamentPost);
+            Assert.NotEqual(0, filamentPost.Result.Data);
             var filamentsAfterPost = manager.GetFilamentList(1, out error);
             Assert.Null(error);
             Assert.Equal(filaments.Count + 1, filamentsAfterPost.Count);
