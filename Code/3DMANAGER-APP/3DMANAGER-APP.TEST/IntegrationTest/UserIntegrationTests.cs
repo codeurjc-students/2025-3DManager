@@ -1,8 +1,10 @@
-﻿using _3DMANAGER_APP.BLL.Managers;
+﻿using _3DMANAGER_APP.BLL.Interfaces;
+using _3DMANAGER_APP.BLL.Managers;
 using _3DMANAGER_APP.BLL.Mapper;
 using _3DMANAGER_APP.BLL.Models.Base;
 using _3DMANAGER_APP.DAL.Base;
 using _3DMANAGER_APP.DAL.Managers;
+using _3DMANAGER_APP.TEST.E2ETest;
 using _3DMANAGER_APP.TEST.Fixture;
 using AutoMapper;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -14,7 +16,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
     {
         private readonly DatabaseFixture _fixture;
         private readonly IMapper _mapper;
-
+        private readonly IAwsS3Service _fakeS3Service;
         public UserIntegrationTests(DatabaseFixture fixture)
         {
             _fixture = fixture;
@@ -25,6 +27,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
             }, NullLoggerFactory.Instance);
 
             _mapper = config.CreateMapper();
+            _fakeS3Service = new FakeAwsS3Service();
         }
 
         [Fact]
@@ -43,7 +46,8 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
             var manager = new UserManager(
                 userDbManager,
                 _mapper,
-                NullLogger<UserManager>.Instance
+                NullLogger<UserManager>.Instance,
+                _fakeS3Service
             );
 
             BaseError error;

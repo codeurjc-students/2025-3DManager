@@ -214,6 +214,8 @@
                 `USER_GROUP_ID` INT NOT NULL,
                 `USER_PHOTO_URL` VARCHAR(255),
                 `USER_REGISTER_DATE` DATETIME DEFAULT CURRENT_TIMESTAMP,
+                `USER_IMAGE_URL` varchar(255) DEFAULT NULL,
+                `USER_IMAGE_KEY` varchar(255) DEFAULT NULL,
                 FOREIGN KEY (`USER_GROUP_ID`)
                     REFERENCES `3DMANAGER_GROUP` (`3DMANAGER_GROUP_ID`)
             );
@@ -262,6 +264,8 @@
                 `3DMANAGER_FILAMENT_REGISTER_DATE` DATETIME DEFAULT CURRENT_TIMESTAMP,
                 `3DMANAGER_FILAMENT_WEIGHT` INT DEFAULT NULL,
                 `3DMANAGER_FILAMENT_COST` DECIMAL(10,2) DEFAULT NULL,
+                `3DMANAGER_FILAMENT_IMAGE_URL` varchar(255) DEFAULT NULL,
+                `3DMANAGER_FILAMENT_IMAGE_KEY` varchar(255) DEFAULT NULL,
                 FOREIGN KEY (`3DMANAGER_FILAMENT_GROUP_ID`)
                     REFERENCES `3DMANAGER_GROUP` (`3DMANAGER_GROUP_ID`)
             );
@@ -285,7 +289,9 @@
                 `3DMANAGER_3DPRINT_USER_ID` INT NOT NULL,
                 `3DMANAGER_3DPRINT_FILAMENT_ID` INT NOT NULL,
                 `3DMANAGER_3DPRINT_DESCRIPTION` VARCHAR(500),
-                `3DMANAGER_3DPRINT_REGISTER_DATE` DATETIME DEFAULT CURRENT_TIMESTAMP
+                `3DMANAGER_3DPRINT_REGISTER_DATE` DATETIME DEFAULT CURRENT_TIMESTAMP,
+                `3DMANAGER_3DPRINT_IMAGE_KEY` varchar(255) DEFAULT NULL,
+                `3DMANAGER_3DPRINT_IMAGE_URL` varchar(255) DEFAULT NULL
             );
             """;
 
@@ -432,6 +438,7 @@
                 OUT CodigoError INT
             )
             BEGIN
+                DECLARE NEW_ID INT;
                 SET CodigoError = 0;
 
                 INSERT INTO `3DMANAGER_PRINTER` (
@@ -449,7 +456,8 @@
                     P_GROUP_ID
                 );
 
-                SELECT LAST_INSERT_ID() AS PRINTER_ID;
+                SET NEW_ID = LAST_INSERT_ID(); 
+                SELECT NEW_ID AS 3DMANAGER_PRINTER_ID;
             END;
             
             """;
@@ -508,6 +516,7 @@
                 OUT CodigoError INT
             )
             BEGIN
+                DECLARE NEW_ID INT;
                 SET CodigoError = 0;
 
                 INSERT INTO `3DMANAGER_3DPRINT` (
@@ -535,7 +544,9 @@
                     P_PRINT_FILAMENT_USED
                 );
 
-                SELECT LAST_INSERT_ID() AS PRINT_ID;
+                SET NEW_ID = LAST_INSERT_ID();
+
+                SELECT NEW_ID AS 3DMANAGER_3DPRINT_ID;
             END;
             
             """;
@@ -592,6 +603,7 @@
                 OUT CodigoError INT
             )
             BEGIN
+                DECLARE NEW_ID INT;
                 SET CodigoError = 0;
 
                 INSERT INTO `3DMANAGER_FILAMENT` (
@@ -622,7 +634,8 @@
                     P_FILAMENT_COST
                 );
 
-                SELECT LAST_INSERT_ID() AS FILAMENT_ID;
+                SET NEW_ID = LAST_INSERT_ID(); 
+            	SELECT NEW_ID AS 3DMANAGER_FILAMENT_ID;
             END;
             
             """;

@@ -110,7 +110,7 @@ body {
     border-color: var(--colorBordersAndSplitters);
     background-color: var(--colorLowGrey);
     border-radius: 5px;
-    max-height: 695px; 
+    max-height: max-content; 
     display: flex;
     flex-direction: column;
     overflow: hidden;

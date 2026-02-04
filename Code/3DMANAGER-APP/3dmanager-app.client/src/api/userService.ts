@@ -5,10 +5,21 @@ import type { UserCreateRequest } from '../models/user/UserCreateRequest'
 import type { LoginRequest } from '../models/user/LoginRequest'
 import type { UserListResponse } from '../models/user/UserListResponse'
 
-export const postNewUser = async (data: UserCreateRequest): Promise<CommonResponse<boolean>> => {
-    const response = await apiClient.post<CommonResponse<boolean>>('/api/v1/users/PostNewUser', data);
+export const postNewUser = async (data: UserCreateRequest): Promise<CommonResponse<number>> => {
+    const formData = new FormData();
+
+    formData.append("userName", data.userName);
+    formData.append("userPassword", data.userPassword);
+    formData.append("userEmail", data.userEmail);
+
+    if (data.imageFile) {
+        formData.append("imageFile", data.imageFile);
+    }
+    const response = await apiClient.post<CommonResponse<number>>('/api/v1/users/PostNewUser', formData,
+        { headers: { "Content-Type": "multipart/form-data" }});
     return response.data;
 }
+
 
 export const Login = async (data : LoginRequest): Promise<CommonResponse<LoginResponse>> => {
     const response = await apiClient.post<CommonResponse<LoginResponse>>('/api/v1/users/Login', data);

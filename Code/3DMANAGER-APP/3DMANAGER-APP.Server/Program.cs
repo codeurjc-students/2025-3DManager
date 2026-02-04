@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MySql.Data.MySqlClient;
+using System.Globalization;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -128,6 +129,13 @@ builder.Services.AddScoped<IAwsS3Service>(sp =>
 });
 
 builder.Services.AddAuthorization();
+
+//Culture
+CultureInfo customCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
+customCulture.NumberFormat.NumberDecimalSeparator = ".";
+CultureInfo.DefaultThreadCurrentCulture = customCulture;
+CultureInfo.DefaultThreadCurrentUICulture = customCulture;
+
 
 //CI configuration
 var app = builder.Build();

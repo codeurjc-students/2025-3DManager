@@ -6,6 +6,6 @@ namespace _3DMANAGER_APP.BLL.Interfaces
     public interface IPrintManager
     {
         public PrintListResponse GetPrintList(int group, PagedRequest pagination, out BaseError? error);
-        public bool PostPrint(PrintRequest print, out BaseError? error);
+        public Task<CommonResponse<int>> PostPrint(PrintRequest print);
     }
 }

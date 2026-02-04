@@ -51,22 +51,22 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// </summary>
         /// <returns>bool</returns>
         /// <response code="200">Respuesta correcta</response>
-        /// <response code="400">Conflicto en servidor</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Filaments")]
         [HttpPost]
-        public Models.CommonResponse<bool> PostFilament(FilamentRequest filament)
+        public async Task<Models.CommonResponse<int>> PostFilament([FromForm] FilamentRequest filament)
         {
             filament.GroupId = GroupId;
-            _filamentManager.PostFilament(filament, out BaseError? error);
-            if (error != null)
+            BLL.Models.Base.CommonResponse<int> response = await _filamentManager.PostFilament(filament);
+            if (response.Error != null)
             {
-                return new Models.CommonResponse<bool>(new ErrorProperties(error.code, error.message));
+                return new Models.CommonResponse<int>(new ErrorProperties(response.Error.Code, response.Error.Message));
             }
-            return new Models.CommonResponse<bool>(true);
+            return new Models.CommonResponse<int>(response.Data);
         }
     }
 }
