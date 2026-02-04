@@ -137,19 +137,41 @@ namespace _3DMANAGER_APP.BLL.Managers
 
             return _mapper.Map<List<UserListResponse>>(list);
         }
-        public List<UserListResponse> GetUserInvitationList(out BaseError? error)
+        public List<UserListResponse> GetUserInvitationList(string? filter, out BaseError? error)
         {
             error = null;
-            List<UserListResponseDbObject> list = _userDbManager.GetUserInvitationList();
+            List<UserListResponseDbObject> list = _userDbManager.GetUserInvitationList(filter);
             if (list == null)
                 error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = "Error al obtener listado de usuarios para invitar" };
 
             return _mapper.Map<List<UserListResponse>>(list);
         }
 
-        public void PostUserInvitation(int groupId, int userId)
+        public bool PostUserInvitation(int groupId, int userId, out BaseError? error)
         {
-            _userDbManager.PostUserInvitation(groupId, userId);
+            bool responseDb = _userDbManager.PostUserInvitation(groupId, userId, out int? errorDb);
+            error = null;
+            if (errorDb != null || !responseDb)
+            {
+                string msg = "";
+                switch (errorDb)
+                {
+                    case 409:
+                        msg = $"Error al invitar al  usuario . Ya existe una invitacion del grupo a ese usuario.";
+                        _logger.LogError(msg);
+                        error = new BaseError { code = StatusCodes.Status409Conflict, message = msg };
+                        break;
+                    case 500:
+                        msg = $"Error al invitar al usuario en el servidor.";
+                        _logger.LogError(msg);
+                        error = new BaseError { code = StatusCodes.Status500InternalServerError, message = msg };
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+            return true;
         }
     }
 }

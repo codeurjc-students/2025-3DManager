@@ -144,9 +144,9 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Tags("Users")]
         [HttpGet]
-        public Models.CommonResponse<List<UserListResponse>> GetUserInvitationList()
+        public Models.CommonResponse<List<UserListResponse>> GetUserInvitationList([FromQuery] string? filter)
         {
-            List<UserListResponse> userList = _userManager.GetUserInvitationList(out BaseError error);
+            List<UserListResponse> userList = _userManager.GetUserInvitationList(filter, out BaseError error);
 
             if (userList == null || error != null)
                 return new Models.CommonResponse<List<UserListResponse>>(new ErrorProperties(error.code, error.message));
@@ -155,22 +155,25 @@ namespace _3DMANAGER_APP.Server.Controllers
         }
 
         /// <summary>
-        /// Return a user list
+        /// Invites a user to a group
         /// </summary>
-        /// <returns>A list of basic data users to invite for show in the dasboard user list invitation</returns>
+        /// <returns>Return a bool that verifies if the invitatios was succesfull or not</returns>
         /// <response code="200">Respuesta correcta</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Models.CommonResponse<List<UserListResponse>>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(Models.CommonResponse<List<UserListResponse>>), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Users")]
         [HttpPost]
-        public IActionResult PostUserInvitation([FromQuery] int userId)
+        public Models.CommonResponse<bool> PostUserInvitation([FromQuery] int userId)
         {
             var groupId = GroupId;
-            _userManager.PostUserInvitation(groupId, userId);
-            return Ok();
+            bool response = _userManager.PostUserInvitation(groupId, userId, out BaseError? error);
+            if (error != null)
+                return new Models.CommonResponse<bool>(new ErrorProperties(error.code, error.message));
+            else
+                return new Models.CommonResponse<bool>(response);
         }
     }
 }
