@@ -118,10 +118,10 @@ const LoginPage: React.FC = () => {
                         </div>
 
                         <div className="d-flex justify-content-between w-50 mt-5">
-                            <button type="submit" className="botton-yellow" disabled={loading}>
+                            <button type="submit" className="button-yellow" disabled={loading}>
                                 {loading ? "Accediendo..." : "Acceder"}
                             </button>
-                            <button type="button" className="botton-darkGrey" onClick={() => loginAsGuest() }>
+                            <button type="button" className="button-darkGrey" onClick={() => loginAsGuest() }>
                                 Acceder como invitado
                             </button>
                         </div>
@@ -133,7 +133,7 @@ const LoginPage: React.FC = () => {
             <div className="row mt-5">
                 <div className="col-3"></div>
                 <div className="col-6 mt-2 d-flex flex-column">
-                    <button type="button" className="botton-darkGrey" onClick={() => navigate("/user-create")}>
+                    <button type="button" className="button-darkGrey" onClick={() => navigate("/user-create")}>
                         Crear cuenta
                     </button>
                 </div>

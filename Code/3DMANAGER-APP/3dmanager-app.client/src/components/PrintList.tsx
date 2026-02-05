@@ -20,12 +20,12 @@ const PrintList: React.FC = () => {
     }, [currentPage, pageSize]);
 
     return (
-        <div className="table-container">
+        <div className="table-container pt-4">
             <div className="table-scroll">
                 <table className="table">
                     <thead>
                         <tr>
-                            <th>Nombre</th>
+                            <th className="col-3">Nombre</th>
                             <th>Usuario</th>
                             <th>Fecha impresión</th>
                             <th>Tiempo impresion</th>
@@ -42,7 +42,7 @@ const PrintList: React.FC = () => {
                                 <td>{print.printTime}</td>
                                 <td>{print.printFilamentConsumed}</td>
                                 <td>
-                                    <button className="botton-darkGrey w-75" onClick={() => navigate(`/detail/print/${print.printId}`)}>
+                                    <button className="button-darkGrey w-75" onClick={() => navigate(`/detail/print/${print.printId}`)}>
                                         Ver detalle
                                     </button>
                                 </td>

@@ -47,32 +47,39 @@ const UserInvitationList: React.FC = () => {
     };
     return (
         <div className="table-container">
-            <div className="mb-3 mt-2">
-                <input type="text" className="form-control" placeholder="Buscar usuario..." value={search}
-                    onChange={(e) => setSearch(e.target.value)}/>
-            </div>
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>                      
-                        <th>Invitar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {paginatedItems.map((userList) => (
-                        <tr key={userList.userId}>
-                            <td className="w-75">{userList.userName}</td>
-                            <td>
-                                <button
-                                    className="botton-darkGrey justify-content-end"
-                                    onClick={() => handleInvite(userList.userId)}>
-                                    Invitar
-                                </button>
-                            </td>
+            <div className="table-scroll">
+                <div className="mb-1 mt-1 d-flex flex-row">
+                    <input type="text" className="form-control" placeholder="Buscar usuario..." value={search}
+                        onChange={(e) => setSearch(e.target.value)} />
+                    {search.length > 0 && (
+                        <button className="button-yellow  ms-2" onClick={clearSearch} >
+                            Limpiar
+                        </button>
+                    )}
+                </div>
+                <table className="table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>                      
+                            <th>Invitar</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {paginatedItems.map((userList) => (
+                            <tr key={userList.userId}>
+                                <td className="w-75">{userList.userName}</td>
+                                <td>
+                                    <button
+                                        className="button-darkGrey justify-content-end"
+                                        onClick={() => handleInvite(userList.userId)}>
+                                        Invitar
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
             <div className="pagination-fixed">
                 <Pagination currentPage={currentPage} totalPages={totalPages} pageSize={pageSize}
                     onPageChange={setCurrentPage} onPageSizeChange={(size) => {

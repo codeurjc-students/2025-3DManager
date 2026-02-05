@@ -21,39 +21,42 @@ const UserList: React.FC = () => {
     const paginatedItems = items.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
     return (
-        <div className="table-container">
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Horas mes actual</th>
-                        <th>Piezas mes actual</th>
-                        <th>Detalle</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {paginatedItems.map((userList) => (
-                        <tr key={userList.userId}>
-                            <td>{userList.userName}</td>
-                            <td>{userList.userHours}</td>
-                            <td>{userList.userNumberPrints}</td>
-                            <td>
-                                <button
-                                    className="botton-darkGrey w-75"
-                                    onClick={() => navigate(`/detail/user/${userList.userId}`)}
-                                >
-                                    Ver detalle
-                                </button>
-                            </td>
+        <div className="table-container pt-4">
+            <div className="table-scroll">
+                <table className="table">
+                    <thead>
+                        <tr>
+                            <th className="col-3">Nombre</th>
+                            <th>Horas mes actual</th>
+                            <th>Piezas mes actual</th>
+                            <th>Detalle</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-            <Pagination currentPage={currentPage} totalPages={totalPages} pageSize={pageSize} onPageChange={setCurrentPage} onPageSizeChange={(size) => {
-                setPageSize(size);
-                setCurrentPage(1); 
-            }}
-            />
+                    </thead>
+                    <tbody>
+                        {paginatedItems.map((userList) => (
+                            <tr key={userList.userId}>
+                                <td>{userList.userName}</td>
+                                <td>{userList.userHours}</td>
+                                <td>{userList.userNumberPrints}</td>
+                                <td>
+                                    <button
+                                        className="button-darkGrey w-75"
+                                        onClick={() => navigate(`/detail/user/${userList.userId}`)}
+                                    >
+                                        Ver detalle
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <div className="pagination-fixed">
+                <Pagination currentPage={currentPage} totalPages={totalPages} pageSize={pageSize} onPageChange={setCurrentPage} onPageSizeChange={(size) => {
+                    setPageSize(size);
+                    setCurrentPage(1);
+                }} />
+            </div>
         </div>
     );
 };

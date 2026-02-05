@@ -57,7 +57,7 @@ const GroupPage: React.FC = () => {
                     <span > La aplicación se gestiona mediante grupos. Para su uso tendrá que ser invitado a participar en un grupo o crear uno.</span>
                     <div className= "d-flex mt-3 h-50">
                         <div className="col-2 m-3 p-2" >
-                            <button type="button" className="botton-yellow createGroup" onClick={() => navigate("/group-create")}>
+                            <button type="button" className="button-yellow createGroup" onClick={() => navigate("/group-create")}>
                                 Crear grupo
                             </button>
                         </div>
@@ -73,14 +73,14 @@ const GroupPage: React.FC = () => {
                                                         en el grupo {groupInvitations.groupName}</td>
                                                     <td>
                                                         <button
-                                                            className="botton-darkGrey justify-content-end w-100"
+                                                            className="button-darkGrey justify-content-end w-100"
                                                             onClick={() => handleInvitationResponse(groupInvitations.groupId, true)}>
                                                             Aceptar
                                                         </button>
                                                     </td>
                                                     <td>
                                                         <button
-                                                            className="botton-darkGrey justify-content-end w-100"
+                                                            className="button-darkGrey justify-content-end w-100"
                                                             onClick={() => handleInvitationResponse(groupInvitations.groupId, false)}>
                                                             Rechazar
                                                         </button>

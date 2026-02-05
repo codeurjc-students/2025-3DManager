@@ -82,8 +82,8 @@ const CreatePrinterPage: React.FC = () => {
                             </div>                           
                         </div>
                         <div className="col-6 d-flex justify-content-between mt-5 p-2">
-                            <button type="submit" className="botton-yellow createUser h-70">Crear impresora</button>
-                            <button type="button" className="botton-darkGrey" onClick={() => navigate("/dashboard")}>Cancelar</button>
+                            <button type="submit" className="button-yellow createUser h-70">Crear impresora</button>
+                            <button type="button" className="button-darkGrey" onClick={() => navigate("/dashboard")}>Cancelar</button>
                         </div>                                      
                     </form>
                 </div>

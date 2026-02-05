@@ -78,8 +78,8 @@ const CreateUserPage: React.FC = () => {
                             />
                         </div>
                         <div className="d-flex justify-content-between w-50 mt-5">
-                            <button type="submit" className="botton-yellow createUser">Crear cuenta</button>
-                            <button type="button" className="botton-darkGrey" onClick={() => navigate("/login")}>Volver</button>
+                            <button type="submit" className="button-yellow createUser">Crear cuenta</button>
+                            <button type="button" className="button-darkGrey" onClick={() => navigate("/login")}>Volver</button>
                         </div>
                         
                     </form>
