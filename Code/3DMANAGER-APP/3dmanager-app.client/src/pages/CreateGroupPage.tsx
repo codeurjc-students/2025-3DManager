@@ -64,8 +64,8 @@ const CreateGroupPage: React.FC = () => {
                             </div>                           
                         </div>
                         <div className="d-flex justify-content-between  m-5">
-                            <button type="submit" className="botton-yellow createUser">Crear grupo</button>
-                            <button type="button" className="botton-darkGrey" onClick={() => navigate("/group")}>Cancelar</button>
+                            <button type="submit" className="button-yellow createUser">Crear grupo</button>
+                            <button type="button" className="button-darkGrey" onClick={() => navigate("/group")}>Cancelar</button>
                         </div>                                      
                     </form>
                 </div>

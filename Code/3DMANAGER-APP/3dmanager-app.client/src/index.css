@@ -74,7 +74,9 @@ body {
 .h-70 {
     height: 70vh;
 }
-
+.h-80 {
+    height: 80vh;
+}
 .w-10 {
     width: 10vh;
 }
@@ -110,11 +112,12 @@ body {
     border-color: var(--colorBordersAndSplitters);
     background-color: var(--colorLowGrey);
     border-radius: 5px;
-    max-height: max-content; 
+    height: 100%; 
     display: flex;
     flex-direction: column;
     overflow: hidden;
 }
+
 
 .white-container {
     border-color: var(--colorBordersAndSplitters);
@@ -140,7 +143,7 @@ body {
     color : var(--colorBlack)
 }
 
-.botton-yellow {
+.button-yellow {
     background-color: var(--colorYellow); 
     color: var(--colorText); 
     border: 1px solid var(--colorBlack); 
@@ -149,7 +152,7 @@ body {
     font-weight: bold;
 }
 
-.botton-low-yellow {
+.button-low-yellow {
     background-color: var(--colorLowYellow);
     color: var(--colorText);
     border: 1px solid var(--colorBlack);
@@ -159,17 +162,17 @@ body {
     height : 250px;
 }
 
-.botton-yellow.createUser {
+.button-yellow.createUser {
     width: 40%;
     height: 100%;
 }
 
-.botton-yellow.createGroup {
+.button-yellow.createGroup {
     width: 100%;
     height: 30%;
 }
 
-.botton-darkGrey {
+.button-darkGrey {
     background-color: var(--colorDarkGrey);
     color: var(--colorWhite);
     border: 1px solid var(--colorBlack);
@@ -329,7 +332,8 @@ body {
     }
 
 .pagination-fixed {
-    padding-top: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     border-top: 1px solid #ddd;
     background: #f8f8f8;
 }

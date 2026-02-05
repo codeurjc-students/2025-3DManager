@@ -203,8 +203,8 @@ const CreatePrint3DPage: React.FC = () => {
                             </div>
                         </div>
                         <div className="col-6 d-flex justify-content-between mt-3 p-2">
-                            <button type="submit" className="botton-yellow createUser h-70">Subir Pieza</button>
-                            <button type="button" className="botton-darkGrey" onClick={() => navigate("/dashboard")}>Cancelar</button>
+                            <button type="submit" className="button-yellow createUser h-70">Subir Pieza</button>
+                            <button type="button" className="button-darkGrey" onClick={() => navigate("/dashboard")}>Cancelar</button>
                         </div>
                     </form>
                 </div>

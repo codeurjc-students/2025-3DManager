@@ -152,7 +152,7 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
         }
 
-        public List<UserListResponseDbObject> GetUserInvitationList()
+        public List<UserListResponseDbObject> GetUserInvitationList(string? filter)
         {
             try
             {
@@ -162,6 +162,8 @@ namespace _3DMANAGER_APP.DAL.Managers
                 {
                     CommandType = CommandType.StoredProcedure
                 };
+
+                cmd.Parameters.Add(new MySqlParameter("P_FILTER", MySqlDbType.VarChar) { Value = filter });
 
                 using var adapter = new MySqlDataAdapter(cmd);
                 var ds = new DataSet();
@@ -192,8 +194,9 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
         }
 
-        public void PostUserInvitation(int groupId, int userId)
+        public bool PostUserInvitation(int groupId, int userId, out int? error)
         {
+            error = null;
             try
             {
                 string procName = $"{ProcedurePrefix}_pr_USER_INVITATION";
@@ -204,21 +207,37 @@ namespace _3DMANAGER_APP.DAL.Managers
 
                 cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
                 cmd.Parameters.Add(new MySqlParameter("P_CD_USER", MySqlDbType.Int32) { Value = userId });
-
+                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
                 using var adapter = new MySqlDataAdapter(cmd);
                 var ds = new DataSet();
                 adapter.Fill(ds);
 
+                var errorDb = Convert.ToInt32(errorParam.Value);
+                if (errorDb != 0)
+                {
+                    error = errorDb;
+                    return false;
+                }
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    return true;
+                }
+                return false;
             }
             catch (MySqlException ex)
             {
+                error = 500;
                 string msg = "Error al devolver el listado de usuarios de en BBDD";
                 Logger.LogError(ex, msg);
+                return false;
             }
             catch (Exception ex)
             {
+                error = 500;
                 string msg = "Error al devolver el listado de usuarios de en BBDD";
                 Logger.LogError(ex, msg);
+                return false;
             }
         }
 

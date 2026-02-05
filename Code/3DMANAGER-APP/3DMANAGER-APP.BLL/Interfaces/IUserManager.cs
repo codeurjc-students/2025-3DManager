@@ -8,7 +8,7 @@ namespace _3DMANAGER_APP.BLL.Interfaces
         public Task<CommonResponse<int>> PostNewUser(UserCreateRequest user);
         public UserObject Login(string userName, string userPassword, out BaseError? error);
         public List<UserListResponse> GetUserList(int group, out BaseError? error);
-        public List<UserListResponse> GetUserInvitationList(out BaseError? error);
-        public void PostUserInvitation(int groupId, int userId);
+        public List<UserListResponse> GetUserInvitationList(string? filter, out BaseError? error);
+        public bool PostUserInvitation(int groupId, int userId, out BaseError? error);
     }
 }

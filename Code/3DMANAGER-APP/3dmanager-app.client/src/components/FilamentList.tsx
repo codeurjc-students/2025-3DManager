@@ -23,12 +23,12 @@ const FilamentList: React.FC = () => {
     const paginatedItems = items.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
     return (
-        <div className="table-container ">
+        <div className="table-container pt-4">
             <div className="table-scroll">
                 <table className="table">
                     <thead>
                         <tr>
-                            <th>Nombre</th>
+                            <th className="col-3">Nombre</th>
                             <th>Estado</th>
                             <th>Filamento restante</th>
                             <th>Coste filamento</th>
@@ -44,7 +44,7 @@ const FilamentList: React.FC = () => {
                                 <td>{filament.filamentCost}</td>
                                 <td>
                                     <button
-                                        className="botton-darkGrey w-75"
+                                        className="button-darkGrey w-75"
                                         onClick={() => navigate(`/detail/filament/${filament.filamentId}`)}
                                     >
                                         Ver detalle

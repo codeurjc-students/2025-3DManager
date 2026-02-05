@@ -10,7 +10,7 @@ const TITLES: Record<string, string> = {
     filaments: "filamentos",
     users: "Usuarios",
     prints: "Piezas",
-    invitation: "invitaciones usuario"
+    invitations: "invitaciones usuario"
 };
 
 const ListPage: React.FC = () => {
@@ -35,7 +35,7 @@ const ListPage: React.FC = () => {
                 </div>
                 <hr></hr>
             </div>
-            <div className="row h-70 d-flex mt-4">
+            <div className="row h-75 d-flex mt-4">
                 <div className="col-1"></div>
                 <div className="col-10 grey-container">
                     {type === "filaments" && <FilamentList />}
@@ -45,7 +45,7 @@ const ListPage: React.FC = () => {
                 </div>
                 <div className="col-1"></div>
             </div>
-            <div className="row h-20"></div>
+            <div className="row h-10"></div>
         </div>
 
     );
