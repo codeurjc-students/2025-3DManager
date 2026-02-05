@@ -1,7 +1,8 @@
-export type PopupType = "info" | "warning" | "error";
+export type PopupType = "info" | "warning" | "error" | "base";
 
 export interface PopupData {
-    type: PopupType;
-    title: string;
-    description: string;
+    type?: PopupType;
+    content: React.ReactNode; 
+    width?: string; 
+    height?: string;
 }

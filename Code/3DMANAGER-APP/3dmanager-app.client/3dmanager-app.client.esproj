@@ -11,4 +11,7 @@
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
     <OpenBrowserOnLaunch>false</OpenBrowserOnLaunch>
   </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="src\components\popupComponent\" />
+  </ItemGroup>
 </Project>

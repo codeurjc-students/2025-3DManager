@@ -3,6 +3,7 @@ import type { UserListResponse } from '../models/user/UserListResponse';
 import { getUserInvitationList, postUserInvitation } from '../api/userService';
 import Pagination from './Pagination';
 import { usePopupContext } from '../context/PopupContext';
+import InfoPopup from './popupComponent/InfoPopup';
 
 const UserInvitationList: React.FC = () => {
     const [items, setItems] = useState<UserListResponse[]>([]);
@@ -42,8 +43,18 @@ const UserInvitationList: React.FC = () => {
     const handleInvite = async (userId: number) => {
         const response = await postUserInvitation(userId);
         if (response.data) {
-            showPopup({ type: "info", title: "Invitación enviada", description: "El usuario ha sido invitado correctamente" });
-        } else { showPopup({ type: "error", title: "Error", description: response.error?.message ?? "Ha habido un error enviando la invitación" }); }
+            showPopup({
+                type: "info", content: (
+                    <InfoPopup title="Invitación enviada" description="El usuario ha sido invitado correctamente" />
+                )
+            });
+        } else {
+            showPopup({
+                type: "error", content: (
+                    <InfoPopup title="Error" description={response.error?.message ?? "Ha habido un error enviando la invitación"} />
+                )
+            });
+        }
     };
     return (
         <div className="table-container">

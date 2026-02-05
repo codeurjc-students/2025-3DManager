@@ -5,6 +5,7 @@ import { getFilamentCatalog, getPrinterCatalog, getPrintState } from "../api/cat
 import type { CatalogResponse } from "../models/catalog/CatalogResponse";
 import { parseGcodeData } from "../models/print/GCodePatterns";
 import { usePopupContext } from "../context/PopupContext";
+import InfoPopup from "../components/popupComponent/InfoPopup";
 
 const CreatePrint3DPage: React.FC = () => {
 
@@ -66,7 +67,11 @@ const CreatePrint3DPage: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault(); 
         if (!printName || !printState || !printFilament || !printPrinter) {
-            showPopup({ type: "warning", title: "Completar formulario", description: "Debe rellenar todos los campos" });
+            showPopup({
+                type: "warning", content: (
+                    <InfoPopup title="Completar formulario" description="Debe rellenar todos los campos" />
+                )
+            });
             return;
         }
         
@@ -89,14 +94,26 @@ const CreatePrint3DPage: React.FC = () => {
             });
 
             if (response.data) {
-                showPopup({ type: "info", title: "Operacion realizada", description: "La impresión ha sido guardada correctamente" });
+                showPopup({
+                    type: "info", content: (
+                        <InfoPopup title="Operacion realizada" description="La impresión ha sido guardada correctamente" />
+                    )
+                });
                 navigate("/dashboard");
             } else {
-                showPopup({ type: "error", title: "Operacion cancelada", description: response.error?.message || "No se pudo crear la impresión." });
+                showPopup({
+                    type: "error", content: (
+                        <InfoPopup title="Operacion cancelada" description={response.error?.message || "No se pudo crear la impresión."} />
+                    )
+                });
             }
         } catch (error) {
             console.error("Error al crear la impresión:", error);
-            showPopup({ type: "error", title: "Operacion cancelada", description: "Ha ocurrido un error en el registro de la impresión." });
+            showPopup({
+                type: "error", content: (
+                    <InfoPopup title="Operacion cancelada" description="Ha ocurrido un error en el registro de la impresión." />
+                )
+            });
         }
     };
 

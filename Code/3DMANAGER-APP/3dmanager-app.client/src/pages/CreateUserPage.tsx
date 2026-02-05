@@ -2,6 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { postNewUser } from "../api/userService";
 import { usePopupContext } from "../context/PopupContext";
+import InfoPopup from "../components/popupComponent/InfoPopup";
 
 const CreateUserPage: React.FC = () => {
 
@@ -16,7 +17,11 @@ const CreateUserPage: React.FC = () => {
         e.preventDefault(); 
 
         if (!userName || !userEmail || !userPassword) {
-            showPopup({ type: "warning", title: "Completar formulario", description: "Todos los campos son obligatorios" });
+            showPopup({
+                type: "warning", content: (
+                    <InfoPopup title="Completar formulario" description="Todos los campos son obligatorios" />
+                )
+            });
             return;
         }
         try {
@@ -29,14 +34,26 @@ const CreateUserPage: React.FC = () => {
             });
 
             if (response.data == 0) {
-                showPopup({ type: "error", title: "Operación cancelada", description: response.error?.message || "No se pudo crear el usuario." });
+                showPopup({
+                    type: "error", content: (
+                        <InfoPopup title="Operación cancelada" description={response.error?.message || "No se pudo crear el usuario."} />
+                    )
+                });
             } else {
-                showPopup({ type: "info", title: "Operación realizada", description: "Cuenta creada correctamente. Ahora puedes iniciar sesión." });
+                showPopup({
+                    type: "info", content: (
+                        <InfoPopup title="Operación realizada" description = "Cuenta creada correctamente. Ahora puedes iniciar sesión." />
+                    )
+                });
                 navigate("/login");
             }
         } catch (error) {
             console.error("Error al crear usuario:", error);
-            showPopup({type: "error", title: "Operación cancelada", description: "Ha ocurrido un error en la creación de un nuevo usuario." });
+            showPopup({
+                type: "error", content: (
+                    <InfoPopup title="Operación cancelada" description="Ha ocurrido un error en la creación de un nuevo usuario." />
+                )
+            });
         }
     };
 

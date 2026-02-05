@@ -2,6 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { postPrinter } from "../api/printerService";
 import { usePopupContext } from "../context/PopupContext";
+import InfoPopup from "../components/popupComponent/InfoPopup";
 
 const CreatePrinterPage: React.FC = () => {
 
@@ -16,7 +17,11 @@ const CreatePrinterPage: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault(); 
         if (!printerName || !printerModel) {
-            showPopup({ type: "warning", title: "Completar formulario", description: "El nombre y el modelo de la impresora son campos obligatorios" });
+            showPopup({
+                type: "warning", content: (
+                    <InfoPopup title="Completar formulario" description="El nombre y el modelo de la impresora son campos obligatorios" />
+                )
+            });
             return;
         }
         
@@ -31,14 +36,26 @@ const CreatePrinterPage: React.FC = () => {
             });
 
             if (response.data) {
-                showPopup({ type: "info", title: "Operación realizada", description: "La impresora ha sido creada correctamente." });
+                showPopup({
+                    type: "info", content: (
+                        <InfoPopup title="Operación realizada" description="La impresora ha sido creada correctamente." />
+                    )
+                });
                 navigate("/dashboard");
             } else {
-                showPopup({ type: "error", title: "Operación cancelada", description: response.error?.message || "No se ha podido crear la impresora." });
+                showPopup({
+                    type: "error", content: (
+                        <InfoPopup title="Operación cancelada" description={response.error?.message || "No se ha podido crear la impresora."} />
+                    )
+                });
             }
         } catch (error) {
             console.error("Error al crear impresora:", error);
-            showPopup({ type: "error", title: "Operación cancelada", description: "Ha ocurrido un error en la creación de la impresora." });
+            showPopup({
+                type: "error", content: (
+                    <InfoPopup title="Operación cancelada" description= "Ha ocurrido un error en la creación de la impresora."/>
+                )
+            });
         }
     };
 

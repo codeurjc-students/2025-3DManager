@@ -4,6 +4,7 @@ import { Login, LoginGuest } from "../api/userService";
 import { useAuth } from "../context/AuthContext";
 import type { LoginResponse } from "../models/user/LoginResponse";
 import { usePopupContext } from "../context/PopupContext";
+import InfoPopup from "../components/popupComponent/InfoPopup";
 
 const LoginPage: React.FC = () => {
     const navigate = useNavigate();
@@ -30,16 +31,24 @@ const LoginPage: React.FC = () => {
             const result = await LoginGuest();
 
             if (!result || result.error != null) {
-                showPopup({ type: "warning", title: "Operación cancelada", description: result?.error?.message || "Problema al intentar acceder como invitado" });
+                showPopup({
+                    type: "warning", content: (
+                        <InfoPopup title="Operación cancelada" description={result?.error?.message || "Problema al intentar acceder como invitado"} />
+                    )
+                });
                 return;
             }
 
             const userLogged = result.data!;
-            authLoad(userLogged);
+            authLoad(userLogged);  
 
         } catch (err) {
             console.error("Error login como invitado:", err);
-            showPopup({ type: "error", title: "Operación cancelada", description: "Error conectando con el servidor como invitado" });
+            showPopup({
+                type: "error", content: (
+                    <InfoPopup title="Operación cancelada" description="Error conectando con el servidor como invitado" />
+                )
+            });
         } finally {
             setLoading(false);
         }
@@ -61,7 +70,11 @@ const LoginPage: React.FC = () => {
             const result = await Login({ userName: userName, userPassword: password });
 
             if (!result || result.error != null) {
-                showPopup({ type: "error", title: "Problema de acceso", description: result?.error?.message || "Problema al intentar acceder" });
+                showPopup({
+                    type: "error", content: (
+                        <InfoPopup title="Problema de acceso" description={result?.error?.message || "Problema al intentar acceder"} />
+                    )
+                });
                 return;
             }
 
@@ -70,7 +83,11 @@ const LoginPage: React.FC = () => {
             
         } catch (err) {
             console.error("Error login:", err);
-            showPopup({ type: "error", title: "Problema de acceso", description: "Error conectando con el servidor" });
+            showPopup({
+                type: "error", content: (
+                    <InfoPopup title="Problema de acceso" description="Error conectando con el servidor" />
+                )
+            });
         } finally {
             setLoading(false);
         }
@@ -79,7 +96,10 @@ const LoginPage: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!userName || !password) {
-            showPopup({ type: "error", title: "Completa autenticación", description: "Debes introducir usuario y contraseña" });
+            showPopup({
+                type: "error", content: (
+                    <InfoPopup title="Completa autenticación" description="Debes introducir usuario y contraseña"/>
+                )});
             return;
         }
         loginUser();
