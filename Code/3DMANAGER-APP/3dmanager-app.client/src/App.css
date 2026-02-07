@@ -8,6 +8,7 @@
     --colorYellow: #ffd54a;
     --colorLowYellow: #fcdd74;
     --colorBlack: #000000;
+    --colorRed: #ba2020;
 }
 
 html, body {
@@ -83,6 +84,8 @@ th, td {
     font-size: 1rem;
     letter-spacing: 1px;
     font-family: Impact, sans-serif;
+    background: none;
+    border: none;
 }
 
 .logout-icon {
@@ -146,11 +149,15 @@ th, td {
 }
 
 .popup-warning {
-    border-top: 6px solid #ffc107;
+    border-top: 6px solid var(--colorYellow);
 }
 
 .popup-error {
-    border-top: 6px solid #dc3545;
+    border-top: 6px solid var(--colorRed);
+}
+
+.popup-base {
+    border-top: 6px solid var(--colorDarkGrey);
 }
 
 .popup-title {
@@ -179,3 +186,6 @@ th, td {
         background-color: #1a1a1a;
     }
 
+    group-button{
+
+    }

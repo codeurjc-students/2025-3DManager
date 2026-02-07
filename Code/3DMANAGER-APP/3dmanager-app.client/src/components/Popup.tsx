@@ -31,7 +31,7 @@ const Popup: React.FC<PopupProps> = ({ data, onClose }) => {
                 <div className="popup-content">
                     {data.content}
                 </div>
-                <button className="popup-button" onClick={onClose}>
+                <button className="popup-button w-50 mt-2" onClick={onClose}>
                     Cerrar
                 </button>
             </div>
