@@ -5,4 +5,6 @@ export interface PopupData {
     content: React.ReactNode; 
     width?: string; 
     height?: string;
+    onClose?: () => void;
+    hideCloseButton?: boolean;
 }

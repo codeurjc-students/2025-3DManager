@@ -14,6 +14,8 @@ import {
 } from "../../api/groupService";
 
 import type { GroupBasicDataResponse } from "../../models/group/GroupBasicDataResponse";
+import InfoPopup from "./InfoPopup";
+import { confirmAction } from "./ConfirmAction";
 
 const GroupPopup: React.FC = () => {
     const { user } = useAuth();
@@ -35,65 +37,75 @@ const GroupPopup: React.FC = () => {
         });
     }, []);
 
-    if (!data) return <p>Cargando...</p>;
-
-
-    const handleSaveGroup = async () => {
-        await updateGroupData({
-            groupName: name,
-            groupDescription: description,
-            userId: -1
+    const handleSaveGroup = () => {
+        confirmAction({
+            action: "Guardar cambios",
+            service: () => updateGroupData({
+                groupName: name,
+                groupDescription: description,
+                userId: -1
+            }),
+            successMessage: "Los cambios se han guardado correctamente.",
+            errorMessage: "No se pudo guardar el grupo.",
+            showPopup,
+            reopenGroupPopup
         });
-        closePopup();
     };
 
     const handleLeaveGroup = () => {
-        showPopup({
-            content: (
-                <ConfirmPopup
-                    action="Abandonar grupo"
-                    onConfirm={async () => {
-                        await leaveGroup();
-                        closePopup();
-                    }}
-                />
-            )
+        confirmAction({
+            action: "Abandonar grupo",
+            service: () => leaveGroup(),
+            successMessage: "Has abandonado el grupo correctamente.",
+            errorMessage: "No se pudo abandonar el grupo.",
+            showPopup,
+            reopenGroupPopup,
+            onSuccess: closePopup
         });
     };
 
     const handleDeleteGroup = () => {
-        showPopup({
-            content: (
-                <ConfirmPopup
-                    action="Eliminar grupo"
-                    onConfirm={async () => {
-                        await deleteGroup();
-                        closePopup();
-                    }}
-                />
-            )
+        confirmAction({
+            action: "Eliminar grupo",
+            service: () => deleteGroup(),
+            successMessage: "El grupo ha sido eliminado correctamente.",
+            errorMessage: "No se pudo eliminar el grupo.",
+            showPopup,
+            reopenGroupPopup,
+            onSuccess: closePopup
         });
     };
 
-    const handleUserExpulsion = (userId: number) => {
-        showPopup({
-            content: (
-                <ConfirmPopup
-                    action="Expulsar usuario"
-                    onConfirm={async () => {
-                        await kickUserFromGroup(userId);
-                        const updated = await getGroupBasicData();
-                        setData(updated.data!);
-                        closePopup();
-                    }}
-                />
-            )
+    const handleUserExpulsion = (userId: number, userName : string) => {
+        confirmAction({
+            action: "Expulsar usuario" + userName,
+            service: async () => {
+                const res = await kickUserFromGroup(userId);
+                if (res.data) {
+                    const updated = await getGroupBasicData();
+                    setData(updated.data!);
+                }
+                return res;
+            },
+            successMessage: "El usuario ha sido expulsado correctamente.",
+            errorMessage: "No se pudo expulsar al usuario.",
+            showPopup,
+            reopenGroupPopup
         });
     };
+
 
     const handleTransferGroup = () => {
         console.log("Transferir control");
     };
+
+    const reopenGroupPopup = () => {
+        showPopup({
+            type: "base", width: "80vh", content: (<GroupPopup />)
+        });
+    };
+
+    if (!data) return <p>Cargando...</p>;
 
     return (
         <div className="container-fluid">
@@ -139,12 +151,12 @@ const GroupPopup: React.FC = () => {
                                         </tr>
                                     </thead>
                                     <tbody className="text-start">
-                                            {data.groupMembers.map((m) => (
-                                                <tr key={m.userId}>
-                                                    <td className="w-75">{m.userName}</td>
-                                                    {isManager && m.userId !== user!.userId ? (
+                                            {data.groupMembers.map((users) => (
+                                                <tr key={users.userId}>
+                                                    <td className="w-75">{users.userName}</td>
+                                                    {isManager && users.userId !== user!.userId ? (
                                                         <td>
-                                                            <button className="button-darkGrey w-100"  onClick={() => handleUserExpulsion(m.userId)}>
+                                                            <button className="button-darkGrey w-100" onClick={() => handleUserExpulsion(users.userId, users.userName)}>
                                                                 Expulsar
                                                             </button>
                                                         </td>

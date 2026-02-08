@@ -119,7 +119,7 @@ const CreatePrint3DPage: React.FC = () => {
 
     return (
         <div className="container-fluid vh-100">
-            <div className="row h-70 mt-5">
+            <div className="row h-75 mt-5">
                 <div className="col-1"></div>
                 <div className="grey-container col-10 ps-4 pb-4 d-flex flex-column">
                     <h2 className="title-impact mt-5 mb-3">Subir pieza</h2>

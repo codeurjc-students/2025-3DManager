@@ -61,7 +61,7 @@ const CreatePrinterPage: React.FC = () => {
 
     return (
         <div className="container-fluid vh-100">         
-            <div className="row h-50 mt-5">
+            <div className="row h-70 mt-5">
                 <div className="col-3"></div>
                 <div className="grey-container col-6 ps-4 pb-4 d-flex flex-column">
                     <h2 className="title-impact mt-5 mb-5">Crear impresora</h2>

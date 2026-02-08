@@ -31,9 +31,18 @@ const Popup: React.FC<PopupProps> = ({ data, onClose }) => {
                 <div className="popup-content">
                     {data.content}
                 </div>
-                <button className="popup-button w-50 mt-2" onClick={onClose}>
-                    Cerrar
-                </button>
+                {!data.hideCloseButton && (
+                    <button className="popup-button w-50 mt-2" onClick={() => {
+                        if (data.onClose) {
+                            data.onClose();   
+                        } else {
+                            onClose();        
+                        }
+                    }}>
+                        Cerrar
+                    </button>
+                )}
+
             </div>
         </div>
     );
