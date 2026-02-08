@@ -143,6 +143,10 @@ body {
     border-radius: 6px;
     color : var(--colorBlack)
 }
+.input-value:disabled{
+    
+    background-color: var(--colorLowGrey);
+}
 
 .button-yellow {
     background-color: var(--colorYellow); 
@@ -183,6 +187,15 @@ body {
     transition: background-color 0.3s ease;
     width: 50%;
     height: 100%;
+}
+
+.button-red {
+    background-color: var(--colorRed);
+    color: var(--colorText);
+    border: 1px solid var(--colorBlack);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
 }
 
 .dashboard-icon-btn {

@@ -43,7 +43,7 @@ namespace _3DMANAGER_APP.BLL.Mapper
             #region Group
             CreateMap<GroupRequest, GroupRequestDbObject>().ReverseMap();
             CreateMap<GroupInvitation, GroupInvitationDbObject>().ReverseMap();
-
+            CreateMap<GroupBasicDataResponse, GroupBasicDataResponseDbObject>().ReverseMap();
             #endregion
 
             #region Filament

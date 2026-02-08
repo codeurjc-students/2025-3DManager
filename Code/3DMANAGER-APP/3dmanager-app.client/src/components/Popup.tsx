@@ -26,7 +26,7 @@ const Popup: React.FC<PopupProps> = ({ data, onClose }) => {
 
     return (
         <div className="popup-overlay">
-            <div className={`popup-container ${getColorClass()}`}>
+            <div className={`popup-container ${getColorClass()}`} style={data.width ? { width: data.width } : undefined}>
 
                 <div className="popup-content">
                     {data.content}

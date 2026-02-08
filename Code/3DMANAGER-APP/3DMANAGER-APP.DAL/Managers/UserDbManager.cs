@@ -120,9 +120,6 @@ namespace _3DMANAGER_APP.DAL.Managers
 
                 cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.VarChar) { Value = group });
 
-                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
-                cmd.Parameters.Add(errorParam);
-
                 using var adapter = new MySqlDataAdapter(cmd);
                 var ds = new DataSet();
                 adapter.Fill(ds);

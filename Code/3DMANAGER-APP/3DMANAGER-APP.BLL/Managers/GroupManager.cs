@@ -45,5 +45,17 @@ namespace _3DMANAGER_APP.BLL.Managers
             }
             return response;
         }
+
+        public GroupBasicDataResponse GetGroupBasicData(int groupId, out BaseError? error)
+        {
+            error = null;
+            GroupBasicDataResponseDbObject response = _groupDbManager.GetGroupBasicData(groupId);
+            if (response == null)
+            {
+                error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = "Error al tratar de recoger la información básica del grupo" };
+                return null;
+            }
+            return _mapper.Map<GroupBasicDataResponse>(response);
+        }
     }
 }

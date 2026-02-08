@@ -82,5 +82,31 @@ namespace _3DMANAGER_APP.Server.Controllers
             }
             return new Models.CommonResponse<bool>(true);
         }
+
+        /// <summary>
+        /// Update a group
+        /// </summary>
+        /// <returns>A boolean that indicates if the creation has been successful</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="400">Conflicto en servidor</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<GroupBasicDataResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<GroupBasicDataResponse>), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(Models.CommonResponse<GroupBasicDataResponse>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Groups")]
+        [HttpGet]
+        public Models.CommonResponse<GroupBasicDataResponse> GetGroupBasicData()
+        {
+            var response = _groupManager.GetGroupBasicData(GroupId, out BaseError? error);
+            if (error != null)
+            {
+                return new Models.CommonResponse<GroupBasicDataResponse>(new ErrorProperties(error.code, error.message));
+            }
+            return new Models.CommonResponse<GroupBasicDataResponse>(response);
+        }
+
+
     }
 }

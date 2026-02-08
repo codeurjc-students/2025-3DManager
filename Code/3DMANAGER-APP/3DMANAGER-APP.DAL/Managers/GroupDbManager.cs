@@ -1,6 +1,7 @@
 ﻿using _3DMANAGER_APP.DAL.Base;
 using _3DMANAGER_APP.DAL.Interfaces;
 using _3DMANAGER_APP.DAL.Models.Group;
+using _3DMANAGER_APP.DAL.Models.User;
 using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
 using System.Data;
@@ -148,6 +149,56 @@ namespace _3DMANAGER_APP.DAL.Managers
                 string msg = "Error al aceptar invitacion de grupo en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
+            }
+        }
+
+        public GroupBasicDataResponseDbObject GetGroupBasicData(int groupId)
+        {
+            try
+            {
+                GroupBasicDataResponseDbObject response = null;
+                string procName = $"{ProcedurePrefix}_pr_GROUP_BASIC_DATA_GET";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
+
+                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    response = new GroupBasicDataResponseDbObject();
+                    response = response.Create(ds.Tables[0].Rows[0]);
+                }
+                if (ds.Tables.Count > 1 && ds.Tables[1].Rows.Count > 0)
+                {
+                    foreach (DataRow row in ds.Tables[1].Rows)
+                    {
+                        UserListResponseDbObject listMember = new UserListResponseDbObject();
+                        response.GroupMembers.Add(listMember.Create(row));
+                    }
+                }
+
+                return response;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = "Error al aceptar invitacion de grupo en BBDD";
+                Logger.LogError(ex, msg);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error al aceptar invitacion de grupo en BBDD";
+                Logger.LogError(ex, msg);
+                return null;
             }
         }
     }
