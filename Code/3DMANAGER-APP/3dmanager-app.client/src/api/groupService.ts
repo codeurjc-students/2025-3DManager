@@ -23,10 +23,10 @@ export const getGroupBasicData = async (): Promise<CommonResponse<GroupBasicData
     return response.data
 }
 
-//export const updateGroupData = async (data: GroupRequest): Promise<CommonResponse<boolean>> => {
-//    const response = await apiClient.put<CommonResponse<boolean>>('/api/v1/groups/UpdateGroupData', data)
-//    return response.data
-//}
+export const updateGroupData = async (data: GroupRequest): Promise<CommonResponse<boolean>> => {
+    const response = await apiClient.put<CommonResponse<boolean>>('/api/v1/groups/UpdateGroupData', data)
+    return response.data
+}
 //export const leaveGroup = async (): Promise<CommonResponse<boolean>> => {
 //    const response = await apiClient.put<CommonResponse<boolean>>('/api/v1/groups/UpdateUserGroup')
 //    return response.data
@@ -39,12 +39,6 @@ export const getGroupBasicData = async (): Promise<CommonResponse<GroupBasicData
 //    const response = await apiClient.put<CommonResponse<boolean>>(`/api/v1/groups/UpdateMembership?userKickedId=${userId}`)
 //    return response.data
 //}
-
-export const updateGroupData = async (data: GroupRequest): Promise<CommonResponse<boolean>> => {
-    return {
-        data: true
-    };
-};
 
 export const leaveGroup = async (): Promise<CommonResponse<boolean>> => {
     return {

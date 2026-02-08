@@ -107,6 +107,29 @@ namespace _3DMANAGER_APP.Server.Controllers
             return new Models.CommonResponse<GroupBasicDataResponse>(response);
         }
 
+        /// <summary>
+        /// Update a group
+        /// </summary>
+        /// <returns>A boolean that indicates if the creation has been successful</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="400">Conflicto en servidor</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Groups")]
+        [HttpPut]
+        public Models.CommonResponse<bool> UpdateGroupData(GroupRequest request)
+        {
+            request.UserId = UserId;
+            var response = _groupManager.UpdateGroupData(request, GroupId);
+            if (!response)
+            {
+                return new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al actualizar el grupo"));
+            }
+            return new Models.CommonResponse<bool>(true);
+        }
 
     }
 }

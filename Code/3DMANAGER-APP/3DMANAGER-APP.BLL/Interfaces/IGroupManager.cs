@@ -9,6 +9,7 @@ namespace _3DMANAGER_APP.BLL.Interfaces
         public List<GroupInvitation> GetGroupInvitations(int userId);
         public bool PostAcceptInvitation(int groupId, bool isAccepted, int userId, out BaseError? error);
         public GroupBasicDataResponse GetGroupBasicData(int groupId, out BaseError? error);
+        public bool UpdateGroupData(GroupRequest request, int groupId);
 
     }
 }

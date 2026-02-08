@@ -57,5 +57,12 @@ namespace _3DMANAGER_APP.BLL.Managers
             }
             return _mapper.Map<GroupBasicDataResponse>(response);
         }
+
+        public bool UpdateGroupData(GroupRequest request, int groupId)
+        {
+            GroupRequestDbObject groupDbObject = _mapper.Map<GroupRequestDbObject>(request);
+            return _groupDbManager.UpdateGroupData(groupDbObject, groupId);
+
+        }
     }
 }

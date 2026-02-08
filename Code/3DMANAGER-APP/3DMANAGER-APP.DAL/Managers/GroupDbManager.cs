@@ -201,5 +201,53 @@ namespace _3DMANAGER_APP.DAL.Managers
                 return null;
             }
         }
+
+        public bool UpdateGroupData(GroupRequestDbObject request, int groupId)
+        {
+            try
+            {
+                string procName = $"{ProcedurePrefix}_pr_GROUP_UPDATE";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_DS_GROUP_NAME", MySqlDbType.VarChar) { Value = request.GroupName });
+                cmd.Parameters.Add(new MySqlParameter("P_DS_GROUP_DESCRIPTION", MySqlDbType.VarChar) { Value = request.GroupDescription });
+                cmd.Parameters.Add(new MySqlParameter("P_CD_USER_ID", MySqlDbType.Int32) { Value = request.UserId });
+                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
+
+                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                var error = Convert.ToInt32(errorParam.Value);
+                if (error != 0)
+                {
+                    return false;
+                }
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = "Error al crear un grupo en BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error al crear un grupo en BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+        }
     }
 }
