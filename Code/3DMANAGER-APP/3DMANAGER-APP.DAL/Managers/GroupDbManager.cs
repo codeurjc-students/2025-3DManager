@@ -249,5 +249,124 @@ namespace _3DMANAGER_APP.DAL.Managers
                 return false;
             }
         }
+
+        public bool UpdateLeaveGroup(int userId)
+        {
+            try
+            {
+                string procName = $"{ProcedurePrefix}_pr_GROUP_LEAVE";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_USER", MySqlDbType.Int32) { Value = userId });
+
+                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                var error = Convert.ToInt32(errorParam.Value);
+                return error == 0;
+
+            }
+            catch (MySqlException ex)
+            {
+                string msg = "Error al abandonar un grupo en BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error al abandonar un grupo en BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+        }
+
+        public bool UpdateMembership(int userKickedId)
+        {
+            try
+            {
+                string procName = $"{ProcedurePrefix}_pr_GROUP_KICK_USER";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_USER_KICKED", MySqlDbType.Int32) { Value = userKickedId });
+
+                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                var error = Convert.ToInt32(errorParam.Value);
+                return error == 0;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = "Error al expulsar a un usuario de un grupo en BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error al expulsar a un usuario de un grupo en BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+        }
+
+        public bool DeleteGroup(int userId, int groupId)
+        {
+            try
+            {
+                string procName = $"{ProcedurePrefix}_pr_GROUP_DELETE";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
+                cmd.Parameters.Add(new MySqlParameter("P_CD_USER", MySqlDbType.Int32) { Value = userId });
+
+                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                var error = Convert.ToInt32(errorParam.Value);
+                if (error != 0)
+                {
+                    return false;
+                }
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = "Error al eliminar un grupo en BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error al eliminar un grupo en BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+        }
     }
 }

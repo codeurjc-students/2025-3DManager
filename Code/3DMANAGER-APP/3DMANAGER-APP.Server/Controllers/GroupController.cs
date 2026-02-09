@@ -131,5 +131,77 @@ namespace _3DMANAGER_APP.Server.Controllers
             return new Models.CommonResponse<bool>(true);
         }
 
+        /// <summary>
+        /// Fucntion to leave a group
+        /// </summary>
+        /// <returns>A boolean that indicates if the operation was correct has been successful</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="400">Conflicto en servidor</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Groups")]
+        [HttpPut]
+        public Models.CommonResponse<bool> UpdateLeaveGroup()
+        {
+
+            var response = _groupManager.UpdateLeaveGroup(UserId);
+            if (!response)
+            {
+                return new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al salir del grupo"));
+            }
+            return new Models.CommonResponse<bool>(true);
+        }
+
+        /// <summary>
+        /// Kick an user form the group
+        /// </summary>
+        /// <returns>A boolean that indicates if the operation was correct has been successful</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="400">Conflicto en servidor</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Groups")]
+        [HttpPut]
+        public Models.CommonResponse<bool> UpdateMembership(int userKickedId)
+        {
+
+            var response = _groupManager.UpdateMembership(UserId);
+            if (!response)
+            {
+                return new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al expulsar del grupo del grupo"));
+            }
+            return new Models.CommonResponse<bool>(true);
+        }
+
+        /// <summary>
+        /// Delete a group
+        /// </summary>
+        /// <returns>A boolean that indicates if the operation was correct has been successful</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="400">Conflicto en servidor</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Groups")]
+        [HttpPut]
+        public Models.CommonResponse<bool> DeleteGroup()
+        {
+
+            var response = _groupManager.DeleteGroup(UserId, GroupId);
+            if (!response)
+            {
+                return new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al eliminar el grupo"));
+            }
+            return new Models.CommonResponse<bool>(true);
+        }
+
     }
 }

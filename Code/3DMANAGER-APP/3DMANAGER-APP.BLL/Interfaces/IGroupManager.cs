@@ -10,6 +10,9 @@ namespace _3DMANAGER_APP.BLL.Interfaces
         public bool PostAcceptInvitation(int groupId, bool isAccepted, int userId, out BaseError? error);
         public GroupBasicDataResponse GetGroupBasicData(int groupId, out BaseError? error);
         public bool UpdateGroupData(GroupRequest request, int groupId);
+        public bool UpdateLeaveGroup(int userId);
+        public bool UpdateMembership(int userKickedId);
+        public bool DeleteGroup(int userId, int groupId);
 
     }
 }

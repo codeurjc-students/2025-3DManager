@@ -64,5 +64,23 @@ namespace _3DMANAGER_APP.BLL.Managers
             return _groupDbManager.UpdateGroupData(groupDbObject, groupId);
 
         }
+
+        public bool UpdateLeaveGroup(int userId)
+        {
+            return _groupDbManager.UpdateLeaveGroup(userId);
+
+        }
+
+        public bool UpdateMembership(int userKickedId)
+        {
+            return _groupDbManager.UpdateMembership(userKickedId);
+
+        }
+
+        public bool DeleteGroup(int userId, int groupId)
+        {
+            return _groupDbManager.DeleteGroup(userId, groupId);
+
+        }
     }
 }
