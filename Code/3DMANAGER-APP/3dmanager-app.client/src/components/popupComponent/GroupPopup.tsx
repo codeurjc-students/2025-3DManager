@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { usePopupContext } from "../../context/PopupContext";
-import ConfirmPopup from "./ConfirmPopup";
 
 import {
     getGroupBasicData,
@@ -10,17 +9,16 @@ import {
     leaveGroup,
     deleteGroup,
     kickUserFromGroup,
-    //transferGroupOwnership
+    transferOwnership,
 } from "../../api/groupService";
 
 import type { GroupBasicDataResponse } from "../../models/group/GroupBasicDataResponse";
-import InfoPopup from "./InfoPopup";
 import { confirmAction } from "./ConfirmAction";
 
 const GroupPopup: React.FC = () => {
     const { user } = useAuth();
     const { showPopup, closePopup } = usePopupContext();
-
+    const [newOwner, setNewOwner] = useState<number>();
     const [data, setData] = useState<GroupBasicDataResponse | null>(null);
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
@@ -96,8 +94,33 @@ const GroupPopup: React.FC = () => {
 
 
     const handleTransferGroup = () => {
-        console.log("Transferir control");
+        if (!newOwner) {
+            showPopup({
+                type: "warning",
+                content: "Debes seleccionar un usuario para transferir el control."
+            });
+            return;
+        }
+
+        const selectedUser = data!.groupMembers.find(u => u.userId === newOwner);
+
+        confirmAction({
+            action: "Transferir control a " + selectedUser?.userName,
+            service: async () => {
+                const res = await transferOwnership(newOwner);
+                if (res.data) {
+                    const updated = await getGroupBasicData();
+                    setData(updated.data!);
+                }
+                return res;
+            },
+            successMessage: "Has transferido el rol correctamente.",
+            errorMessage: "No se ha podido transferir el rol de manager al usuario.",
+            showPopup,
+            reopenGroupPopup
+        });
     };
+
 
     const reopenGroupPopup = () => {
         showPopup({
@@ -106,6 +129,9 @@ const GroupPopup: React.FC = () => {
     };
 
     if (!data) return <p>Cargando...</p>;
+
+    const isOnlyMember = data.groupMembers.length === 1;
+
 
     return (
         <div className="container-fluid">
@@ -171,10 +197,34 @@ const GroupPopup: React.FC = () => {
                             </div>
                         </div>
                     </div>
+                    {isManager && !isOnlyMember ? (
+                        <div className="white-container h-5 mt-2">
+                            <div className="d-flex p-2">
+                                <button className="button-red w-20" onClick={handleTransferGroup}>
+                                    Transferir control
+                                </button>
+                                <select id="newOwner" className="input-value w-75 ms-2" value={newOwner ?? ""} onChange={(e) => setNewOwner(Number(e.target.value))}
+                                >
+                                    <option value="">Seleccione un usuario</option>
 
+                                    {data.groupMembers
+                                        .filter(member => member.userId !== user!.userId)
+                                        .map(member => (
+                                            <option key={member.userId} value={member.userId}>
+                                                {member.userName}
+                                            </option>
+                                        ))}
+                                </select>
+                            </div>
+                        </div>
+                    ) : isManager && isOnlyMember ? (
+                        <div className="white-container h-5 mt-2 p-3 text-muted">
+                            Eres el único miembro del grupo. No puedes transferir el control.
+                        </div>
+                    ) : null}
                     <div className="d-flex justify-content-between mt-4">
 
-                        {user?.rolId == "usuario-base" && (
+                        {user?.rolId == "Usuario-Base" && (
                             <button className="button-red" onClick={handleLeaveGroup}>
                                 Abandonar grupo
                             </button>
@@ -184,10 +234,6 @@ const GroupPopup: React.FC = () => {
                             <>
                                 <button className="button-yellow w-20" onClick={handleSaveGroup}>
                                     Guardar cambios
-                                </button>
-
-                                <button className="button-red w-20" onClick={handleTransferGroup}>
-                                    Transferir control
                                 </button>
 
                                 <button className="button-red w-20" onClick={handleDeleteGroup}>

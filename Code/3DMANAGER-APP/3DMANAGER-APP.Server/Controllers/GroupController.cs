@@ -171,10 +171,10 @@ namespace _3DMANAGER_APP.Server.Controllers
         public Models.CommonResponse<bool> UpdateMembership(int userKickedId)
         {
 
-            var response = _groupManager.UpdateMembership(UserId);
+            var response = _groupManager.UpdateMembership(userKickedId);
             if (!response)
             {
-                return new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al expulsar del grupo del grupo"));
+                return new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al expulsar del grupo "));
             }
             return new Models.CommonResponse<bool>(true);
         }
@@ -191,15 +191,41 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Groups")]
-        [HttpPut]
-        public Models.CommonResponse<bool> DeleteGroup()
+        [HttpDelete]
+        public async Task<Models.CommonResponse<bool>> DeleteGroup()
         {
+            var result = await _groupManager.DeleteGroup(UserId, GroupId);
 
-            var response = _groupManager.DeleteGroup(UserId, GroupId);
-            if (!response)
+            if (!result)
             {
                 return new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al eliminar el grupo"));
             }
+
+            return new Models.CommonResponse<bool>(true);
+        }
+
+        /// <summary>
+        /// Delete a group
+        /// </summary>
+        /// <returns>A boolean that indicates if the operation was correct has been successful</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="400">Conflicto en servidor</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Groups")]
+        [HttpPut]
+        public Models.CommonResponse<bool> TrasnferOwnership(int newOwnerUserId)
+        {
+            var result = _groupManager.TrasnferOwnership(UserId, GroupId, newOwnerUserId);
+
+            if (!result)
+            {
+                return new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al eliminar el grupo"));
+            }
+
             return new Models.CommonResponse<bool>(true);
         }
 

@@ -176,12 +176,12 @@ const CreatePrint3DPage: React.FC = () => {
                                 </div>
                                 <div className="row-3 d-flex flex-row">
                                     <div className="col-6 p-2">
-                                        <label htmlFor="printRealTimeH" className="form-label">Tiempo real impresion (Horas)</label>
+                                        <label htmlFor="printRealTimeH" className="form-label">Tiempo real impresión (Horas)</label>
                                         <input id="printRealTimeH" className="input-value w-100 " value={printRealTimeH}
                                             onChange={(e) => setPrintRealTimeH(Number(e.target.value))} />
                                     </div>
                                     <div className="col-6 p-2">
-                                        <label htmlFor="printRealTimeM" className="form-label">Tiempo real impresion (Minutos)</label>
+                                        <label htmlFor="printRealTimeM" className="form-label">Tiempo real impresión (Minutos)</label>
                                         <input type="number" id="printRealTimeM" className="input-value w-100 " value={printRealTimeM}
                                             onChange={(e) => setPrintRealTimeM(Number(e.target.value))} />
                                     </div>
@@ -206,7 +206,7 @@ const CreatePrint3DPage: React.FC = () => {
                                 />
                             </div>
                             <div className="ms-3 me-3 p-2">
-                                <label className="form-label">Imagen de la impresora</label>
+                                <label className="form-label">Imagen de la impresión</label>
                                 <input
                                     type="file"
                                     className="form-control input-value w-100"

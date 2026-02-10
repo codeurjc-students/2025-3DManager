@@ -53,6 +53,10 @@ body {
   background-color : var(--colorWhite)
 }
 
+.h-05 {
+    height: 5vh;
+}
+
 .h-10 {
     height: 10vh;
 }

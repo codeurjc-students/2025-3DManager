@@ -12,7 +12,7 @@ namespace _3DMANAGER_APP.BLL.Interfaces
         public bool UpdateGroupData(GroupRequest request, int groupId);
         public bool UpdateLeaveGroup(int userId);
         public bool UpdateMembership(int userKickedId);
-        public bool DeleteGroup(int userId, int groupId);
-
+        public Task<bool> DeleteGroup(int userId, int groupId);
+        public bool TrasnferOwnership(int userId, int groupId, int newOwnerUserId);
     }
 }

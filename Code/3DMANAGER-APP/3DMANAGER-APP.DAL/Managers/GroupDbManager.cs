@@ -368,5 +368,43 @@ namespace _3DMANAGER_APP.DAL.Managers
                 return false;
             }
         }
+
+        public bool TrasnferOwnership(int userId, int groupId, int newOwnerUserId)
+        {
+            try
+            {
+                string procName = $"{ProcedurePrefix}_pr_GROUP_TRANSFER_OWNERSHIP";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_NEW_OWNER", MySqlDbType.Int32) { Value = newOwnerUserId });
+                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
+                cmd.Parameters.Add(new MySqlParameter("P_CD_USER", MySqlDbType.Int32) { Value = userId });
+
+                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                var error = Convert.ToInt32(errorParam.Value);
+                return error == 0;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = "Error al tranferir a un usuario el rol de manager de un grupo en BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error al expulsar a un usuario el rol de manager de un grupo en BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+        }
     }
 }
