@@ -348,12 +348,7 @@ namespace _3DMANAGER_APP.DAL.Managers
                 {
                     return false;
                 }
-                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
-                {
-                    return true;
-                }
-
-                return false;
+                return true;
             }
             catch (MySqlException ex)
             {
