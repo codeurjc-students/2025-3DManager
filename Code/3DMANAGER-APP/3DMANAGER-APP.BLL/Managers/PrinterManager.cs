@@ -75,7 +75,7 @@ namespace _3DMANAGER_APP.BLL.Managers
             }
             if (printer.ImageFile != null)
             {
-                bool responseImage = await UpdateS3PrinterImage(responseDb, printer.ImageFile);
+                bool responseImage = await UpdateS3PrinterImage(responseDb, printer.ImageFile, printer.GroupId);
                 if (!responseImage)
                 {
                     string msg = "La impresora se ha creado correctamente, pero la imagen ha fallado al ser guardada.";
@@ -85,14 +85,14 @@ namespace _3DMANAGER_APP.BLL.Managers
             }
             return response;
         }
-        public async Task<bool> UpdateS3PrinterImage(int printerId, IFormFile imageFile)
+        public async Task<bool> UpdateS3PrinterImage(int printerId, IFormFile imageFile, int groupId)
         {
             FileResponse? image = null;
 
             if (imageFile != null)
             {
                 image = await _awsS3Service.UploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName,
-                    imageFile.ContentType, "printers");
+                    imageFile.ContentType, "printers", groupId);
                 if (image != null)
                     return _printerDbManager.UpdatePrinterImageData(printerId, _mapper.Map<FileResponseDbObject>(image));
                 else return false;

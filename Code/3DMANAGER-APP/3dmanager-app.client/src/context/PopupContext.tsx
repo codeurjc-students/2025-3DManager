@@ -5,6 +5,7 @@ import type { PopupData } from "../models/popup/PopupData";
 
 interface PopupContextType {
     showPopup: (data: PopupData) => void;
+    closePopup: () => void;
 }
 
 const PopupContext = createContext<PopupContextType | undefined>(undefined);
@@ -13,7 +14,7 @@ export const PopupProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const { popup, showPopup, closePopup } = usePopup();
 
     return (
-        <PopupContext.Provider value= {{ showPopup }}>
+        <PopupContext.Provider value= {{ showPopup ,closePopup  }}>
             {children}
         <Popup data={popup} onClose={closePopup} />
         </PopupContext.Provider>

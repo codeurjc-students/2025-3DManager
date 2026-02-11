@@ -28,11 +28,19 @@ namespace _3DMANAGER_APP.BLL.Managers
             await _s3Client.DeleteObjectAsync(request);
         }
 
-        public async Task<FileResponse> UploadImageAsync(Stream fileStream, string fileName, string contentType, string folder)
+        public async Task<FileResponse?> UploadImageAsync(Stream fileStream, string fileName, string contentType, string folder, int? groupId)
         {
             try
             {
-                var key = $"{folder}/{Guid.NewGuid()}_{fileName}";
+                string key;
+                if (groupId == null)
+                {
+                    key = $"{folder}/{Guid.NewGuid()}_{fileName}";
+                }
+                else
+                {
+                    key = $"group_{groupId}/{folder}/{Guid.NewGuid()}_{fileName}";
+                }
 
                 if (fileStream.CanSeek)
                     fileStream.Position = 0;
@@ -55,12 +63,12 @@ namespace _3DMANAGER_APP.BLL.Managers
             }
             catch (AmazonS3Exception ex)
             {
-                _logger.LogError("AWS ERROR: " + ex.Message);
+                _logger.LogError(ex, "AWS ERROR");
                 return null;
             }
             catch (Exception ex)
             {
-                _logger.LogError("AWS ERROR: " + ex.Message);
+                _logger.LogError(ex, "AWS ERROR");
                 return null;
             }
         }
@@ -74,6 +82,41 @@ namespace _3DMANAGER_APP.BLL.Managers
             };
             string responseURL = _s3Client.GetPreSignedURL(request);
             return responseURL;
+        }
+
+        public async Task DeleteGroupAsync(int groupId)
+        {
+            string prefix = $"group_{groupId}/";
+
+            var listRequest = new ListObjectsV2Request
+            {
+                BucketName = _bucketName,
+                Prefix = prefix
+            };
+
+            ListObjectsV2Response listResponse;
+
+            do
+            {
+                listResponse = await _s3Client.ListObjectsV2Async(listRequest);
+
+                if (listResponse.S3Objects.Count > 0)
+                {
+                    var deleteRequest = new DeleteObjectsRequest
+                    {
+                        BucketName = _bucketName,
+                        Objects = listResponse.S3Objects
+                            .Select(o => new KeyVersion { Key = o.Key })
+                            .ToList()
+                    };
+
+                    await _s3Client.DeleteObjectsAsync(deleteRequest);
+                }
+
+                listRequest.ContinuationToken = listResponse.NextContinuationToken;
+
+            } while (listResponse.IsTruncated == true);
+
         }
 
     }

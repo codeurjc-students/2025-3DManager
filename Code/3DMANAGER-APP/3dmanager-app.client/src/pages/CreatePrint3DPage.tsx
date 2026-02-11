@@ -5,6 +5,7 @@ import { getFilamentCatalog, getPrinterCatalog, getPrintState } from "../api/cat
 import type { CatalogResponse } from "../models/catalog/CatalogResponse";
 import { parseGcodeData } from "../models/print/GCodePatterns";
 import { usePopupContext } from "../context/PopupContext";
+import InfoPopup from "../components/popupComponent/InfoPopup";
 
 const CreatePrint3DPage: React.FC = () => {
 
@@ -66,7 +67,11 @@ const CreatePrint3DPage: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault(); 
         if (!printName || !printState || !printFilament || !printPrinter) {
-            showPopup({ type: "warning", title: "Completar formulario", description: "Debe rellenar todos los campos" });
+            showPopup({
+                type: "warning", content: (
+                    <InfoPopup title="Completar formulario" description="Debe rellenar todos los campos" />
+                )
+            });
             return;
         }
         
@@ -89,20 +94,32 @@ const CreatePrint3DPage: React.FC = () => {
             });
 
             if (response.data) {
-                showPopup({ type: "info", title: "Operacion realizada", description: "La impresión ha sido guardada correctamente" });
+                showPopup({
+                    type: "info", content: (
+                        <InfoPopup title="Operacion realizada" description="La impresión ha sido guardada correctamente" />
+                    )
+                });
                 navigate("/dashboard");
             } else {
-                showPopup({ type: "error", title: "Operacion cancelada", description: response.error?.message || "No se pudo crear la impresión." });
+                showPopup({
+                    type: "error", content: (
+                        <InfoPopup title="Operacion cancelada" description={response.error?.message || "No se pudo crear la impresión."} />
+                    )
+                });
             }
         } catch (error) {
             console.error("Error al crear la impresión:", error);
-            showPopup({ type: "error", title: "Operacion cancelada", description: "Ha ocurrido un error en el registro de la impresión." });
+            showPopup({
+                type: "error", content: (
+                    <InfoPopup title="Operacion cancelada" description="Ha ocurrido un error en el registro de la impresión." />
+                )
+            });
         }
     };
 
     return (
         <div className="container-fluid vh-100">
-            <div className="row h-70 mt-5">
+            <div className="row h-75 mt-5">
                 <div className="col-1"></div>
                 <div className="grey-container col-10 ps-4 pb-4 d-flex flex-column">
                     <h2 className="title-impact mt-5 mb-3">Subir pieza</h2>
@@ -159,12 +176,12 @@ const CreatePrint3DPage: React.FC = () => {
                                 </div>
                                 <div className="row-3 d-flex flex-row">
                                     <div className="col-6 p-2">
-                                        <label htmlFor="printRealTimeH" className="form-label">Tiempo real impresion (Horas)</label>
+                                        <label htmlFor="printRealTimeH" className="form-label">Tiempo real impresión (Horas)</label>
                                         <input id="printRealTimeH" className="input-value w-100 " value={printRealTimeH}
                                             onChange={(e) => setPrintRealTimeH(Number(e.target.value))} />
                                     </div>
                                     <div className="col-6 p-2">
-                                        <label htmlFor="printRealTimeM" className="form-label">Tiempo real impresion (Minutos)</label>
+                                        <label htmlFor="printRealTimeM" className="form-label">Tiempo real impresión (Minutos)</label>
                                         <input type="number" id="printRealTimeM" className="input-value w-100 " value={printRealTimeM}
                                             onChange={(e) => setPrintRealTimeM(Number(e.target.value))} />
                                     </div>
@@ -189,7 +206,7 @@ const CreatePrint3DPage: React.FC = () => {
                                 />
                             </div>
                             <div className="ms-3 me-3 p-2">
-                                <label className="form-label">Imagen de la impresora</label>
+                                <label className="form-label">Imagen de la impresión</label>
                                 <input
                                     type="file"
                                     className="form-control input-value w-100"

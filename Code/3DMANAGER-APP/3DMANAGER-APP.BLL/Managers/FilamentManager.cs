@@ -66,7 +66,7 @@ namespace _3DMANAGER_APP.BLL.Managers
             response.Data = responseDb;
             if (filament.ImageFile != null)
             {
-                bool responseImage = await UpdateS3FilamentImage(responseDb, filament.ImageFile);
+                bool responseImage = await UpdateS3FilamentImage(responseDb, filament.ImageFile, filament.GroupId);
                 if (!responseImage)
                 {
                     string msg = "El filamento se ha creado correctamente, pero la imagen ha fallado al ser guardada.";
@@ -76,14 +76,14 @@ namespace _3DMANAGER_APP.BLL.Managers
             }
             return response;
         }
-        public async Task<bool> UpdateS3FilamentImage(int filamentId, IFormFile imageFile)
+        public async Task<bool> UpdateS3FilamentImage(int filamentId, IFormFile imageFile, int groupId)
         {
             FileResponse? image = null;
 
             if (imageFile != null)
             {
                 image = await _awsS3Service.UploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName,
-                    imageFile.ContentType, "filaments");
+                    imageFile.ContentType, "filaments", groupId);
                 if (image != null)
                     return _filamentDbManager.UpdateFilamentImageData(filamentId, _mapper.Map<FileResponseDbObject>(image));
                 else return false;

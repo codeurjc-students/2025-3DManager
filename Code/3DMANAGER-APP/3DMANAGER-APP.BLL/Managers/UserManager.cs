@@ -84,7 +84,7 @@ namespace _3DMANAGER_APP.BLL.Managers
             if (imageFile != null)
             {
                 image = await _awsS3Service.UploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName,
-                    imageFile.ContentType, "users");
+                    imageFile.ContentType, "users", null);
                 if (image != null)
                     return _userDbManager.UpdateUserImageData(userId, _mapper.Map<FileResponseDbObject>(image));
                 else return false;

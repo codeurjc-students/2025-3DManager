@@ -7,5 +7,11 @@ namespace _3DMANAGER_APP.DAL.Interfaces
         public bool PostNewGroup(GroupRequestDbObject request);
         public List<GroupInvitationDbObject> GetGroupInvitations(int userId);
         public bool PostAcceptInvitation(int groupId, bool isAccepted, int userId, out int? errorDb);
+        public GroupBasicDataResponseDbObject GetGroupBasicData(int groupId);
+        public bool UpdateGroupData(GroupRequestDbObject request, int groupId);
+        public bool UpdateLeaveGroup(int userId);
+        public bool UpdateMembership(int userKickedId);
+        public bool DeleteGroup(int userId, int groupId);
+        public bool TrasnferOwnership(int userId, int groupId, int newOwnerUserId);
     }
 }

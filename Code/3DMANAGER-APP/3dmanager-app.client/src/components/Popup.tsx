@@ -17,6 +17,8 @@ const Popup: React.FC<PopupProps> = ({ data, onClose }) => {
                 return "popup-warning";
             case "error":
                 return "popup-error";
+            case "base":
+                return "popup-base";
             default:
                 return "";
         }
@@ -24,13 +26,23 @@ const Popup: React.FC<PopupProps> = ({ data, onClose }) => {
 
     return (
         <div className="popup-overlay">
-            <div className={`popup-container ${getColorClass()}`}>
-                <h3 className="popup-title">{data.title}</h3>
-                <p className="popup-description">{data.description}</p>
+            <div className={`popup-container ${getColorClass()}`} style={data.width ? { width: data.width } : undefined}>
 
-                <button className="popup-button" onClick={onClose}>
-                    Aceptar
-                </button>
+                <div className="popup-content">
+                    {data.content}
+                </div>
+                {!data.hideCloseButton && (
+                    <button className="popup-button w-50 mt-2" onClick={() => {
+                        if (data.onClose) {
+                            data.onClose();   
+                        } else {
+                            onClose();        
+                        }
+                    }}>
+                        Cerrar
+                    </button>
+                )}
+
             </div>
         </div>
     );

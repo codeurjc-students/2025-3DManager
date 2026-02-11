@@ -5,6 +5,11 @@ namespace _3DMANAGER_APP.TEST.E2ETest
 {
     public class FakeAwsS3Service : IAwsS3Service
     {
+        public Task DeleteGroupAsync(int groupId)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task DeleteImageAsync(string key)
         {
             throw new NotImplementedException();
@@ -23,6 +28,11 @@ namespace _3DMANAGER_APP.TEST.E2ETest
                 FileKey = "folder/aws_S3service_3dmanager_key",
                 FileUrl = $"https://fake-s3/{folder}/{fileName}"
             });
+        }
+
+        public Task<FileResponse?> UploadImageAsync(Stream fileStream, string fileName, string contentType, string folder, int? groupId)
+        {
+            throw new NotImplementedException();
         }
     }
 

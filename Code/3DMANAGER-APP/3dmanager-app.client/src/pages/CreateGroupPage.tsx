@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { postNewGroup } from "../api/groupService";
 import { useAuth } from '../context/AuthContext';
 import { usePopupContext } from "../context/PopupContext";
+import InfoPopup from "../components/popupComponent/InfoPopup";
 
 const CreateGroupPage: React.FC = () => {
 
@@ -16,7 +17,11 @@ const CreateGroupPage: React.FC = () => {
         e.preventDefault(); 
 
         if (!groupName || !groupDescription) {
-            showPopup({ type: "warning", title: "Completar formulario", description: "Todos los campos son obligatorios" });
+            showPopup({
+                type: "warning", content: (
+                    <InfoPopup title="Completar formulario" description="Todos los campos son obligatorios" />
+                )
+            });
             return;
         }
         
@@ -30,14 +35,26 @@ const CreateGroupPage: React.FC = () => {
             });
 
             if (response.data) {
-                showPopup({ type: "info", title: "Opreación realizada", description: "Grupo creado correctamente. Se va a proceder a hacer un logout para entrar al nuevo grupo" });
+                showPopup({
+                    type: "info", content: (
+                        <InfoPopup title="Operación realizada" description="Grupo creado correctamente. Se va a proceder a hacer un logout para entrar al nuevo grupo" />
+                    )
+                });
                 logout();
             } else {
-                showPopup({ type: "error", title: "Operación cancelada", description: response.error?.message || "No se pudo crear el grupo"});
+                showPopup({
+                    type: "error", content: (
+                        <InfoPopup title="Operación cancelada" description={response.error?.message || "No se pudo crear el grupo"} />
+                    )
+                });
             }
         } catch (error) {
-            console.error("Error al crear grupo:", error);
-            showPopup({ type: "error", title: "Operación cancelada", description: "Ha ocurrido un error en el registro del grupo." });
+            console.log("Error al crear grupo: " + error)
+            showPopup({
+                type: "error", content: (
+                    <InfoPopup title="Operación cancelada" description=" Ha ocurrido un error en el registro del grupo." />
+                )
+            });
         }
     };
 

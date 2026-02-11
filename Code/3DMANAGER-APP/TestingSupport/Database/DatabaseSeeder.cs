@@ -393,11 +393,9 @@
             DROP PROCEDURE IF EXISTS `3DMANAGER_pr_USER_LIST`;
 
             CREATE PROCEDURE `3DMANAGER_pr_USER_LIST`(
-                IN P_CD_GROUP INT,
-                OUT CodigoError INT
+                IN P_CD_GROUP INT
             )
             BEGIN
-                SET CodigoError = 0;
 
                 SELECT 
                     `USER_ID`,

@@ -39,7 +39,8 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                     It.IsAny<Stream>(),
                     It.IsAny<string>(),
                     It.IsAny<string>(),
-                    It.IsAny<string>()
+                    It.IsAny<string>(),
+                    It.IsAny<int>()
                 ))
                 .ReturnsAsync(new FileResponse
                 {

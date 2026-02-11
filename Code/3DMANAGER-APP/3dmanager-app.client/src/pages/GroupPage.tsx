@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import type { GroupInvitation } from "../models/group/GroupInvitation";
 import { getGroupInvitations, postAcceptInvitation } from "../api/groupService";
 import { usePopupContext } from "../context/PopupContext";
+import InfoPopup from "../components/popupComponent/InfoPopup";
 
 
 const GroupPage: React.FC = () => {
@@ -29,21 +30,37 @@ const GroupPage: React.FC = () => {
 
             if (response) {
                 if (accepted) {
-                    showPopup({ type: "info", title: "Operación realizada", description: "Te has unido al grupo. Se va a proceder a hacer un logout para entrar al nuevo grupo" });
+                    showPopup({
+                        type: "info", content: (
+                            <InfoPopup title="Operación realizada" description="Te has unido al grupo. Se va a proceder a hacer un logout para entrar al nuevo grupo" />
+                        )
+                    });
                     logout();
                 } else {
-                    showPopup({ type: "info", title: "Operación realizada", description: "Invitacion rechazada correctamente" });
+                    showPopup({
+                        type: "info", content: (
+                            <InfoPopup title="Operación realizada" description="Invitacion rechazada correctamente" />
+                        )
+                    });
                     reloadInvitations();
                 }
                 
             } else {
-                showPopup({ type: "error", title: "Operación cancelada", description: "No se ha podido procesar la respuesta a la invitación" });
+                showPopup({
+                    type: "error", content: (
+                        <InfoPopup title="Operación cancelada" description="No se ha podido procesar la respuesta a la invitación" />
+                    )
+                });
 
             }
 
         } catch (error) {
             console.error("Error procesando la invitación:", error);
-            showPopup({ type: "error", title: "Operación cancelada", description: "No se ha podido procesar la respuesta a la invitación" });
+            showPopup({
+                type: "error", content: (
+                    <InfoPopup title="Operación cancelada" description="No se ha podido procesar la respuesta a la invitación" />
+                )
+            });
         }
     };
 
