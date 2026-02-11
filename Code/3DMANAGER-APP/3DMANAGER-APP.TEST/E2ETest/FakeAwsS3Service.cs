@@ -22,7 +22,6 @@ namespace _3DMANAGER_APP.TEST.E2ETest
 
         public Task<FileResponse?> UploadImageAsync(Stream stream, string fileName, string contentType, string folder)
         {
-            // Simula una subida correcta
             return Task.FromResult<FileResponse?>(new FileResponse
             {
                 FileKey = "folder/aws_S3service_3dmanager_key",

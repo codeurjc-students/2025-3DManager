@@ -9,17 +9,18 @@ namespace _3DMANAGER_APP.Server.Controllers
     {
         public ILogger<BaseController> _logger;
 
-        public BaseController(ILogger<BaseController> logger)
+        protected BaseController(ILogger<BaseController> logger)
         {
             _logger = logger;
         }
-        protected int UserId =>
-        int.Parse(User.FindFirst("userId")!.Value);
+        protected int? UserId =>
+            int.TryParse(User.FindFirst("userId")?.Value, out var id) ? id : null;
 
-        protected int GroupId =>
-            int.Parse(User.FindFirst("groupId")!.Value);
+        protected int? GroupId =>
+            int.TryParse(User.FindFirst("groupId")?.Value, out var id) ? id : null;
 
         protected string UserRole =>
             User.FindFirst(ClaimTypes.Role)?.Value ?? "";
+
     }
 }

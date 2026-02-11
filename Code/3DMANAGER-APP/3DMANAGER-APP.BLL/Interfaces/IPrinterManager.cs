@@ -6,7 +6,7 @@ namespace _3DMANAGER_APP.BLL.Interfaces
     public interface IPrinterManager
     {
         List<PrinterObject> GetPrinterList(out BaseError error);
-        public Task<CommonResponse<bool>> PostPrinter(PrinterRequest printer);
+        public Task<CommonResponse<int>> PostPrinter(PrinterRequest printer);
         List<PrinterListObject> GetPrinterDashboardList(int groupId, out BaseError error);
     }
 }

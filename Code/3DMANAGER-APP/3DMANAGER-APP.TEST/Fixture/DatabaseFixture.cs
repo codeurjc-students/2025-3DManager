@@ -7,7 +7,7 @@ namespace _3DMANAGER_APP.TEST.Fixture
     public class DatabaseFixture : IAsyncLifetime
     {
         public string ConnectionString { get; }
-        private DatabaseSeeder _seeder;
+        private readonly DatabaseSeeder _seeder;
         public DatabaseFixture()
         {
             var config = new ConfigurationBuilder()

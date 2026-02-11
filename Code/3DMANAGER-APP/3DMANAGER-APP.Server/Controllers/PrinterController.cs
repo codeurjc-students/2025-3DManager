@@ -47,48 +47,66 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <summary>
         /// Post a user list
         /// </summary>
-        /// <returns>bool</returns>
+        /// <returns>Id of object created</returns>
         /// <response code="200">Respuesta correcta</response>
-        /// <response code="400">Conflicto en servidor</response>
+        /// <response code="401">No autorizado</response>
+        /// <response code="409">Conflicto al crear el usuario</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Printers")]
         [HttpPost]
-        public async Task<Models.CommonResponse<bool>> PostPrinter([FromForm] PrinterRequest printer)
+        public async Task<IActionResult> PostPrinter([FromForm] PrinterRequest printer)
         {
-            printer.GroupId = GroupId;
-            BLL.Models.Base.CommonResponse<bool> response = await _printerManager.PostPrinter(printer);
+
+            if (GroupId == null)
+                return Unauthorized(new Models.CommonResponse<int>(new ErrorProperties(401, "No autenticado")));
+
+            printer.GroupId = GroupId.Value;
+
+            BLL.Models.Base.CommonResponse<int> response = await _printerManager.PostPrinter(printer);
             if (response.Error != null)
             {
-                return new Models.CommonResponse<bool>(new ErrorProperties(response.Error.Code, response.Error.Message));
+                if (response.Error.Code == StatusCodes.Status409Conflict)
+                    return Conflict(new Models.CommonResponse<int>(new ErrorProperties(response.Error.Code, response.Error.Message)));
+                else
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new Models.CommonResponse<int>(new ErrorProperties(response.Error.Code, response.Error.Message)));
             }
-            return new Models.CommonResponse<bool>(true);
+            return Ok(new Models.CommonResponse<int>(response.Data));
         }
+
+
 
         /// <summary>
         /// Return a filament list
         /// </summary>
         /// <returns>A list of filaments for show in the dasboard</returns>
         /// <response code="200">Respuesta correcta</response>
-        /// <response code="400">Conflicto en servidor</response>
+        /// <response code="401">No autorizado</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
         [ProducesResponseType(typeof(Models.CommonResponse<List<PrinterListObject>>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(Models.CommonResponse<List<PrinterListObject>>), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(Models.CommonResponse<List<PrinterListObject>>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<List<PrinterListObject>>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Printers")]
         [HttpGet]
-        public Models.CommonResponse<List<PrinterListObject>> GetPrinterDashboardList()
+        public IActionResult GetPrinterDashboardList()
         {
-            List<PrinterListObject> printerList = _printerManager.GetPrinterDashboardList(GroupId, out BaseError error);
+            if (GroupId == null)
+                return Unauthorized(new Models.CommonResponse<PrinterListObject>(new ErrorProperties(401, "No autenticado")));
+
+            List<PrinterListObject> printerList = _printerManager.GetPrinterDashboardList(GroupId.Value, out BaseError error);
 
             if (printerList == null || error != null)
-                return new Models.CommonResponse<List<PrinterListObject>>(new ErrorProperties(error.code, error.message));
+                return StatusCode(500, new Models.CommonResponse<List<PrinterListObject>>(new ErrorProperties(error.code, error.message)));
 
-            return new Models.CommonResponse<List<PrinterListObject>>(printerList);
+            return Ok(new Models.CommonResponse<List<PrinterListObject>>(printerList));
         }
     }
 }

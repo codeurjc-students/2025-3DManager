@@ -16,10 +16,10 @@ namespace _3DMANAGER_APP.BLL.Managers
 {
     public class PrinterManager : IPrinterManager
     {
-        private IPrinterDbManager _printerDbManager;
-        private IMapper _mapper;
-        private ILogger<PrinterManager> _logger;
-        private IAwsS3Service _awsS3Service;
+        private readonly IPrinterDbManager _printerDbManager;
+        private readonly IMapper _mapper;
+        private readonly ILogger<PrinterManager> _logger;
+        private readonly IAwsS3Service _awsS3Service;
         public PrinterManager(IPrinterDbManager printerDbManager, IMapper mapper, ILogger<PrinterManager> logger, IAwsS3Service awsS3Service)
         {
             _printerDbManager = printerDbManager;
@@ -46,10 +46,10 @@ namespace _3DMANAGER_APP.BLL.Managers
             return response;
         }
 
-        public async Task<CommonResponse<bool>> PostPrinter(PrinterRequest printer)
+        public async Task<CommonResponse<int>> PostPrinter(PrinterRequest printer)
         {
 
-            CommonResponse<bool> response = new CommonResponse<bool>();
+            CommonResponse<int> response = new CommonResponse<int>();
             PrinterRequestDbObject printerDbObject = _mapper.Map<PrinterRequestDbObject>(printer);
             var responseDb = _printerDbManager.PostPrinter(printerDbObject, out int? errorDb);
 
@@ -71,6 +71,7 @@ namespace _3DMANAGER_APP.BLL.Managers
                     default:
                         break;
                 }
+                response.Data = responseDb;
                 return response;
             }
             if (printer.ImageFile != null)
@@ -103,10 +104,10 @@ namespace _3DMANAGER_APP.BLL.Managers
             }
 
         }
-        public List<PrinterListObject> GetPrinterDashboardList(int group, out BaseError? error)
+        public List<PrinterListObject> GetPrinterDashboardList(int groupId, out BaseError? error)
         {
             error = null;
-            List<PrinterListDbObject> list = _printerDbManager.GetPrinterDashboardList(group);
+            List<PrinterListDbObject> list = _printerDbManager.GetPrinterDashboardList(groupId);
             if (list == null)
                 error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = "Error al obtener listado de impresoras" };
 

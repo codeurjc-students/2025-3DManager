@@ -10,7 +10,7 @@ namespace _3DMANAGER_APP.BLL.Managers
     {
         private readonly IAmazonS3 _s3Client;
         private readonly string _bucketName;
-        private ILogger<AwsS3Service> _logger;
+        private readonly ILogger<AwsS3Service> _logger;
         public AwsS3Service(IAmazonS3 s3Client, string bucketName, ILogger<AwsS3Service> logger)
         {
             _s3Client = s3Client;

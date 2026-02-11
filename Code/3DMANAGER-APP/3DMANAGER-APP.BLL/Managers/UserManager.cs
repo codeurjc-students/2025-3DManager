@@ -18,7 +18,7 @@ namespace _3DMANAGER_APP.BLL.Managers
         private readonly IUserDbManager _userDbManager;
         private readonly IMapper _mapper;
         private readonly ILogger<UserManager> _logger;
-        private IAwsS3Service _awsS3Service;
+        private readonly IAwsS3Service _awsS3Service;
         public UserManager(IUserDbManager userDbManager, IMapper mapper, ILogger<UserManager> logger, IAwsS3Service awsS3Service)
         {
             _userDbManager = userDbManager;
