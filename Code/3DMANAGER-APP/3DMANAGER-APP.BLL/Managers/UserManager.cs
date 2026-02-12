@@ -173,5 +173,14 @@ namespace _3DMANAGER_APP.BLL.Managers
             }
             return true;
         }
+
+        public UserObject GetUserById(int userId)
+        {
+            return _mapper.Map<UserObject>(_userDbManager.GetUserById(userId));
+        }
+        public int GetGroupIdByUserId(int userId)
+        {
+            return _userDbManager.GetGroupIdByUserId(userId);
+        }
     }
 }

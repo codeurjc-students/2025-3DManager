@@ -198,14 +198,18 @@ namespace _3DMANAGER_APP.Server.Controllers
             if (UserId == null)
                 return Unauthorized();
 
-            var userInfo = new
-            {
-                userId = UserId,
-                groupId = GroupId,
-                rolId = UserRole
-            };
+            var user = _userManager.GetUserById(UserId.Value);
 
-            return Ok(userInfo);
+            if (user == null)
+                return Unauthorized();
+
+            return Ok(new
+            {
+                userId = user.UserId,
+                groupId = user.GroupId,
+                rolId = user.RolId,
+                groupName = user.GroupName
+            });
         }
 
     }

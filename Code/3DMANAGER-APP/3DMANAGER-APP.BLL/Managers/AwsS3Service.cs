@@ -100,24 +100,27 @@ namespace _3DMANAGER_APP.BLL.Managers
             {
                 listResponse = await _s3Client.ListObjectsV2Async(listRequest);
 
-                if (listResponse.S3Objects.Count > 0)
+                if (listResponse.S3Objects == null || listResponse.S3Objects.Count == 0)
                 {
-                    var deleteRequest = new DeleteObjectsRequest
-                    {
-                        BucketName = _bucketName,
-                        Objects = listResponse.S3Objects
-                            .Select(o => new KeyVersion { Key = o.Key })
-                            .ToList()
-                    };
-
-                    await _s3Client.DeleteObjectsAsync(deleteRequest);
+                    listRequest.ContinuationToken = listResponse.NextContinuationToken;
+                    continue;
                 }
+
+                var deleteRequest = new DeleteObjectsRequest
+                {
+                    BucketName = _bucketName,
+                    Objects = listResponse.S3Objects
+                        .Select(o => new KeyVersion { Key = o.Key })
+                        .ToList()
+                };
+
+                await _s3Client.DeleteObjectsAsync(deleteRequest);
 
                 listRequest.ContinuationToken = listResponse.NextContinuationToken;
 
             } while (listResponse.IsTruncated == true);
-
         }
+
 
     }
 }

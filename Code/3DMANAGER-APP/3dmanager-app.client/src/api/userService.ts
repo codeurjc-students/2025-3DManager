@@ -47,7 +47,7 @@ export const postUserInvitation = async (userId: number): Promise<CommonResponse
     return response.data;
 }
 
-export const GetUserAuth = async (): Promise<{userId: number; groupId: number | null; rolId: string | null;}> => {
+export const GetUserAuth = async (): Promise<{ userId: number; groupId: number | null; rolId: string | null; groupName: string | null; }> => {
     const response = await apiClient.get("/api/v1/users/GetUserAuth");
     return response.data;
 };

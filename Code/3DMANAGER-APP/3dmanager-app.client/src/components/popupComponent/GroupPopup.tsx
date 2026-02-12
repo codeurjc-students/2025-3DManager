@@ -57,7 +57,10 @@ const GroupPopup: React.FC = () => {
             errorMessage: "No se pudo abandonar el grupo.",
             showPopup,
             reopenGroupPopup,
-            onSuccess: closePopup
+            onSuccess: async () => {
+                await refreshUser();
+                closePopup();
+            }
         });
     };
 
@@ -119,7 +122,11 @@ const GroupPopup: React.FC = () => {
             successMessage: "Has transferido el rol correctamente.",
             errorMessage: "No se ha podido transferir el rol de manager al usuario.",
             showPopup,
-            reopenGroupPopup
+            reopenGroupPopup,
+            onSuccess: async () => {
+                await refreshUser();
+                closePopup();
+            }
         });
     };
 

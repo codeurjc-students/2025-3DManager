@@ -2,6 +2,8 @@ import React, { createContext, useState, useEffect, useContext } from "react";
 import type { UserObject } from "../models/user/UserObject";
 import { GetUserAuth } from "../api/userService";
 
+
+
 type AuthContextType = {
     user: UserObject | null;
     token: string | null;
@@ -76,13 +78,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 ...user!,
                 userId: res.userId,
                 groupId: res.groupId,
-                rolId: res.rolId
+                rolId: res.rolId,
+                groupName: res.groupName
             };
 
             setUser(updatedUser);
             localStorage.setItem("user", JSON.stringify(updatedUser));
 
-        } catch {
+        } catch (err) {
+            console.error(err)
             logout();
         }
     };

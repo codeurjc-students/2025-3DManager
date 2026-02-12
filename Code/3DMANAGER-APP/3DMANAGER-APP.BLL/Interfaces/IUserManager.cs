@@ -10,5 +10,7 @@ namespace _3DMANAGER_APP.BLL.Interfaces
         public List<UserListResponse> GetUserList(int group, out BaseError? error);
         public List<UserListResponse> GetUserInvitationList(string? filter, out BaseError? error);
         public bool PostUserInvitation(int groupId, int userId, out BaseError? error);
+        public UserObject GetUserById(int userId);
+        public int GetGroupIdByUserId(int userId);
     }
 }

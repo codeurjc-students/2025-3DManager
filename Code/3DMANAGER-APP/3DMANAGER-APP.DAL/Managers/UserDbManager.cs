@@ -279,6 +279,82 @@ namespace _3DMANAGER_APP.DAL.Managers
                 return false;
             }
         }
+
+        public UserDbObject GetUserById(int userId)
+        {
+            try
+            {
+                var user = new UserDbObject();
+                string procName = $"{ProcedurePrefix}_pr_USER_GET_BY_ID";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_USER", MySqlDbType.Int32) { Value = userId });
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    return user.Create(ds.Tables[0].Rows[0]);
+                }
+
+                return null;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = "Error al obtener el usuario en BBDD";
+                Logger.LogError(ex, msg);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error al obtener el usuario en BBDD";
+                Logger.LogError(ex, msg);
+                return null;
+            }
+        }
+
+        public int GetGroupIdByUserId(int userId)
+        {
+            try
+            {
+                var user = new UserDbObject();
+                string procName = $"{ProcedurePrefix}_pr_USER_GROUP_GET_BY_ID";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_USER", MySqlDbType.Int32) { Value = userId });
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    return ds.Tables[0].Rows[0].Field<int>("USER_GROUP_ID");
+                }
+
+                return 0;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = "Error al obtener el id de grupo del usuario en BBDD";
+                Logger.LogError(ex, msg);
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error al obtener el id de grupo del usuario en BBDD";
+                Logger.LogError(ex, msg);
+                return 0;
+            }
+        }
     }
 
 }

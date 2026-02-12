@@ -59,7 +59,7 @@ namespace _3DMANAGER_APP.BLL.Managers
                 switch (errorDb)
                 {
                     case 1:
-                        msg = $"Error al crear impresora con nombre {printer.PrinterName}";
+                        msg = $"Error al crear impresora con nombre {printer.PrinterName}. El nombre de la impresora ya existe";
                         _logger.LogError(msg);
                         response.Error = new Response.ErrorProperties() { Code = StatusCodes.Status409Conflict, Message = msg };
                         break;
@@ -71,9 +71,10 @@ namespace _3DMANAGER_APP.BLL.Managers
                     default:
                         break;
                 }
-                response.Data = responseDb;
+
                 return response;
             }
+            response.Data = responseDb;
             if (printer.ImageFile != null)
             {
                 bool responseImage = await UpdateS3PrinterImage(responseDb, printer.ImageFile, printer.GroupId);

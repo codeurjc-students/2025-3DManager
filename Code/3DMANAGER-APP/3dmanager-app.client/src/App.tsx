@@ -17,6 +17,7 @@ import InsertInventoryPage from './pages/InsertInventoryPage';
 import CreatePrinterPage from './pages/CreatePrinterPage';
 import CreateFilamentPage from './pages/CreateFilamentPage';
 import CreatePrint3DPage from './pages/CreatePrint3DPage';
+import AuthWatcher from './context/AuthWatcher';
 
 
 
@@ -28,6 +29,7 @@ const App: React.FC = () => {
         <AuthProvider>
             <PopupProvider>
                 <BrowserRouter>
+                    <AuthWatcher />
                     <div className="main-container">
                         <Header />
                         <main className="pages-container">
