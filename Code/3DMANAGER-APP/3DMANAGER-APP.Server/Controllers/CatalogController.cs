@@ -3,6 +3,7 @@ using _3DMANAGER_APP.BLL.Models.Catalog;
 using _3DMANAGER_APP.Server.Models;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
+using static _3DMANAGER_APP.Server.Models.Response;
 
 namespace _3DMANAGER_APP.Server.Controllers
 {
@@ -67,10 +68,13 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Tags("Catalogs")]
         [HttpGet]
-        public CommonResponse<List<CatalogResponse>> GetFilamentCatalog()
+        public IActionResult GetFilamentCatalog()
         {
-            List<CatalogResponse> catalog = _catalogManager.GetFilamentCatalog(GroupId);
-            return new CommonResponse<List<CatalogResponse>>(catalog);
+            if (GroupId == null)
+                return Unauthorized(new CommonResponse<bool>(new ErrorProperties(401, "No autenticado")));
+
+            List<CatalogResponse> catalog = _catalogManager.GetFilamentCatalog(GroupId.Value);
+            return Ok(new CommonResponse<List<CatalogResponse>>(catalog));
         }
 
         /// <summary>
@@ -85,10 +89,12 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Tags("Catalogs")]
         [HttpGet]
-        public CommonResponse<List<CatalogResponse>> GetPrinterCatalog()
+        public IActionResult GetPrinterCatalog()
         {
-            List<CatalogResponse> catalog = _catalogManager.GetPrinterCatalog(GroupId);
-            return new CommonResponse<List<CatalogResponse>>(catalog);
+            if (GroupId == null)
+                return Unauthorized(new CommonResponse<bool>(new ErrorProperties(401, "No autenticado")));
+            List<CatalogResponse> catalog = _catalogManager.GetPrinterCatalog(GroupId.Value);
+            return Ok(new CommonResponse<List<CatalogResponse>>(catalog));
         }
     }
 }

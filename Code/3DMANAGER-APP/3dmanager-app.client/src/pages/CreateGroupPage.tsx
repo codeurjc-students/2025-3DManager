@@ -9,7 +9,7 @@ const CreateGroupPage: React.FC = () => {
 
     const [groupName, setGroupName] = useState("");
     const [groupDescription, setGroupDescription] = useState("");
-    const { logout } = useAuth();
+    const { refreshUser } = useAuth();
     const navigate = useNavigate();
     const { showPopup } = usePopupContext();
 
@@ -37,10 +37,11 @@ const CreateGroupPage: React.FC = () => {
             if (response.data) {
                 showPopup({
                     type: "info", content: (
-                        <InfoPopup title="Operación realizada" description="Grupo creado correctamente. Se va a proceder a hacer un logout para entrar al nuevo grupo" />
+                        <InfoPopup title="Operación realizada" description="Grupo creado correctamente." />
                     )
                 });
-                logout();
+                refreshUser();
+                navigate("/dashboard");
             } else {
                 showPopup({
                     type: "error", content: (

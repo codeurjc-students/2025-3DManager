@@ -48,6 +48,8 @@
             await CreateProcUserListAsync();
             await CreateProcUserLoginAsync();
             await CreateProcUserPostAsync();
+            await CreateProcUserGetByIdAsync();
+            await CreateProcuserGroupGetByIdAsync();
         }
 
         private async Task LoadDataAsync()
@@ -423,6 +425,57 @@
             await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
         }
 
+        private async Task CreateProcUserGetByIdAsync()
+        {
+            var sql = """
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_USER_GET_BY_ID`;
+
+            CREATE PROCEDURE `3DMANAGER_pr_USER_GET_BY_ID`(
+                IN P_CD_USER INT
+            )
+            BEGIN
+                SELECT 
+            		u.USER_ID,
+                    u.USER_NAME,
+                    u.USER_PASSWORD,
+                    u.USER_EMAIL,
+                    u.USER_GROUP_ID,
+                    r.`3DMANAGER_C_ROLES_NAME` AS USER_ROLE,
+                    g.`3DMANAGER_GROUP_NAME` AS GROUP_NAME
+
+                FROM `3DMANAGER_USER` AS u
+                LEFT JOIN `3DMANAGER_C_ROLES` AS r 
+                    ON u.USER_ROLE = r.`3DMANAGER_C_ROLES_ID`
+            	LEFT JOIN `3DMANAGER_GROUP` AS g
+            		ON G.`3DMANAGER_GROUP_ID` = u.USER_GROUP_ID 
+                WHERE u.USER_ID= P_CD_USER;
+            END;
+            
+            """;
+
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
+
+        private async Task CreateProcuserGroupGetByIdAsync()
+        {
+            var sql = """
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_USER_GROUP_GET_BY_ID`;
+
+            CREATE PROCEDURE `3DMANAGER_pr_USER_GROUP_GET_BY_ID`(
+                IN P_CD_USER INT
+            )
+            BEGIN
+                SELECT 
+                    u.USER_GROUP_ID
+                FROM `3DMANAGER_USER` AS u
+                WHERE u.USER_ID= P_CD_USER;
+            END;
+            
+            """;
+
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
+
         private async Task CreateProcPrinterPostAsync()
         {
             var sql = """
@@ -731,5 +784,7 @@
 
             await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
         }
+
+
     }
 }

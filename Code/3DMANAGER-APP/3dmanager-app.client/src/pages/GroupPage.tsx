@@ -9,7 +9,7 @@ import InfoPopup from "../components/popupComponent/InfoPopup";
 
 const GroupPage: React.FC = () => {
     const [items, setItems] = useState<GroupInvitation[]>([]);
-    const { logout } = useAuth();
+    const { refreshUser } = useAuth();
     const { showPopup } = usePopupContext();
 
     useEffect(() => {
@@ -32,10 +32,10 @@ const GroupPage: React.FC = () => {
                 if (accepted) {
                     showPopup({
                         type: "info", content: (
-                            <InfoPopup title="Operación realizada" description="Te has unido al grupo. Se va a proceder a hacer un logout para entrar al nuevo grupo" />
+                            <InfoPopup title="Operación realizada" description="Te has unido al grupo. " />
                         )
                     });
-                    logout();
+                    refreshUser()
                 } else {
                     showPopup({
                         type: "info", content: (

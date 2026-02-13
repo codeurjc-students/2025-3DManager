@@ -12,6 +12,7 @@ namespace _3DMANAGER_APP.Server.Controllers
     {
         private readonly BLL.Interfaces.IGroupManager _groupManager;
 
+        const string UnauthorizedMsg = "No autenticado";
         public GroupController(BLL.Interfaces.IGroupManager groupManager, ILogger<GroupController> logger) : base(logger)
         {
             _groupManager = groupManager;
@@ -22,24 +23,29 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// </summary>
         /// <returns>A boolean that indicates if the creation has been successful</returns>
         /// <response code="200">Respuesta correcta</response>
-        /// <response code="400">Conflicto en servidor</response>
+        /// <response code="401">No autorizado</response>
+        /// <response code="409">Conflicto en servidor</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Groups")]
         [HttpPost]
-        public Models.CommonResponse<bool> PostNewGroup(GroupRequest request)
+        public IActionResult PostNewGroup(GroupRequest request)
         {
-            request.UserId = UserId;
+            if (UserId == null)
+                return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, UnauthorizedMsg)));
+
+            request.UserId = UserId.Value;
             var response = _groupManager.PostNewGroup(request, out BaseError? error);
             if (error != null)
             {
-                return new Models.CommonResponse<bool>(new ErrorProperties(error.code, error.message));
+                return StatusCode(error.code, new Models.CommonResponse<bool>(new ErrorProperties(error.code, error.message)));
             }
-            return new Models.CommonResponse<bool>(true);
+            return Ok(new Models.CommonResponse<bool>(response));
         }
 
         /// <summary>
@@ -47,17 +53,26 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// </summary>
         /// <returns>A list of invitation of groups for a user</returns>
         /// <response code="200">Respuesta correcta</response>
+        /// <response code="401">No autorizado</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
         [ProducesResponseType(typeof(Models.CommonResponse<List<GroupInvitation>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<List<GroupInvitation>>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<List<GroupInvitation>>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Groups")]
         [HttpPost]
-        public Models.CommonResponse<List<GroupInvitation>> GetGroupInvitations()
+        public IActionResult GetGroupInvitations()
         {
-            var response = _groupManager.GetGroupInvitations(UserId);
-            return new Models.CommonResponse<List<GroupInvitation>>(response);
+            if (UserId == null)
+                return Unauthorized(new Models.CommonResponse<List<GroupInvitation>>(new ErrorProperties(401, UnauthorizedMsg)));
+
+            var response = _groupManager.GetGroupInvitations(UserId.Value);
+
+            if (response == null)
+                return StatusCode(500, new Models.CommonResponse<List<GroupInvitation>>(new ErrorProperties(500, "Error al obtener la lista de invitaciones a grupo")));
+
+            return Ok(new Models.CommonResponse<List<GroupInvitation>>(response));
         }
 
         /// <summary>
@@ -65,22 +80,27 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// </summary>
         /// <returns>True if the operation result was succesfull</returns>
         /// <response code="200">Respuesta correcta</response>
+        /// <response code="401">No autorizado</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Groups")]
         [HttpPost]
-        public Models.CommonResponse<bool> postAcceptInvitation(int groupId, bool isAccepted)
+        public IActionResult postAcceptInvitation(int groupId, bool isAccepted)
         {
-            var response = _groupManager.PostAcceptInvitation(groupId, isAccepted, UserId, out BaseError? error);
+            if (UserId == null)
+                return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, UnauthorizedMsg)));
+
+            var response = _groupManager.PostAcceptInvitation(groupId, isAccepted, UserId.Value, out BaseError? error);
 
             if (error != null)
             {
-                return new Models.CommonResponse<bool>(new ErrorProperties(error.code, error.message));
+                return StatusCode(error.code, new Models.CommonResponse<bool>(new ErrorProperties(error.code, error.message)));
             }
-            return new Models.CommonResponse<bool>(true);
+            return Ok(new Models.CommonResponse<bool>(response));
         }
 
         /// <summary>
@@ -88,23 +108,25 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// </summary>
         /// <returns>A boolean that indicates if the creation has been successful</returns>
         /// <response code="200">Respuesta correcta</response>
-        /// <response code="400">Conflicto en servidor</response>
+        /// <response code="401">No autorizado</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
         [ProducesResponseType(typeof(Models.CommonResponse<GroupBasicDataResponse>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(Models.CommonResponse<GroupBasicDataResponse>), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(Models.CommonResponse<GroupBasicDataResponse>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<GroupBasicDataResponse>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Groups")]
         [HttpGet]
-        public Models.CommonResponse<GroupBasicDataResponse> GetGroupBasicData()
+        public IActionResult GetGroupBasicData()
         {
-            var response = _groupManager.GetGroupBasicData(GroupId, out BaseError? error);
+            if (GroupId == null)
+                return Unauthorized(new Models.CommonResponse<GroupBasicDataResponse>(new ErrorProperties(401, UnauthorizedMsg)));
+            var response = _groupManager.GetGroupBasicData(GroupId.Value, out BaseError? error);
             if (error != null)
             {
-                return new Models.CommonResponse<GroupBasicDataResponse>(new ErrorProperties(error.code, error.message));
+                return StatusCode(error.code, new Models.CommonResponse<GroupBasicDataResponse>(new ErrorProperties(error.code, error.message)));
             }
-            return new Models.CommonResponse<GroupBasicDataResponse>(response);
+            return Ok(new Models.CommonResponse<GroupBasicDataResponse>(response));
         }
 
         /// <summary>
@@ -112,23 +134,29 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// </summary>
         /// <returns>A boolean that indicates if the creation has been successful</returns>
         /// <response code="200">Respuesta correcta</response>
-        /// <response code="400">Conflicto en servidor</response>
+        /// <response code="401">No autorizado</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Groups")]
         [HttpPut]
-        public Models.CommonResponse<bool> UpdateGroupData(GroupRequest request)
+        public IActionResult UpdateGroupData(GroupRequest request)
         {
-            request.UserId = UserId;
-            var response = _groupManager.UpdateGroupData(request, GroupId);
+
+            if (UserId == null || GroupId == null)
+                return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, UnauthorizedMsg)));
+
+            request.UserId = UserId.Value;
+            var response = _groupManager.UpdateGroupData(request, GroupId.Value);
             if (!response)
             {
-                return new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al actualizar el grupo"));
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al actualizar el grupo")));
             }
-            return new Models.CommonResponse<bool>(true);
+            return Ok(new Models.CommonResponse<bool>(true));
         }
 
         /// <summary>
@@ -136,23 +164,28 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// </summary>
         /// <returns>A boolean that indicates if the operation was correct has been successful</returns>
         /// <response code="200">Respuesta correcta</response>
-        /// <response code="400">Conflicto en servidor</response>
+        /// <response code="401">No autorizado</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Groups")]
         [HttpPut]
-        public Models.CommonResponse<bool> UpdateLeaveGroup()
+        public IActionResult UpdateLeaveGroup()
         {
+            if (UserId == null)
+                return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, UnauthorizedMsg)));
 
-            var response = _groupManager.UpdateLeaveGroup(UserId);
+            var response = _groupManager.UpdateLeaveGroup(UserId.Value);
+
             if (!response)
             {
-                return new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al salir del grupo"));
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al salir del grupo")));
             }
-            return new Models.CommonResponse<bool>(true);
+            return Ok(new Models.CommonResponse<bool>(true));
         }
 
         /// <summary>
@@ -160,7 +193,6 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// </summary>
         /// <returns>A boolean that indicates if the operation was correct has been successful</returns>
         /// <response code="200">Respuesta correcta</response>
-        /// <response code="400">Conflicto en servidor</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
@@ -184,24 +216,28 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// </summary>
         /// <returns>A boolean that indicates if the operation was correct has been successful</returns>
         /// <response code="200">Respuesta correcta</response>
-        /// <response code="400">Conflicto en servidor</response>
+        /// <response code="401">No autorizado</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Groups")]
         [HttpDelete]
-        public async Task<Models.CommonResponse<bool>> DeleteGroup()
+        public async Task<IActionResult> DeleteGroup()
         {
-            var result = await _groupManager.DeleteGroup(UserId, GroupId);
+            if (GroupId == null || UserId == null)
+                return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, UnauthorizedMsg)));
+            var result = await _groupManager.DeleteGroup(UserId.Value, GroupId.Value);
 
             if (!result)
             {
-                return new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al eliminar el grupo"));
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al eliminar el grupo")));
             }
 
-            return new Models.CommonResponse<bool>(true);
+            return Ok(new Models.CommonResponse<bool>(true));
         }
 
         /// <summary>
@@ -209,24 +245,29 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// </summary>
         /// <returns>A boolean that indicates if the operation was correct has been successful</returns>
         /// <response code="200">Respuesta correcta</response>
-        /// <response code="400">Conflicto en servidor</response>
+        /// <response code="401">No autorizado</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Groups")]
         [HttpPut]
-        public Models.CommonResponse<bool> TrasnferOwnership(int newOwnerUserId)
+        public IActionResult TrasnferOwnership(int newOwnerUserId)
         {
-            var result = _groupManager.TrasnferOwnership(UserId, GroupId, newOwnerUserId);
+            if (GroupId == null || UserId == null)
+                return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, UnauthorizedMsg)));
+
+            var result = _groupManager.TrasnferOwnership(UserId.Value, GroupId.Value, newOwnerUserId);
 
             if (!result)
             {
-                return new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al eliminar el grupo"));
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al eliminar el grupo")));
             }
 
-            return new Models.CommonResponse<bool>(true);
+            return Ok(new Models.CommonResponse<bool>(true));
         }
 
     }

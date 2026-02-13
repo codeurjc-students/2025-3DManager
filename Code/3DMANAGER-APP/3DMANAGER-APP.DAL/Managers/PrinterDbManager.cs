@@ -15,6 +15,7 @@ namespace _3DMANAGER_APP.DAL.Managers
         public PrinterDbManager(IDataSource<MySqlConnection> dataSourceFactory, ILogger<PrinterDbManager> logger)
             : base(dataSourceFactory, logger) { }
 
+
         public List<PrinterDbObject> GetPrinterList(out ErrorDbObject error)
         {
             error = null;

@@ -1,5 +1,4 @@
-﻿// components/popupContents/GroupPopup.tsx
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { usePopupContext } from "../../context/PopupContext";
 
@@ -16,7 +15,7 @@ import type { GroupBasicDataResponse } from "../../models/group/GroupBasicDataRe
 import { confirmAction } from "./ConfirmAction";
 
 const GroupPopup: React.FC = () => {
-    const { user } = useAuth();
+    const { user, refreshUser } = useAuth();
     const { showPopup, closePopup } = usePopupContext();
     const [newOwner, setNewOwner] = useState<number>();
     const [data, setData] = useState<GroupBasicDataResponse | null>(null);
@@ -58,7 +57,10 @@ const GroupPopup: React.FC = () => {
             errorMessage: "No se pudo abandonar el grupo.",
             showPopup,
             reopenGroupPopup,
-            onSuccess: closePopup
+            onSuccess: async () => {
+                await refreshUser();
+                closePopup();
+            }
         });
     };
 
@@ -70,7 +72,10 @@ const GroupPopup: React.FC = () => {
             errorMessage: "No se pudo eliminar el grupo.",
             showPopup,
             reopenGroupPopup,
-            onSuccess: closePopup
+            onSuccess: async () => {
+                await refreshUser();
+                closePopup();
+            }
         });
     };
 
@@ -117,7 +122,11 @@ const GroupPopup: React.FC = () => {
             successMessage: "Has transferido el rol correctamente.",
             errorMessage: "No se ha podido transferir el rol de manager al usuario.",
             showPopup,
-            reopenGroupPopup
+            reopenGroupPopup,
+            onSuccess: async () => {
+                await refreshUser();
+                closePopup();
+            }
         });
     };
 

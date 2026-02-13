@@ -17,7 +17,7 @@ namespace _3DMANAGER_APP.BLL.Managers
         private readonly IFilamentDbManager _filamentDbManager;
         private readonly IMapper _mapper;
         private readonly ILogger<FilamentManager> _logger;
-        private IAwsS3Service _awsS3Service;
+        private readonly IAwsS3Service _awsS3Service;
         public FilamentManager(IFilamentDbManager filamentDbManager, IMapper mapper, ILogger<FilamentManager> logger, IAwsS3Service awsS3Service)
         {
             _filamentDbManager = filamentDbManager;

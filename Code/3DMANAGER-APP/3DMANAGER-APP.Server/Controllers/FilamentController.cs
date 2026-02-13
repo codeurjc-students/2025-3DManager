@@ -30,43 +30,61 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
         [ProducesResponseType(typeof(Models.CommonResponse<List<FilamentListResponse>>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(Models.CommonResponse<List<FilamentListResponse>>), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(Models.CommonResponse<List<FilamentListResponse>>), StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(Models.CommonResponse<List<FilamentListResponse>>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Filaments")]
         [Authorize]
         [HttpGet]
-        public Models.CommonResponse<List<FilamentListResponse>> GetFilamentList()
+        public IActionResult GetFilamentList()
         {
-            List<FilamentListResponse> userList = _filamentManager.GetFilamentList(GroupId, out BaseError error);
+            if (GroupId == null)
+                return Unauthorized(new Models.CommonResponse<List<FilamentListResponse>>(new ErrorProperties(401, "No autenticado")));
 
-            if (userList == null || error != null)
-                return new Models.CommonResponse<List<FilamentListResponse>>(new ErrorProperties(error.code, error.message));
+            List<FilamentListResponse> userList = _filamentManager.GetFilamentList(GroupId.Value, out BaseError error);
 
-            return new Models.CommonResponse<List<FilamentListResponse>>(userList);
+            if (error != null)
+            {
+                return StatusCode(error.code, new Models.CommonResponse<List<FilamentListResponse>>(new ErrorProperties(error.code, error.message)));
+            }
+
+            return Ok(new Models.CommonResponse<List<FilamentListResponse>>(userList));
         }
 
         /// <summary>
         /// Post a user list
         /// </summary>
-        /// <returns>bool</returns>
+        /// <returns>Id of object created</returns>
         /// <response code="200">Respuesta correcta</response>
+        /// <response code="401">No autorizado</response>
+        /// <response code="409">Conlficto</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
         [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Filaments")]
         [HttpPost]
-        public async Task<Models.CommonResponse<int>> PostFilament([FromForm] FilamentRequest filament)
+        public async Task<IActionResult> PostFilament([FromForm] FilamentRequest filament)
         {
-            filament.GroupId = GroupId;
+
+            if (GroupId == null)
+                return Unauthorized(new Models.CommonResponse<int>(new ErrorProperties(401, "No autenticado")));
+
+            filament.GroupId = GroupId.Value;
+
             BLL.Models.Base.CommonResponse<int> response = await _filamentManager.PostFilament(filament);
             if (response.Error != null)
             {
-                return new Models.CommonResponse<int>(new ErrorProperties(response.Error.Code, response.Error.Message));
+                if (response.Error.Code == StatusCodes.Status409Conflict)
+                    return Conflict(new Models.CommonResponse<int>(new ErrorProperties(response.Error.Code, response.Error.Message)));
+                else
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new Models.CommonResponse<int>(new ErrorProperties(response.Error.Code, response.Error.Message)));
             }
-            return new Models.CommonResponse<int>(response.Data);
+            return Ok(new Models.CommonResponse<int>(response.Data));
         }
     }
 }

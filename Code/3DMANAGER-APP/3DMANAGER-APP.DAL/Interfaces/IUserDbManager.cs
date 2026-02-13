@@ -11,5 +11,7 @@ namespace _3DMANAGER_APP.DAL.Interfaces
         public List<UserListResponseDbObject> GetUserInvitationList(string? filter);
         public bool PostUserInvitation(int groupId, int userId, out int? error);
         public bool UpdateUserImageData(int userId, FileResponseDbObject image);
+        public UserDbObject GetUserById(int userId);
+        public int GetGroupIdByUserId(int userId);
     }
 }

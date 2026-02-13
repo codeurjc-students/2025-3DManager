@@ -4,6 +4,7 @@ using _3DMANAGER_APP.BLL.Mapper;
 using _3DMANAGER_APP.DAL.Base;
 using _3DMANAGER_APP.DAL.Interfaces;
 using _3DMANAGER_APP.DAL.Managers;
+using _3DMANAGER_APP.Server.Controllers;
 using _3DMANAGER_APP.TestingSupport.Database;
 using Amazon;
 using Amazon.Runtime;
