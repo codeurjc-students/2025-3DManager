@@ -30,3 +30,8 @@ export const getPrinterDashboardList = async (): Promise<CommonResponse<PrinterD
     return response.data;
 }
 
+export const updatePrinterState = async (printerId : number, stateId : number): Promise<CommonResponse<boolean>> => {
+    const response = await apiClient.put<CommonResponse<boolean>>(`/api/v1/printers/UpdatePrinterState?printerId=${printerId}&stateId=${stateId}`);
+    return response.data;
+}
+

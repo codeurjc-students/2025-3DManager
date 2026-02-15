@@ -28,3 +28,8 @@ export const postPrint = async (data: PrintRequest): Promise<CommonResponse<numb
         { headers: { "Content-Type": "multipart/form-data" } })
     return response.data;
 }
+
+export const GetPrintListByType = async (pageNumber: number, pageSize: number , type : number ,id : number): Promise<CommonResponse<PrintListResponse>> => {
+    const response = await apiClient.get<CommonResponse<PrintListResponse>>(`/api/v1/prints/GetPrintListByType?pageNumber=${pageNumber}&pageSize=${pageSize}&type=${type}&id=${id}`);
+    return response.data;
+}
