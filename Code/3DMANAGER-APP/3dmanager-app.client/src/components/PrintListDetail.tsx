@@ -15,11 +15,22 @@ const PrintListDetail: React.FC<Props> = ({ printerId }) => {
     const [totalPages, setTotalPages] = useState(1);
 
     useEffect(() => {
-        GetPrintListByType(currentPage, pageSize,1,printerId).then(response => { 
-            setItems(response.data?.prints ?? []);
-            setTotalPages(response.data?.totalPages ?? 1);
+        GetPrintListByType(currentPage, pageSize, 1, printerId).then(response => {
+            const prints = response.data?.prints ?? [];
+            const pages = response.data?.totalPages ?? 1;
+
+            if (pages === 0) {
+                setItems([]);
+                setTotalPages(1);
+                setCurrentPage(1);
+                return;
+            }
+
+            setItems(prints);
+            setTotalPages(pages);
         });
-    }, [currentPage, pageSize]);
+    }, [currentPage, pageSize, printerId]);
+
 
     return (
         <div className="table-container-printer-detail">

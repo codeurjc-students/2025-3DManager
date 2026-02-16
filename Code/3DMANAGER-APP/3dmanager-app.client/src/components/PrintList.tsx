@@ -14,10 +14,22 @@ const PrintList: React.FC = () => {
 
     useEffect(() => {
         getPrintList(currentPage, pageSize).then(response => {
-            setItems(response.data?.prints ?? []);
-            setTotalPages(response.data?.totalPages ?? 1);
+
+            const prints = response.data?.prints ?? [];
+            const pages = response.data?.totalPages ?? 1;
+
+            if (pages === 0) {
+                setItems([]);
+                setTotalPages(1);
+                setCurrentPage(1);
+                return;
+            }
+
+            setItems(prints);
+            setTotalPages(pages);
         });
     }, [currentPage, pageSize]);
+
 
     return (
         <div className="table-container pt-4">
