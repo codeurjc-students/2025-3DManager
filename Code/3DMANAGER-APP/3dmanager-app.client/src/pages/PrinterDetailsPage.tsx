@@ -2,7 +2,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import PrintListDetail from "../components/PrintListDetail";
 import { useAuth } from "../context/AuthContext";
-import { getPrintState } from "../api/catalogService";
+import { getPrinterState } from "../api/catalogService";
 import type { CatalogResponse } from "../models/catalog/CatalogResponse";
 import { usePopupContext } from "../context/PopupContext";
 import InfoPopup from "../components/popupComponent/InfoPopup";
@@ -19,7 +19,7 @@ const PrinterDetailPage: React.FC = () => {
 
     useEffect(() => {
 
-        getPrintState().then(response => {
+        getPrinterState().then(response => {
             setStateData(response.data!);
         });
 
@@ -87,7 +87,7 @@ const PrinterDetailPage: React.FC = () => {
                                 <div className="col-6 mb-3">
                                     <label htmlFor="printerModel" className="form-label">Estado</label>
                                     <select id="printerState" className="input-value w-75" value={state} onChange={(e) => { setState(Number(e.target.value)); handleSetState() }}>
-                                        <option value="">Seleccione un Estado</option>
+                                        
                                         {stateData.map(s => (
                                             <option key={s.id} value={s.id}>
                                                 {s.description}

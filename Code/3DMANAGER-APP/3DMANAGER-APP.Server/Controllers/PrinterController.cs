@@ -126,10 +126,10 @@ namespace _3DMANAGER_APP.Server.Controllers
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<PrinterListObject>(new ErrorProperties(401, "No autenticado")));
 
-            bool response = _printerManager.UpdatePrinterState(GroupId.Value, printerId, stateId, out BaseError error);
+            bool response = _printerManager.UpdatePrinterState(GroupId.Value, printerId, stateId);
 
-            if (error != null)
-                return StatusCode(500, new Models.CommonResponse<bool>(new ErrorProperties(error.code, error.message)));
+            if (!response)
+                return StatusCode(500, new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error actualizando el estado de la impresora")));
 
             return Ok(new Models.CommonResponse<bool>(response));
         }

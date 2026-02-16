@@ -126,5 +126,10 @@ namespace _3DMANAGER_APP.BLL.Managers
 
             return response;
         }
+
+        public bool UpdatePrinterState(int groupId, int printerId, int stateId)
+        {
+            return _printerDbManager.UpdatePrinterState(groupId, printerId, stateId);
+        }
     }
 }

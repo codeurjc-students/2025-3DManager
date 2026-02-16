@@ -205,6 +205,53 @@ namespace _3DMANAGER_APP.DAL.Managers
                 return false;
             }
         }
+
+        public bool UpdatePrinterState(int groupId, int printerId, int stateId)
+        {
+            try
+            {
+                string procName = $"{ProcedurePrefix}_pr_PRINTER_STATE_UPDATE";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
+                cmd.Parameters.Add(new MySqlParameter("P_CD_PRINTER", MySqlDbType.Int32) { Value = printerId });
+                cmd.Parameters.Add(new MySqlParameter("P_CD_STATE", MySqlDbType.Int32) { Value = stateId });
+
+                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                var error = Convert.ToInt32(errorParam.Value);
+                if (error != 0)
+                {
+                    return false;
+                }
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = "Error al actualizar el estado de la impresora en BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error al actualizar el estado de la impresora en BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+        }
     }
 
 }
