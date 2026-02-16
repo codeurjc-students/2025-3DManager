@@ -8,5 +8,6 @@ namespace _3DMANAGER_APP.DAL.Interfaces
         public List<CatalogResponseDbObject> GetPrintState();
         public List<CatalogResponseDbObject> GetFilamentCatalog(int groupId);
         public List<CatalogResponseDbObject> GetPrinterCatalog(int groupId);
+        public List<CatalogResponseDbObject> GetPrinterState();
     }
 }

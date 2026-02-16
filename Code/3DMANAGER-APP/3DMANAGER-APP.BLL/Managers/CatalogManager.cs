@@ -34,6 +34,10 @@ namespace _3DMANAGER_APP.BLL.Managers
         {
             return _mapper.Map<List<CatalogResponse>>(_catalogDbManager.GetPrintState());
         }
+        public List<CatalogResponse> GetPrinterState()
+        {
+            return _mapper.Map<List<CatalogResponse>>(_catalogDbManager.GetPrinterState());
+        }
 
     }
 }
