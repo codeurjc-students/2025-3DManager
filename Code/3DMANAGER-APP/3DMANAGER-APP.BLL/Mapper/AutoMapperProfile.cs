@@ -71,11 +71,28 @@ namespace _3DMANAGER_APP.BLL.Mapper
             CreateMap<PrinterListObject, PrinterListDbObject>().ReverseMap();
             CreateMap<PrinterRequest, PrinterRequestDbObject>().ReverseMap();
             CreateMap<PrinterObject, PrinterDbObject>().ReverseMap();
+            CreateMap<PrinterDetailDbObject, PrinterDetailObject>()
+            .ForMember(dest => dest.PrinterTotalHours,
+                opt => opt.MapFrom(src => ConvertHours(src.PrinterTotalHours)))
+            .ForMember(dest => dest.PrinterTotalHoursMonth,
+                opt => opt.MapFrom(src => ConvertHours(src.PrinterTotalHoursMonth)));
+
+            CreateMap<PrinterEstimationObject, PrinterEstimationDbObject>().ReverseMap();
+            CreateMap<PrinterDetailRequest, PrinterDetailRequestDbObject>();
             #endregion
+
 
             #region File
             CreateMap<FileResponse, FileResponseDbObject>().ReverseMap();
             #endregion
+        }
+
+        private static string ConvertHours(double value)
+        {
+            int horas = (int)value;
+            int minutos = (int)((value - horas) * 60);
+
+            return $"{horas} h {minutos} minutos";
         }
     }
 }

@@ -11,6 +11,7 @@ namespace _3DMANAGER_APP.DAL.Interfaces
         public int PostPrinter(PrinterRequestDbObject request, out int? error);
         public List<PrinterListDbObject> GetPrinterDashboardList(int group);
         public bool UpdatePrinterImageData(int printerId, FileResponseDbObject image);
-        public bool UpdatePrinterState(int groupId, int printerId, int stateId);
+        public bool UpdatePrinter(PrinterDetailRequestDbObject requestDb);
+        PrinterDetailDbObject GetPrinterDetail(int groupId, int printerId);
     }
 }

@@ -167,6 +167,17 @@ fs-detail{
         background-color: var(--colorWhite);
     }
 
+.input-value-3 {
+    background-color: var(--colorLowGrey);
+    border: none;
+    border-radius: 6px;
+    color: var(--colorBlack)
+}
+
+    .input-value-3:disabled {
+        background-color: var(--colorWhite);
+    }
+
 .button-yellow {
     background-color: var(--colorYellow); 
     color: var(--colorText); 
