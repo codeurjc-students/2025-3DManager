@@ -21,3 +21,8 @@ export const getPrintState = async (): Promise<CommonResponse<CatalogResponse[]>
     const response = await apiClient.get<CommonResponse<CatalogResponse[]>>("/api/v1/catalogs/GetPrintState");
     return response.data;
 };
+
+export const getPrinterState = async (): Promise<CommonResponse<CatalogResponse[]>> => {
+    const response = await apiClient.get<CommonResponse<CatalogResponse[]>>("/api/v1/catalogs/GetPrinterState");
+    return response.data;
+};

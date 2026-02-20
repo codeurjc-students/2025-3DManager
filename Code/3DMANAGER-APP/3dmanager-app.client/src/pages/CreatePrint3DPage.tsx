@@ -136,7 +136,6 @@ const CreatePrint3DPage: React.FC = () => {
                                         <label htmlFor="printState" className="form-label">Estado</label>
                                         <select id="printState" className="input-value w-100 " value={printState}
                                             onChange={(e) => setPrintState(Number(e.target.value))}>
-                                            <option value="">Seleccione un tipo</option>
 
                                             {catalogState.map(t => (
                                                 <option key={t.id} value={t.id}>
@@ -151,7 +150,6 @@ const CreatePrint3DPage: React.FC = () => {
                                         <label htmlFor="printPrinter" className="form-label">Impresora</label>
                                         <select id="printPrinter" className="input-value w-100" value={printPrinter}
                                             onChange={(e) => setPrintPrinter(Number(e.target.value))}>
-                                            <option value="">Seleccione una impresora</option>
 
                                             {catalogPrinter.map(t => (
                                                 <option key={t.id} value={t.id}>
@@ -164,7 +162,6 @@ const CreatePrint3DPage: React.FC = () => {
                                         <label htmlFor="printFilament" className="form-label">Bobina de filamento</label>
                                         <select id="printFilament" className="input-value w-100" value={printFilament}
                                             onChange={(e) => setPrintFilament(Number(e.target.value))}>
-                                            <option value="">Seleccione un filamento</option>
 
                                             {catalogFilament.map(t => (
                                                 <option key={t.id} value={t.id}>

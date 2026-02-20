@@ -3,6 +3,8 @@ import type { CommonResponse } from '../models/base/CommonResponse'
 import type { PrinterObject } from '../models/printer/PrinterObject'
 import type { PrinterRequest } from '../models/printer/PrinterRequest'
 import type { PrinterDashboardObject } from '../models/printer/PrinterDashboardObject'
+import type { PrinterDetailObject } from '../models/printer/PrinterDetailObject'
+import type { PrinterDetailRequest } from '../models/printer/PrinterDetailRequest'
 
 export const getPrinterList = async (): Promise<CommonResponse<PrinterObject[]>> => {
     const response = await apiClient.get<CommonResponse<PrinterObject[]>>('/api/v1/printers/GetPrinterList')
@@ -27,6 +29,16 @@ export const postPrinter = async (data: PrinterRequest): Promise<CommonResponse<
 
 export const getPrinterDashboardList = async (): Promise<CommonResponse<PrinterDashboardObject[]>> => {
     const response = await apiClient.get<CommonResponse<PrinterDashboardObject[]>>("/api/v1/printers/GetPrinterDashboardList");
+    return response.data;
+}
+
+export const updatePrinter = async (data: PrinterDetailRequest): Promise<CommonResponse<boolean>> => {
+    const response = await apiClient.put<CommonResponse<boolean>>(`/api/v1/printers/UpdatePrinter`, data);
+    return response.data;
+}
+
+export const getPrinterDetail = async (printerId: number): Promise<CommonResponse<PrinterDetailObject>> => {
+    const response = await apiClient.get<CommonResponse<PrinterDetailObject>>(`/api/v1/printers/GetPrinterDetail?printerId=${printerId}`);
     return response.data;
 }
 

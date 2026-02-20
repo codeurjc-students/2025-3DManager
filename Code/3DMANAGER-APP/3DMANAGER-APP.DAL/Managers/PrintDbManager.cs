@@ -27,7 +27,7 @@ namespace _3DMANAGER_APP.DAL.Managers
                     CommandType = CommandType.StoredProcedure
                 };
 
-                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.VarChar) { Value = group });
+                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = group });
                 cmd.Parameters.Add(new MySqlParameter("P_PAGE_NUMBER", MySqlDbType.Int32) { Value = pageNumber });
                 cmd.Parameters.Add(new MySqlParameter("P_PAGE_SIZE", MySqlDbType.Int32) { Value = pageSize });
 
@@ -166,6 +166,70 @@ namespace _3DMANAGER_APP.DAL.Managers
                 string msg = "Error al guardar los datos de la imagen en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
+            }
+        }
+
+        public List<PrintListResponseDbObject> GetPrintListByType(int group, int pageNumber, int pageSize, int type, int id, out int totalItems)
+        {
+            totalItems = 0;
+            try
+            {
+                List<PrintListResponseDbObject> list = new List<PrintListResponseDbObject>();
+                string procName = "";
+                switch (type)
+                {
+                    case 1:
+                        procName = $"{ProcedurePrefix}_pr_PRINT_LIST_OF_PRINTER";
+                        break;
+                    case 2:
+                        procName = $"{ProcedurePrefix}_pr_PRINT_LIST_OF_FILAMENT";
+                        break;
+                    case 3:
+                        procName = $"{ProcedurePrefix}_pr_PRINT_LIST_OF_USER";
+                        break;
+
+                }
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = group });
+                cmd.Parameters.Add(new MySqlParameter("P_PAGE_NUMBER", MySqlDbType.Int32) { Value = pageNumber });
+                cmd.Parameters.Add(new MySqlParameter("P_PAGE_SIZE", MySqlDbType.Int32) { Value = pageSize });
+                cmd.Parameters.Add(new MySqlParameter("P_ID", MySqlDbType.Int32) { Value = id });
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    foreach (DataRow row in ds.Tables[0].Rows)
+                    {
+                        PrintListResponseDbObject listResponse = new PrintListResponseDbObject();
+                        list.Add(listResponse.Create(row));
+                    }
+                }
+
+                if (ds.Tables.Count > 1 && ds.Tables[1].Rows.Count > 0)
+                {
+                    totalItems = Convert.ToInt32(ds.Tables[1].Rows[0]["TOTAL_ITEMS"]);
+                }
+
+                return list;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = "Error al devolver el listado de impresiones de detalle en BBDD";
+                Logger.LogError(ex, msg);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error al devolver el listado de impresiones de en BBDD";
+                Logger.LogError(ex, msg);
+                return null;
             }
         }
     }

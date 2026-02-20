@@ -37,7 +37,7 @@ const DashboardPage: React.FC = () => {
                         <button
                             key={printer.printerId}
                             className="printer-card mb-5 p-3 d-flex flex-row text-start"
-                            onClick={() => navigate(`/printer/${printer.printerId}`)}
+                            onClick={() => navigate(`/dashboard/printer/detail/${printer.printerId}`)}
                         >
                             <div className="col-5">
                                 <img src={printer.printerImageData?.fileUrl} alt={printer.printerName} className="image-container" />

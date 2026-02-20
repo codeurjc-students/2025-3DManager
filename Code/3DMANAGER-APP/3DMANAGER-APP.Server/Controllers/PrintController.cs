@@ -81,5 +81,33 @@ namespace _3DMANAGER_APP.Server.Controllers
             }
             return Ok(new Models.CommonResponse<int>(response.Data));
         }
+
+        /// <summary>
+        /// Return a user list of prints printed by a especific printer
+        /// </summary>
+        /// <returns>A list of basic data users for show in the dasboard user list</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="401">No autorizado</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<PrintListResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<PrintListResponse>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<PrintListResponse>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Prints")]
+        [HttpGet]
+        public IActionResult GetPrintListByType([FromQuery] PagedRequest pagination, [FromQuery] int type, [FromQuery] int id)
+        {
+            if (GroupId == null)
+                return Unauthorized(new Models.CommonResponse<PrintListResponse>(new ErrorProperties(401, "No autenticado")));
+
+            PrintListResponse printList = _printManager.GetPrintListByType(GroupId.Value, pagination, type, id, out BaseError? error);
+
+            if (printList == null || error != null)
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new Models.CommonResponse<PrintListResponse>(new ErrorProperties(error.code, error.message)));
+
+            return Ok(new Models.CommonResponse<PrintListResponse>(printList));
+        }
     }
 }

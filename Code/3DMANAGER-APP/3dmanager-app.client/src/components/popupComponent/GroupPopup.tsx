@@ -214,8 +214,6 @@ const GroupPopup: React.FC = () => {
                                 </button>
                                 <select id="newOwner" className="input-value w-75 ms-2" value={newOwner ?? ""} onChange={(e) => setNewOwner(Number(e.target.value))}
                                 >
-                                    <option value="">Seleccione un usuario</option>
-
                                     {data.groupMembers
                                         .filter(member => member.userId !== user!.userId)
                                         .map(member => (

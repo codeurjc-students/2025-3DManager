@@ -1,10 +1,12 @@
 ﻿import React, { useEffect, useState } from 'react';
-import { getPrintList } from '../api/printService';
+import { GetPrintListByType } from '../api/printService';
 import { useNavigate } from 'react-router-dom';
 import Pagination from './Pagination';
 import type { PrintResponse } from '../models/print/PrintResponse';
 
-const PrintList: React.FC = () => {
+interface Props { printerId: number; }
+
+const PrintListDetail: React.FC<Props> = ({ printerId }) => {
 
     const [items, setItems] = useState<PrintResponse[]>([]);
     const navigate = useNavigate();
@@ -13,8 +15,7 @@ const PrintList: React.FC = () => {
     const [totalPages, setTotalPages] = useState(1);
 
     useEffect(() => {
-        getPrintList(currentPage, pageSize).then(response => {
-
+        GetPrintListByType(currentPage, pageSize, 1, printerId).then(response => {
             const prints = response.data?.prints ?? [];
             const pages = response.data?.totalPages ?? 1;
 
@@ -28,11 +29,11 @@ const PrintList: React.FC = () => {
             setItems(prints);
             setTotalPages(pages);
         });
-    }, [currentPage, pageSize]);
+    }, [currentPage, pageSize, printerId]);
 
 
     return (
-        <div className="table-container pt-4">
+        <div className="table-container-printer-detail">
             <div className="table-scroll">
                 <table className="table">
                     <thead>
@@ -41,7 +42,6 @@ const PrintList: React.FC = () => {
                             <th>Usuario</th>
                             <th>Fecha impresión</th>
                             <th>Tiempo impresion</th>
-                            <th>Filamento consumido</th>
                             <th>Detalle</th>
                         </tr>
                     </thead>
@@ -52,7 +52,6 @@ const PrintList: React.FC = () => {
                                 <td>{print.printUserCreator}</td>
                                 <td>{print.printDate.toString()}</td>
                                 <td>{print.printTime}</td>
-                                <td>{print.printFilamentConsumed}</td>
                                 <td>
                                     <button className="button-darkGrey w-75" onClick={() => navigate(`/detail/print/${print.printId}`)}>
                                         Ver detalle
@@ -63,7 +62,7 @@ const PrintList: React.FC = () => {
                     </tbody>
                 </table>
             </div>
-            <div className="pagination-fixed">
+            <div className="pagination-fixed-detail">
                 <Pagination currentPage={currentPage} totalPages={totalPages} pageSize={pageSize}
                     onPageChange={setCurrentPage} onPageSizeChange={(size) => {
                     setPageSize(size);
@@ -75,4 +74,4 @@ const PrintList: React.FC = () => {
     );
 };
 
-export default PrintList;
+export default PrintListDetail;

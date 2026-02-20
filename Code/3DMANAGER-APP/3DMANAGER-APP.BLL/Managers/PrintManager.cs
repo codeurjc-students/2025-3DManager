@@ -107,5 +107,28 @@ namespace _3DMANAGER_APP.BLL.Managers
             }
 
         }
+
+        public PrintListResponse GetPrintListByType(int group, PagedRequest pagination, int type, int id, out BaseError? error)
+        {
+            error = null;
+            List<PrintListResponseDbObject> result;
+            result = _printDbManager.GetPrintListByType(group, pagination.PageNumber, pagination.PageSize, type, id, out int totalItems);
+            if (result == null)
+            {
+                error = new BaseError()
+                {
+                    code = (int)HttpStatusCode.InternalServerError,
+                    message = "Error al obtener listado de impresiones para el detalle"
+                };
+            }
+            var printsList = _mapper.Map<List<PrintResponse>>(result);
+
+            return new PrintListResponse
+            {
+                prints = printsList,
+                TotalItems = totalItems,
+                TotalPages = (int)Math.Ceiling((double)totalItems / pagination.PageSize)
+            };
+        }
     }
 }

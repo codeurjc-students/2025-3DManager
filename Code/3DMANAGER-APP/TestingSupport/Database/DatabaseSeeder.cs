@@ -50,6 +50,7 @@
             await CreateProcUserPostAsync();
             await CreateProcUserGetByIdAsync();
             await CreateProcuserGroupGetByIdAsync();
+            await CreateProcUpdatePrinterAsync();
         }
 
         private async Task LoadDataAsync()
@@ -779,6 +780,56 @@
                     `3DMANAGER_C_STATE_PRINT_ID` AS ID,
                     `3DMANAGER_C_STATE_PRINT_NAME` AS DESCRIPTION
                 FROM `3DMANAGER_C_STATE_PRINT`;
+            END;
+            """;
+
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
+
+        private async Task CreateProcUpdatePrinterAsync()
+        {
+            var sql = """
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_PRINTER_UPDATE`;
+
+            CREATE PROCEDURE `3DMANAGER_pr_PRINTER_UPDATE`(
+                IN P_CD_GROUP INT,
+                IN P_CD_PRINTER INT,
+                IN P_CD_STATE INT,
+                IN P_DS_NAME VARCHAR(100),
+                IN P_DS_MODEL VARCHAR(100),
+                IN P_DS_DESCRIPTION VARCHAR(100),
+                OUT CodigoError INT
+            )
+            BEGIN
+
+                DECLARE v_err_msg TEXT;
+                    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+                    BEGIN
+
+                    GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
+
+            		-- Forzar un commit independiente
+
+                    START TRANSACTION;
+                    INSERT INTO 3DMANAGER_SYSTEM_LOGS(PROCEDURE_NAME, ERROR_MESSAGE)
+
+                    VALUES('3DMANAGER_pr_PRINTER_UPDATE', v_err_msg);
+                    COMMIT;
+
+            		SET CodigoError = -1;
+                    ROLLBACK;
+            	END;
+                SET CodigoError = 0;
+                    START TRANSACTION;
+                    UPDATE `3DMANAGER_PRINTER` 
+                    SET `3DMANAGER_PRINTER_STATE` = P_CD_STATE ,
+                     `3DMANAGER_PRINTER_NAME` = P_DS_NAME ,
+                     `3DMANAGER_PRINTER_MODEL` = P_DS_MODEL ,
+                     `3DMANAGER_PRINTER_DESCRIPTION` = P_DS_DESCRIPTION
+                    WHERE `3DMANAGER_PRINTER_ID` = P_CD_PRINTER AND `3DMANAGER_PRINTER_GROUP_ID` = P_CD_GROUP;
+
+                    SELECT ROW_COUNT() AS Total;
+                    COMMIT;
             END;
             """;
 

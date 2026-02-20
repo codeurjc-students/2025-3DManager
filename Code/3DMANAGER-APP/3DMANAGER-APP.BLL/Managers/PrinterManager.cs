@@ -126,5 +126,38 @@ namespace _3DMANAGER_APP.BLL.Managers
 
             return response;
         }
+
+        public bool UpdatePrinter(PrinterDetailRequest request)
+        {
+            PrinterDetailRequestDbObject requestDb = _mapper.Map<PrinterDetailRequestDbObject>(request);
+            return _printerDbManager.UpdatePrinter(requestDb);
+        }
+
+        public PrinterDetailObject GetPrinterDetail(int groupId, int printerId, out BaseError? error)
+        {
+            error = null;
+            PrinterDetailObject response;
+            var responseDb = _printerDbManager.GetPrinterDetail(groupId, printerId);
+            if (responseDb == null)
+            {
+                _logger.LogError("Error al obtener el detalle de impresora");
+                error = new BaseError()
+                {
+                    code = StatusCodes.Status500InternalServerError,
+                    message = "Error al obtener el detalle de impresora"
+                };
+            }
+            response = _mapper.Map<PrinterDetailObject>(responseDb);
+
+            if (response != null)
+            {
+                if (response.PrinterImageData != null && response.PrinterImageData.FileUrl != null && response.PrinterImageData.FileKey != null)
+                    response.PrinterImageData.FileUrl = _awsS3Service.GetPresignedUrl(response.PrinterImageData.FileKey, 1);
+                else
+                    response.PrinterImageData.FileUrl = _awsS3Service.GetPresignedUrl("default/3dmanager-default-printer.jpg", 1);
+
+            }
+            return response;
+        }
     }
 }

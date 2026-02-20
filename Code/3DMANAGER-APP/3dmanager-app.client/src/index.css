@@ -29,25 +29,6 @@ html, body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-.textStyleTitulos {
-    font-size: 32px;
-    font-family: Impact, sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    text-decoration: none;
-    text-transform: none;
-}
-
-.textStyleImpactNormal {
-    font-size: 12px;
-    font-family: Impact, sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    text-decoration: none;
-    text-transform: none;
-}
-
-
 body {
   margin: 0;
   background-color : var(--colorWhite)
@@ -55,6 +36,10 @@ body {
 
 .h-05 {
     height: 5vh;
+}
+
+.h-08 {
+    height: 8vh;
 }
 
 .h-10 {
@@ -69,6 +54,9 @@ body {
     height: 30vh;
 }
 
+.h-35{
+    height: 35vh;
+}
 .h-40 {
     height: 40vh;
 }
@@ -97,7 +85,9 @@ body {
 .w-40 {
     width: 40vh;
 }
-
+.w-45{
+    width: 45vh;
+}
 .w-60 {
     width: 60vh;
 }
@@ -112,6 +102,9 @@ body {
     width: 90vh;
 }
 
+fs-detail{
+    font-size: 15px;
+}
 
 .grey-container {
     border-color: var(--colorBordersAndSplitters);
@@ -123,6 +116,14 @@ body {
     overflow: hidden;
 }
 
+.grey-container-detail {
+    border-color: var(--colorBordersAndSplitters);
+    background-color: var(--colorLowGrey);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
 
 .white-container {
     border-color: var(--colorBordersAndSplitters);
@@ -136,6 +137,10 @@ body {
 .title-impact-2 {
     font-family: Impact, sans-serif;
     font-size: 30px;
+}
+.title-impact-3 {
+    font-family: Impact, sans-serif;
+    font-size: 20px;
 }
 
 .input-value {
@@ -151,6 +156,36 @@ body {
     
     background-color: var(--colorLowGrey);
 }
+
+.input-value-2 {
+    display: block;
+    width: 50%;
+    padding: 6px 12px;
+    background-color: var(--colorLowGrey);
+    border: 1px solid var(--colorBordersAndSplitters);
+    border-radius: 6px;
+    color: var(--colorBlack)
+}
+
+    .input-value-2:disabled {
+        background-color: var(--colorWhite);
+    }
+
+.input-value-3 {
+    background-color: var(--colorLowGrey);
+    border: none;
+    border-radius: 6px;
+    color: var(--colorBlack)
+}
+
+.input-value-4 {
+    background-color: var(--colorLowGrey);
+    border: none;
+    border-radius: 6px;
+    color: var(--colorBlack);
+    font-size: 14px
+}
+
 
 .button-yellow {
     background-color: var(--colorYellow); 
@@ -228,6 +263,16 @@ body {
     height: 100%;
 }
 
+.table-container-printer-detail {
+    display: flex;
+    flex-direction: column;
+    height: 67%;
+    margin-left: 8px;
+    margin-right:4px;
+    margin-top:8px;
+    margin-bottom:8px;
+}
+
 .table-scroll {
     flex: 1;
     overflow-y: auto;
@@ -264,6 +309,14 @@ body {
     background-color: white;
     z-index: 1;
 }
+
+.table-container-printer-detail table thead {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1;
+}
+
 
 .table {
     border-collapse: collapse;
@@ -352,6 +405,13 @@ body {
 .pagination-fixed {
     padding-top: 5px;
     padding-bottom: 5px;
+    border-top: 1px solid #ddd;
+    background: #f8f8f8;
+}
+
+.pagination-detail-fixed {
+    padding-top: 2px;
+    padding-bottom: 2px;
     border-top: 1px solid #ddd;
     background: #f8f8f8;
 }
