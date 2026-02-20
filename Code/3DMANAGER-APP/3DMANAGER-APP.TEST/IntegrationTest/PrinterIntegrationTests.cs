@@ -102,5 +102,57 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
             Assert.NotEmpty(printersAfterPost);
 
         }
+
+
+        [Fact]
+        public void UpdatePrinter_ShouldModifyPrinterCorrectly()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER"
+            );
+
+            var printerDbManager = new PrinterDbManager(
+                dataSource,
+                NullLogger<PrinterDbManager>.Instance
+            );
+
+            var manager = new PrinterManager(
+                printerDbManager,
+                _mapper,
+                NullLogger<PrinterManager>.Instance,
+                _s3
+            );
+
+            BaseError error;
+
+            var printers = manager.GetPrinterDashboardList(1, out error);
+            Assert.Null(error);
+            Assert.NotEmpty(printers);
+
+            var printer = printers.First();
+            var request = new PrinterDetailRequest
+            {
+                GroupId = 1,
+                PrinterId = 1,
+                PrinterName = "Updated Name Test",
+                PrinterDescription = "Updated Description Test",
+                PrinterModel = "Updated Model Test",
+                PrinterStateId = 2
+            };
+
+            var result = manager.UpdatePrinter(request);
+
+            Assert.True(result);
+
+            var updatedPrinters = manager.GetPrinterDashboardList(1, out error);
+            Assert.Null(error);
+
+            var updated = updatedPrinters.First(p => p.PrinterId == printer.PrinterId);
+
+            Assert.Equal("Updated Name Test", updated.PrinterName);
+            Assert.Equal("Updated Model Test", updated.PrinterModel);
+        }
+
     }
 }

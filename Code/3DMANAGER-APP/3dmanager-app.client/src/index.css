@@ -38,6 +38,10 @@ body {
     height: 5vh;
 }
 
+.h-08 {
+    height: 8vh;
+}
+
 .h-10 {
     height: 10vh;
 }
@@ -174,9 +178,14 @@ fs-detail{
     color: var(--colorBlack)
 }
 
-    .input-value-3:disabled {
-        background-color: var(--colorWhite);
-    }
+.input-value-4 {
+    background-color: var(--colorLowGrey);
+    border: none;
+    border-radius: 6px;
+    color: var(--colorBlack);
+    font-size: 14px
+}
+
 
 .button-yellow {
     background-color: var(--colorYellow); 
