@@ -51,6 +51,7 @@
             await CreateProcUserGetByIdAsync();
             await CreateProcuserGroupGetByIdAsync();
             await CreateProcUpdatePrinterAsync();
+            await CreateProcUpdateUserAsync();
         }
 
         private async Task LoadDataAsync()
@@ -808,8 +809,6 @@
 
                     GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
 
-            		-- Forzar un commit independiente
-
                     START TRANSACTION;
                     INSERT INTO 3DMANAGER_SYSTEM_LOGS(PROCEDURE_NAME, ERROR_MESSAGE)
 
@@ -835,7 +834,47 @@
 
             await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
         }
+        private async Task CreateProcUpdateUserAsync()
+        {
+            var sql = """
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_USER_UPDATE`;
 
+            CREATE DEFINER=`root`@`localhost` PROCEDURE `3DMANAGER_pr_USER_UPDATE`(
+                IN P_CD_GROUP INT,
+                IN P_CD_USER INT,
+                IN P_DS_NAME VARCHAR(100),
+                IN P_DS_EMAIL VARCHAR(100),
+                OUT CodigoError INT
+            )
+            BEGIN
 
+            	DECLARE v_err_msg TEXT;
+                DECLARE EXIT HANDLER FOR SQLEXCEPTION
+            	BEGIN
+            		GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
+
+            		-- Forzar un commit independiente
+            		START TRANSACTION;
+            		INSERT INTO 3DMANAGER_SYSTEM_LOGS(PROCEDURE_NAME, ERROR_MESSAGE)
+            		VALUES('3DMANAGER_pr_USER_UPDATE', v_err_msg);
+            		COMMIT;
+
+            		SET CodigoError = -1;
+            		ROLLBACK;
+            	END;
+                SET CodigoError = 0;
+            	START TRANSACTION;
+            		UPDATE `3DMANAGER_USER` 
+                    SET `USER_NAME` = P_DS_NAME ,
+                     `USER_EMAIL` = P_DS_EMAIL 
+                    WHERE `USER_ID` = P_CD_USER AND `USER_GROUP_ID` = P_CD_GROUP;
+
+                    SELECT ROW_COUNT() AS Total;
+                COMMIT;
+            END
+            """;
+
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
     }
 }

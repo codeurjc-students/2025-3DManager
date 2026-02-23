@@ -108,7 +108,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         }
 
         /// <summary>
-        /// update the state of a printer
+        /// update a printer
         /// </summary>
         /// <returns>Return  a bool taht indicates the success of the operation made</returns>
         /// <response code="200">Respuesta correcta</response>
@@ -124,7 +124,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         public IActionResult UpdatePrinter([FromBody] PrinterDetailRequest request)
         {
             if (GroupId == null)
-                return Unauthorized(new Models.CommonResponse<PrinterListObject>(new ErrorProperties(401, "No autenticado")));
+                return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, "No autenticado")));
 
             request.GroupId = GroupId.Value;
             bool response = _printerManager.UpdatePrinter(request);
@@ -137,9 +137,9 @@ namespace _3DMANAGER_APP.Server.Controllers
 
 
         /// <summary>
-        /// Return a printer list
+        /// Get printer detail
         /// </summary>
-        /// <returns>A list of filaments for show in the dasboard</returns>
+        /// <returns>A detail object of a printer</returns>
         /// <response code="200">Respuesta correcta</response>
         /// <response code="401">No autorizado</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>

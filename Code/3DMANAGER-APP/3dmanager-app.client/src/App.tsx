@@ -19,6 +19,7 @@ import CreateFilamentPage from './pages/CreateFilamentPage';
 import CreatePrint3DPage from './pages/CreatePrint3DPage';
 import AuthWatcher from './context/AuthWatcher';
 import PrinterDetailPage from './pages/PrinterDetailsPage';
+import UserDetailPage from './pages/UserDetailPage';
 
 
 
@@ -48,6 +49,7 @@ const App: React.FC = () => {
                                 <Route path="/dashboard/print-create" element={<ProtectedRoute><CreatePrint3DPage /></ProtectedRoute>} />
                                 <Route path="/dashboard/user-invitation/:type" element={<ProtectedRoute><ListPage /></ProtectedRoute>} />
                                 <Route path="/dashboard/printer/detail/:printerId" element={<ProtectedRoute><PrinterDetailPage /></ProtectedRoute>} />
+                                <Route path="/dashboard/user/detail/:userId" element={<ProtectedRoute><UserDetailPage /></ProtectedRoute>} />
                             </Routes>
                         </main>
                     </div>

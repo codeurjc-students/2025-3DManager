@@ -41,8 +41,7 @@ const UserList: React.FC = () => {
                                 <td>
                                     <button
                                         className="button-darkGrey w-75"
-                                        onClick={() => navigate(`/detail/user/${userList.userId}`)}
-                                    >
+                                        onClick={() => navigate(`/dashboard/user/detail/${userList.userId}`)}>
                                         Ver detalle
                                     </button>
                                 </td>

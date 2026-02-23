@@ -4,6 +4,8 @@ import type { LoginResponse } from '../models/user/LoginResponse'
 import type { UserCreateRequest } from '../models/user/UserCreateRequest'
 import type { LoginRequest } from '../models/user/LoginRequest'
 import type { UserListResponse } from '../models/user/UserListResponse'
+import type { UserUpdateRequest } from '../models/user/UserUpdateRequest'
+import type { UserDetailObject } from '../models/user/UserDetailObject'
 
 export const postNewUser = async (data: UserCreateRequest): Promise<CommonResponse<number>> => {
     const formData = new FormData();
@@ -51,3 +53,13 @@ export const GetUserAuth = async (): Promise<{ userId: number; groupId: number |
     const response = await apiClient.get("/api/v1/users/GetUserAuth");
     return response.data;
 };
+
+export const updateUser = async (data: UserUpdateRequest): Promise<CommonResponse<boolean>> => {
+    const response = await apiClient.put<CommonResponse<boolean>>(`/api/v1/users/UpdateUser`, data);
+    return response.data;
+}
+
+export const getUserDetail = async (userId: number): Promise<CommonResponse<UserDetailObject>> => {
+    const response = await apiClient.get<CommonResponse<UserDetailObject>>(`/api/v1/users/GetUserDetail?userId=${userId}`);
+    return response.data;
+}
