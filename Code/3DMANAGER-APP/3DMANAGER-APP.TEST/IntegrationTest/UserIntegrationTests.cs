@@ -40,12 +40,12 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                     It.IsAny<string>(),
                     It.IsAny<string>(),
                     It.IsAny<int>()
-                ))
-                .ReturnsAsync(new FileResponse
-                {
-                    FileKey = "printers/test.jpg",
-                    FileUrl = "https://fake-url.com/printers/test.jpg"
-                });
+            ))
+            .ReturnsAsync(new FileResponse
+            {
+                FileKey = "printers/test.jpg",
+                FileUrl = "https://fake-url.com/printers/test.jpg"
+            });
 
             s3Mock.Setup(x => x.DeleteImageAsync(It.IsAny<string>()))
                   .Returns(Task.CompletedTask);

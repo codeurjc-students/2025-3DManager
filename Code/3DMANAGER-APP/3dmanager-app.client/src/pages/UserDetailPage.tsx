@@ -37,7 +37,6 @@ const UserDetailPage: React.FC = () => {
     const handleUpdate = async () => {
         try {
 
-            const groupId = -1;
             const request: UserUpdateRequest = {
                 userGroupId : - 1,
                 userId: Number(userId),
