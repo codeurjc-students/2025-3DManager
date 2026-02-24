@@ -52,6 +52,7 @@
             await CreateProcuserGroupGetByIdAsync();
             await CreateProcUpdatePrinterAsync();
             await CreateProcUpdateUserAsync();
+            await CreateProcGetUserDetailAsync();
         }
 
         private async Task LoadDataAsync()
@@ -839,7 +840,7 @@
             var sql = """
             DROP PROCEDURE IF EXISTS `3DMANAGER_pr_USER_UPDATE`;
 
-            CREATE DEFINER=`root`@`localhost` PROCEDURE `3DMANAGER_pr_USER_UPDATE`(
+            CREATE  PROCEDURE `3DMANAGER_pr_USER_UPDATE`(
                 IN P_CD_GROUP INT,
                 IN P_CD_USER INT,
                 IN P_DS_NAME VARCHAR(100),
@@ -871,6 +872,56 @@
 
                     SELECT ROW_COUNT() AS Total;
                 COMMIT;
+            END
+            """;
+
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
+
+
+        private async Task CreateProcGetUserDetailAsync()
+        {
+            var sql = """
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_USER_DETAIL_GET`;
+
+            CREATE PROCEDURE `3DMANAGER_pr_USER_DETAIL_GET`(
+                IN P_CD_GROUP INT,
+                IN P_CD_USER INT
+            )
+            BEGIN
+
+            	SELECT 
+            		U.`USER_ID`,
+                    U.`USER_NAME`,
+                    R.`3DMANAGER_C_ROLES_NAME` AS USER_ROLE,
+                    U.`USER_EMAIL`,
+                    U.`USER_REGISTER_DATE` AS USER_CREATE_DATE,
+                    (SELECT COUNT(*) 
+            			FROM `3DMANAGER_3DPRINT`
+                        WHERE `3DMANAGER_3DPRINT_USER_ID` = P_CD_USER 
+            				AND `3DMANAGER_3DPRINT_GROUP_ID` = P_CD_GROUP
+                            AND `3DMANAGER_3DPRINT_STATE`= 2 ) AS USER_TOTAL_PRINTS,
+                     (SELECT SUM(`3DMANAGER_3DPRINT_IMPRESSION_TIME`)/3600 
+            			FROM 3DMANAGER_3DPRINT
+            			WHERE  `3DMANAGER_3DPRINT_USER_ID` = P_CD_USER 
+            				AND `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP 
+                            AND `3DMANAGER_3DPRINT_STATE`= 2 
+                            AND `3DMANAGER_3DPRINT_REGISTER_DATE` > DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) AS USER_PRINT_HOURS,
+                    (SELECT COUNT(*) 
+            			FROM `3DMANAGER_3DPRINT` 
+            			WHERE `3DMANAGER_3DPRINT_USER_ID` = P_CD_USER 
+                        AND `3DMANAGER_3DPRINT_GROUP_ID` = P_CD_GROUP
+                        AND `3DMANAGER_3DPRINT_STATE`= 2 
+            			AND `3DMANAGER_3DPRINT_REGISTER_DATE` > DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) AS USER_PRINTED_PRINTS,
+                    (SELECT SUM(`3DMANAGER_3DPRINT_IMPRESSION_TIME`)/3600 
+            			FROM 3DMANAGER_3DPRINT
+            			WHERE  `3DMANAGER_3DPRINT_USER_ID` = P_CD_USER 
+            				AND `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP 
+                            AND `3DMANAGER_3DPRINT_STATE`= 2 ) AS USER_TOTAL_HOURS,
+                    `USER_IMAGE_URL` AS FILE_URL,
+                    `USER_IMAGE_KEY` AS FILE_KEY
+                    FROM `3DMANAGER_USER` U LEFT JOIN `3DMANAGER_C_ROLES` R ON  U.`USER_ROLE` = R.`3DMANAGER_C_ROLES_ID`
+                    WHERE `USER_ID` = P_CD_USER AND `USER_GROUP_ID` = P_CD_GROUP;
             END
             """;
 
