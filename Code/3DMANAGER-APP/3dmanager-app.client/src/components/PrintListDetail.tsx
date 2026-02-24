@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import Pagination from './Pagination';
 import type { PrintResponse } from '../models/print/PrintResponse';
 
-interface Props { printerId: number; }
+interface Props { id: number, typeList: number; }
 
-const PrintListDetail: React.FC<Props> = ({ printerId }) => {
+const PrintListDetail: React.FC<Props> = ({ id, typeList }) => {
 
     const [items, setItems] = useState<PrintResponse[]>([]);
     const navigate = useNavigate();
@@ -15,7 +15,7 @@ const PrintListDetail: React.FC<Props> = ({ printerId }) => {
     const [totalPages, setTotalPages] = useState(1);
 
     useEffect(() => {
-        GetPrintListByType(currentPage, pageSize, 1, printerId).then(response => {
+        GetPrintListByType(currentPage, pageSize, typeList, id).then(response => {
             const prints = response.data?.prints ?? [];
             const pages = response.data?.totalPages ?? 1;
 
@@ -29,7 +29,7 @@ const PrintListDetail: React.FC<Props> = ({ printerId }) => {
             setItems(prints);
             setTotalPages(pages);
         });
-    }, [currentPage, pageSize, printerId]);
+    }, [currentPage, pageSize, typeList, id]);
 
 
     return (

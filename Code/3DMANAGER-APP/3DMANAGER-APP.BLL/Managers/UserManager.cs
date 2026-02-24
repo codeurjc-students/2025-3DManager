@@ -182,5 +182,38 @@ namespace _3DMANAGER_APP.BLL.Managers
         {
             return _userDbManager.GetGroupIdByUserId(userId);
         }
+
+        public bool UpdateUser(UserUpdateRequest request)
+        {
+            UserUpdateRequestDbObject requestDb = _mapper.Map<UserUpdateRequestDbObject>(request);
+            return _userDbManager.UpdateUser(requestDb);
+        }
+
+        public UserDetailObject GetUserDetail(int groupId, int userId, out BaseError? error)
+        {
+            error = null;
+            UserDetailObject response;
+            var responseDb = _userDbManager.GetUserDetail(groupId, userId);
+            if (responseDb == null)
+            {
+                _logger.LogError("Error al obtener el detalle de usuario");
+                error = new BaseError()
+                {
+                    code = StatusCodes.Status500InternalServerError,
+                    message = "Error al obtener el detalle de usuario"
+                };
+            }
+            response = _mapper.Map<UserDetailObject>(responseDb);
+
+            if (response != null)
+            {
+                if (response.UserImageData != null && response.UserImageData.FileUrl != null && response.UserImageData.FileKey != null)
+                    response.UserImageData.FileUrl = _awsS3Service.GetPresignedUrl(response.UserImageData.FileKey, 1);
+                else
+                    response.UserImageData.FileUrl = _awsS3Service.GetPresignedUrl("default/3dmanager-default-user.png", 1);
+
+            }
+            return response;
+        }
     }
 }

@@ -78,6 +78,7 @@ th, td {
     font-size: 1.4rem;
     letter-spacing: 1px;
     font-family: Impact, sans-serif;
+    cursor: pointer;
 }
 
 .header-group {
@@ -88,6 +89,7 @@ th, td {
     font-family: Impact, sans-serif;
     background: none;
     border: none;
+    cursor: pointer;
 }
 
 .logout-icon {

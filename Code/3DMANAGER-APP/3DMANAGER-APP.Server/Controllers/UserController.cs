@@ -212,5 +212,61 @@ namespace _3DMANAGER_APP.Server.Controllers
             });
         }
 
+        /// <summary>
+        /// update the user
+        /// </summary>
+        /// <returns>Return  a bool taht indicates the success of the operation made</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="401">No autorizado</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Users")]
+        [HttpPut]
+        public IActionResult UpdateUser([FromBody] UserUpdateRequest request)
+        {
+            if (GroupId == null)
+                return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, "No autenticado")));
+
+            request.GroupId = GroupId.Value;
+            bool response = _userManager.UpdateUser(request);
+
+            if (!response)
+                return StatusCode(500, new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error actualizando el usuario")));
+
+            return Ok(new Models.CommonResponse<bool>(response));
+        }
+
+
+        /// <summary>
+        /// Return a user detail
+        /// </summary>
+        /// <returns>A list of filaments for show in the dasboard</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="401">No autorizado</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<UserDetailObject>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<UserDetailObject>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<UserDetailObject>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Users")]
+        [HttpGet]
+        public IActionResult GetUserDetail([FromQuery] int userId)
+        {
+            if (GroupId == null)
+                return Unauthorized(new Models.CommonResponse<UserDetailObject>(new ErrorProperties(401, "No autenticado")));
+
+            UserDetailObject userResponse = _userManager.GetUserDetail(GroupId.Value, userId, out BaseError error);
+
+            if (userResponse == null || error != null)
+                return StatusCode(500, new Models.CommonResponse<UserDetailObject>(new ErrorProperties(error.code, error.message)));
+
+            return Ok(new Models.CommonResponse<UserDetailObject>(userResponse));
+        }
+
     }
 }

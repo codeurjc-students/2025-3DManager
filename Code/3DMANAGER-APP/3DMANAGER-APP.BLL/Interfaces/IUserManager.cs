@@ -12,5 +12,7 @@ namespace _3DMANAGER_APP.BLL.Interfaces
         public bool PostUserInvitation(int groupId, int userId, out BaseError? error);
         public UserObject GetUserById(int userId);
         public int GetGroupIdByUserId(int userId);
+        bool UpdateUser(UserUpdateRequest request);
+        UserDetailObject GetUserDetail(int groupId, int userId, out BaseError? error);
     }
 }

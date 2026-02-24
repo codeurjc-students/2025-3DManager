@@ -35,9 +35,13 @@ namespace _3DMANAGER_APP.BLL.Mapper
                 .ForMember(dest => dest.UserHours,
                            opt => opt.MapFrom(src => $"{(int)TimeSpan.FromSeconds((double)src.UserHours).TotalHours}h " +
                            $"{TimeSpan.FromSeconds((double)src.UserHours).Minutes}min"));
+            CreateMap<UserDetailDbObject, UserDetailObject>()
+                .ForMember(dest => dest.UserTotalHours,
+                    opt => opt.MapFrom(src => ConvertHours(src.UserTotalHours)))
+                .ForMember(dest => dest.UserPrintHours,
+                    opt => opt.MapFrom(src => ConvertHours(src.UserPrintHours)));
 
-
-
+            CreateMap<UserUpdateRequest, UserUpdateRequestDbObject>().ReverseMap();
             #endregion
 
             #region Group

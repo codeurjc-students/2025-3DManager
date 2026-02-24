@@ -142,7 +142,7 @@ const PrinterDetailPage: React.FC = () => {
                                 <div className="col-6 mb-1 ">
                                     <label htmlFor="printerModel" className="form-label">Estado</label>
                                     <div className="d-flex flex-row">
-                                        <select id="printerState" className="input-value-2 w-100" value={state} disabled={!isManager} onChange={(e) => { setState(Number(e.target.value)) }}>
+                                        <select id="printerState" className="input-value-5 w-100" value={state} disabled={!isManager} onChange={(e) => { setState(Number(e.target.value)) }}>
                                             {stateData.map(s => (
                                                 <option key={s.id} value={s.id}>
                                                     {s.description}
@@ -184,7 +184,7 @@ const PrinterDetailPage: React.FC = () => {
                     </div>
                     <div className="grey-container-detail mt-2 h-60">
                         <h3 className="title-impact-3 ms-2 mt-2">Piezas impresas</h3>
-                        <PrintListDetail printerId={Number(printerId)} />
+                        <PrintListDetail id={Number(printerId)} typeList={1}/>
                     </div>
                 </div>
             </div>
