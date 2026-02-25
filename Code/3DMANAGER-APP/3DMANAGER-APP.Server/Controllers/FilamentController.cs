@@ -1,6 +1,7 @@
 ﻿using _3DMANAGER_APP.BLL.Interfaces;
 using _3DMANAGER_APP.BLL.Models.Base;
 using _3DMANAGER_APP.BLL.Models.Filament;
+using _3DMANAGER_APP.BLL.Models.Printer;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -85,6 +86,62 @@ namespace _3DMANAGER_APP.Server.Controllers
                         new Models.CommonResponse<int>(new ErrorProperties(response.Error.Code, response.Error.Message)));
             }
             return Ok(new Models.CommonResponse<int>(response.Data));
+        }
+
+        /// <summary>
+        /// update a filament
+        /// </summary>
+        /// <returns>Return  a bool taht indicates the success of the operation made</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="401">No autorizado</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Printers")]
+        [HttpPut]
+        public IActionResult UpdateFilament([FromBody] PrinterDetailRequest request)
+        {
+            if (GroupId == null)
+                return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, "No autenticado")));
+
+            request.GroupId = GroupId.Value;
+            bool response = _printerManager.UpdatePrinter(request);
+
+            if (!response)
+                return StatusCode(500, new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error actualizando la impresora")));
+
+            return Ok(new Models.CommonResponse<bool>(response));
+        }
+
+
+        /// <summary>
+        /// Get printer detail
+        /// </summary>
+        /// <returns>A detail object of a printer</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="401">No autorizado</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<PrinterDetailObject>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<PrinterDetailObject>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<PrinterDetailObject>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Printers")]
+        [HttpGet]
+        public IActionResult GetPrinterDetail([FromQuery] int printerId)
+        {
+            if (GroupId == null)
+                return Unauthorized(new Models.CommonResponse<PrinterDetailObject>(new ErrorProperties(401, "No autenticado")));
+
+            PrinterDetailObject printerResponse = _printerManager.GetPrinterDetail(GroupId.Value, printerId, out BaseError error);
+
+            if (printerResponse == null || error != null)
+                return StatusCode(500, new Models.CommonResponse<PrinterDetailObject>(new ErrorProperties(error.code, error.message)));
+
+            return Ok(new Models.CommonResponse<PrinterDetailObject>(printerResponse));
         }
     }
 }

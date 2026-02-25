@@ -2,44 +2,46 @@
 import { useNavigate, useParams } from "react-router-dom";
 import PrintListDetail from "../components/PrintListDetail";
 import { useAuth } from "../context/AuthContext";
-import { getPrinterState } from "../api/catalogService";
 import type { CatalogResponse } from "../models/catalog/CatalogResponse";
 import { usePopupContext } from "../context/PopupContext";
 import InfoPopup from "../components/popupComponent/InfoPopup";
-import { getPrinterDetail, updatePrinter } from "../api/printerService";
-import type { PrinterDetailObject } from "../models/printer/PrinterDetailObject";
-import type { PrinterDetailRequest } from "../models/printer/PrinterDetailRequest";
+import { getFilamentState } from "../api/catalogService";
+import { getFilamentDetail, updateFilament } from "../api/filamentService";
+import type { FilamentDetailObject } from "../models/filament/FilamentDetailObject";
+import type { FilamentUpdateRequest } from "../models/filament/FilamentUpdateRequest";
 
-const PrinterDetailPage: React.FC = () => {
+const FilamentDetailPage: React.FC = () => {
     const navigate = useNavigate();
     const { user } = useAuth();
-    const { printerId } = useParams<{ printerId: string }>();
     const [stateData, setStateData] = useState<CatalogResponse[]>([]); 
-    const [data, setData] = useState<PrinterDetailObject>(); 
+    const { filamentId } = useParams<{ filamentId: string }>();
+    const [data, setData] = useState<FilamentDetailObject>(); 
     const [state, setState] = useState<number>(0);
     const [name, setName] = useState<string>("");
-    const [model, setModel] = useState<string>("");
     const [description, setDescription] = useState<string>("");
+    const [temperature, setTemperature] = useState<number>(0);
+    const [color, setColor] = useState<string>("");
+    const [remainingLenght, setRemainingLenght] = useState<number>(0);
     const isManager = user?.rolId === "Usuario-Manager";
     const { showPopup } = usePopupContext();
-
-
+    
     useEffect(() => {
-        getPrinterState().then(response => {
+        getFilamentState().then(response => {
             setStateData(response.data!);
         });
 
-        getPrinterDetail(Number(printerId)).then(response => {
-            const printer = response.data;
+        getFilamentDetail(Number(filamentId)).then(response => {
+            const filament = response.data;
 
-            if (printer) {
-                printer.printerCreateDate = new Date(printer.printerCreateDate);
-
-                setData(printer);
-                setState(printer.printerStateId || 0);
-                setDescription(printer.printerDescription || "");
-                setModel(printer.printerModel || "");
-                setName(printer.printerName || "");
+            if (filament) {
+                filament.filamentCreateDate = new Date(filament.filamentCreateDate);
+                setData(filament);
+                setState(filament.filamentState || 0);
+                setDescription(filament.filamentDescription || "");
+                setName(filament.filamentName || "");
+                setRemainingLenght(filament.filamentRemainignLenght || 0);
+                setColor(filament.filamentName || "");
+                setTemperature(filament.filamentTemperature || 0);
             }
         });
     }, []);
@@ -50,47 +52,48 @@ const PrinterDetailPage: React.FC = () => {
         try {
 
             const groupId = -1;
-            const request: PrinterDetailRequest = {
+            const request: FilamentUpdateRequest = {
                 groupId,
-                printerId: Number(printerId),
-                printerName: name,
-                printerDescription: description,
-                printerModel: model,
-                printerStateId: state
+                filamentId: Number(filamentId),
+                filamentName: name,
+                filamentDescription: description,
+                filamentColor: color,
+                filamentLenght: remainingLenght,
+                filamentTemperature: temperature
             };
 
-            const response = await updatePrinter(request);
+            const response = await updateFilament(request);
 
             if (response.data) {
                 showPopup({
                     type: "info", content: (
-                        <InfoPopup title="Operacion realizada" description="La impresora ha sido guardado correctamente" />
+                        <InfoPopup title="Operacion realizada" description="El filamento ha sido guardado correctamente" />
                     )
                 });
             } else {
                 showPopup({
                     type: "error", content: (
-                        <InfoPopup title="Operacion cancelada" description={response.error?.message || "No se pudo actualizar de la impresora."} />
+                        <InfoPopup title="Operacion cancelada" description={response.error?.message || "No se pudo actualizar el filamento."} />
                     )
                 });
-                setState(data?.printerStateId || 0);
-                
+                setState(data?.filamentState || 0);
             }
         } catch (error) {
-            console.error("Error al cambiar de estado de impresora", error);
+            console.error("Error al actualizar el filamento", error);
             showPopup({
                 type: "error", content: (
-                    <InfoPopup title="Operacion cancelada" description="Ha ocurrido un error al actualizar de la impresora" />
+                    <InfoPopup title="Operacion cancelada" description="Ha ocurrido un error al actualizar el filamento" />
                 )
             });
         }
     };
+    
 
     return (
         <div className="d-flex flex-column vh-100">
             <div className="row h-10 w-100">
                 <div className="col-10">
-                    <h2 className="title-impact-2 mt-3 ms-2 mb-1">Detalle de impresora</h2>
+                    <h2 className="title-impact-2 mt-3 ms-2 mb-1">Detalle de filamento</h2>
                 </div>
                 <div className="col-2 mt-1 ps-5">
                     <button type="button" className="white-container-button d-flex align-items-center" onClick={() => navigate("/dashboard")}>
@@ -104,7 +107,7 @@ const PrinterDetailPage: React.FC = () => {
             </div>
             <div className="row h-100">
                 <div className="col-4 grey-container">
-                    <div className="h-50">
+                    <div className="h-40">
                         <div className="title-impact-3 col-1 mt-2 ms-2 mb-1 w-100 d-flex flex-row justify-content-between">
                             <input type="text" className="input-value-3 me-5 w-75" value={name} disabled={!isManager}
                                 onChange={(e) => setName(e.target.value)}
@@ -118,23 +121,21 @@ const PrinterDetailPage: React.FC = () => {
                             ) : ""}
                         </div>
                         <div className="col-6 ms-5">
-                            <img src={data?.printerImageData?.fileUrl} alt={name} className="image-container" />
+                            <img src={""} alt={name} className="image-container" />
                         </div>
                         <div className="col-4 mt-2 ms-3 mb-5 w-100">
-                            <input type="text" className="input-value-4 me-5 mb-1 w-100" value={model} disabled={!isManager}
-                                onChange={(e) => setModel(e.target.value)}/>
                             <textarea className="input-value-4 me-5 mb-1 w-100 h-08" value={description} disabled={!isManager} onChange={(e) => setDescription(e.target.value)}/>
                         </div>
                     </div>
-                    <div className="h-40 ms-3 mt-1">
+                    <div className="h-60 ms-3 mt-1">
                         <div className="h-10 mt-2">
                             <div className="d-flex flex row">
                                 <div className="col-6 mb-1 ">
-                                    <label htmlFor="CreateDatePrinter" className="form-label">Fecha de alta de impresora</label>
+                                    <label htmlFor="CreateDatePrinter" className="form-label">Fecha de alta de filamento</label>
                                     <input
                                         type="text"
                                         className="input-value-2 w-100"
-                                        value={data ? data.printerCreateDate.toISOString().split("T")[0] : ""}
+                                        value={data ? data.filamentCreateDate.toISOString().split("T")[0] : ""}
                                         disabled
                                     />
 
@@ -156,35 +157,62 @@ const PrinterDetailPage: React.FC = () => {
                         <div className="h-10">
                             <div className="d-flex flex row">
                                 <div className="col-6 mb-1">
-                                    <label htmlFor="printerModel" className="form-label">Horas mes actual</label>
-                                    <input type="text" className="input-value-2 w-100" value={data?.printerTotalHoursMonth ?? 0} disabled />
+                                    <label htmlFor="printerModel" className="form-label">Color</label>
+                                    <input type="color" id="filamentColor" className="input-value w-75" value={color}
+                                        onChange={(e) => setColor(e.target.value)} disabled={!isManager} />
                                 </div>
                                 <div className="col-6 mb-1">
-                                    <label htmlFor="printerModel" className="form-label">Horas totales</label>
-                                    <input type="text" className="input-value-2 w-100" value={data?.printerTotalHours ?? 0} disabled />
+                                    <label htmlFor="printerModel" className="form-label">Temperatura ideal</label>
+                                    <input type="text" className="input-value-2 w-100" value={temperature} disabled={!isManager} />
                                 </div>
                             </div>
                         </div>
                         <div className="h-10">
                             <div className="d-flex flex row">
                                 <div className="col-6 mb-1">
-                                    <label htmlFor="printerModel" className="form-label">Piezas impresas este mes</label>
-                                    <input type="text" className="input-value-2 w-100" value={data?.printerPrintsTotalMonth ?? 0} disabled />
+                                    <label htmlFor="printerModel" className="form-label">Longitud Original</label>
+                                    <input type="text" className="input-value-2 w-100" value={data?.filamentLenght} disabled />
                                 </div>
                                 <div className="col-6 mb-1">
-                                    <label htmlFor="printerModel" className="form-label">Piezas impresas en total</label>
-                                    <input type="text" className="input-value-2 w-100" value={data?.printerPrintsTotal ?? 0} disabled />
+                                    <label htmlFor="printerModel" className="form-label">Coste</label>
+                                    <input type="text" className="input-value-2 w-100" value={data?.filamentCost} disabled />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="h-10">
+                            <div className="d-flex flex row">
+                                <div className="col-6 mb-1">
+                                    <label htmlFor="printerModel" className="form-label">Grosor Filamento</label>
+                                    <input type="text" className="input-value-2 w-100" value={data?.filamentThickness} disabled />
+                                </div>
+                                <div className="col-6 mb-1">
+                                    <label htmlFor="printerModel" className="form-label">Tipo filamento</label>
+                                    <input type="text" className="input-value-2 w-100" value={data?.filamentType} disabled />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div className="col-7 d-flex flex-column ms-auto">
-                    <div className="h-35 grey-container-detail mb-2">
+                    <div className="h-25 grey-container-detail mb-2">
+                        <div className="d-flex flex row ms-1 mt-5">
+                            <div className="col-4 ">
+                                <label htmlFor="printerModel" className="form-label">Piezas impresas en el último mes</label>
+                                <input type="text" className="input-value-2 w-75" value={data?.filamentPrintedPrintsMonth} disabled />
+                            </div>
+                            <div className="col-4 ">
+                                <label htmlFor="printerModel" className="form-label">Piezas impresas en total</label>
+                                <input type="text" className="input-value-2 w-75" value={data?.filamentPrintedPrintsTotal} disabled />
+                            </div>
+                            <div className="col-4 ">
+                                <label htmlFor="printerModel" className="form-label">Longitud Restante</label>
+                                <input type="text" className="input-value-2 w-75" value={remainingLenght} disabled={!isManager} />
+                            </div>
+                        </div>
                     </div>
-                    <div className="grey-container-detail mt-2 h-60">
+                    <div className="grey-container-detail mt-2 h-70">
                         <h3 className="title-impact-3 ms-2 mt-2">Piezas impresas</h3>
-                        <PrintListDetail id={Number(printerId)} typeList={1}/>
+                        <PrintListDetail id={Number(filamentId)} typeList={2}/>
                     </div>
                 </div>
             </div>
@@ -195,5 +223,5 @@ const PrinterDetailPage: React.FC = () => {
     );
 
 };
-export default PrinterDetailPage;
+export default FilamentDetailPage;
 
