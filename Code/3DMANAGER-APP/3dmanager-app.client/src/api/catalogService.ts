@@ -7,6 +7,11 @@ export const getFilamentType = async (): Promise<CommonResponse<CatalogResponse[
     return response.data;
 };
 
+export const getFilamentState = async (): Promise<CommonResponse<CatalogResponse[]>> => {
+    const response = await apiClient.get<CommonResponse<CatalogResponse[]>>("/api/v1/catalogs/GetFilamentState");
+    return response.data;
+};
+
 export const getPrinterCatalog = async (): Promise<CommonResponse<CatalogResponse[]>> => {
     const response = await apiClient.get<CommonResponse<CatalogResponse[]>>("/api/v1/catalogs/GetPrinterCatalog");
     return response.data;

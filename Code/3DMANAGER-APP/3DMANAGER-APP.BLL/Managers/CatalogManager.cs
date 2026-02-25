@@ -38,6 +38,11 @@ namespace _3DMANAGER_APP.BLL.Managers
         {
             return _mapper.Map<List<CatalogResponse>>(_catalogDbManager.GetPrinterState());
         }
+        public List<CatalogResponse> GetFilamentState()
+        {
+            return _mapper.Map<List<CatalogResponse>>(_catalogDbManager.GetFilamentState());
+        }
+
 
     }
 }

@@ -114,5 +114,23 @@ namespace _3DMANAGER_APP.Server.Controllers
             List<CatalogResponse> catalog = _catalogManager.GetPrinterState();
             return new CommonResponse<List<CatalogResponse>>(catalog);
         }
+
+        /// <summary>
+        /// A catalog of filament states
+        /// </summary>
+        /// <returns>A catalog of filament states</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="400">Conflicto en servidor</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(CommonResponse<List<CatalogResponse>>), StatusCodes.Status200OK)]
+        [ApiVersionNeutral]
+        [Tags("Catalogs")]
+        [HttpGet]
+        public CommonResponse<List<CatalogResponse>> GetFilamentState()
+        {
+            List<CatalogResponse> catalog = _catalogManager.GetFilamentState();
+            return new CommonResponse<List<CatalogResponse>>(catalog);
+        }
     }
 }
