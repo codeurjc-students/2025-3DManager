@@ -158,6 +158,99 @@ namespace _3DMANAGER_APP.DAL.Managers
                 return false;
             }
         }
+
+        public bool UpdateFilament(FilamentUpdateRequestDbObject requestDb)
+        {
+            try
+            {
+                string procName = $"{ProcedurePrefix}_pr_FILAMENT_UPDATE";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = requestDb.GroupId });
+                cmd.Parameters.Add(new MySqlParameter("P_CD_FILAMENT", MySqlDbType.Int32) { Value = requestDb.FilamentId });
+                cmd.Parameters.Add(new MySqlParameter("P_CD_LENGHT", MySqlDbType.Decimal) { Value = requestDb.FilamentLenght });
+                cmd.Parameters.Add(new MySqlParameter("P_CD_TEMPERATURE", MySqlDbType.Int32) { Value = requestDb.FilamentTemperature });
+                cmd.Parameters.Add(new MySqlParameter("P_DS_COLOR", MySqlDbType.VarChar) { Value = requestDb.FilamentColor });
+                cmd.Parameters.Add(new MySqlParameter("P_DS_DESCRIPTION", MySqlDbType.VarChar) { Value = requestDb.FilamentDescription });
+                cmd.Parameters.Add(new MySqlParameter("P_DS_NAME", MySqlDbType.VarChar) { Value = requestDb.FilamentName });
+                cmd.Parameters.Add(new MySqlParameter("P_CD_COST", MySqlDbType.Decimal) { Value = requestDb.FilamentCost });
+
+
+                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                var error = Convert.ToInt32(errorParam.Value);
+                if (error != 0)
+                {
+                    return false;
+                }
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    return ds.Tables[0].Rows[0].Field<long>("Total") > 0;
+                }
+
+                return false;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = "Error al actualizar el filamento en BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error al actualizar el filamento en BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+        }
+
+        public FilamentDetailDbObject GetFilamentDetail(int groupId, int filamentId)
+        {
+            try
+            {
+                FilamentDetailDbObject response = null;
+                string procName = $"{ProcedurePrefix}_pr_FILAMENT_DETAIL_GET";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.VarChar) { Value = groupId });
+                cmd.Parameters.Add(new MySqlParameter("P_CD_FILAMENT", MySqlDbType.VarChar) { Value = filamentId });
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    response = new FilamentDetailDbObject();
+                    return response.Create(ds.Tables[0].Rows[0]);
+                }
+
+                return response;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = "Error al devolver el detalle de filamento de en BBDD";
+                Logger.LogError(ex, msg);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error al devolver el detalle de filamento de en BBDD";
+                Logger.LogError(ex, msg);
+                return null;
+            }
+        }
     }
 
 }

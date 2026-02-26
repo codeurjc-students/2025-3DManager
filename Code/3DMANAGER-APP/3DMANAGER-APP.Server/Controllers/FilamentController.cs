@@ -1,7 +1,6 @@
 ﻿using _3DMANAGER_APP.BLL.Interfaces;
 using _3DMANAGER_APP.BLL.Models.Base;
 using _3DMANAGER_APP.BLL.Models.Filament;
-using _3DMANAGER_APP.BLL.Models.Printer;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -100,48 +99,48 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
-        [Tags("Printers")]
+        [Tags("Filaments")]
         [HttpPut]
-        public IActionResult UpdateFilament([FromBody] PrinterDetailRequest request)
+        public IActionResult UpdateFilament([FromBody] FilamentUpdateRequest request)
         {
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, "No autenticado")));
 
             request.GroupId = GroupId.Value;
-            bool response = _printerManager.UpdatePrinter(request);
+            bool response = _filamentManager.UpdateFilament(request);
 
             if (!response)
-                return StatusCode(500, new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error actualizando la impresora")));
+                return StatusCode(500, new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error actualizando el filamento")));
 
             return Ok(new Models.CommonResponse<bool>(response));
         }
 
 
         /// <summary>
-        /// Get printer detail
+        /// Get filament detail
         /// </summary>
-        /// <returns>A detail object of a printer</returns>
+        /// <returns>A detail object of a filament</returns>
         /// <response code="200">Respuesta correcta</response>
         /// <response code="401">No autorizado</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Models.CommonResponse<PrinterDetailObject>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(Models.CommonResponse<PrinterDetailObject>), StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(typeof(Models.CommonResponse<PrinterDetailObject>), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(Models.CommonResponse<FilamentDetailObject>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<FilamentDetailObject>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<FilamentDetailObject>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
-        [Tags("Printers")]
+        [Tags("Filaments")]
         [HttpGet]
-        public IActionResult GetPrinterDetail([FromQuery] int printerId)
+        public IActionResult GetFilamentDetail([FromQuery] int filamentId)
         {
             if (GroupId == null)
-                return Unauthorized(new Models.CommonResponse<PrinterDetailObject>(new ErrorProperties(401, "No autenticado")));
+                return Unauthorized(new Models.CommonResponse<FilamentDetailObject>(new ErrorProperties(401, "No autenticado")));
 
-            PrinterDetailObject printerResponse = _printerManager.GetPrinterDetail(GroupId.Value, printerId, out BaseError error);
+            FilamentDetailObject filamentResponse = _filamentManager.GetFilamentDetail(GroupId.Value, filamentId, out BaseError error);
 
-            if (printerResponse == null || error != null)
-                return StatusCode(500, new Models.CommonResponse<PrinterDetailObject>(new ErrorProperties(error.code, error.message)));
+            if (filamentResponse == null || error != null)
+                return StatusCode(500, new Models.CommonResponse<FilamentDetailObject>(new ErrorProperties(error.code, error.message)));
 
-            return Ok(new Models.CommonResponse<PrinterDetailObject>(printerResponse));
+            return Ok(new Models.CommonResponse<FilamentDetailObject>(filamentResponse));
         }
     }
 }

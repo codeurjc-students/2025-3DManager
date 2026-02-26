@@ -58,7 +58,10 @@ th, td {
     width : 80%;
     height : 100%;
 }
-
+.image-container-2 {
+    width: 60%;
+    height: 80%;
+}
 
 .app-title {
     color: var(--colorWhite);

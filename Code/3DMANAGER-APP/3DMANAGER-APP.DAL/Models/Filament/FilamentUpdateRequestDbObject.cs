@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace _3DMANAGER_APP.BLL.Models.Filament
+﻿namespace _3DMANAGER_APP.DAL.Models.Filament
 {
-    public class FilamentUpdateRequest
+    public class FilamentUpdateRequestDbObject
     {
         public int GroupId { get; set; }
         public int FilamentId { get; set; }
@@ -12,7 +10,7 @@ namespace _3DMANAGER_APP.BLL.Models.Filament
         public decimal FilamentLenght { get; set; }
         public string? FilamentDescription { get; set; }
         public decimal FilamentCost { get; set; }
-        public IFormFile? ImageFile { get; set; }
+        //public IFormFile? ImageFile { get; set; }
     }
 
 }

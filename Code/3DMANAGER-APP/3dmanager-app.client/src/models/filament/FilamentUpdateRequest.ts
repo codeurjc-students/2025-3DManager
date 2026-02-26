@@ -6,5 +6,6 @@ export interface FilamentUpdateRequest {
     filamentTemperature: number;
     filamentLenght: number;
     filamentDescription: string;
-    imageFile?: File | null;
+    filamentCost: number;
+    //imageFile?: File | null;
 }

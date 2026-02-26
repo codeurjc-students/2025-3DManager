@@ -1,13 +1,15 @@
+import type { FileResponse } from "../file/fileResponse";
+
 export interface FilamentDetailObject {
     groupId: number;
     filamentId: number;
     filamentName: string;
-    filamentType: number;
+    filamentType: string;
     filamentWeight: number;
     filamentColor: string;
     filamentTemperature: number;
     filamentLenght: number;
-    filamentRemainignLenght: number;
+    filamentRemainingLenght: number;
     filamentThickness: number;
     filamentCost: number;
     filamentDescription: string;
@@ -15,5 +17,5 @@ export interface FilamentDetailObject {
     filamentState: number;
     filamentPrintedPrintsMonth: number;
     filamentPrintedPrintsTotal: number;
-    imageFile?: File | null;
+    filamentImageFile?: FileResponse | null;
 }

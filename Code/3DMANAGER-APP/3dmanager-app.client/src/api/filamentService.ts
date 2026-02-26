@@ -34,12 +34,12 @@ export const postFilament = async (data: FilamentRequest): Promise<CommonRespons
 }
 
 export const updateFilament = async (data: FilamentUpdateRequest): Promise<CommonResponse<boolean>> => {
-    const response = await apiClient.put<CommonResponse<boolean>>(`/api/v1/filaments/UpdateUser`, data);
+    const response = await apiClient.put<CommonResponse<boolean>>(`/api/v1/filaments/UpdateFilament`, data);
     return response.data;
 }
 
 export const getFilamentDetail = async (filamentId: number): Promise<CommonResponse<FilamentDetailObject>> => {
-    const response = await apiClient.get<CommonResponse<FilamentDetailObject>>(`/api/v1/filaments/GetUserDetail?userId=${filamentId}`);
+    const response = await apiClient.get<CommonResponse<FilamentDetailObject>>(`/api/v1/filaments/GetFilamentDetail?filamentId=${filamentId}`);
     return response.data;
 }
 
