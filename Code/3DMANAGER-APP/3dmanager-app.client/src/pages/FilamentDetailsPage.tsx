@@ -134,9 +134,9 @@ const FilamentDetailPage: React.FC = () => {
                         <div className="h-10 mt-2">
                             <div className="d-flex flex row">
                                 <div className="col-6 ">
-                                    <label htmlFor="CreateDatePrinter" className="form-label">Fecha de alta de filamento</label>
+                                    <label htmlFor="filamentCreateDatePrinter" className="form-label">Fecha de alta de filamento</label>
                                     <input
-                                        id="filament-"
+                                        id="filamentCreateDatePrinter"
                                         type="text"
                                         className="input-value-2 w-100"
                                         value={data ? data.filamentCreateDate.toISOString().split("T")[0] : ""}
@@ -161,36 +161,36 @@ const FilamentDetailPage: React.FC = () => {
                             <div className="d-flex flex row">
                                 <div className="col-6">
                                     <label htmlFor="printerModel" className="form-label">Color</label>
-                                    <input id="filament-" type="color" id="filamentColor" className="input-value w-100" value={color}
+                                    <input id="filamentColor" type="color" className="input-value w-100" value={color}
                                         onChange={(e) => setColor(e.target.value)} disabled={!isManager} />
                                 </div>
                                 <div className="col-6">
-                                    <label htmlFor="printerModel" className="form-label">Temperatura ideal</label>
-                                    <input id="filament-" type="text" className="input-value-5 w-100" value={temperature} disabled={!isManager} onChange={(e) => { setTemperature(Number(e.target.value)) }} />
+                                    <label htmlFor="filamentTemperature" className="form-label">Temperatura ideal</label>
+                                    <input id="filamentTemperature" type="text" className="input-value-5 w-100" value={temperature} disabled={!isManager} onChange={(e) => { setTemperature(Number(e.target.value)) }} />
                                 </div>
                             </div>
                         </div>
                         <div className="h-08">
                             <div className="d-flex flex row">
                                 <div className="col-6">
-                                    <label htmlFor="printerModel" className="form-label">Longitud Original</label>
-                                    <input id="filament-" type="text" className="input-value-2 w-100" value={data?.filamentLenght ?? 0} disabled />
+                                    <label htmlFor="filamentLenght" className="form-label">Longitud Original</label>
+                                    <input id="filamentLenght" type="text" className="input-value-2 w-100" value={data?.filamentLenght ?? 0} disabled />
                                 </div>
                                 <div className="col-6">
-                                    <label htmlFor="printerModel" className="form-label">Coste</label>
-                                    <input id="filament-" type="number" className="input-value-5 w-100" value={cost} disabled={!isManager} onChange={(e) => { setCost(Number(e.target.value)) }} />
+                                    <label htmlFor="filamentCost" className="form-label">Coste</label>
+                                    <input id="filamentCost" type="number" className="input-value-5 w-100" value={cost} disabled={!isManager} onChange={(e) => { setCost(Number(e.target.value)) }} />
                                 </div>
                             </div>
                         </div>
                         <div className="h-08">
                             <div className="d-flex flex row">
                                 <div className="col-6">
-                                    <label htmlFor="printerModel" className="form-label">Grosor Filamento</label>
-                                    <input id="filament-" type="text" className="input-value-2 w-100" value={data?.filamentThickness} disabled />
+                                    <label htmlFor="filamentThickness" className="form-label">Grosor Filamento</label>
+                                    <input id="filamentThickness" type="text" className="input-value-2 w-100" value={data?.filamentThickness} disabled />
                                 </div>
                                 <div className="col-6">
-                                    <label htmlFor="printerModel" className="form-label">Tipo filamento</label>
-                                    <input id="filament-" type="text" className="input-value-2 w-100" value={data?.filamentType} disabled />
+                                    <label htmlFor="filamentType" className="form-label">Tipo filamento</label>
+                                    <input id="filamentType" type="text" className="input-value-2 w-100" value={data?.filamentType} disabled />
                                 </div>
                             </div>
                         </div>
@@ -200,16 +200,16 @@ const FilamentDetailPage: React.FC = () => {
                     <div className="h-25 grey-container-detail mb-2">
                         <div className="d-flex flex row ms-1 mt-5">
                             <div className="col-4 ">
-                                <label htmlFor="printerModel" className="form-label">Piezas impresas en el último mes</label>
-                                <input id="filament-" type="text" className="input-value-2 w-75" value={data?.filamentPrintedPrintsMonth} disabled />
+                                <label htmlFor="filamentPrintsLastMonth" className="form-label">Piezas impresas en el último mes</label>
+                                <input id="filamentPrintsLastMonth" type="text" className="input-value-2 w-75" value={data?.filamentPrintedPrintsMonth} disabled />
                             </div>
                             <div className="col-4 ">
-                                <label htmlFor="printerModel" className="form-label">Piezas impresas en total</label>
-                                <input id="filament-" type="text" className="input-value-2 w-75" value={data?.filamentPrintedPrintsTotal} disabled />
+                                <label htmlFor="filamentPrintsTotal" className="form-label">Piezas impresas en total</label>
+                                <input id="filamentPrintsTotal" type="text" className="input-value-2 w-75" value={data?.filamentPrintedPrintsTotal} disabled />
                             </div>
                             <div className="col-4 ">
-                                <label htmlFor="printerModel" className="form-label">Longitud Restante</label>
-                                <input id="filament-" type="text" className="input-value-5 w-75" value={remainingLenght} disabled={!isManager} onChange={(e) => { setRemainingLenght(Number(e.target.value)) }} />
+                                <label htmlFor="filamentRemainingLenght" className="form-label">Longitud Restante</label>
+                                <input id="filamentRemainingLenght" type="text" className="input-value-5 w-75" value={remainingLenght} disabled={!isManager} onChange={(e) => { setRemainingLenght(Number(e.target.value)) }} />
                             </div>
                         </div>
                     </div>
