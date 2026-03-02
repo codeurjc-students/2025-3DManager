@@ -94,5 +94,38 @@ namespace _3DMANAGER_APP.BLL.Managers
             }
 
         }
+
+        public bool UpdateFilament(FilamentUpdateRequest request)
+        {
+            FilamentUpdateRequestDbObject requestDb = _mapper.Map<FilamentUpdateRequestDbObject>(request);
+            return _filamentDbManager.UpdateFilament(requestDb);
+        }
+
+        public FilamentDetailObject GetFilamentDetail(int groupId, int filamentId, out BaseError? error)
+        {
+            error = null;
+            FilamentDetailObject response;
+            var responseDb = _filamentDbManager.GetFilamentDetail(groupId, filamentId);
+            if (responseDb == null)
+            {
+                _logger.LogError("Error al obtener el detalle de filamento");
+                error = new BaseError()
+                {
+                    code = StatusCodes.Status500InternalServerError,
+                    message = "Error al obtener el detalle de filamento"
+                };
+            }
+            response = _mapper.Map<FilamentDetailObject>(responseDb);
+
+            if (response != null)
+            {
+                if (response.FilamentImageFile != null && response.FilamentImageFile.FileUrl != null && response.FilamentImageFile.FileKey != null)
+                    response.FilamentImageFile.FileUrl = _awsS3Service.GetPresignedUrl(response.FilamentImageFile.FileKey, 1);
+                else
+                    response.FilamentImageFile.FileUrl = _awsS3Service.GetPresignedUrl("default/3dmanager-default-filament.png", 1);
+
+            }
+            return response;
+        }
     }
 }

@@ -54,6 +54,8 @@ namespace _3DMANAGER_APP.BLL.Mapper
 
             CreateMap<FilamentListResponse, FilamentListResponseDbObject>().ReverseMap();
             CreateMap<FilamentRequest, FilamentRequestDbObject>().ReverseMap();
+            CreateMap<FilamentDetailObject, FilamentDetailDbObject>().ReverseMap();
+            CreateMap<FilamentUpdateRequest, FilamentUpdateRequestDbObject>().ReverseMap();
             #endregion
 
             #region Print

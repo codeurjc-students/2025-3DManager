@@ -86,5 +86,61 @@ namespace _3DMANAGER_APP.Server.Controllers
             }
             return Ok(new Models.CommonResponse<int>(response.Data));
         }
+
+        /// <summary>
+        /// update a filament
+        /// </summary>
+        /// <returns>Return  a bool taht indicates the success of the operation made</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="401">No autorizado</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Filaments")]
+        [HttpPut]
+        public IActionResult UpdateFilament([FromBody] FilamentUpdateRequest request)
+        {
+            if (GroupId == null)
+                return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, "No autenticado")));
+
+            request.GroupId = GroupId.Value;
+            bool response = _filamentManager.UpdateFilament(request);
+
+            if (!response)
+                return StatusCode(500, new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error actualizando el filamento")));
+
+            return Ok(new Models.CommonResponse<bool>(response));
+        }
+
+
+        /// <summary>
+        /// Get filament detail
+        /// </summary>
+        /// <returns>A detail object of a filament</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="401">No autorizado</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<FilamentDetailObject>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<FilamentDetailObject>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<FilamentDetailObject>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Filaments")]
+        [HttpGet]
+        public IActionResult GetFilamentDetail([FromQuery] int filamentId)
+        {
+            if (GroupId == null)
+                return Unauthorized(new Models.CommonResponse<FilamentDetailObject>(new ErrorProperties(401, "No autenticado")));
+
+            FilamentDetailObject filamentResponse = _filamentManager.GetFilamentDetail(GroupId.Value, filamentId, out BaseError error);
+
+            if (filamentResponse == null || error != null)
+                return StatusCode(500, new Models.CommonResponse<FilamentDetailObject>(new ErrorProperties(error.code, error.message)));
+
+            return Ok(new Models.CommonResponse<FilamentDetailObject>(filamentResponse));
+        }
     }
 }

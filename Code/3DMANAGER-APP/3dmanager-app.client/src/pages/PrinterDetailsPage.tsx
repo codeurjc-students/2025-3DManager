@@ -70,7 +70,7 @@ const PrinterDetailPage: React.FC = () => {
             } else {
                 showPopup({
                     type: "error", content: (
-                        <InfoPopup title="Operacion cancelada" description={response.error?.message || "No se pudo cambiar el estado de la impresora."} />
+                        <InfoPopup title="Operacion cancelada" description={response.error?.message || "No se pudo actualizar de la impresora."} />
                     )
                 });
                 setState(data?.printerStateId || 0);
@@ -80,7 +80,7 @@ const PrinterDetailPage: React.FC = () => {
             console.error("Error al cambiar de estado de impresora", error);
             showPopup({
                 type: "error", content: (
-                    <InfoPopup title="Operacion cancelada" description="Ha ocurrido un error al cambiar el estado de la impresora" />
+                    <InfoPopup title="Operacion cancelada" description="Ha ocurrido un error al actualizar de la impresora" />
                 )
             });
         }

@@ -122,10 +122,10 @@ const CreatePrint3DPage: React.FC = () => {
             <div className="row h-75 mt-5">
                 <div className="col-1"></div>
                 <div className="grey-container col-10 ps-4 pb-4 d-flex flex-column">
-                    <h2 className="title-impact mt-5 mb-3">Subir pieza</h2>
+                    <h2 className="title-impact mt-2 mb-2">Subir pieza</h2>
                     <form onSubmit={handleSubmit}>
                         <div className="white-container">
-                            <div className="p-3 d-flex flex-column">
+                            <div className="p-2 d-flex flex-column">
                                 <div className="row-3 d-flex flex-row">
                                     <div className="col-6 p-2">
                                         <label htmlFor="printName" className="form-label">Nombre</label>
@@ -191,7 +191,6 @@ const CreatePrint3DPage: React.FC = () => {
                                     </div>
                                 </div>
                             </div>
-
                             <div className="ms-3 me-3 p-2">
                                 <label htmlFor="gcodeFile" className="form-label">Archivo GCODE</label>
                                 <input

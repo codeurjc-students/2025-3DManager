@@ -45,7 +45,7 @@ const FilamentList: React.FC = () => {
                                 <td>
                                     <button
                                         className="button-darkGrey w-75"
-                                        onClick={() => navigate(`/detail/filament/${filament.filamentId}`)}
+                                        onClick={() => navigate(`/dashboard/filament/detail/${filament.filamentId}`)}
                                     >
                                         Ver detalle
                                     </button>
