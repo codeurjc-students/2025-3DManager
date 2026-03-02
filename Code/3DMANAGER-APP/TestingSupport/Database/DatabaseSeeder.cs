@@ -53,6 +53,8 @@
             await CreateProcUpdatePrinterAsync();
             await CreateProcUpdateUserAsync();
             await CreateProcGetUserDetailAsync();
+            await CreateProcUpdateFilamentAsync();
+            await CreateProcGetFilamentDetailAsync();
         }
 
         private async Task LoadDataAsync()
@@ -107,11 +109,13 @@
                 3DMANAGER_FILAMENT_COLOR,
                 3DMANAGER_FILAMENT_GROUP_ID,
                 3DMANAGER_FILAMENT_MATERIAL_TYPE,
-                3DMANAGER_FILAMENT_COST
+                3DMANAGER_FILAMENT_COST,
+                3DMANAGER_FILAMENT_WEIGHT
+
             )
             VALUES
-            ('PLA Negro','Filamento de prueba',1,1000,800,1.75,200,'000000',1,1,10),
-            ('PLA Blanco','Filamento de prueba',1,1000,800,1.75,200,'000000',1,1,20);
+            ('PLA Negro','Filamento de prueba',1,1000,800,1.75,200,'000000',1,1,10,1),
+            ('PLA Blanco','Filamento de prueba',1,1000,800,1.75,200,'000000',1,1,20,1);
 
             INSERT INTO `3DMANAGER_3DPRINT`
             (
@@ -261,14 +265,14 @@
                 `3DMANAGER_FILAMENT_STATE` INT NOT NULL,
                 `3DMANAGER_FILAMENT_MATERIAL_LENGTH` DECIMAL(10,4) NOT NULL,
                 `3DMANAGER_FILAMENT_MATERIAL_REMAINING_LENGTH` DECIMAL(10,4) NOT NULL,
-                `3DMANAGER_FILAMENT_MATERIAL_THICKNESS` FLOAT DEFAULT NULL,
-                `3DMANAGER_FILAMENT_TEMPERATURE` INT DEFAULT NULL,
-                `3DMANAGER_FILAMENT_COLOR` VARCHAR(10) DEFAULT NULL,
+                `3DMANAGER_FILAMENT_MATERIAL_THICKNESS` FLOAT NOT NULL,
+                `3DMANAGER_FILAMENT_TEMPERATURE` INT NOT NULL,
+                `3DMANAGER_FILAMENT_COLOR` VARCHAR(10) NOT NULL,
                 `3DMANAGER_FILAMENT_GROUP_ID` INT NOT NULL,
                 `3DMANAGER_FILAMENT_MATERIAL_TYPE` INT NOT NULL,
                 `3DMANAGER_FILAMENT_REGISTER_DATE` DATETIME DEFAULT CURRENT_TIMESTAMP,
-                `3DMANAGER_FILAMENT_WEIGHT` INT DEFAULT NULL,
-                `3DMANAGER_FILAMENT_COST` DECIMAL(10,2) DEFAULT NULL,
+                `3DMANAGER_FILAMENT_WEIGHT` INT  NOT NULL,
+                `3DMANAGER_FILAMENT_COST` DECIMAL(10,2)  NOT NULL,
                 `3DMANAGER_FILAMENT_IMAGE_URL` varchar(255) DEFAULT NULL,
                 `3DMANAGER_FILAMENT_IMAGE_KEY` varchar(255) DEFAULT NULL,
                 FOREIGN KEY (`3DMANAGER_FILAMENT_GROUP_ID`)
@@ -922,6 +926,103 @@
                     `USER_IMAGE_KEY` AS FILE_KEY
                     FROM `3DMANAGER_USER` U LEFT JOIN `3DMANAGER_C_ROLES` R ON  U.`USER_ROLE` = R.`3DMANAGER_C_ROLES_ID`
                     WHERE `USER_ID` = P_CD_USER AND `USER_GROUP_ID` = P_CD_GROUP;
+            END
+            """;
+
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
+
+        private async Task CreateProcUpdateFilamentAsync()
+        {
+            var sql = """
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_FILAMENT_UPDATE`;
+
+            CREATE PROCEDURE `3DMANAGER_pr_FILAMENT_UPDATE`(
+                IN P_CD_GROUP INT,
+                IN P_CD_FILAMENT INT,
+                IN P_CD_TEMPERATURE INT,
+                IN P_CD_LENGHT DECIMAL(10,4),
+                IN P_DS_COLOR VARCHAR(10),
+                IN P_DS_DESCRIPTION VARCHAR(500),
+                IN P_DS_NAME VARCHAR(100),
+                IN P_CD_COST DECIMAL(10,2),
+                OUT CodigoError INT
+            )
+            BEGIN
+
+            	DECLARE v_err_msg TEXT;
+                DECLARE EXIT HANDLER FOR SQLEXCEPTION
+            	BEGIN
+            		GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
+
+            		-- Forzar un commit independiente
+            		START TRANSACTION;
+            		INSERT INTO 3DMANAGER_SYSTEM_LOGS(PROCEDURE_NAME, ERROR_MESSAGE)
+            		VALUES('3DMANAGER_pr_FILAMENT_UPDATE', v_err_msg);
+            		COMMIT;
+
+            		SET CodigoError = -1;
+            		ROLLBACK;
+            	END;
+                SET CodigoError = 0;
+            	START TRANSACTION;
+            		UPDATE `3DMANAGER_FILAMENT` 
+                    SET `3DMANAGER_FILAMENT_NAME` = P_DS_NAME ,
+                     `3DMANAGER_FILAMENT_DESCRIPTION` = P_DS_DESCRIPTION ,
+                     `3DMANAGER_FILAMENT_TEMPERATURE` = P_CD_TEMPERATURE,
+            		 `3DMANAGER_FILAMENT_MATERIAL_REMAINING_LENGTH` = P_CD_LENGHT,
+                     `3DMANAGER_FILAMENT_COLOR` = P_DS_COLOR,
+                     `3DMANAGER_FILAMENT_COST` = P_CD_COST
+                    WHERE `3DMANAGER_FILAMENT_ID` = P_CD_FILAMENT AND `3DMANAGER_FILAMENT_GROUP_ID` = P_CD_GROUP;
+
+                    SELECT ROW_COUNT() AS Total;
+                COMMIT;
+            END
+            """;
+
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
+        private async Task CreateProcGetFilamentDetailAsync()
+        {
+            var sql = """
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_FILAMENT_DETAIL_GET`;
+
+            CREATE PROCEDURE `3DMANAGER_pr_FILAMENT_DETAIL_GET`(
+                IN P_CD_GROUP INT,
+                IN P_CD_FILAMENT INT
+            )
+            BEGIN
+
+            	SELECT 
+            		`3DMANAGER_FILAMENT_ID` AS FILAMENT_ID,
+                    `3DMANAGER_FILAMENT_NAME` AS FILAMENT_NAME,
+                    `3DMANAGER_C_TYPE_FILAMENT_NAME` AS FILAMENT_TYPE,
+                    `3DMANAGER_FILAMENT_WEIGHT` AS FILAMENT_WEIGHT,
+                    `3DMANAGER_FILAMENT_COLOR` AS FILAMENT_COLOR,
+                    `3DMANAGER_FILAMENT_TEMPERATURE` AS FILAMENT_TEMPERATURE,
+                    `3DMANAGER_FILAMENT_MATERIAL_LENGTH` AS FILAMENT_LENGHT,
+                    `3DMANAGER_FILAMENT_MATERIAL_REMAINING_LENGTH` AS FILAMENT_REMAINING_LENGHT,
+                    `3DMANAGER_FILAMENT_MATERIAL_THICKNESS` AS FILAMENT_THICKNESS,
+                    `3DMANAGER_FILAMENT_COST` AS FILAMENT_COST,
+                    `3DMANAGER_FILAMENT_DESCRIPTION` AS FILAMENT_DESCRIPTION,
+                    `3DMANAGER_FILAMENT_REGISTER_DATE`AS FILAMENT_CREATE_DATE,
+                    `3DMANAGER_FILAMENT_STATE` AS FILAMENT_STATE,
+                    (SELECT COUNT(*) 
+            			FROM `3DMANAGER_3DPRINT` 
+            			WHERE `3DMANAGER_3DPRINT_FILAMENT_ID` = P_CD_FILAMENT 
+                        AND `3DMANAGER_3DPRINT_GROUP_ID` = P_CD_GROUP
+                        AND `3DMANAGER_3DPRINT_STATE`= 2 
+            			AND `3DMANAGER_3DPRINT_REGISTER_DATE` > DATE_SUB(CURDATE(), INTERVAL 1 MONTH))AS FILAMENT_PRINTED_PRINTS_MONTH,
+                    (SELECT COUNT(*) 
+            			FROM `3DMANAGER_3DPRINT` 
+            			WHERE `3DMANAGER_3DPRINT_FILAMENT_ID` = P_CD_FILAMENT 
+                        AND `3DMANAGER_3DPRINT_GROUP_ID` = P_CD_GROUP
+                        AND `3DMANAGER_3DPRINT_STATE`= 2 )AS FILAMENT_PRINTED_PRINTS_TOTAL,
+                    `3DMANAGER_FILAMENT_IMAGE_URL` AS FILE_URL,
+                    `3DMANAGER_FILAMENT_IMAGE_KEY` AS FILE_KEY
+                    FROM `3DMANAGER_FILAMENT`
+                    LEFT JOIN `3DMANAGER_C_TYPE_FILAMENT` ON `3DMANAGER_C_TYPE_FILAMENT_ID` = `3DMANAGER_FILAMENT_MATERIAL_TYPE`
+                    WHERE `3DMANAGER_FILAMENT_ID` = P_CD_FILAMENT AND `3DMANAGER_FILAMENT_GROUP_ID` = P_CD_GROUP;
             END
             """;
 
