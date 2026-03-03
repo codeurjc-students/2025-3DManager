@@ -232,6 +232,94 @@ namespace _3DMANAGER_APP.DAL.Managers
                 return null;
             }
         }
+
+        public bool UpdatePrint(PrintDetailRequestDbObject requestDb)
+        {
+            try
+            {
+                string procName = $"{ProcedurePrefix}_pr_PRINT_UPDATE";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = requestDb.GroupId });
+                cmd.Parameters.Add(new MySqlParameter("P_CD_PRINT", MySqlDbType.Int32) { Value = requestDb.PrintId });
+                cmd.Parameters.Add(new MySqlParameter("P_DS_NAME", MySqlDbType.VarChar) { Value = requestDb.PrintName });
+                cmd.Parameters.Add(new MySqlParameter("P_DS_DESCRIPTION", MySqlDbType.VarChar) { Value = requestDb.PrintDescription });
+
+                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                var error = Convert.ToInt32(errorParam.Value);
+                if (error != 0)
+                {
+                    return false;
+                }
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    return ds.Tables[0].Rows[0].Field<long>("Total") > 0;
+                }
+
+                return false;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = "Error al actualizar la impresión en BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error al actualizar la impresión en BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+        }
+
+        public PrintDetailDbObject GetPrintDetail(int groupId, int printId)
+        {
+            try
+            {
+                PrintDetailDbObject response = null;
+                string procName = $"{ProcedurePrefix}_pr_PRINT_DETAIL_GET";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.VarChar) { Value = groupId });
+                cmd.Parameters.Add(new MySqlParameter("P_CD_PRINT", MySqlDbType.VarChar) { Value = printId });
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    response = new PrintDetailDbObject();
+                    return response.Create(ds.Tables[0].Rows[0]);
+                }
+
+                return response;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = "Error al devolver el detalle de impresión de en BBDD";
+                Logger.LogError(ex, msg);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error al devolver el detalle de impresión de en BBDD";
+                Logger.LogError(ex, msg);
+                return null;
+            }
+        }
     }
 
 }

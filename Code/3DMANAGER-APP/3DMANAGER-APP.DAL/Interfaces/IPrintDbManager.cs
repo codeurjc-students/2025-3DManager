@@ -9,5 +9,7 @@ namespace _3DMANAGER_APP.DAL.Interfaces
         public int PostPrint(PrintRequestDbObject request, out int? error);
         public bool UpdatePrintImageData(int printId, FileResponseDbObject image);
         public List<PrintListResponseDbObject> GetPrintListByType(int group, int pageNumber, int pageSize, int type, int id, out int totalItems);
+        bool UpdatePrint(PrintDetailRequestDbObject request);
+        PrintDetailDbObject GetPrintDetail(int groupId, int printId);
     }
 }
