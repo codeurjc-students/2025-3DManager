@@ -186,7 +186,7 @@ const FilamentDetailPage: React.FC = () => {
                             <div className="d-flex flex row">
                                 <div className="col-6">
                                     <label htmlFor="filamentThickness" className="form-label">Grosor Filamento</label>
-                                    <input id="filamentThickness" type="text" className="input-value-2 w-100" value={data?.filamentThickness} disabled />
+                                    <input id="filamentThickness" type="text" className="input-value-2 w-100" value={data?.filamentThickness ?? ""} disabled />
                                 </div>
                                 <div className="col-6">
                                     <label htmlFor="filamentType" className="form-label">Tipo filamento</label>

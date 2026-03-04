@@ -21,6 +21,7 @@ import AuthWatcher from './context/AuthWatcher';
 import PrinterDetailPage from './pages/PrinterDetailsPage';
 import UserDetailPage from './pages/UserDetailPage';
 import FilamentDetailPage from './pages/FilamentDetailsPage';
+import PrintDetailPage from './pages/PrintDetailsPage';
 
 
 
@@ -52,6 +53,7 @@ const App: React.FC = () => {
                                 <Route path="/dashboard/printer/detail/:printerId" element={<ProtectedRoute><PrinterDetailPage /></ProtectedRoute>} />
                                 <Route path="/dashboard/user/detail/:userId" element={<ProtectedRoute><UserDetailPage /></ProtectedRoute>} />
                                 <Route path="/dashboard/filament/detail/:filamentId" element={<ProtectedRoute><FilamentDetailPage /></ProtectedRoute>} />
+                                <Route path="/dashboard/print/detail/:printId" element={<ProtectedRoute><PrintDetailPage /></ProtectedRoute>} />
                             </Routes>
                         </main>
                     </div>
