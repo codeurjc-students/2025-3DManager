@@ -122,9 +122,9 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
-        [Tags("Printers")]
+        [Tags("Prints")]
         [HttpPut]
-        public IActionResult UpdatePrinter([FromBody] PrintDetailRequest request)
+        public IActionResult UpdatePrint([FromBody] PrintDetailRequest request)
         {
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, "No autenticado")));
@@ -151,14 +151,14 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<PrintDetailObject>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<PrintDetailObject>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
-        [Tags("Printers")]
+        [Tags("Prints")]
         [HttpGet]
-        public IActionResult GetPrinterDetail([FromQuery] int printerId)
+        public IActionResult GetPrintDetail([FromQuery] int printId)
         {
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<PrintDetailObject>(new ErrorProperties(401, "No autenticado")));
 
-            PrintDetailObject printerResponse = _printManager.GetPrintDetail(GroupId.Value, printerId, out BaseError error);
+            PrintDetailObject printerResponse = _printManager.GetPrintDetail(GroupId.Value, printId, out BaseError error);
 
             if (printerResponse == null || error != null)
                 return StatusCode(500, new Models.CommonResponse<PrintDetailObject>(new ErrorProperties(error.code, error.message)));

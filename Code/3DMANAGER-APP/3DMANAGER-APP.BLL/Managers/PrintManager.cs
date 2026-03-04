@@ -158,7 +158,7 @@ namespace _3DMANAGER_APP.BLL.Managers
                 if (response.PrintImageData != null && response.PrintImageData.FileUrl != null && response.PrintImageData.FileKey != null)
                     response.PrintImageData.FileUrl = _awsS3Service.GetPresignedUrl(response.PrintImageData.FileKey, 1);
                 else
-                    response.PrintImageData.FileUrl = _awsS3Service.GetPresignedUrl("default/3dmanager-default-print.png", 1);
+                    response.PrintImageData.FileUrl = _awsS3Service.GetPresignedUrl("default/3dmanager-default-3dprint.png", 1);
 
             }
             return response;
