@@ -4,6 +4,8 @@ import type { PrintListResponse } from '../models/print/PrintListResponse';
 import type { PrintRequest } from '../models/print/PrintRequest';
 import type { PrintDetailRequest } from '../models/print/PrintDetailRequest';
 import type { PrintDetailObject } from '../models/print/PrintDetailObject';
+import type { PrintCommentRequest } from '../models/print/PrintCommentRequest';
+import type { PrintCommentObject } from '../models/print/PrintCommentObject';
 
 export const getPrintList = async (pageNumber: number, pageSize: number): Promise<CommonResponse<PrintListResponse>> => {
     const response = await apiClient.get<CommonResponse<PrintListResponse>>(`/api/v1/prints/GetPrintList?pageNumber=${pageNumber}&pageSize=${pageSize}`);
@@ -45,3 +47,15 @@ export const getPrintDetail = async (printId: number): Promise<CommonResponse<Pr
     const response = await apiClient.get<CommonResponse<PrintDetailObject>>(`/api/v1/prints/GetPrintDetail?printId=${printId}`);
     return response.data;
 }
+
+export const getPrintComments = async (printId: number): Promise<CommonResponse<PrintCommentObject[]>> => {
+    const response = await apiClient.get(`/api/v1/prints/GetPrintComments?printId=${printId}`);
+    return response.data;
+};
+
+export const postPrintComment = async (data: PrintCommentRequest): Promise<CommonResponse<number>> => {
+    const response = await apiClient.post(`/api/v1/prints/PostPrintComment`, data);
+    return response.data;
+};
+
+

@@ -6,6 +6,7 @@ import InfoPopup from "../components/popupComponent/InfoPopup";
 import { getPrintDetail, updatePrint } from "../api/printService";
 import type { PrintDetailObject } from "../models/print/PrintDetailObject";
 import type { PrintDetailRequest } from "../models/print/PrintDetailRequest";
+import PrintComments from "../components/PrintComments";
 
 const PrintDetailPage: React.FC = () => {
     const navigate = useNavigate();
@@ -153,45 +154,41 @@ const PrintDetailPage: React.FC = () => {
                     </div>
                 </div>
                 <div className="col-7 d-flex flex-column ms-auto">
-                    <div className="h-35 grey-container-detail mb-2">
+                    <div className="h-30 grey-container-detail mb-2">
                         <h3 className="title-impact-3 ms-3 mt-1">Datos impresión</h3>
-                        <div className="h-08 ms-3">
+                        <div className="h-08 ms-3 me-3">
                             <div className="d-flex flex row">
-                                <div className="col-5 ">
+                                <div className="col-3 ">
                                     <label htmlFor="printTime" className="form-label">Tiempo impresión</label>
                                     <input type="text" className="input-value-2 w-100" value={data?.printTimeImpression} disabled />
                                 </div>
-                                <div className="col-5 ">
+                                <div className="col-3 ">
                                     <label htmlFor="printRealTime" className="form-label">Tiempo real impresión</label>
                                     <input type="text" className="input-value-2 w-100" value={data?.printRealTimeImpression} disabled />
                                 </div>
-                            </div>
-                        </div>
-                        <div className="h-08 ms-3">
-                            <div className="d-flex flex row">
-                                <div className="col-5">
+                                <div className="col-3">
                                     <label htmlFor="printMaterialConsumed" className="form-label">Material usado</label>
                                     <input type="text" className="input-value-2 w-100" value={data?.printMaterialConsumed} disabled />
                                 </div>
-                                <div className="col-5 ">
+                                <div className="col-3">
                                     <label htmlFor="printEstimatedCost" className="form-label">Estimación de coste</label>
                                     <input type="text" className="input-value-2 w-100" value={data?.printEstimedCost} disabled />
                                 </div>
                             </div>
                         </div>
-                        <div className="h-10 ms-3">
-                            <div className="d-flex flex row">
-                                <div className="col-10">
+                        <div className="h-25 ms-3 me-3">
+                            <div className="d-flex flex-rows ">
+                                <div className="col-10 w-100">
                                     <label htmlFor="printDescription" className="form-label">Descripcion</label>
-                                    <textarea className="input-value-5 w-100" value={description}
+                                    <textarea className="input-value-5 table-scroll w-100" value={description}
                                         onChange={(e) => setDescription(e.target.value)} disabled={!isManager} />
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div className="grey-container-detail mt-2 h-50">
-                        <h3 className="title-impact-3 ms-2 mt-2">Comentarios</h3>
-                       {/* <PrintComments id={Number(printId)}/>*/}
+                    <div className="grey-container-detail mt-2 h-55">
+                        <h3 className="title-impact-3 ms-3 mt-2">Comentarios</h3>
+                        <PrintComments id={Number(printId)}/>
                     </div>
                 </div>
             </div>
