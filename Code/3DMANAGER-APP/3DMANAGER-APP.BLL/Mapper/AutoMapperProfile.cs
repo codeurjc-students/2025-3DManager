@@ -73,6 +73,8 @@ namespace _3DMANAGER_APP.BLL.Mapper
                            $"{TimeSpan.FromSeconds((double)src.PrintRealTimeImpression).Minutes}min"));
 
             CreateMap<PrintDetailRequest, PrintDetailRequestDbObject>().ReverseMap();
+            CreateMap<PrintCommentRequest, PrintCommentRequestDbObject>().ReverseMap();
+            CreateMap<PrintCommentObject, PrintCommentDbObject>().ReverseMap();
             #endregion
 
             #region Catalog
@@ -94,7 +96,6 @@ namespace _3DMANAGER_APP.BLL.Mapper
             CreateMap<PrinterEstimationObject, PrinterEstimationDbObject>().ReverseMap();
             CreateMap<PrinterDetailRequest, PrinterDetailRequestDbObject>();
             #endregion
-
 
             #region File
             CreateMap<FileResponse, FileResponseDbObject>().ReverseMap();

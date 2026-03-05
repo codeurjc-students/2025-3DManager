@@ -320,6 +320,99 @@ namespace _3DMANAGER_APP.DAL.Managers
                 return null;
             }
         }
-    }
 
+        public List<PrintCommentDbObject> GetPrintComments(int groupId, int printId)
+        {
+            try
+            {
+                List<PrintCommentDbObject> list = new List<PrintCommentDbObject>();
+                string procName = $"{ProcedurePrefix}_pr_PRINT_COMMENTS_LIST";
+
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
+                cmd.Parameters.Add(new MySqlParameter("P_PRINT_ID", MySqlDbType.Int32) { Value = printId });
+
+                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    foreach (DataRow row in ds.Tables[0].Rows)
+                    {
+                        PrintCommentDbObject comment = new PrintCommentDbObject();
+                        list.Add(comment.Create(row));
+                    }
+                }
+
+                return list;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = "Error al obtener los comentarios de impresión en BBDD";
+                Logger.LogError(ex, msg);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error al obtener los comentarios de impresión en BBDD";
+                Logger.LogError(ex, msg);
+                return null;
+            }
+        }
+
+        public int PostPrintComment(PrintCommentRequestDbObject request)
+        {
+            try
+            {
+                string procName = $"{ProcedurePrefix}_pr_PRINT_COMMENT_INSERT";
+
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_COMMENT", MySqlDbType.VarChar) { Value = request.Comment });
+                cmd.Parameters.Add(new MySqlParameter("P_USER_ID", MySqlDbType.Int32) { Value = request.UserId });
+                cmd.Parameters.Add(new MySqlParameter("P_PRINT_ID", MySqlDbType.Int32) { Value = request.PrintId });
+
+
+                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                int errorCode = Convert.ToInt32(errorParam.Value);
+                if (errorCode != 0)
+                {
+                    Logger.LogError($"Error al insertar comentario. Código: {errorCode}");
+                    return 0;
+                }
+                if (ds.Tables.Count > 1 && ds.Tables[1].Rows.Count > 0)
+                {
+                    return Convert.ToInt32(ds.Tables[1].Rows[0]["COMMENT_ID"]);
+                }
+                return 0;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = "Error al insertar comentario en BBDD";
+                Logger.LogError(ex, msg);
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error al insertar comentario en BBDD";
+                Logger.LogError(ex, msg);
+                return 0;
+            }
+        }
+    }
 }

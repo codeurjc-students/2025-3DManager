@@ -163,5 +163,33 @@ namespace _3DMANAGER_APP.BLL.Managers
             }
             return response;
         }
+
+        public List<PrintCommentObject> GetPrintComments(int groupId, int printId, out BaseError? error)
+        {
+            error = null;
+
+            var dbResult = _printDbManager.GetPrintComments(groupId, printId);
+
+            if (dbResult == null)
+            {
+                error = new BaseError
+                {
+                    code = 500,
+                    message = "Error obteniendo comentarios"
+                };
+                return null;
+            }
+
+            return _mapper.Map<List<PrintCommentObject>>(dbResult);
+        }
+
+
+        public int PostPrintComment(PrintCommentRequest request, out BaseError? error)
+        {
+            error = null;
+            PrintCommentRequestDbObject requestDb = _mapper.Map<PrintCommentRequestDbObject>(request);
+            return _printDbManager.PostPrintComment(requestDb);
+        }
+
     }
 }

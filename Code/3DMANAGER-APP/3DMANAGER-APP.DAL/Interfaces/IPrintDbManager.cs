@@ -11,5 +11,7 @@ namespace _3DMANAGER_APP.DAL.Interfaces
         public List<PrintListResponseDbObject> GetPrintListByType(int group, int pageNumber, int pageSize, int type, int id, out int totalItems);
         bool UpdatePrint(PrintDetailRequestDbObject request);
         PrintDetailDbObject GetPrintDetail(int groupId, int printId);
+        List<PrintCommentDbObject> GetPrintComments(int groupI, int printId);
+        int PostPrintComment(PrintCommentRequestDbObject request);
     }
 }
