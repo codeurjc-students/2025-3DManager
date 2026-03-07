@@ -207,7 +207,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Tags("Prints")]
         [HttpPost]
-        public IActionResult AddComment([FromBody] PrintCommentRequest request)
+        public IActionResult PostPrintComment([FromBody] PrintCommentRequest request)
         {
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<int>(new ErrorProperties(401, "No autenticado")));
@@ -217,7 +217,7 @@ namespace _3DMANAGER_APP.Server.Controllers
             int newId = _printManager.PostPrintComment(request, out BaseError error);
 
             if (error != null || newId == 0)
-                return StatusCode(500, new Models.CommonResponse<int>(new ErrorProperties(error.code, error.message)));
+                return StatusCode(500, new Models.CommonResponse<int>(new ErrorProperties(error != null ? error.code : StatusCodes.Status500InternalServerError, error.message ?? "Error al crear comentario")));
 
             return Ok(new CommonResponse<int>(newId));
         }

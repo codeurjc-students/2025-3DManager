@@ -336,9 +336,6 @@ namespace _3DMANAGER_APP.DAL.Managers
                 cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
                 cmd.Parameters.Add(new MySqlParameter("P_PRINT_ID", MySqlDbType.Int32) { Value = printId });
 
-                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
-                cmd.Parameters.Add(errorParam);
-
                 using var adapter = new MySqlDataAdapter(cmd);
                 var ds = new DataSet();
                 adapter.Fill(ds);
@@ -372,7 +369,7 @@ namespace _3DMANAGER_APP.DAL.Managers
         {
             try
             {
-                string procName = $"{ProcedurePrefix}_pr_PRINT_COMMENT_INSERT";
+                string procName = $"{ProcedurePrefix}_pr_PRINT_COMMENT_POST";
 
                 using var cmd = new MySqlCommand(procName, Connection)
                 {
@@ -383,8 +380,9 @@ namespace _3DMANAGER_APP.DAL.Managers
                 cmd.Parameters.Add(new MySqlParameter("P_USER_ID", MySqlDbType.Int32) { Value = request.UserId });
                 cmd.Parameters.Add(new MySqlParameter("P_PRINT_ID", MySqlDbType.Int32) { Value = request.PrintId });
 
-
                 var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+
                 using var adapter = new MySqlDataAdapter(cmd);
                 var ds = new DataSet();
                 adapter.Fill(ds);
@@ -395,9 +393,9 @@ namespace _3DMANAGER_APP.DAL.Managers
                     Logger.LogError($"Error al insertar comentario. Código: {errorCode}");
                     return 0;
                 }
-                if (ds.Tables.Count > 1 && ds.Tables[1].Rows.Count > 0)
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                 {
-                    return Convert.ToInt32(ds.Tables[1].Rows[0]["COMMENT_ID"]);
+                    return Convert.ToInt32(ds.Tables[0].Rows[0]["COMMENT_ID"]);
                 }
                 return 0;
             }
