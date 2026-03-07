@@ -44,7 +44,7 @@ th, td {
 }
 .main-container {
 
-    display: "flex";
+    display: flex;
     flex-direction: column;
     height: 100vh;
     overflow :hidden;
@@ -61,6 +61,10 @@ th, td {
 .image-container-2 {
     width: 60%;
     height: 80%;
+}
+.image-container-3 {
+    width: 100%;
+    height: 120%;
 }
 
 .app-title {

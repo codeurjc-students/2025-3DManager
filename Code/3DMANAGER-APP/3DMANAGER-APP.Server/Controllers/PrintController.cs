@@ -109,5 +109,119 @@ namespace _3DMANAGER_APP.Server.Controllers
 
             return Ok(new Models.CommonResponse<PrintListResponse>(printList));
         }
+
+        /// <summary>
+        /// update a print
+        /// </summary>
+        /// <returns>Return  a bool that indicates the success of the operation made</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="401">No autorizado</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Prints")]
+        [HttpPut]
+        public IActionResult UpdatePrint([FromBody] PrintDetailRequest request)
+        {
+            if (GroupId == null)
+                return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, "No autenticado")));
+
+            request.GroupId = GroupId.Value;
+            bool response = _printManager.UpdatePrint(request);
+
+            if (!response)
+                return StatusCode(500, new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error actualizando la impresión")));
+
+            return Ok(new Models.CommonResponse<bool>(response));
+        }
+
+
+        /// <summary>
+        /// Get print detail
+        /// </summary>
+        /// <returns>A detail object of a print</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="401">No autorizado</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<PrintDetailObject>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<PrintDetailObject>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<PrintDetailObject>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Prints")]
+        [HttpGet]
+        public IActionResult GetPrintDetail([FromQuery] int printId)
+        {
+            if (GroupId == null)
+                return Unauthorized(new Models.CommonResponse<PrintDetailObject>(new ErrorProperties(401, "No autenticado")));
+
+            PrintDetailObject printerResponse = _printManager.GetPrintDetail(GroupId.Value, printId, out BaseError error);
+
+            if (printerResponse == null || error != null)
+                return StatusCode(500, new Models.CommonResponse<PrintDetailObject>(new ErrorProperties(error.code, error.message)));
+
+            return Ok(new Models.CommonResponse<PrintDetailObject>(printerResponse));
+        }
+
+        /// <summary>
+        /// Get print comments
+        /// </summary>
+        /// <returns>A list object of a print comments</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="401">No autorizado</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<List<PrintCommentObject>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<List<PrintCommentObject>>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<List<PrintCommentObject>>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Prints")]
+        [HttpGet]
+        public IActionResult GetPrintComments([FromQuery] int printId)
+        {
+            if (GroupId == null)
+                return Unauthorized(new Models.CommonResponse<List<PrintCommentObject>>(new ErrorProperties(401, "No autenticado")));
+
+            var comments = _printManager.GetPrintComments(GroupId.Value, printId, out BaseError error);
+
+            if (comments == null || error != null)
+                return StatusCode(500, new Models.CommonResponse<List<PrintCommentObject>>(new ErrorProperties(error.code, error.message)));
+
+            return Ok(new CommonResponse<List<PrintCommentObject>>(comments));
+        }
+
+        /// <summary>
+        /// Post comment on a print
+        /// </summary>
+        /// <returns>Id of the print comment created</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="401">No autorizado</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Prints")]
+        [HttpPost]
+        public IActionResult PostPrintComment([FromBody] PrintCommentRequest request)
+        {
+            if (GroupId == null)
+                return Unauthorized(new Models.CommonResponse<int>(new ErrorProperties(401, "No autenticado")));
+
+            request.UserId = UserId.Value;
+
+            int newId = _printManager.PostPrintComment(request, out BaseError error);
+
+            if (error != null || newId == 0)
+                return StatusCode(500, new Models.CommonResponse<int>(new ErrorProperties(error != null ? error.code : StatusCodes.Status500InternalServerError, error.message ?? "Error al crear comentario")));
+
+            return Ok(new CommonResponse<int>(newId));
+        }
+
+
     }
 }

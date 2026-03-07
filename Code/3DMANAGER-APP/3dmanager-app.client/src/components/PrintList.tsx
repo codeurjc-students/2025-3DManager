@@ -54,7 +54,7 @@ const PrintList: React.FC = () => {
                                 <td>{print.printTime}</td>
                                 <td>{print.printFilamentConsumed}</td>
                                 <td>
-                                    <button className="button-darkGrey w-75" onClick={() => navigate(`/detail/print/${print.printId}`)}>
+                                    <button className="button-darkGrey w-75" onClick={() => navigate(`/dashboard/print/detail/${print.printId}`)}>
                                         Ver detalle
                                     </button>
                                 </td>

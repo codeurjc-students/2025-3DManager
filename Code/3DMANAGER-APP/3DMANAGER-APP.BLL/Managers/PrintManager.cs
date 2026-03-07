@@ -130,5 +130,66 @@ namespace _3DMANAGER_APP.BLL.Managers
                 TotalPages = (int)Math.Ceiling((double)totalItems / pagination.PageSize)
             };
         }
+
+        public bool UpdatePrint(PrintDetailRequest request)
+        {
+            PrintDetailRequestDbObject requestDb = _mapper.Map<PrintDetailRequestDbObject>(request);
+            return _printDbManager.UpdatePrint(requestDb);
+        }
+
+        public PrintDetailObject GetPrintDetail(int groupId, int printId, out BaseError? error)
+        {
+            error = null;
+            PrintDetailObject response;
+            var responseDb = _printDbManager.GetPrintDetail(groupId, printId);
+            if (responseDb == null)
+            {
+                _logger.LogError("Error al obtener el detalle de impresión");
+                error = new BaseError()
+                {
+                    code = StatusCodes.Status500InternalServerError,
+                    message = "Error al obtener el detalle de impresión"
+                };
+            }
+            response = _mapper.Map<PrintDetailObject>(responseDb);
+
+            if (response != null)
+            {
+                if (response.PrintImageData != null && response.PrintImageData.FileUrl != null && response.PrintImageData.FileKey != null)
+                    response.PrintImageData.FileUrl = _awsS3Service.GetPresignedUrl(response.PrintImageData.FileKey, 1);
+                else
+                    response.PrintImageData.FileUrl = _awsS3Service.GetPresignedUrl("default/3dmanager-default-3dprint.png", 1);
+
+            }
+            return response;
+        }
+
+        public List<PrintCommentObject> GetPrintComments(int groupId, int printId, out BaseError? error)
+        {
+            error = null;
+
+            var dbResult = _printDbManager.GetPrintComments(groupId, printId);
+
+            if (dbResult == null)
+            {
+                error = new BaseError
+                {
+                    code = 500,
+                    message = "Error obteniendo comentarios"
+                };
+                return null;
+            }
+
+            return _mapper.Map<List<PrintCommentObject>>(dbResult);
+        }
+
+
+        public int PostPrintComment(PrintCommentRequest request, out BaseError? error)
+        {
+            error = null;
+            PrintCommentRequestDbObject requestDb = _mapper.Map<PrintCommentRequestDbObject>(request);
+            return _printDbManager.PostPrintComment(requestDb);
+        }
+
     }
 }

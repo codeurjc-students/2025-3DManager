@@ -55,6 +55,8 @@
             await CreateProcGetUserDetailAsync();
             await CreateProcUpdateFilamentAsync();
             await CreateProcGetFilamentDetailAsync();
+            await CreateProcUpdatePrintAsync();
+            await CreateProcGetPrintDetailAsync();
         }
 
         private async Task LoadDataAsync()
@@ -1023,6 +1025,91 @@
                     FROM `3DMANAGER_FILAMENT`
                     LEFT JOIN `3DMANAGER_C_TYPE_FILAMENT` ON `3DMANAGER_C_TYPE_FILAMENT_ID` = `3DMANAGER_FILAMENT_MATERIAL_TYPE`
                     WHERE `3DMANAGER_FILAMENT_ID` = P_CD_FILAMENT AND `3DMANAGER_FILAMENT_GROUP_ID` = P_CD_GROUP;
+            END
+            """;
+
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
+
+        private async Task CreateProcUpdatePrintAsync()
+        {
+            var sql = """
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_PRINT_UPDATE`;
+            CREATE PROCEDURE `3DMANAGER_pr_PRINT_UPDATE`(
+                IN P_CD_GROUP INT,
+                IN P_CD_PRINT INT,
+                IN P_DS_NAME VARCHAR(100),
+                IN P_DS_DESCRIPTION VARCHAR(500),
+                OUT CodigoError INT
+            )
+            BEGIN
+
+            	DECLARE v_err_msg TEXT;
+                DECLARE EXIT HANDLER FOR SQLEXCEPTION
+            	BEGIN
+            		GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
+
+            		-- Forzar un commit independiente
+            		START TRANSACTION;
+            		INSERT INTO 3DMANAGER_SYSTEM_LOGS(PROCEDURE_NAME, ERROR_MESSAGE)
+            		VALUES('3DMANAGER_pr_PRINT_UPDATE', v_err_msg);
+            		COMMIT;
+
+            		SET CodigoError = -1;
+            		ROLLBACK;
+            	END;
+                SET CodigoError = 0;
+            	START TRANSACTION;
+            		UPDATE `3DMANAGER_3DPRINT` 
+                    SET 
+                     `3DMANAGER_3DPRINT_NAME` = P_DS_NAME ,
+                     `3DMANAGER_3DPRINT_DESCRIPTION` = P_DS_DESCRIPTION 
+                    WHERE `3DMANAGER_3DPRINT_ID` = P_CD_PRINT AND `3DMANAGER_3DPRINT_GROUP_ID` = P_CD_GROUP;
+
+                    SELECT ROW_COUNT() AS Total;
+                COMMIT;
+            END
+            """;
+
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
+        private async Task CreateProcGetPrintDetailAsync()
+        {
+            var sql = """
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_PRINT_DETAIL_GET`;
+
+            CREATE PROCEDURE `3DMANAGER_pr_PRINT_DETAIL_GET`(
+                IN P_CD_GROUP INT,
+                IN P_CD_PRINT INT
+            )
+            BEGIN
+
+            	SELECT 
+            		P.`3DMANAGER_3DPRINT_ID` AS PRINT_ID,
+                    P.`3DMANAGER_3DPRINT_FILAMENT_ID` AS PRINT_FILAMENT_ID,
+                    F.`3DMANAGER_FILAMENT_NAME` AS PRINT_FILAMENT_NAME,
+                    TP.`3DMANAGER_C_TYPE_FILAMENT_NAME` AS PRINT_MATERIAL,
+                    P.`3DMANAGER_3DPRINT_PRINTER_ID` AS PRINT_PRINTER_ID,
+                    PR.`3DMANAGER_PRINTER_NAME` AS PRINT_PRINTER_NAME,
+                    P.`3DMANAGER_3DPRINT_USER_ID` AS PRINT_USER_ID,
+                    U.`USER_NAME` AS PRINT_USER_NAME,
+                    P.`3DMANAGER_3DPRINT_NAME` AS PRINT_NAME,
+                    S.`3DMANAGER_C_STATE_PRINT_ID` AS PRINT_STATE,
+                    P.`3DMANAGER_3DPRINT_DESCRIPTION` AS PRINT_DESCRIPTION,
+                    P.`3DMANAGER_3DPRINT_REGISTER_DATE` AS PRINT_DATE_CREATE_TIME,
+                    P.`3DMANAGER_3DPRINT_MATERIAL_CONSUMED` AS PRINT_MATERIAL_CONSUMED,
+                    P.`3DMANAGER_3DPRINT_IMPRESSION_TIME` AS PRINT_TIME_IMPRESSION,
+                    P.`3DMANAGER_3DPRINT_REAL_IMPRESSION_TIME` AS PRINT_REAL_TIME_IMPRESSION,
+                    F.`3DMANAGER_FILAMENT_COST` AS FILAMENT_COST,
+                    P.`3DMANAGER_3DPRINT_IMAGE_URL` AS FILE_URL,
+                    P.`3DMANAGER_3DPRINT_IMAGE_KEY` AS FILE_KEY
+                FROM `3DMANAGER_3DPRINT` P
+                LEFT JOIN `3DMANAGER_FILAMENT` F ON F.`3DMANAGER_FILAMENT_ID` = P.`3DMANAGER_3DPRINT_FILAMENT_ID`
+                LEFT JOIN `3DMANAGER_USER` U ON U.`USER_ID` = P.`3DMANAGER_3DPRINT_USER_ID`
+                LEFT JOIN `3DMANAGER_PRINTER` PR ON PR.`3DMANAGER_PRINTER_ID` = P.`3DMANAGER_3DPRINT_PRINTER_ID`
+                LEFT JOIN `3DMANAGER_C_STATE_PRINT` S ON S.`3DMANAGER_C_STATE_PRINT_ID` = P.`3DMANAGER_3DPRINT_STATE`
+                LEFT JOIN `3DMANAGER_C_TYPE_FILAMENT` TP ON F.`3DMANAGER_FILAMENT_MATERIAL_TYPE` = TP.`3DMANAGER_C_TYPE_FILAMENT_ID`
+                WHERE `3DMANAGER_3DPRINT_GROUP_ID` = P_CD_GROUP and  `3DMANAGER_3DPRINT_ID` = P_CD_PRINT ;
             END
             """;
 
