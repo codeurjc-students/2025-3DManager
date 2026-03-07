@@ -48,10 +48,6 @@ const PrintComments: React.FC<PrintCommentsProps> = ({ id }) => {
         }
     };
 
-     const mockComments: PrintCommentObject[] = [
-        
-    ];
-
     return (
         <div className="comments-container ms-3 d-flex flex-column h-100">
             <div className="comments-scroll comments-list h-55">
