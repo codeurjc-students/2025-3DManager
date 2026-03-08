@@ -42,11 +42,11 @@ const PrinterDetailPage: React.FC = () => {
                 setModel(printer.printerModel || "");
                 setName(printer.printerName || "");
                 setChartData([
-                    { name: "Pendiente", value: 25 },
-                    { name: "Completada", value: 70 },
-                    { name: "No completada", value: 5 }
+                    { name: "Pendiente", value: (printer.printerPrintsPending * 100) / printer.printerPrintsTotal },
+                    { name: "Completada", value: (printer.printerPrintsComplete * 100) / printer.printerPrintsTotal },
+                    { name: "No completada", value: (printer.printerPrintsNoComplete * 100) / printer.printerPrintsTotal }
                     ,
-                ])
+                ]);
             }
         });
     }, []);
@@ -205,11 +205,11 @@ const PrinterDetailPage: React.FC = () => {
                             <div className="col-2 ms-3 me-5 d-flex flex-column">
                                 <div className="h-50">
                                     <label htmlFor="printerEstimations" className="form-label">Tasa de éxito</label>
-                                    <input type="text" className="input-value-2 w-100" value={data?.printerPrintSuccessRate ?? 0} disabled />
+                                    <input type="text" className="input-value-2 w-100" value={data?.printerSuccessRate ?? 0} disabled />
                                 </div>
                                 <div>
                                     <label htmlFor="printerEstimations" className="form-label">Porcentaje eficiencia tiempo real en impresión </label>
-                                    <input type="text" className="input-value-2 w-100" value={data?.printerPrintsTotal ?? 0} disabled />
+                                    <input type="text" className="input-value-2 w-100" value={data?.printerTimeVariation ?? 0} disabled />
                                 </div>
                             </div>
                             <div className="col-10 ms-5">

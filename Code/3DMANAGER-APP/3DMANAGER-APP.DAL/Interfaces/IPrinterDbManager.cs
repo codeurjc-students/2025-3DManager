@@ -13,5 +13,6 @@ namespace _3DMANAGER_APP.DAL.Interfaces
         public bool UpdatePrinterImageData(int printerId, FileResponseDbObject image);
         public bool UpdatePrinter(PrinterDetailRequestDbObject requestDb);
         PrinterDetailDbObject GetPrinterDetail(int groupId, int printerId);
+        List<PrinterTimesValuesDbObject> GetTimeVariation(int groupId, int printerId);
     }
 }

@@ -156,8 +156,31 @@ namespace _3DMANAGER_APP.BLL.Managers
                 else
                     response.PrinterImageData.FileUrl = _awsS3Service.GetPresignedUrl("default/3dmanager-default-printer.jpg", 1);
 
+                response.PrinterTimeVariation = GetPrinterTimeVariation(groupId, printerId, out error);
             }
+
             return response;
+        }
+
+        public float GetPrinterTimeVariation(int groupId, int printerId, out BaseError? error)
+        {
+            error = null;
+            var responseDb = _printerDbManager.GetTimeVariation(groupId, printerId);
+            if (responseDb == null)
+            {
+                _logger.LogError("Error al obtener el listado de tiempos de impresión");
+                error = new BaseError()
+                {
+                    code = StatusCodes.Status500InternalServerError,
+                    message = "Error al obtener el listado de tiempos de impresión"
+                };
+            }
+            var variations = responseDb
+            .Where(time => time.PrinterTimeImpresion > 0)
+            .Average(time => ((float)(time.PrinterRealTimeImpresion - time.PrinterTimeImpresion) / time.PrinterTimeImpresion) * 100
+            );
+
+            return variations;
         }
     }
 }

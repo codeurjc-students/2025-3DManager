@@ -20,8 +20,7 @@ namespace _3DMANAGER_APP.BLL.Models.Printer
         public int PrinterPrintsComplete { get; set; }
         public int PrinterPrintsNoComplete { get; set; }
         public int PrinterPrintsCompleteMonth { get; set; }
-        public float PrinterPrintSuccessRate { get; set; }
-
-        public PrinterEstimationObject? PrinterEstimations;
+        public float PrinterSuccessRate { get; set; }
+        public float PrinterTimeVariation { get; set; }
     }
 }

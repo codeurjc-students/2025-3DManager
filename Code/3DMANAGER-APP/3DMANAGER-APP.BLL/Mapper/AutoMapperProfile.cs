@@ -92,7 +92,7 @@ namespace _3DMANAGER_APP.BLL.Mapper
                 opt => opt.MapFrom(src => ConvertHours(src.PrinterTotalHours)))
             .ForMember(dest => dest.PrinterTotalHoursMonth,
                 opt => opt.MapFrom(src => ConvertHours(src.PrinterTotalHoursMonth)))
-            .ForMember(dest => dest.PrinterPrintSuccessRate,
+            .ForMember(dest => dest.PrinterSuccessRate,
                 opt => opt.MapFrom(src =>
                 (src.PrinterPrintsComplete + src.PrinterPrintsNoComplete) == 0 ? 0
                 : (float)src.PrinterPrintsComplete / (src.PrinterPrintsComplete + src.PrinterPrintsNoComplete)

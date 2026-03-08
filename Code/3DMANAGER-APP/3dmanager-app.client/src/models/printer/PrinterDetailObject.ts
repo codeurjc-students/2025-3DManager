@@ -20,5 +20,6 @@ export interface PrinterDetailObject {
     printerPrintsComplete : number;
     printerPrintsNoComplete : number;
     printerPrintsCompleteMonth : number;
-    printerPrintSuccessRate : number;
+    printerSuccessRate: number;
+    printerTimeVariation: number;
 }
