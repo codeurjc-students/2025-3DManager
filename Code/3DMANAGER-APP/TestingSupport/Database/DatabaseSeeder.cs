@@ -51,6 +51,7 @@
             await CreateProcUserGetByIdAsync();
             await CreateProcuserGroupGetByIdAsync();
             await CreateProcUpdatePrinterAsync();
+            await CreateProcGetPrinterDetailAsync();
             await CreateProcUpdateUserAsync();
             await CreateProcGetUserDetailAsync();
             await CreateProcUpdateFilamentAsync();
@@ -1110,6 +1111,76 @@
                 LEFT JOIN `3DMANAGER_C_STATE_PRINT` S ON S.`3DMANAGER_C_STATE_PRINT_ID` = P.`3DMANAGER_3DPRINT_STATE`
                 LEFT JOIN `3DMANAGER_C_TYPE_FILAMENT` TP ON F.`3DMANAGER_FILAMENT_MATERIAL_TYPE` = TP.`3DMANAGER_C_TYPE_FILAMENT_ID`
                 WHERE `3DMANAGER_3DPRINT_GROUP_ID` = P_CD_GROUP and  `3DMANAGER_3DPRINT_ID` = P_CD_PRINT ;
+            END
+            """;
+
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
+
+        private async Task CreateProcGetPrinterDetailAsync()
+        {
+            var sql = """
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_PRINTER_DETAIL_GET`;
+
+            CREATE PROCEDURE `3DMANAGER_pr_PRINTER_DETAIL_GET`(
+                IN P_CD_GROUP INT,
+                IN P_CD_PRINTER INT
+            )
+            BEGIN
+
+            	SELECT 
+            		`3DMANAGER_PRINTER_ID` AS PRINTER_ID,
+                    `3DMANAGER_PRINTER_NAME` AS PRINTER_NAME,
+                    `3DMANAGER_PRINTER_MODEL` AS PRINTER_MODEL,
+                    `3DMANAGER_PRINTER_DESCRIPTION` AS PRINTER_DESCRIPTION,
+                    `3DMANAGER_PRINTER_STATE` AS PRINTER_STATE_ID,
+                    `3DMANAGER_C_STATE_PRINTER_NAME` AS PRINTER_STATE_NAME,
+                    `3DMANAGER_PRINTER_REGISTER_DATE` AS PRINTER_CREATE_DATE,
+                    (SELECT SUM(`3DMANAGER_3DPRINT_IMPRESSION_TIME`)/3600
+            			FROM 3DMANAGER_3DPRINT
+                        WHERE `3DMANAGER_3DPRINT_PRINTER_ID` = P_CD_PRINTER
+            				AND `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP
+                            AND `3DMANAGER_3DPRINT_STATE`= 2) AS PRINTER_TOTAL_HOURS,
+                    (SELECT SUM(`3DMANAGER_3DPRINT_IMPRESSION_TIME`)/3600 
+            			FROM 3DMANAGER_3DPRINT
+            			WHERE `3DMANAGER_3DPRINT_PRINTER_ID` = P_CD_PRINTER 
+            				AND `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP 
+                            AND `3DMANAGER_3DPRINT_STATE`= 2 
+                            AND `3DMANAGER_3DPRINT_REGISTER_DATE` > DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) AS PRINTER_TOTAL_HOURS_MONTH,
+                    (SELECT COUNT(*) FROM 3DMANAGER_3DPRINT 
+            			WHERE `3DMANAGER_3DPRINT_PRINTER_ID` = P_CD_PRINTER 
+                        AND `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP 
+                         ) AS PRINTER_TOTAL_PRINTS,
+                    (SELECT COUNT(*) FROM 3DMANAGER_3DPRINT 
+            			WHERE `3DMANAGER_3DPRINT_PRINTER_ID` = P_CD_PRINTER 
+                        AND `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP
+                        AND `3DMANAGER_3DPRINT_REGISTER_DATE` > DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) AS PRINTER_TOTAL_PRINTS_MONTH,
+                    `3DMANAGER_PRINTER_IMAGE_URL` AS FILE_URL,
+                    `3DMANAGER_PRINTER_IMAGE_KEY` AS FILE_KEY,
+                    (SELECT COUNT(*) FROM 3DMANAGER_3DPRINT 
+            			WHERE `3DMANAGER_3DPRINT_PRINTER_ID` = P_CD_PRINTER 
+                        AND `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP 
+                        AND `3DMANAGER_3DPRINT_STATE`= 1 ) AS PRINTER_PENDING_PRINTS,
+                     (SELECT COUNT(*) FROM 3DMANAGER_3DPRINT 
+            			WHERE `3DMANAGER_3DPRINT_PRINTER_ID` = P_CD_PRINTER 
+                        AND `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP 
+                        AND `3DMANAGER_3DPRINT_STATE`= 2 ) AS PRINTER_COMPLETE_PRINTS, 
+            		(SELECT COUNT(*) FROM 3DMANAGER_3DPRINT 
+            			WHERE `3DMANAGER_3DPRINT_PRINTER_ID` = P_CD_PRINTER 
+                        AND `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP 
+                        AND `3DMANAGER_3DPRINT_STATE`= 3 ) AS PRINTER_NO_COMPLETE_PRINTS,
+            		(SELECT COUNT(*) FROM 3DMANAGER_3DPRINT 
+            			WHERE `3DMANAGER_3DPRINT_PRINTER_ID` = P_CD_PRINTER 
+                        AND `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP
+                        AND `3DMANAGER_3DPRINT_REGISTER_DATE` > DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) AS PRINTER_TOTAL_PRINTS_MONTH,
+            		(SELECT COUNT(*) FROM 3DMANAGER_3DPRINT 
+            			WHERE `3DMANAGER_3DPRINT_PRINTER_ID` = P_CD_PRINTER 
+                        AND `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP
+                        AND `3DMANAGER_3DPRINT_STATE`= 2
+                        AND `3DMANAGER_3DPRINT_REGISTER_DATE` > DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) AS PRINTER_COMPLETE_PRINTS_MONTH
+                FROM 3DMANAGER_PRINTER 
+                LEFT JOIN 3DMANAGER_C_STATE_PRINTER ON `3DMANAGER_C_STATE_PRINTER_ID` = `3DMANAGER_PRINTER_STATE`
+                WHERE `3DMANAGER_PRINTER_GROUP_ID` = P_CD_GROUP and  `3DMANAGER_PRINTER_ID` = P_CD_PRINTER ;
             END
             """;
 

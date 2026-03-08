@@ -27,13 +27,19 @@ namespace _3DMANAGER_APP.DAL.Models.Printer
         private const string PrinterPrintsTotalColumnName = "PRINTER_TOTAL_PRINTS";
         public int PrinterPrintsTotalMonth { get; set; }
         private const string PrinterPrintsTotalMonthColumnName = "PRINTER_TOTAL_PRINTS_MONTH";
-        public PrinterEstimationDbObject? PrinterEstimations;
+        public int PrinterPrintsPending { get; set; }
+        private const string PrinterPrintsPendingColumnName = "PRINTER_PENDING_PRINTS";
+        public int PrinterPrintsComplete { get; set; }
+        private const string PrinterPrintsCompleteColumnName = "PRINTER_COMPLETE_PRINTS";
+        public int PrinterPrintsNoComplete { get; set; }
+        private const string PrinterPrintsNoCompleteColumnName = "PRINTER_NO_COMPLETE_PRINTS";
+        public int PrinterPrintsCompleteMonth { get; set; }
+        private const string PrinterPrintsCompleteMonthColumnName = "PRINTER_COMPLETE_PRINTS_MONTH";
         public FileResponseDbObject? PrinterImageData;
 
         public PrinterDetailDbObject()
         {
             PrinterImageData = new FileResponseDbObject();
-            PrinterEstimations = new PrinterEstimationDbObject();
         }
 
         public PrinterDetailDbObject Create(DataRow row)
@@ -51,8 +57,11 @@ namespace _3DMANAGER_APP.DAL.Models.Printer
             obj.PrinterPrintsTotalMonth = (int)(row.Field<long?>(PrinterPrintsTotalMonthColumnName) ?? 0);
             obj.PrinterTotalHours = (double)(row.Field<decimal?>(PrinterTotalHoursColumnName) ?? 0);
             obj.PrinterTotalHoursMonth = (double)(row.Field<decimal?>(PrinterTotalHoursMonthColumnName) ?? 0);
+            obj.PrinterPrintsComplete = (int)(row.Field<long?>(PrinterPrintsCompleteColumnName) ?? 0);
+            obj.PrinterPrintsNoComplete = (int)(row.Field<long?>(PrinterPrintsNoCompleteColumnName) ?? 0);
+            obj.PrinterPrintsPending = (int)(row.Field<long?>(PrinterPrintsPendingColumnName) ?? 0);
+            obj.PrinterPrintsCompleteMonth = (int)(row.Field<long?>(PrinterPrintsCompleteMonthColumnName) ?? 0);
             obj.PrinterImageData = PrinterImageData.Create(row);
-            //obj.PrinterEstimations = PrinterEstimations.Create(row);
             return obj;
         }
 

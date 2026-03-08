@@ -91,9 +91,13 @@ namespace _3DMANAGER_APP.BLL.Mapper
             .ForMember(dest => dest.PrinterTotalHours,
                 opt => opt.MapFrom(src => ConvertHours(src.PrinterTotalHours)))
             .ForMember(dest => dest.PrinterTotalHoursMonth,
-                opt => opt.MapFrom(src => ConvertHours(src.PrinterTotalHoursMonth)));
+                opt => opt.MapFrom(src => ConvertHours(src.PrinterTotalHoursMonth)))
+            .ForMember(dest => dest.PrinterPrintSuccessRate,
+                opt => opt.MapFrom(src =>
+                (src.PrinterPrintsComplete + src.PrinterPrintsNoComplete) == 0 ? 0
+                : (float)src.PrinterPrintsComplete / (src.PrinterPrintsComplete + src.PrinterPrintsNoComplete)
+            ));
 
-            CreateMap<PrinterEstimationObject, PrinterEstimationDbObject>().ReverseMap();
             CreateMap<PrinterDetailRequest, PrinterDetailRequestDbObject>();
             #endregion
 
