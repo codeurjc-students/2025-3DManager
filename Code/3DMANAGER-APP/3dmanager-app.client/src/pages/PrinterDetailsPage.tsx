@@ -24,7 +24,6 @@ const PrinterDetailPage: React.FC = () => {
     const isManager = user?.rolId === "Usuario-Manager";
     const { showPopup } = usePopupContext();
     const [ chartData, setChartData ] = useState<PrintChartData[]>([]);
-
     useEffect(() => {
         getPrinterState().then(response => {
             setStateData(response.data!);
@@ -51,6 +50,23 @@ const PrinterDetailPage: React.FC = () => {
         });
     }, []);
 
+    const formatVariationText = (variation: number): string => {
+        const absValue = Math.abs(Math.round(variation));
+
+        if (variation < 0) return `${absValue}% más rápido`;
+        if (variation > 0) return `${absValue}% más lento`;
+        return "Sin variación";
+    };
+
+    const variation = data?.printerTimeVariation ?? 0;
+
+    let variationClass = "variation-neutral";
+
+    if (variation < 0) {
+        variationClass = "variation-negative";
+    } else if (variation > 0) {
+        variationClass = "variation-positive";
+    }
 
     const handleUpdate = async () => {
         
@@ -209,7 +225,7 @@ const PrinterDetailPage: React.FC = () => {
                                 </div>
                                 <div>
                                     <label htmlFor="printerEstimations" className="form-label">Porcentaje eficiencia tiempo real en impresión </label>
-                                    <input type="text" className="input-value-2 w-100" value={data?.printerTimeVariation ?? 0} disabled />
+                                    <input type="text" className={`input-value-2 w-100 ${variationClass}`} value={formatVariationText(variation)} disabled/>
                                 </div>
                             </div>
                             <div className="col-10 ms-5">

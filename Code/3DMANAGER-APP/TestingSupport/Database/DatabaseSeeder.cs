@@ -574,25 +574,59 @@
                 IN P_PRINT_TIME INT,
                 IN P_PRINT_FILAMENT_USED DECIMAL(10,2),
                 IN P_PRINT_REAL_TIME INT,
+                IN P_PRINT_PROGRESS INT,
                 OUT CodigoError INT
             )
             BEGIN
                 DECLARE NEW_ID INT;
-                SET CodigoError = 0;
+                DECLARE CURRENT_FILAMENT_LENGTH DECIMAL(10,2);
+                DECLARE v_err_msg TEXT;
+                DECLARE NEW_STATE INT;
+                DECLARE REAL_FILAMENT_USED DECIMAL(10,2);
 
-                INSERT INTO `3DMANAGER_3DPRINT` (
-                    `3DMANAGER_3DPRINT_NAME`,
-                    `3DMANAGER_3DPRINT_DESCRIPTION`,
-                    `3DMANAGER_3DPRINT_STATE`,
-                    `3DMANAGER_3DPRINT_IMPRESSION_TIME`,
-                    `3DMANAGER_3DPRINT_REAL_IMPRESSION_TIME`,
-                    `3DMANAGER_3DPRINT_GROUP_ID`,
-                    `3DMANAGER_3DPRINT_FILAMENT_ID`,
-                    `3DMANAGER_3DPRINT_USER_ID`,
-                    `3DMANAGER_3DPRINT_PRINTER_ID`,
-                    `3DMANAGER_3DPRINT_MATERIAL_CONSUMED`
-                )
-                VALUES (
+                DECLARE EXIT HANDLER FOR SQLEXCEPTION
+            	BEGIN
+            		GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
+
+            		-- Forzar un commit independiente
+            		START TRANSACTION;
+            		INSERT INTO 3DMANAGER_SYSTEM_LOGS(PROCEDURE_NAME, ERROR_MESSAGE)
+            		VALUES('3DMANAGER_pr_PRINT_POST', v_err_msg);
+            		COMMIT;
+
+            		SET CodigoError = -1;
+            		ROLLBACK;
+            	END;
+
+                SET CodigoError = 0;
+                START TRANSACTION;
+
+                SET REAL_FILAMENT_USED = 
+                    CASE 
+                        WHEN P_PRINT_STATE = 3 THEN (P_PRINT_FILAMENT_USED * (P_PRINT_PROGRESS / 100))
+                        ELSE P_PRINT_FILAMENT_USED
+                    END;
+
+                SELECT `3DMANAGER_FILAMENT`.`3DMANAGER_FILAMENT_MATERIAL_REMAINING_LENGTH`
+                INTO CURRENT_FILAMENT_LENGTH
+                FROM 3DMANAGER_FILAMENT
+                WHERE `3DMANAGER_FILAMENT`.`3DMANAGER_FILAMENT_ID` = P_PRINT_FILAMENT_ID;
+
+                SET CURRENT_FILAMENT_LENGTH = CURRENT_FILAMENT_LENGTH - REAL_FILAMENT_USED;
+            	SET  NEW_STATE = CASE WHEN CURRENT_FILAMENT_LENGTH <= 0 THEN 2 ELSE 1 END;
+
+                INSERT INTO 3DMANAGER_3DPRINT (
+                    3DMANAGER_3DPRINT_NAME,
+                    3DMANAGER_3DPRINT_DESCRIPTION,
+                    3DMANAGER_3DPRINT_STATE,
+                    3DMANAGER_3DPRINT_IMPRESSION_TIME,
+                    3DMANAGER_3DPRINT_REAL_IMPRESSION_TIME,
+                    3DMANAGER_3DPRINT_GROUP_ID,
+                    3DMANAGER_3DPRINT_FILAMENT_ID,
+                    3DMANAGER_3DPRINT_USER_ID,
+                    3DMANAGER_3DPRINT_PRINTER_ID,
+                    3DMANAGER_3DPRINT_MATERIAL_CONSUMED 
+                ) VALUES (
                     P_PRINT_NAME,
                     P_PRINT_DESCRIPTION,
                     P_PRINT_STATE,
@@ -607,8 +641,15 @@
 
                 SET NEW_ID = LAST_INSERT_ID();
 
+                UPDATE 3DMANAGER_FILAMENT 
+                SET `3DMANAGER_FILAMENT`.`3DMANAGER_FILAMENT_MATERIAL_REMAINING_LENGTH` = CURRENT_FILAMENT_LENGTH,
+            		`3DMANAGER_FILAMENT`.`3DMANAGER_FILAMENT_STATE` = NEW_STATE
+                WHERE `3DMANAGER_FILAMENT_ID` = P_PRINT_FILAMENT_ID;
+
+                COMMIT;
+
                 SELECT NEW_ID AS 3DMANAGER_3DPRINT_ID;
-            END;
+            END
             
             """;
 

@@ -22,10 +22,11 @@ const CreatePrint3DPage: React.FC = () => {
     const [printRealTimeM, setPrintRealTimeM] = useState<number>(0);
     const [printFilamentUsed, setPrintFilamentUsed] = useState<number>(0);
     const [imageFile, setImageFile] = useState<File | null>(null);
+    const [printProgress, setPrintProgress] = useState<number>(0);
 
     const { showPopup } = usePopupContext();
     const navigate = useNavigate();
-    
+
 
     useEffect(() => {
         const loadCatalog = async () => {
@@ -90,6 +91,7 @@ const CreatePrint3DPage: React.FC = () => {
                 printTime,
                 printRealTime,
                 printFilamentUsed,
+                printProgress,
                 imageFile
             });
 
@@ -127,24 +129,32 @@ const CreatePrint3DPage: React.FC = () => {
                         <div className="white-container">
                             <div className="p-2 d-flex flex-column">
                                 <div className="row-3 d-flex flex-row">
-                                    <div className="col-6 p-2">
+                                    <div className={printState === 3 ? "col-4 p-2" : "col-6 p-2"}>
                                         <label htmlFor="printName" className="form-label">Nombre</label>
-                                        <input id="printName" className="input-value w-100 " value={printName} placeholder="Nombre"
-                                            onChange={(e) => setPrintName(e.target.value)} />
+                                        <input id="printName" className="input-value w-100" value={printName} placeholder="Nombre" onChange={(e) => setPrintName(e.target.value)}/>
                                     </div>
-                                    <div className="col-6 p-2">
-                                        <label htmlFor="printState" className="form-label">Estado</label>
-                                        <select id="printState" className="input-value w-100 " value={printState}
-                                            onChange={(e) => setPrintState(Number(e.target.value))}>
 
+                                    <div className={printState === 3 ? "col-4 p-2" : "col-6 p-2"}>
+                                        <label htmlFor="printState" className="form-label">Estado</label>
+                                        <select id="printState" className="input-value w-100" value={printState} onChange={(e) => setPrintState(Number(e.target.value))}>
+                                            <option value={0}>Seleccione un estado</option>
                                             {catalogState.map(t => (
-                                                <option key={t.id} value={t.id}>
-                                                    {t.description}
-                                                </option>
+                                                <option key={t.id} value={t.id}>{t.description}</option>
                                             ))}
                                         </select>
                                     </div>
+
+                                    {printState === 3 && (
+                                        <div className="col-4 p-2">
+                                            <label htmlFor="printProgress" className="form-label">
+                                                Porcentaje completado antes del fallo
+                                            </label>
+                                            <input id="printProgress" type="number" className="input-value w-100" min={0} max={100}
+                                                value={printProgress} onChange={(e) => setPrintProgress(Number(e.target.value))} placeholder="0 - 100"/>
+                                        </div>
+                                    )}
                                 </div>
+
                                 <div className="row-3 d-flex flex-row">
                                     <div className="col-6 p-2">
                                         <label htmlFor="printPrinter" className="form-label">Impresora</label>
