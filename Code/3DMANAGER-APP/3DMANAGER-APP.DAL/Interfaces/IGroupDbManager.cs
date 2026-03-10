@@ -13,5 +13,6 @@ namespace _3DMANAGER_APP.DAL.Interfaces
         public bool UpdateMembership(int userKickedId);
         public bool DeleteGroup(int userId, int groupId);
         public bool TrasnferOwnership(int userId, int groupId, int newOwnerUserId);
+        public GroupDashboardDataDbObject GetGroupDashboardData(int groupId);
     }
 }

@@ -27,8 +27,6 @@ namespace _3DMANAGER_APP.DAL.Models.Printer
         private const string PrinterPrintsTotalColumnName = "PRINTER_TOTAL_PRINTS";
         public int PrinterPrintsTotalMonth { get; set; }
         private const string PrinterPrintsTotalMonthColumnName = "PRINTER_TOTAL_PRINTS_MONTH";
-        public int PrinterPrintsPending { get; set; }
-        private const string PrinterPrintsPendingColumnName = "PRINTER_PENDING_PRINTS";
         public int PrinterPrintsComplete { get; set; }
         private const string PrinterPrintsCompleteColumnName = "PRINTER_COMPLETE_PRINTS";
         public int PrinterPrintsNoComplete { get; set; }
@@ -59,7 +57,6 @@ namespace _3DMANAGER_APP.DAL.Models.Printer
             obj.PrinterTotalHoursMonth = (double)(row.Field<decimal?>(PrinterTotalHoursMonthColumnName) ?? 0);
             obj.PrinterPrintsComplete = (int)(row.Field<long?>(PrinterPrintsCompleteColumnName) ?? 0);
             obj.PrinterPrintsNoComplete = (int)(row.Field<long?>(PrinterPrintsNoCompleteColumnName) ?? 0);
-            obj.PrinterPrintsPending = (int)(row.Field<long?>(PrinterPrintsPendingColumnName) ?? 0);
             obj.PrinterPrintsCompleteMonth = (int)(row.Field<long?>(PrinterPrintsCompleteMonthColumnName) ?? 0);
             obj.PrinterImageData = PrinterImageData.Create(row);
             return obj;

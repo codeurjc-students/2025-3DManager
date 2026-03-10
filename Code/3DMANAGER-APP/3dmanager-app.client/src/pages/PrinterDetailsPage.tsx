@@ -41,7 +41,6 @@ const PrinterDetailPage: React.FC = () => {
                 setModel(printer.printerModel || "");
                 setName(printer.printerName || "");
                 setChartData([
-                    { name: "Pendiente", value: (printer.printerPrintsPending * 100) / printer.printerPrintsTotal },
                     { name: "Completada", value: (printer.printerPrintsComplete * 100) / printer.printerPrintsTotal },
                     { name: "No completada", value: (printer.printerPrintsNoComplete * 100) / printer.printerPrintsTotal }
                     ,
@@ -219,9 +218,9 @@ const PrinterDetailPage: React.FC = () => {
                         <h3 className="title-impact-3 ms-3 mt-1">Estimaciones</h3>
                         <div className="d-flex flex-row h-100">
                             <div className="col-2 ms-3 me-5 d-flex flex-column">
-                                <div className="h-50">
+                                <div className="mt-3 mb-4">
                                     <label htmlFor="printerEstimations" className="form-label">Tasa de éxito</label>
-                                    <input type="text" className="input-value-2 w-100" value={data?.printerSuccessRate ?? 0} disabled />
+                                    <input type="text" className="input-value-2 w-100" value={((data?.printerSuccessRate ?? 0) * 100).toFixed(2)} disabled/>
                                 </div>
                                 <div>
                                     <label htmlFor="printerEstimations" className="form-label">Porcentaje eficiencia tiempo real en impresión </label>

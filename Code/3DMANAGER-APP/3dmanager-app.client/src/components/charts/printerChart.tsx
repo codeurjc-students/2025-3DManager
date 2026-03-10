@@ -24,7 +24,7 @@ interface Props {
 }
 
 export const PrintChart = ({ data }: Props) => {
-    const colors = ["#525252", "#ffd54a", "#ba2020"];
+    const colors = ["#ffd54a", "#ba2020"];
 
     return (
         <ResponsiveContainer width="80%" height="80%">

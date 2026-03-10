@@ -16,7 +16,6 @@ export interface PrinterDetailObject {
     printerPrintsTotal: number;
     printerPrintsTotalMonth: number;
     printerEstimations: PrinterEstimations;
-    printerPrintsPending: number; 
     printerPrintsComplete : number;
     printerPrintsNoComplete : number;
     printerPrintsCompleteMonth : number;

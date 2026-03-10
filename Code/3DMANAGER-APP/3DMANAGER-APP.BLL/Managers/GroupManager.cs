@@ -105,5 +105,17 @@ namespace _3DMANAGER_APP.BLL.Managers
         {
             return _groupDbManager.TrasnferOwnership(userId, groupId, newOwnerUserId);
         }
+
+        public GroupDashboardData GetGroupDashboardData(int groupId, out BaseError? error)
+        {
+            error = null;
+            GroupDashboardDataDbObject response = _groupDbManager.GetGroupDashboardData(groupId);
+            if (response == null)
+            {
+                error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = "Error al tratar de recoger la información del dashboard del grupo" };
+                return null;
+            }
+            return _mapper.Map<GroupDashboardData>(response);
+        }
     }
 }
