@@ -3,6 +3,7 @@ import type { CommonResponse } from '../models/base/CommonResponse'
 import type { GroupRequest } from '../models/group/GroupRequest'
 import type { GroupInvitation } from '../models/group/GroupInvitation'
 import type { GroupBasicDataResponse } from '../models/group/GroupBasicDataResponse'
+import type { GroupDashboardData } from '../models/group/GroupDashboardData'
 export const postNewGroup = async (data: GroupRequest): Promise<CommonResponse<boolean>> => {
     const response = await apiClient.post<CommonResponse<boolean>>('/api/v1/groups/PostNewGroup', data)
     return response.data
@@ -41,5 +42,9 @@ export const kickUserFromGroup = async (userId : number): Promise<CommonResponse
 }
 export const transferOwnership = async (userId: number): Promise<CommonResponse<boolean>> => {
     const response = await apiClient.put<CommonResponse<boolean>>(`/api/v1/groups/TrasnferOwnership?newOwnerUserId=${userId}`)
+    return response.data
+}
+export const getGroupDashboardData = async (): Promise<CommonResponse<GroupDashboardData>> => {
+    const response = await apiClient.get<CommonResponse<GroupDashboardData>>(`/api/v1/groups/GetGroupDashboardData`)
     return response.data
 }

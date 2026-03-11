@@ -17,7 +17,8 @@ namespace _3DMANAGER_APP.DAL.Models.Group
 
             obj.PrinterId = row.Field<int>(PrinterIdColumnName);
             obj.PrinterName = row.Field<string>(PrinterNameColumnName);
-            obj.PrinterHours = row.Field<decimal>(PrinterHoursColumnName);
+            obj.PrinterHours = row.Field<decimal?>(PrinterHoursColumnName) ?? 0;
+
 
             return obj;
         }

@@ -3,16 +3,33 @@ import DashboardActions from "../components/DashboardActions";
 import { useNavigate } from "react-router-dom";
 import { getPrinterDashboardList } from "../api/printerService";
 import type { PrinterDashboardObject } from "../models/printer/PrinterDashboardObject";
+import { DashboardBarChart } from "../components/charts/dashboardChart";
+import type { GroupDashboardData } from "../models/group/GroupDashboardData";
+import { getGroupDashboardData } from "../api/groupService";
 
 const DashboardPage: React.FC = () => {
     const [printers, setPrinters] = useState<PrinterDashboardObject[]>([]);
+    const [data, setData] = useState<GroupDashboardData | null>(null);
+
     const navigate = useNavigate();
 
     useEffect(() => {
         getPrinterDashboardList().then(response => {
             setPrinters(response.data ?? []);
         });
+        getGroupDashboardData().then(response => {
+            setData(response.data ?? null);
+        });
     }, []);
+
+     
+    const printerHoursChartData = data
+        ? data.groupPrinterHours.map(p => ({
+            name: p.printerName,
+            value: Number(p.printerHours)
+        }))
+        : [];
+
 
     const renderPrinterStatus = (state: number,stateName : string) => {
         switch (state) {
@@ -55,7 +72,20 @@ const DashboardPage: React.FC = () => {
             <div className="white-container col-6 vh-100">
                 <h2 className="title-impact-2 ms-3 mt-4">Datos Generales</h2>
                 <hr className="m-3"></hr>
-                <div className="h-40"></div>
+                <div className="h-40 d-flex flex-row">
+                    <div className="col-4">
+                        <p className="title-impact-4 ms-4 mt-5">Horas impresión: {data?.groupTotalHours}</p>
+                        <p className="title-impact-4 ms-4 mt-4">Piezas impresas: {data?.groupTotalPrints}</p>
+                        <p className="title-impact-4 ms-4 mt-4">Filamento consumido: {data?.groupTotalFilament} m</p>
+                        <p className="title-impact-4 ms-4 mt-4">Usuarios activos: {data?.groupUserCount}</p>
+                        <p className="title-impact-4 ms-4 mt-4">Filamentos registrados: {data?.groupFilamentCount}</p>
+                        <p className="title-impact-4 ms-4 mt-4">Impresoras registradas: {data?.groupPrinterCount}</p>
+                    </div>
+                    <div className="col-8 charts-scroll">
+                        <DashboardBarChart data={printerHoursChartData} height={Math.max(printerHoursChartData.length * 40),150} />
+                    </div>
+
+                </div>
                 <div>
                     <DashboardActions />
                 </div>  

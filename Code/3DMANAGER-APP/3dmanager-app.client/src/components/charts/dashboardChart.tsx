@@ -1,44 +1,55 @@
 import {
-    PieChart as RePieChart,
-    Pie,
+    BarChart as ReBarChart,
+    Bar,
+    XAxis,
+    YAxis,
     Tooltip,
-    Cell,
     ResponsiveContainer,
+    Rectangle,
 } from "recharts";
 
-export interface DashboardChartData {
-    name: string;
-    value: number;
-}
+const CustomBar = (props: any) => {
+    const { fill, x, y, width, height } = props;
+    return <Rectangle x={x} y={y} width={width} height={height} fill={fill} />;
+};
 
 interface Props {
-    data: DashboardChartData[];
-    colors?: string[];
+    data: { name: string; value: number }[];
     height?: number;
 }
 
-export const DashboardChart = ({
-    data,
-    colors = ["#8884d8", "#82ca9d", "#ffc658"],
-    height = 300,
-}: Props) => {
+export const DashboardBarChart = ({ data, height = 300 }: Props) => {
+    const colors = [
+        "#ffd54a",
+        "#fcdd74",
+        "#fce9a3",
+        "#2c2c2c",
+        "#4a4a4a",
+        "#6e6e6e",
+        "#000000",
+    ];
+
+
     return (
         <ResponsiveContainer width="100%" height={height}>
-            <RePieChart>
+            <ReBarChart data={data} layout="vertical">
+                <XAxis
+                    type="number"
+                    orientation="top"
+                    label={{ value: "Horas", position: "insideTop", offset: -5 }}
+                />
+                <YAxis type="category" dataKey="name" width={150} />
                 <Tooltip />
-                <Pie
-                    data={data}
+
+                <Bar
                     dataKey="value"
-                    nameKey="name"
-                    outerRadius={100}
-                    fill="#8884d8"
-                    label
-                >
-                    {data.map((_, index) => (
-                        <Cell key={index} fill={colors[index % colors.length]} />
-                    ))}
-                </Pie>
-            </RePieChart>
+                    shape={(props) => {
+                        const index = props.index;
+                        const color = colors[index % colors.length];
+                        return <CustomBar {...props} fill={color} />;
+                    }}
+                />
+            </ReBarChart>
         </ResponsiveContainer>
     );
 };

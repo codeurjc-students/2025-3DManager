@@ -48,6 +48,9 @@ namespace _3DMANAGER_APP.BLL.Mapper
             CreateMap<GroupRequest, GroupRequestDbObject>().ReverseMap();
             CreateMap<GroupInvitation, GroupInvitationDbObject>().ReverseMap();
             CreateMap<GroupBasicDataResponse, GroupBasicDataResponseDbObject>().ReverseMap();
+            CreateMap<GroupDashboardDataDbObject, GroupDashboardData>().ForMember(dest => dest.GroupTotalHours,
+                opt => opt.MapFrom(src => ConvertHours(src.GroupTotalHours)));
+            CreateMap<GroupPrinterHoursDbObject, PrinterHoursObject>().ReverseMap();
             #endregion
 
             #region Filament
