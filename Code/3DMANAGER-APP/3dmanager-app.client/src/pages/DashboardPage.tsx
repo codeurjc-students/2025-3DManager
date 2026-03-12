@@ -82,7 +82,7 @@ const DashboardPage: React.FC = () => {
                         <p className="title-impact-4 ms-4 mt-4">Impresoras registradas: {data?.groupPrinterCount}</p>
                     </div>
                     <div className="col-8 charts-scroll">
-                        <DashboardBarChart data={printerHoursChartData} height={Math.max(printerHoursChartData.length * 40),150} />
+                        <DashboardBarChart data={printerHoursChartData} height={Math.max((printerHoursChartData.length * 40),150)} />
                     </div>
 
                 </div>

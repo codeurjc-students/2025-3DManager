@@ -96,10 +96,10 @@ const CreatePrint3DPage: React.FC = () => {
     
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!printName || !printState || !printFilament || !printPrinter || !printDescription) {
+        if (!printName || !printState || !printFilament || !printPrinter || !printDescription || !printTime || !printRealTimeH) {
             showPopup({
                 type: "warning", content: (
-                    <InfoPopup title="Completar formulario" description="Debe rellenar todos los campos" />
+                    <InfoPopup title="Completar formulario" description="Debe rellenar todos los campos salvo la imagen de impresión" />
                 )
             });
             return;

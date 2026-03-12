@@ -73,7 +73,8 @@ namespace _3DMANAGER_APP.BLL.Mapper
                            $"{TimeSpan.FromSeconds((double)src.PrintTimeImpression).Minutes}min"))
             .ForMember(dest => dest.PrintRealTimeImpression,
                            opt => opt.MapFrom(src => $"{(int)TimeSpan.FromSeconds((double)src.PrintRealTimeImpression).TotalHours}h " +
-                           $"{TimeSpan.FromSeconds((double)src.PrintRealTimeImpression).Minutes}min"));
+                           $"{TimeSpan.FromSeconds((double)src.PrintRealTimeImpression).Minutes}min"))
+            .ForMember(dest => dest.PrintEstimedCost, opt => opt.MapFrom(src => src.FilamentCost * src.PrintMaterialConsumed));
 
             CreateMap<PrintDetailRequest, PrintDetailRequestDbObject>().ReverseMap();
             CreateMap<PrintCommentRequest, PrintCommentRequestDbObject>().ReverseMap();
