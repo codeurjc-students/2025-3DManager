@@ -58,6 +58,7 @@
             await CreateProcGetFilamentDetailAsync();
             await CreateProcUpdatePrintAsync();
             await CreateProcGetPrintDetailAsync();
+            await CreateProcGetGroupDashboardDataAsync();
         }
 
         private async Task LoadDataAsync()
@@ -1204,6 +1205,37 @@
                 FROM 3DMANAGER_PRINTER 
                 LEFT JOIN 3DMANAGER_C_STATE_PRINTER ON `3DMANAGER_C_STATE_PRINTER_ID` = `3DMANAGER_PRINTER_STATE`
                 WHERE `3DMANAGER_PRINTER_GROUP_ID` = P_CD_GROUP and  `3DMANAGER_PRINTER_ID` = P_CD_PRINTER ;
+            END
+            """;
+
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
+        private async Task CreateProcGetGroupDashboardDataAsync()
+        {
+            var sql = """
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_GROUP_DASHBOARD_DATA_GET`;
+
+            CREATE DEFINER=`root`@`localhost` PROCEDURE `3DMANAGER_pr_GROUP_DASHBOARD_DATA_GET`(
+            IN P_CD_GROUP INT 
+            )
+            BEGIN
+            	SELECT 
+            		(SELECT SUM(`3DMANAGER_3DPRINT_IMPRESSION_TIME`)/3600 FROM 3DMANAGER_3DPRINT 
+            			WHERE `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP) AS GROUP_TOTAL_HOURS,
+                    (SELECT COUNT(*) FROM 3DMANAGER_3DPRINT WHERE `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP) AS GROUP_TOTAL_PRINTS,
+                    (SELECT SUM(`3DMANAGER_3DPRINT_MATERIAL_CONSUMED`) FROM 3DMANAGER_3DPRINT WHERE `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP) AS GROUP_TOTAL_FILAMENT,
+                    (SELECT COUNT(*) FROM 3DMANAGER_USER WHERE `USER_GROUP_ID`= P_CD_GROUP) AS GROUP_TOTAL_USER,
+                    (SELECT COUNT(*) FROM 3DMANAGER_FILAMENT WHERE `3DMANAGER_FILAMENT_GROUP_ID`= P_CD_GROUP) AS GROUP_FILAMENT_COUNT,
+                    (SELECT COUNT(*) FROM 3DMANAGER_PRINTER WHERE `3DMANAGER_PRINTER_GROUP_ID`= P_CD_GROUP) AS GROUP_TOTAL_PRINTER;
+
+            	SELECT 
+            		`3DMANAGER_PRINTER_ID` AS PRINTER_ID,
+                    `3DMANAGER_PRINTER_NAME` AS PRINTER_NAME,
+                     (SELECT SUM(`3DMANAGER_3DPRINT_IMPRESSION_TIME`)/3600 FROM 3DMANAGER_3DPRINT
+            			WHERE `3DMANAGER_3DPRINT_PRINTER_ID` = P.`3DMANAGER_PRINTER_ID`) AS PRINTER_HOURS
+                FROM 3DMANAGER_PRINTER P
+                LEFT JOIN `3DMANAGER_3DPRINT` PR ON PR.`3DMANAGER_3DPRINT_PRINTER_ID` = P.`3DMANAGER_PRINTER_ID`
+                WHERE `3DMANAGER_PRINTER_GROUP_ID` = P_CD_GROUP GROUP BY PRINTER_ID ; 
             END
             """;
 
