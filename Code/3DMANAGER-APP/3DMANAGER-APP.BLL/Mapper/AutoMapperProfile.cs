@@ -48,6 +48,9 @@ namespace _3DMANAGER_APP.BLL.Mapper
             CreateMap<GroupRequest, GroupRequestDbObject>().ReverseMap();
             CreateMap<GroupInvitation, GroupInvitationDbObject>().ReverseMap();
             CreateMap<GroupBasicDataResponse, GroupBasicDataResponseDbObject>().ReverseMap();
+            CreateMap<GroupDashboardDataDbObject, GroupDashboardData>().ForMember(dest => dest.GroupTotalHours,
+                opt => opt.MapFrom(src => ConvertHours(src.GroupTotalHours)));
+            CreateMap<GroupPrinterHoursDbObject, PrinterHoursObject>().ReverseMap();
             #endregion
 
             #region Filament
@@ -70,7 +73,8 @@ namespace _3DMANAGER_APP.BLL.Mapper
                            $"{TimeSpan.FromSeconds((double)src.PrintTimeImpression).Minutes}min"))
             .ForMember(dest => dest.PrintRealTimeImpression,
                            opt => opt.MapFrom(src => $"{(int)TimeSpan.FromSeconds((double)src.PrintRealTimeImpression).TotalHours}h " +
-                           $"{TimeSpan.FromSeconds((double)src.PrintRealTimeImpression).Minutes}min"));
+                           $"{TimeSpan.FromSeconds((double)src.PrintRealTimeImpression).Minutes}min"))
+            .ForMember(dest => dest.PrintEstimedCost, opt => opt.MapFrom(src => src.FilamentCost * src.PrintMaterialConsumed));
 
             CreateMap<PrintDetailRequest, PrintDetailRequestDbObject>().ReverseMap();
             CreateMap<PrintCommentRequest, PrintCommentRequestDbObject>().ReverseMap();
@@ -91,9 +95,13 @@ namespace _3DMANAGER_APP.BLL.Mapper
             .ForMember(dest => dest.PrinterTotalHours,
                 opt => opt.MapFrom(src => ConvertHours(src.PrinterTotalHours)))
             .ForMember(dest => dest.PrinterTotalHoursMonth,
-                opt => opt.MapFrom(src => ConvertHours(src.PrinterTotalHoursMonth)));
+                opt => opt.MapFrom(src => ConvertHours(src.PrinterTotalHoursMonth)))
+            .ForMember(dest => dest.PrinterSuccessRate,
+                opt => opt.MapFrom(src =>
+                (src.PrinterPrintsComplete + src.PrinterPrintsNoComplete) == 0 ? 0
+                : (float)src.PrinterPrintsComplete / (src.PrinterPrintsComplete + src.PrinterPrintsNoComplete)
+            ));
 
-            CreateMap<PrinterEstimationObject, PrinterEstimationDbObject>().ReverseMap();
             CreateMap<PrinterDetailRequest, PrinterDetailRequestDbObject>();
             #endregion
 

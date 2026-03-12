@@ -51,12 +51,14 @@
             await CreateProcUserGetByIdAsync();
             await CreateProcuserGroupGetByIdAsync();
             await CreateProcUpdatePrinterAsync();
+            await CreateProcGetPrinterDetailAsync();
             await CreateProcUpdateUserAsync();
             await CreateProcGetUserDetailAsync();
             await CreateProcUpdateFilamentAsync();
             await CreateProcGetFilamentDetailAsync();
             await CreateProcUpdatePrintAsync();
             await CreateProcGetPrintDetailAsync();
+            await CreateProcGetGroupDashboardDataAsync();
         }
 
         private async Task LoadDataAsync()
@@ -80,7 +82,7 @@
 
             INSERT INTO `3DMANAGER_C_STATE_PRINT`
             (3DMANAGER_C_STATE_PRINT_NAME)
-            VALUES ('Pendiente'),('Completada');
+            VALUES ('Completada'),('No Completada');
 
             INSERT INTO `3DMANAGER_GROUP`
             (3DMANAGER_GROUP_NAME, 3DMANAGER_GROUP_DESCRIPTION)
@@ -573,25 +575,59 @@
                 IN P_PRINT_TIME INT,
                 IN P_PRINT_FILAMENT_USED DECIMAL(10,2),
                 IN P_PRINT_REAL_TIME INT,
+                IN P_PRINT_PROGRESS INT,
                 OUT CodigoError INT
             )
             BEGIN
                 DECLARE NEW_ID INT;
-                SET CodigoError = 0;
+                DECLARE CURRENT_FILAMENT_LENGTH DECIMAL(10,2);
+                DECLARE v_err_msg TEXT;
+                DECLARE NEW_STATE INT;
+                DECLARE REAL_FILAMENT_USED DECIMAL(10,2);
 
-                INSERT INTO `3DMANAGER_3DPRINT` (
-                    `3DMANAGER_3DPRINT_NAME`,
-                    `3DMANAGER_3DPRINT_DESCRIPTION`,
-                    `3DMANAGER_3DPRINT_STATE`,
-                    `3DMANAGER_3DPRINT_IMPRESSION_TIME`,
-                    `3DMANAGER_3DPRINT_REAL_IMPRESSION_TIME`,
-                    `3DMANAGER_3DPRINT_GROUP_ID`,
-                    `3DMANAGER_3DPRINT_FILAMENT_ID`,
-                    `3DMANAGER_3DPRINT_USER_ID`,
-                    `3DMANAGER_3DPRINT_PRINTER_ID`,
-                    `3DMANAGER_3DPRINT_MATERIAL_CONSUMED`
-                )
-                VALUES (
+                DECLARE EXIT HANDLER FOR SQLEXCEPTION
+            	BEGIN
+            		GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
+
+            		-- Forzar un commit independiente
+            		START TRANSACTION;
+            		INSERT INTO 3DMANAGER_SYSTEM_LOGS(PROCEDURE_NAME, ERROR_MESSAGE)
+            		VALUES('3DMANAGER_pr_PRINT_POST', v_err_msg);
+            		COMMIT;
+
+            		SET CodigoError = -1;
+            		ROLLBACK;
+            	END;
+
+                SET CodigoError = 0;
+                START TRANSACTION;
+
+                SET REAL_FILAMENT_USED = 
+                    CASE 
+                        WHEN P_PRINT_STATE = 3 THEN (P_PRINT_FILAMENT_USED * (P_PRINT_PROGRESS / 100))
+                        ELSE P_PRINT_FILAMENT_USED
+                    END;
+
+                SELECT `3DMANAGER_FILAMENT`.`3DMANAGER_FILAMENT_MATERIAL_REMAINING_LENGTH`
+                INTO CURRENT_FILAMENT_LENGTH
+                FROM 3DMANAGER_FILAMENT
+                WHERE `3DMANAGER_FILAMENT`.`3DMANAGER_FILAMENT_ID` = P_PRINT_FILAMENT_ID;
+
+                SET CURRENT_FILAMENT_LENGTH = CURRENT_FILAMENT_LENGTH - REAL_FILAMENT_USED;
+            	SET  NEW_STATE = CASE WHEN CURRENT_FILAMENT_LENGTH <= 0 THEN 2 ELSE 1 END;
+
+                INSERT INTO 3DMANAGER_3DPRINT (
+                    3DMANAGER_3DPRINT_NAME,
+                    3DMANAGER_3DPRINT_DESCRIPTION,
+                    3DMANAGER_3DPRINT_STATE,
+                    3DMANAGER_3DPRINT_IMPRESSION_TIME,
+                    3DMANAGER_3DPRINT_REAL_IMPRESSION_TIME,
+                    3DMANAGER_3DPRINT_GROUP_ID,
+                    3DMANAGER_3DPRINT_FILAMENT_ID,
+                    3DMANAGER_3DPRINT_USER_ID,
+                    3DMANAGER_3DPRINT_PRINTER_ID,
+                    3DMANAGER_3DPRINT_MATERIAL_CONSUMED 
+                ) VALUES (
                     P_PRINT_NAME,
                     P_PRINT_DESCRIPTION,
                     P_PRINT_STATE,
@@ -601,14 +637,20 @@
                     P_PRINT_FILAMENT_ID,
                     P_USER_ID,
                     P_PRINT_PRINTER_ID,
-                    P_PRINT_FILAMENT_USED
+                    REAL_FILAMENT_USED
                 );
 
                 SET NEW_ID = LAST_INSERT_ID();
 
+                UPDATE 3DMANAGER_FILAMENT 
+                SET `3DMANAGER_FILAMENT`.`3DMANAGER_FILAMENT_MATERIAL_REMAINING_LENGTH` = CURRENT_FILAMENT_LENGTH,
+            		`3DMANAGER_FILAMENT`.`3DMANAGER_FILAMENT_STATE` = NEW_STATE
+                WHERE `3DMANAGER_FILAMENT_ID` = P_PRINT_FILAMENT_ID;
+
+                COMMIT;
+
                 SELECT NEW_ID AS 3DMANAGER_3DPRINT_ID;
-            END;
-            
+            END
             """;
 
             await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
@@ -890,12 +932,11 @@
             var sql = """
             DROP PROCEDURE IF EXISTS `3DMANAGER_pr_USER_DETAIL_GET`;
 
-            CREATE PROCEDURE `3DMANAGER_pr_USER_DETAIL_GET`(
+            CREATE DEFINER=`root`@`localhost` PROCEDURE `3DMANAGER_pr_USER_DETAIL_GET`(
                 IN P_CD_GROUP INT,
                 IN P_CD_USER INT
             )
             BEGIN
-
             	SELECT 
             		U.`USER_ID`,
                     U.`USER_NAME`,
@@ -905,25 +946,21 @@
                     (SELECT COUNT(*) 
             			FROM `3DMANAGER_3DPRINT`
                         WHERE `3DMANAGER_3DPRINT_USER_ID` = P_CD_USER 
-            				AND `3DMANAGER_3DPRINT_GROUP_ID` = P_CD_GROUP
-                            AND `3DMANAGER_3DPRINT_STATE`= 2 ) AS USER_TOTAL_PRINTS,
+            				AND `3DMANAGER_3DPRINT_GROUP_ID` = P_CD_GROUP ) AS USER_TOTAL_PRINTS,
                      (SELECT SUM(`3DMANAGER_3DPRINT_IMPRESSION_TIME`)/3600 
             			FROM 3DMANAGER_3DPRINT
             			WHERE  `3DMANAGER_3DPRINT_USER_ID` = P_CD_USER 
-            				AND `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP 
-                            AND `3DMANAGER_3DPRINT_STATE`= 2 
+            				AND `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP  
                             AND `3DMANAGER_3DPRINT_REGISTER_DATE` > DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) AS USER_PRINT_HOURS,
                     (SELECT COUNT(*) 
             			FROM `3DMANAGER_3DPRINT` 
             			WHERE `3DMANAGER_3DPRINT_USER_ID` = P_CD_USER 
                         AND `3DMANAGER_3DPRINT_GROUP_ID` = P_CD_GROUP
-                        AND `3DMANAGER_3DPRINT_STATE`= 2 
             			AND `3DMANAGER_3DPRINT_REGISTER_DATE` > DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) AS USER_PRINTED_PRINTS,
                     (SELECT SUM(`3DMANAGER_3DPRINT_IMPRESSION_TIME`)/3600 
             			FROM 3DMANAGER_3DPRINT
             			WHERE  `3DMANAGER_3DPRINT_USER_ID` = P_CD_USER 
-            				AND `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP 
-                            AND `3DMANAGER_3DPRINT_STATE`= 2 ) AS USER_TOTAL_HOURS,
+            				AND `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP ) AS USER_TOTAL_HOURS,
                     `USER_IMAGE_URL` AS FILE_URL,
                     `USER_IMAGE_KEY` AS FILE_KEY
                     FROM `3DMANAGER_USER` U LEFT JOIN `3DMANAGER_C_ROLES` R ON  U.`USER_ROLE` = R.`3DMANAGER_C_ROLES_ID`
@@ -989,7 +1026,7 @@
             var sql = """
             DROP PROCEDURE IF EXISTS `3DMANAGER_pr_FILAMENT_DETAIL_GET`;
 
-            CREATE PROCEDURE `3DMANAGER_pr_FILAMENT_DETAIL_GET`(
+            CREATE DEFINER=`root`@`localhost` PROCEDURE `3DMANAGER_pr_FILAMENT_DETAIL_GET`(
                 IN P_CD_GROUP INT,
                 IN P_CD_FILAMENT INT
             )
@@ -1013,13 +1050,11 @@
             			FROM `3DMANAGER_3DPRINT` 
             			WHERE `3DMANAGER_3DPRINT_FILAMENT_ID` = P_CD_FILAMENT 
                         AND `3DMANAGER_3DPRINT_GROUP_ID` = P_CD_GROUP
-                        AND `3DMANAGER_3DPRINT_STATE`= 2 
             			AND `3DMANAGER_3DPRINT_REGISTER_DATE` > DATE_SUB(CURDATE(), INTERVAL 1 MONTH))AS FILAMENT_PRINTED_PRINTS_MONTH,
                     (SELECT COUNT(*) 
             			FROM `3DMANAGER_3DPRINT` 
             			WHERE `3DMANAGER_3DPRINT_FILAMENT_ID` = P_CD_FILAMENT 
-                        AND `3DMANAGER_3DPRINT_GROUP_ID` = P_CD_GROUP
-                        AND `3DMANAGER_3DPRINT_STATE`= 2 )AS FILAMENT_PRINTED_PRINTS_TOTAL,
+                        AND `3DMANAGER_3DPRINT_GROUP_ID` = P_CD_GROUP )AS FILAMENT_PRINTED_PRINTS_TOTAL,
                     `3DMANAGER_FILAMENT_IMAGE_URL` AS FILE_URL,
                     `3DMANAGER_FILAMENT_IMAGE_KEY` AS FILE_KEY
                     FROM `3DMANAGER_FILAMENT`
@@ -1110,6 +1145,97 @@
                 LEFT JOIN `3DMANAGER_C_STATE_PRINT` S ON S.`3DMANAGER_C_STATE_PRINT_ID` = P.`3DMANAGER_3DPRINT_STATE`
                 LEFT JOIN `3DMANAGER_C_TYPE_FILAMENT` TP ON F.`3DMANAGER_FILAMENT_MATERIAL_TYPE` = TP.`3DMANAGER_C_TYPE_FILAMENT_ID`
                 WHERE `3DMANAGER_3DPRINT_GROUP_ID` = P_CD_GROUP and  `3DMANAGER_3DPRINT_ID` = P_CD_PRINT ;
+            END
+            """;
+
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
+
+        private async Task CreateProcGetPrinterDetailAsync()
+        {
+            var sql = """
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_PRINTER_DETAIL_GET`;
+
+            CREATE DEFINER=`root`@`localhost` PROCEDURE `3DMANAGER_pr_PRINTER_DETAIL_GET`(
+                IN P_CD_GROUP INT,
+                IN P_CD_PRINTER INT
+            )
+            BEGIN
+
+            	SELECT 
+            		`3DMANAGER_PRINTER_ID` AS PRINTER_ID,
+                    `3DMANAGER_PRINTER_NAME` AS PRINTER_NAME,
+                    `3DMANAGER_PRINTER_MODEL` AS PRINTER_MODEL,
+                    `3DMANAGER_PRINTER_DESCRIPTION` AS PRINTER_DESCRIPTION,
+                    `3DMANAGER_PRINTER_STATE` AS PRINTER_STATE_ID,
+                    `3DMANAGER_C_STATE_PRINTER_NAME` AS PRINTER_STATE_NAME,
+                    `3DMANAGER_PRINTER_REGISTER_DATE` AS PRINTER_CREATE_DATE,
+                    (SELECT SUM(`3DMANAGER_3DPRINT_IMPRESSION_TIME`)/3600
+            			FROM 3DMANAGER_3DPRINT
+                        WHERE `3DMANAGER_3DPRINT_PRINTER_ID` = P_CD_PRINTER
+            				AND `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP) AS PRINTER_TOTAL_HOURS,
+                    (SELECT SUM(`3DMANAGER_3DPRINT_IMPRESSION_TIME`)/3600 
+            			FROM 3DMANAGER_3DPRINT
+            			WHERE `3DMANAGER_3DPRINT_PRINTER_ID` = P_CD_PRINTER 
+            				AND `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP 
+                            AND `3DMANAGER_3DPRINT_REGISTER_DATE` > DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) AS PRINTER_TOTAL_HOURS_MONTH,
+                    (SELECT COUNT(*) FROM 3DMANAGER_3DPRINT 
+            			WHERE `3DMANAGER_3DPRINT_PRINTER_ID` = P_CD_PRINTER 
+                        AND `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP 
+                         ) AS PRINTER_TOTAL_PRINTS,
+                    (SELECT COUNT(*) FROM 3DMANAGER_3DPRINT 
+            			WHERE `3DMANAGER_3DPRINT_PRINTER_ID` = P_CD_PRINTER 
+                        AND `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP
+                        AND `3DMANAGER_3DPRINT_REGISTER_DATE` > DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) AS PRINTER_TOTAL_PRINTS_MONTH,
+                    `3DMANAGER_PRINTER_IMAGE_URL` AS FILE_URL,
+                    `3DMANAGER_PRINTER_IMAGE_KEY` AS FILE_KEY,
+                     (SELECT COUNT(*) FROM 3DMANAGER_3DPRINT 
+            			WHERE `3DMANAGER_3DPRINT_PRINTER_ID` = P_CD_PRINTER 
+                        AND `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP 
+                        AND `3DMANAGER_3DPRINT_STATE`= 1 ) AS PRINTER_COMPLETE_PRINTS, 
+            		(SELECT COUNT(*) FROM 3DMANAGER_3DPRINT 
+            			WHERE `3DMANAGER_3DPRINT_PRINTER_ID` = P_CD_PRINTER 
+                        AND `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP 
+                        AND `3DMANAGER_3DPRINT_STATE`= 2 ) AS PRINTER_NO_COMPLETE_PRINTS,
+            		(SELECT COUNT(*) FROM 3DMANAGER_3DPRINT 
+            			WHERE `3DMANAGER_3DPRINT_PRINTER_ID` = P_CD_PRINTER 
+                        AND `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP
+                        AND `3DMANAGER_3DPRINT_STATE`= 1
+                        AND `3DMANAGER_3DPRINT_REGISTER_DATE` > DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) AS PRINTER_COMPLETE_PRINTS_MONTH
+                FROM 3DMANAGER_PRINTER 
+                LEFT JOIN 3DMANAGER_C_STATE_PRINTER ON `3DMANAGER_C_STATE_PRINTER_ID` = `3DMANAGER_PRINTER_STATE`
+                WHERE `3DMANAGER_PRINTER_GROUP_ID` = P_CD_GROUP and  `3DMANAGER_PRINTER_ID` = P_CD_PRINTER ;
+            END
+            """;
+
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
+        private async Task CreateProcGetGroupDashboardDataAsync()
+        {
+            var sql = """
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_GROUP_DASHBOARD_DATA_GET`;
+
+            CREATE DEFINER=`root`@`localhost` PROCEDURE `3DMANAGER_pr_GROUP_DASHBOARD_DATA_GET`(
+            IN P_CD_GROUP INT 
+            )
+            BEGIN
+            	SELECT 
+            		(SELECT SUM(`3DMANAGER_3DPRINT_IMPRESSION_TIME`)/3600 FROM 3DMANAGER_3DPRINT 
+            			WHERE `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP) AS GROUP_TOTAL_HOURS,
+                    (SELECT COUNT(*) FROM 3DMANAGER_3DPRINT WHERE `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP) AS GROUP_TOTAL_PRINTS,
+                    (SELECT SUM(`3DMANAGER_3DPRINT_MATERIAL_CONSUMED`) FROM 3DMANAGER_3DPRINT WHERE `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP) AS GROUP_TOTAL_FILAMENT,
+                    (SELECT COUNT(*) FROM 3DMANAGER_USER WHERE `USER_GROUP_ID`= P_CD_GROUP) AS GROUP_TOTAL_USER,
+                    (SELECT COUNT(*) FROM 3DMANAGER_FILAMENT WHERE `3DMANAGER_FILAMENT_GROUP_ID`= P_CD_GROUP) AS GROUP_FILAMENT_COUNT,
+                    (SELECT COUNT(*) FROM 3DMANAGER_PRINTER WHERE `3DMANAGER_PRINTER_GROUP_ID`= P_CD_GROUP) AS GROUP_TOTAL_PRINTER;
+
+            	SELECT 
+            		`3DMANAGER_PRINTER_ID` AS PRINTER_ID,
+                    `3DMANAGER_PRINTER_NAME` AS PRINTER_NAME,
+                     (SELECT SUM(`3DMANAGER_3DPRINT_IMPRESSION_TIME`)/3600 FROM 3DMANAGER_3DPRINT
+            			WHERE `3DMANAGER_3DPRINT_PRINTER_ID` = P.`3DMANAGER_PRINTER_ID`) AS PRINTER_HOURS
+                FROM 3DMANAGER_PRINTER P
+                LEFT JOIN `3DMANAGER_3DPRINT` PR ON PR.`3DMANAGER_3DPRINT_PRINTER_ID` = P.`3DMANAGER_PRINTER_ID`
+                WHERE `3DMANAGER_PRINTER_GROUP_ID` = P_CD_GROUP GROUP BY PRINTER_ID ; 
             END
             """;
 

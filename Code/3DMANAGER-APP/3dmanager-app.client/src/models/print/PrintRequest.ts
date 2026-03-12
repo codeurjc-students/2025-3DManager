@@ -9,5 +9,6 @@ export interface PrintRequest {
     printTime: number;
     printRealTime: number;
     printFilamentUsed: number;
+    printProgress: number;
     imageFile?: File | null;
 }

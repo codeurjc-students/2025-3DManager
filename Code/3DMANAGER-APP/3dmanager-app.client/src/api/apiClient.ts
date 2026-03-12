@@ -21,6 +21,9 @@ apiClient.interceptors.response.use(response => response, error => {
         localStorage.removeItem("token");
         globalThis.location.href = "/login";
     }
+    if (error.response) {
+        return error.response;
+    }
     return Promise.reject(error);
 });
 export default apiClient

@@ -270,5 +270,31 @@ namespace _3DMANAGER_APP.Server.Controllers
             return Ok(new Models.CommonResponse<bool>(true));
         }
 
+        /// <summary>
+        /// Get group data info for dashboard
+        /// </summary>
+        /// <returns>A boolean that indicates if the creation has been successful</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="401">No autorizado</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<GroupDashboardData>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<GroupDashboardData>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<GroupDashboardData>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Groups")]
+        [HttpGet]
+        public IActionResult GetGroupDashboardData()
+        {
+            if (GroupId == null)
+                return Unauthorized(new Models.CommonResponse<GroupDashboardData>(new ErrorProperties(401, UnauthorizedMsg)));
+            var response = _groupManager.GetGroupDashboardData(GroupId.Value, out BaseError? error);
+            if (error != null)
+            {
+                return StatusCode(error.code, new Models.CommonResponse<GroupDashboardData>(new ErrorProperties(error.code, error.message)));
+            }
+            return Ok(new Models.CommonResponse<GroupDashboardData>(response));
+        }
+
     }
 }

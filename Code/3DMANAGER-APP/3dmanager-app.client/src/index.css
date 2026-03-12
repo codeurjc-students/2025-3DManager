@@ -147,7 +147,10 @@ fs-detail{
     font-family: Impact, sans-serif;
     font-size: 20px;
 }
-
+.title-impact-4 {
+    font-family: Impact, sans-serif;
+    font-size: 17px;
+}
 .input-value {
     display: block;
     width: 50%;
@@ -467,3 +470,41 @@ fs-detail{
         .comments-scroll::-webkit-scrollbar-thumb:hover {
             background-color: #9a9a9a;
         }
+
+
+.charts-scroll {
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+    .charts-scroll::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .charts-scroll::-webkit-scrollbar-track {
+        background: #f0f0f0;
+        border-radius: 10px;
+    }
+
+    .charts-scroll::-webkit-scrollbar-thumb {
+        background-color: #b5b5b5;
+        border-radius: 10px;
+    }
+
+        .charts-scroll::-webkit-scrollbar-thumb:hover {
+            background-color: #9a9a9a;
+        }
+.variation-positive {
+    color: #ba2020; 
+    font-weight: 600;
+}
+
+.variation-negative {
+    color: #2e7d32;
+    font-weight: 600;
+}
+
+.variation-neutral {
+    color: #555;
+}
+

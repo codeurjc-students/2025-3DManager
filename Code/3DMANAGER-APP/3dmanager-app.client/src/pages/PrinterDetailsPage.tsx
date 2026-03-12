@@ -9,6 +9,7 @@ import InfoPopup from "../components/popupComponent/InfoPopup";
 import { getPrinterDetail, updatePrinter } from "../api/printerService";
 import type { PrinterDetailObject } from "../models/printer/PrinterDetailObject";
 import type { PrinterDetailRequest } from "../models/printer/PrinterDetailRequest";
+import { PrintChart, type PrintChartData } from "../components/charts/printerChart";
 
 const PrinterDetailPage: React.FC = () => {
     const navigate = useNavigate();
@@ -22,8 +23,7 @@ const PrinterDetailPage: React.FC = () => {
     const [description, setDescription] = useState<string>("");
     const isManager = user?.rolId === "Usuario-Manager";
     const { showPopup } = usePopupContext();
-
-
+    const [ chartData, setChartData ] = useState<PrintChartData[]>([]);
     useEffect(() => {
         getPrinterState().then(response => {
             setStateData(response.data!);
@@ -40,10 +40,32 @@ const PrinterDetailPage: React.FC = () => {
                 setDescription(printer.printerDescription || "");
                 setModel(printer.printerModel || "");
                 setName(printer.printerName || "");
+                setChartData([
+                    { name: "Completada", value: (printer.printerPrintsComplete * 100) / printer.printerPrintsTotal },
+                    { name: "No completada", value: (printer.printerPrintsNoComplete * 100) / printer.printerPrintsTotal }
+                    ,
+                ]);
             }
         });
     }, []);
 
+    const formatVariationText = (variation: number): string => {
+        const absValue = Math.abs(Math.round(variation));
+
+        if (variation < 0) return `${absValue}% más rápido`;
+        if (variation > 0) return `${absValue}% más lento`;
+        return "Sin variación";
+    };
+
+    const variation = data?.printerTimeVariation ?? 0;
+
+    let variationClass = "variation-neutral";
+
+    if (variation < 0) {
+        variationClass = "variation-negative";
+    } else if (variation > 0) {
+        variationClass = "variation-positive";
+    }
 
     const handleUpdate = async () => {
         
@@ -126,8 +148,8 @@ const PrinterDetailPage: React.FC = () => {
                             <textarea className="input-value-4 me-5 mb-1 w-100 h-08" value={description} disabled={!isManager} onChange={(e) => setDescription(e.target.value)}/>
                         </div>
                     </div>
-                    <div className="h-40 ms-3 mt-1">
-                        <div className="h-10 mt-2">
+                    <div className="h-40 ms-3 mt-3">
+                        <div className="h-08">
                             <div className="d-flex flex row">
                                 <div className="col-6 mb-1 ">
                                     <label htmlFor="CreateDatePrinter" className="form-label">Fecha de alta de impresora</label>
@@ -140,7 +162,7 @@ const PrinterDetailPage: React.FC = () => {
 
                                 </div>
                                 <div className="col-6 mb-1 ">
-                                    <label htmlFor="printerModel" className="form-label">Estado</label>
+                                    <label htmlFor="printerState" className="form-label">Estado</label>
                                     <div className="d-flex flex-row">
                                         <select id="printerState" className="input-value-5 w-100" value={state} disabled={!isManager} onChange={(e) => { setState(Number(e.target.value)) }}>
                                             {stateData.map(s => (
@@ -153,27 +175,39 @@ const PrinterDetailPage: React.FC = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="h-10">
+                        <div className="h-08">
                             <div className="d-flex flex row">
-                                <div className="col-6 mb-1">
-                                    <label htmlFor="printerModel" className="form-label">Horas mes actual</label>
+                                <div className="col-6">
+                                    <label htmlFor="printerHoursMonth" className="form-label">Horas mes actual</label>
                                     <input type="text" className="input-value-2 w-100" value={data?.printerTotalHoursMonth ?? 0} disabled />
                                 </div>
-                                <div className="col-6 mb-1">
-                                    <label htmlFor="printerModel" className="form-label">Horas totales</label>
+                                <div className="col-6">
+                                    <label htmlFor="printerHours" className="form-label">Horas totales</label>
                                     <input type="text" className="input-value-2 w-100" value={data?.printerTotalHours ?? 0} disabled />
                                 </div>
                             </div>
                         </div>
-                        <div className="h-10">
+                        <div className="h-08">
                             <div className="d-flex flex row">
-                                <div className="col-6 mb-1">
-                                    <label htmlFor="printerModel" className="form-label">Piezas impresas este mes</label>
+                                <div className="col-6">
+                                    <label htmlFor="printerPrintsMonth" className="form-label">Piezas impresas este mes</label>
                                     <input type="text" className="input-value-2 w-100" value={data?.printerPrintsTotalMonth ?? 0} disabled />
                                 </div>
-                                <div className="col-6 mb-1">
-                                    <label htmlFor="printerModel" className="form-label">Piezas impresas en total</label>
+                                <div className="col-6">
+                                    <label htmlFor="printerPrintsTotal" className="form-label">Piezas impresas en total</label>
                                     <input type="text" className="input-value-2 w-100" value={data?.printerPrintsTotal ?? 0} disabled />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="h-08">
+                            <div className="d-flex flex row">
+                                <div className="col-6">
+                                    <label htmlFor="printerCompleteMonth" className="form-label">Piezas completas impresas este mes</label>
+                                    <input type="text" className="input-value-2 w-100" value={data?.printerPrintsCompleteMonth ?? 0} disabled />
+                                </div>
+                                <div className="col-6">
+                                    <label htmlFor="printerComplete" className="form-label">Piezas completas impresas en total</label>
+                                    <input type="text" className="input-value-2 w-100" value={data?.printerPrintsComplete ?? 0} disabled />
                                 </div>
                             </div>
                         </div>
@@ -181,6 +215,23 @@ const PrinterDetailPage: React.FC = () => {
                 </div>
                 <div className="col-7 d-flex flex-column ms-auto">
                     <div className="h-35 grey-container-detail mb-2">
+                        <h3 className="title-impact-3 ms-3 mt-1">Estimaciones</h3>
+                        <div className="d-flex flex-row h-100">
+                            <div className="col-2 ms-3 me-5 d-flex flex-column">
+                                <div className="mt-3 mb-4">
+                                    <label htmlFor="printerEstimations" className="form-label">Tasa de éxito</label>
+                                    <input type="text" className="input-value-2 w-100" value={((data?.printerSuccessRate ?? 0) * 100).toFixed(2)} disabled/>
+                                </div>
+                                <div>
+                                    <label htmlFor="printerEstimations" className="form-label">Porcentaje eficiencia tiempo real en impresión </label>
+                                    <input type="text" className={`input-value-2 w-100 ${variationClass}`} value={formatVariationText(variation)} disabled/>
+                                </div>
+                            </div>
+                            <div className="col-10 ms-5">
+                                <PrintChart data={chartData} />
+                            </div>
+                        </div>
+                        
                     </div>
                     <div className="grey-container-detail mt-2 h-60">
                         <h3 className="title-impact-3 ms-2 mt-2">Piezas impresas</h3>

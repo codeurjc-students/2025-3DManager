@@ -13,7 +13,6 @@ const PrintDetailPage: React.FC = () => {
     const { user } = useAuth();
     const { printId } = useParams<{ printId: string }>();
     const [data, setData] = useState<PrintDetailObject>(); 
-    //const [state, setState] = useState<number>(0);
     const [name, setName] = useState<string>("");
     const [description, setDescription] = useState<string>("");
     const isManager = user?.rolId === "Usuario-Manager";
@@ -112,7 +111,11 @@ const PrintDetailPage: React.FC = () => {
                     <div className="h-40 ms-3 mt-1">
                         <div className="h-10 mt-2">
                             <div className="d-flex flex row">
-                                <div className="col-6 mb-1 "></div>
+                                <div className="col-6 mt-4">
+                                    {data?.printState == 1 ?
+                                        <span className="status-badge status-active">Finalizada</span> :
+                                        <span className="status-badge status-maintenance">No finalizada</span>}
+                                </div>
                                 <div className="col-6 mb-1">
                                     <label htmlFor="printUser" className="form-label">Usuario</label>
                                     <input type="text" className="input-value-2 w-100" value={data?.printUserName}

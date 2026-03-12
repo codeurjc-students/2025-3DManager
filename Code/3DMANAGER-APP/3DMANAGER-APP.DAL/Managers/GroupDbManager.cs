@@ -401,5 +401,55 @@ namespace _3DMANAGER_APP.DAL.Managers
                 return false;
             }
         }
+
+        public GroupDashboardDataDbObject GetGroupDashboardData(int groupId)
+        {
+            try
+            {
+                GroupDashboardDataDbObject response = null;
+                string procName = $"{ProcedurePrefix}_pr_GROUP_DASHBOARD_DATA_GET";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
+
+                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    response = new GroupDashboardDataDbObject();
+                    response = response.Create(ds.Tables[0].Rows[0]);
+                }
+                if (ds.Tables.Count > 1 && ds.Tables[1].Rows.Count > 0)
+                {
+                    foreach (DataRow row in ds.Tables[1].Rows)
+                    {
+                        GroupPrinterHoursDbObject listMember = new GroupPrinterHoursDbObject();
+                        response.GroupPrinterHours.Add(listMember.Create(row));
+                    }
+                }
+
+                return response;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = "Error al obtener la información de grupo para el dashboard en BBDD";
+                Logger.LogError(ex, msg);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error al obtener la información de grupo para el dashboard en BBDD";
+                Logger.LogError(ex, msg);
+                return null;
+            }
+        }
     }
 }

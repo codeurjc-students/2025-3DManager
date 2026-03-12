@@ -14,6 +14,7 @@ namespace _3DMANAGER_APP.BLL.Models.Print
         public int PrintTime { get; set; }
         public decimal PrintFilamentUsed { get; set; }
         public int PrintRealTime { get; set; }
+        public int? PrintProgress { get; set; }
         public IFormFile? ImageFile { get; set; }
     }
 }

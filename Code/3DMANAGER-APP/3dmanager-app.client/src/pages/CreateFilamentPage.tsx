@@ -36,10 +36,10 @@ const CreateFilamentPage: React.FC = () => {
         e.preventDefault(); 
 
         if (!filamentName || !filamentType || !filamentWeight || !filamentColor || !filamentTemperature || !filamentLenght
-            || !filamentThickness || !filamentCost) {
+            || !filamentThickness || !filamentCost || !filamentDescription) {
             showPopup({
                 type: "warning", content: (
-                    <InfoPopup title="Completar formulario" description="Todos los campos salvo la descripción son campos obligatorios" />
+                    <InfoPopup title="Completar formulario" description="Todos los campos salvo la foto son obligatorios" />
                 )
             });
 
@@ -106,6 +106,7 @@ const CreateFilamentPage: React.FC = () => {
                                         <label htmlFor="filamentType" className="form-label">Tipo Filamento</label>
                                         <select id="filamentType" className="input-value w-75" value={filamentType}
                                             onChange={(e) => setFilamentType(Number(e.target.value))}>
+                                            <option value={0}>Seleccione un material</option>
                                             {catalogTypes.map(t => (
                                                 <option key={t.id} value={t.id}>
                                                     {t.description}

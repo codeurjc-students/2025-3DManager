@@ -295,6 +295,48 @@ namespace _3DMANAGER_APP.DAL.Managers
                 return null;
             }
         }
+
+        public List<PrinterTimesValuesDbObject> GetTimeVariation(int groupId, int printerId)
+        {
+            try
+            {
+                List<PrinterTimesValuesDbObject> list = new List<PrinterTimesValuesDbObject>();
+                string procName = $"{ProcedurePrefix}_pr_PRINT_LIST_TIMES";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
+                cmd.Parameters.Add(new MySqlParameter("P_CD_PRINTER", MySqlDbType.Int32) { Value = printerId });
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    foreach (DataRow row in ds.Tables[0].Rows)
+                    {
+                        PrinterTimesValuesDbObject listResponse = new PrinterTimesValuesDbObject();
+                        list.Add(listResponse.Create(row));
+                    }
+                }
+                return list;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = "Error al devolver el listado de tiempos de impresiones de detalle en BBDD";
+                Logger.LogError(ex, msg);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error al devolver el listado de tiempos de impresiones de en BBDD";
+                Logger.LogError(ex, msg);
+                return null;
+            }
+        }
     }
 
 }

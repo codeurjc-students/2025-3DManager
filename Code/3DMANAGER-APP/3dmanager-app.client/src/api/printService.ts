@@ -24,6 +24,7 @@ export const postPrint = async (data: PrintRequest): Promise<CommonResponse<numb
     formData.append("printPrinter", data.printPrinter.toString());
     formData.append("printRealTime", data.printRealTime.toString());
     formData.append("printState", data.printState.toString());
+    formData.append("printProgress", data.printProgress.toString());
     formData.append("printTime", Math.round(data.printTime).toString());
     if (data.imageFile) {
         formData.append("imageFile", data.imageFile);

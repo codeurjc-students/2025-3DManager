@@ -89,6 +89,7 @@ namespace _3DMANAGER_APP.DAL.Managers
                 cmd.Parameters.Add(new MySqlParameter("P_PRINT_TIME", MySqlDbType.Int32) { Value = request.PrintTime });
                 cmd.Parameters.Add(new MySqlParameter("P_PRINT_FILAMENT_USED", MySqlDbType.Decimal) { Value = request.PrintFilamentUsed });
                 cmd.Parameters.Add(new MySqlParameter("P_PRINT_REAL_TIME", MySqlDbType.Int32) { Value = request.PrintRealTime });
+                cmd.Parameters.Add(new MySqlParameter("P_PRINT_PROGRESS", MySqlDbType.Int32) { Value = request.PrintProgress });
 
                 var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
@@ -107,7 +108,6 @@ namespace _3DMANAGER_APP.DAL.Managers
                 {
                     return ds.Tables[0].Rows[0].Field<int>("3DMANAGER_3DPRINT_ID");
                 }
-
 
                 return 0;
             }

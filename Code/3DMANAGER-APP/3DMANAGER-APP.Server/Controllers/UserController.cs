@@ -165,6 +165,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]

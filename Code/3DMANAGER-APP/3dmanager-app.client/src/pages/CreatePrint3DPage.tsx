@@ -22,23 +22,53 @@ const CreatePrint3DPage: React.FC = () => {
     const [printRealTimeM, setPrintRealTimeM] = useState<number>(0);
     const [printFilamentUsed, setPrintFilamentUsed] = useState<number>(0);
     const [imageFile, setImageFile] = useState<File | null>(null);
+    const [printProgress, setPrintProgress] = useState<number>(0);
 
     const { showPopup } = usePopupContext();
     const navigate = useNavigate();
-    
+
 
     useEffect(() => {
         const loadCatalog = async () => {
             const responseCFilament = await getFilamentCatalog();
-            setCatalogFilament(responseCFilament.data!);
+            const filaments = responseCFilament.data ?? [];
+            setCatalogFilament(filaments);
+            if (filaments.length === 0) {
+                showPopup({
+                    type: "warning",
+                    content: (
+                        <InfoPopup
+                            title="Sin filamentos"
+                            description="No hay bobinas de filamento registradas. Debe añadir una antes de crear una impresión."
+                        />
+                    )
+                });
+            }
+
             const responseCPrinter = await getPrinterCatalog();
-            setCatalogPrinter(responseCPrinter.data!);
+            const printers = responseCPrinter.data ?? [];
+            setCatalogPrinter(printers);
+            if (printers.length === 0) {
+                showPopup({
+                    type: "warning",
+                    content: (
+                        <InfoPopup
+                            title="Sin impresoras"
+                            description="No hay impresoras registradas. Debe añadir una antes de crear una impresión."
+                        />
+                    )
+                });
+            }
+
             const responseCState = await getPrintState();
-            setCatalogState(responseCState.data!);
+            const states = responseCState.data ?? [];
+            setCatalogState(states);
         };
 
         loadCatalog();
     }, []);
+
+
 
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -65,11 +95,11 @@ const CreatePrint3DPage: React.FC = () => {
 
     
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault(); 
-        if (!printName || !printState || !printFilament || !printPrinter) {
+        e.preventDefault();
+        if (!printName || !printState || !printFilament || !printPrinter || !printDescription || !printTime || !printRealTimeH) {
             showPopup({
                 type: "warning", content: (
-                    <InfoPopup title="Completar formulario" description="Debe rellenar todos los campos" />
+                    <InfoPopup title="Completar formulario" description="Debe rellenar todos los campos salvo la imagen de impresión" />
                 )
             });
             return;
@@ -90,6 +120,7 @@ const CreatePrint3DPage: React.FC = () => {
                 printTime,
                 printRealTime,
                 printFilamentUsed,
+                printProgress,
                 imageFile
             });
 
@@ -127,30 +158,38 @@ const CreatePrint3DPage: React.FC = () => {
                         <div className="white-container">
                             <div className="p-2 d-flex flex-column">
                                 <div className="row-3 d-flex flex-row">
-                                    <div className="col-6 p-2">
+                                    <div className={printState === 2 ? "col-4 p-2" : "col-6 p-2"}>
                                         <label htmlFor="printName" className="form-label">Nombre</label>
-                                        <input id="printName" className="input-value w-100 " value={printName} placeholder="Nombre"
-                                            onChange={(e) => setPrintName(e.target.value)} />
+                                        <input id="printName" className="input-value w-100" value={printName} placeholder="Nombre" onChange={(e) => setPrintName(e.target.value)}/>
                                     </div>
-                                    <div className="col-6 p-2">
-                                        <label htmlFor="printState" className="form-label">Estado</label>
-                                        <select id="printState" className="input-value w-100 " value={printState}
-                                            onChange={(e) => setPrintState(Number(e.target.value))}>
 
+                                    <div className={printState === 2 ? "col-4 p-2" : "col-6 p-2"}>
+                                        <label htmlFor="printState" className="form-label">Estado</label>
+                                        <select id="printState" className="input-value w-100" value={printState} onChange={(e) => setPrintState(Number(e.target.value))}>
+                                            <option value={0}>Seleccione un estado</option>
                                             {catalogState.map(t => (
-                                                <option key={t.id} value={t.id}>
-                                                    {t.description}
-                                                </option>
+                                                <option key={t.id} value={t.id}>{t.description}</option>
                                             ))}
                                         </select>
                                     </div>
+
+                                    {printState === 2 && (
+                                        <div className="col-4 p-2">
+                                            <label htmlFor="printProgress" className="form-label">
+                                                Porcentaje completado antes del fallo
+                                            </label>
+                                            <input id="printProgress" type="number" className="input-value w-100" min={0} max={100}
+                                                value={printProgress} onChange={(e) => setPrintProgress(Number(e.target.value))} placeholder="0 - 100"/>
+                                        </div>
+                                    )}
                                 </div>
+
                                 <div className="row-3 d-flex flex-row">
                                     <div className="col-6 p-2">
                                         <label htmlFor="printPrinter" className="form-label">Impresora</label>
                                         <select id="printPrinter" className="input-value w-100" value={printPrinter}
                                             onChange={(e) => setPrintPrinter(Number(e.target.value))}>
-
+                                            <option value={0}>Seleccione una impresora</option>
                                             {catalogPrinter.map(t => (
                                                 <option key={t.id} value={t.id}>
                                                     {t.description}
@@ -162,7 +201,7 @@ const CreatePrint3DPage: React.FC = () => {
                                         <label htmlFor="printFilament" className="form-label">Bobina de filamento</label>
                                         <select id="printFilament" className="input-value w-100" value={printFilament}
                                             onChange={(e) => setPrintFilament(Number(e.target.value))}>
-
+                                            <option value={0}>Seleccione un filamento</option>
                                             {catalogFilament.map(t => (
                                                 <option key={t.id} value={t.id}>
                                                     {t.description}
