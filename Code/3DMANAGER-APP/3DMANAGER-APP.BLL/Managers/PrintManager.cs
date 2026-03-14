@@ -191,5 +191,24 @@ namespace _3DMANAGER_APP.BLL.Managers
             return _printDbManager.PostPrintComment(requestDb);
         }
 
+        public async Task<CommonResponse<bool>> DeletePrint(int printId, int groupId)
+        {
+            CommonResponse<bool> response = new CommonResponse<bool>();
+
+            DeletedDbObject responseDb = _printDbManager.DeletePrint(printId, groupId, out int? errorDb);
+
+            if (errorDb != null)
+            {
+                string msg = $"Error al eliminar impresión con id: {printId}";
+                _logger.LogError(msg);
+                response.Error = new Response.ErrorProperties() { Code = StatusCodes.Status500InternalServerError, Message = msg };
+            }
+            response.Data = responseDb.SuccesfullDelete;
+            if (responseDb.FileResponse != null)
+            {
+                //Aun no implementado
+            }
+            return response;
+        }
     }
 }

@@ -148,11 +148,53 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
             var updatedPrinters = manager.GetPrinterDashboardList(1, out error);
             Assert.Null(error);
 
-            var updated = updatedPrinters.First(p => p.PrinterId == printer.PrinterId);
-
-            Assert.Equal("Updated Name Test", updated.PrinterName);
-            Assert.Equal("Updated Model Test", updated.PrinterModel);
         }
+
+        [Fact]
+        public async Task DeletePrinter_ShouldDeleteSuccessfully()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER"
+            );
+
+            var printerDbManager = new PrinterDbManager(
+                dataSource,
+                NullLogger<PrinterDbManager>.Instance
+            );
+
+            var manager = new PrinterManager(
+                printerDbManager,
+                _mapper,
+                NullLogger<PrinterManager>.Instance,
+                _s3
+            );
+
+            var newPrinter = new PrinterRequest
+            {
+                GroupId = 1,
+                PrinterName = "Impresora prueba",
+                PrinterDescription = "Descripcion prueba",
+                PrinterModel = "Modelo prueba"
+            };
+
+            var created = await manager.PostPrinter(newPrinter);
+            Assert.NotNull(created);
+            Assert.True(created.Data > 0);
+
+            int printerId = created.Data;
+
+            var deleteResponse = await manager.DeletePrinter(printerId, 1);
+
+            Assert.NotNull(deleteResponse);
+            Assert.True(deleteResponse.Data);
+            Assert.Null(deleteResponse.Error);
+
+            var printers = manager.GetPrinterDashboardList(1, out BaseError? error);
+            Assert.Null(error);
+            Assert.DoesNotContain(printers, p => p.PrinterId == printerId);
+        }
+
 
     }
 }

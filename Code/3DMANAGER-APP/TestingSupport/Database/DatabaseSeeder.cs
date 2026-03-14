@@ -59,6 +59,9 @@
             await CreateProcUpdatePrintAsync();
             await CreateProcGetPrintDetailAsync();
             await CreateProcGetGroupDashboardDataAsync();
+            await CreateProcDeletePrintAsync();
+            await CreateProcDeletePrinterAsync();
+            await CreateProcDeleteFilamentAsync();
         }
 
         private async Task LoadDataAsync()
@@ -251,6 +254,7 @@
                 `3DMANAGER_PRINTER_DESCRIPTION` varchar(100) DEFAULT NULL,
                 `3DMANAGER_PRINTER_IMAGE_URL` varchar(255) DEFAULT NULL,
                 `3DMANAGER_PRINTER_IMAGE_KEY` varchar(255) DEFAULT NULL,
+                `3DMANAGER_PRINTER_DELETED` bit(1) NOT NULL DEFAULT b'0',
                 FOREIGN KEY (`3DMANAGER_PRINTER_GROUP_ID`)
                     REFERENCES `3DMANAGER_GROUP` (`3DMANAGER_GROUP_ID`)
             );
@@ -279,10 +283,12 @@
                 `3DMANAGER_FILAMENT_COST` DECIMAL(10,2)  NOT NULL,
                 `3DMANAGER_FILAMENT_IMAGE_URL` varchar(255) DEFAULT NULL,
                 `3DMANAGER_FILAMENT_IMAGE_KEY` varchar(255) DEFAULT NULL,
+                `3DMANAGER_FILAMENT_DELETED` bit(1) NOT NULL DEFAULT b'0',
                 FOREIGN KEY (`3DMANAGER_FILAMENT_GROUP_ID`)
                     REFERENCES `3DMANAGER_GROUP` (`3DMANAGER_GROUP_ID`)
             );
             """;
+
 
             await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
         }
@@ -304,7 +310,8 @@
                 `3DMANAGER_3DPRINT_DESCRIPTION` VARCHAR(500),
                 `3DMANAGER_3DPRINT_REGISTER_DATE` DATETIME DEFAULT CURRENT_TIMESTAMP,
                 `3DMANAGER_3DPRINT_IMAGE_KEY` varchar(255) DEFAULT NULL,
-                `3DMANAGER_3DPRINT_IMAGE_URL` varchar(255) DEFAULT NULL
+                `3DMANAGER_3DPRINT_IMAGE_URL` varchar(255) DEFAULT NULL,
+                `3DMANAGER_3DPRINT_DELETED` bit(1) NOT NULL DEFAULT b'0'
             );
             """;
 
@@ -551,7 +558,7 @@
                 FROM `3DMANAGER_PRINTER` p
                 LEFT JOIN `3DMANAGER_C_STATE_PRINTER` s
                     ON s.`3DMANAGER_C_STATE_PRINTER_ID` = p.`3DMANAGER_PRINTER_STATE`
-                WHERE p.`3DMANAGER_PRINTER_GROUP_ID` = P_CD_GROUP;
+                WHERE p.`3DMANAGER_PRINTER_GROUP_ID` = P_CD_GROUP AND `3DMANAGER_PRINTER_DELETED` = 0;
             END;
             
             """;
@@ -678,7 +685,7 @@
                 FROM `3DMANAGER_3DPRINT` p
                 LEFT JOIN `3DMANAGER_USER` u
                     ON p.`3DMANAGER_3DPRINT_USER_ID` = u.`USER_ID`
-                WHERE p.`3DMANAGER_3DPRINT_GROUP_ID` = P_CD_GROUP;
+                WHERE p.`3DMANAGER_3DPRINT_GROUP_ID` = P_CD_GROUP AND `3DMANAGER_3DPRINT_DELETED` = 0;
             END;
             
             """;
@@ -766,7 +773,7 @@
                 FROM `3DMANAGER_FILAMENT` f
                 LEFT JOIN `3DMANAGER_C_STATE_FILAMENT` s
                     ON f.`3DMANAGER_FILAMENT_STATE` = s.`3DMANAGER_C_STATE_FILAMENT_ID`
-                WHERE f.`3DMANAGER_FILAMENT_GROUP_ID` = P_CD_GROUP;
+                WHERE f.`3DMANAGER_FILAMENT_GROUP_ID` = P_CD_GROUP AND `3DMANAGER_FILAMENT_DELETED` = 0;
             END;
             
             """;
@@ -932,7 +939,7 @@
             var sql = """
             DROP PROCEDURE IF EXISTS `3DMANAGER_pr_USER_DETAIL_GET`;
 
-            CREATE DEFINER=`root`@`localhost` PROCEDURE `3DMANAGER_pr_USER_DETAIL_GET`(
+            CREATE  PROCEDURE `3DMANAGER_pr_USER_DETAIL_GET`(
                 IN P_CD_GROUP INT,
                 IN P_CD_USER INT
             )
@@ -1026,7 +1033,7 @@
             var sql = """
             DROP PROCEDURE IF EXISTS `3DMANAGER_pr_FILAMENT_DETAIL_GET`;
 
-            CREATE DEFINER=`root`@`localhost` PROCEDURE `3DMANAGER_pr_FILAMENT_DETAIL_GET`(
+            CREATE PROCEDURE `3DMANAGER_pr_FILAMENT_DETAIL_GET`(
                 IN P_CD_GROUP INT,
                 IN P_CD_FILAMENT INT
             )
@@ -1156,7 +1163,7 @@
             var sql = """
             DROP PROCEDURE IF EXISTS `3DMANAGER_pr_PRINTER_DETAIL_GET`;
 
-            CREATE DEFINER=`root`@`localhost` PROCEDURE `3DMANAGER_pr_PRINTER_DETAIL_GET`(
+            CREATE PROCEDURE `3DMANAGER_pr_PRINTER_DETAIL_GET`(
                 IN P_CD_GROUP INT,
                 IN P_CD_PRINTER INT
             )
@@ -1215,7 +1222,7 @@
             var sql = """
             DROP PROCEDURE IF EXISTS `3DMANAGER_pr_GROUP_DASHBOARD_DATA_GET`;
 
-            CREATE DEFINER=`root`@`localhost` PROCEDURE `3DMANAGER_pr_GROUP_DASHBOARD_DATA_GET`(
+            CREATE PROCEDURE `3DMANAGER_pr_GROUP_DASHBOARD_DATA_GET`(
             IN P_CD_GROUP INT 
             )
             BEGIN
@@ -1236,6 +1243,143 @@
                 FROM 3DMANAGER_PRINTER P
                 LEFT JOIN `3DMANAGER_3DPRINT` PR ON PR.`3DMANAGER_3DPRINT_PRINTER_ID` = P.`3DMANAGER_PRINTER_ID`
                 WHERE `3DMANAGER_PRINTER_GROUP_ID` = P_CD_GROUP GROUP BY PRINTER_ID ; 
+            END
+            """;
+
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
+        private async Task CreateProcDeleteFilamentAsync()
+        {
+            var sql = """
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_FILAMENT_DELETE`;
+
+            CREATE PROCEDURE `3DMANAGER_pr_FILAMENT_DELETE`(
+                IN P_CD_GROUP INT,
+                IN P_CD_FILAMENT INT,
+                OUT CodigoError INT
+            )
+            BEGIN
+
+            	DECLARE v_err_msg TEXT;
+                DECLARE EXIT HANDLER FOR SQLEXCEPTION
+            	BEGIN
+            		GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
+
+            		-- Forzar un commit independiente
+            		START TRANSACTION;
+            		INSERT INTO 3DMANAGER_SYSTEM_LOGS(PROCEDURE_NAME, ERROR_MESSAGE)
+            		VALUES('3DMANAGER_pr_FILAMENT_DELETE', v_err_msg);
+            		COMMIT;
+
+            		SET CodigoError = -1;
+            		ROLLBACK;
+            	END;
+                SET CodigoError = 0;
+            	START TRANSACTION;
+            		UPDATE `3DMANAGER_FILAMENT` 
+                    SET 
+                     `3DMANAGER_FILAMENT_DELETED` = 1 
+                    WHERE `3DMANAGER_FILAMENT_ID` = P_CD_FILAMENT AND `3DMANAGER_FILAMENT_GROUP_ID` = P_CD_GROUP;
+
+                    SELECT 
+            			`3DMANAGER_FILAMENT_ID` AS ID,
+            			`3DMANAGER_FILAMENT_IMAGE_KEY` AS FILE_KEY,
+                        `3DMANAGER_FILAMENT_IMAGE_URL` AS FILE_URL
+                    FROM `3DMANAGER_FILAMENT`
+                    WHERE `3DMANAGER_FILAMENT_ID` = P_CD_FILAMENT AND `3DMANAGER_FILAMENT_GROUP_ID` = P_CD_GROUP;
+                COMMIT;
+            END
+            """;
+
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
+
+        private async Task CreateProcDeletePrinterAsync()
+        {
+            var sql = """
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_PRINTER_DELETE`;
+
+            CREATE PROCEDURE `3DMANAGER_pr_PRINTER_DELETE`(
+                IN P_CD_GROUP INT,
+                IN P_CD_PRINTER INT,
+                OUT CodigoError INT
+            )
+            BEGIN
+
+            	DECLARE v_err_msg TEXT;
+                DECLARE EXIT HANDLER FOR SQLEXCEPTION
+            	BEGIN
+            		GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
+
+            		-- Forzar un commit independiente
+            		START TRANSACTION;
+            		INSERT INTO 3DMANAGER_SYSTEM_LOGS(PROCEDURE_NAME, ERROR_MESSAGE)
+            		VALUES('3DMANAGER_pr_PRINTER_DELETE', v_err_msg);
+            		COMMIT;
+
+            		SET CodigoError = -1;
+            		ROLLBACK;
+            	END;
+                SET CodigoError = 0;
+            	START TRANSACTION;
+            		UPDATE `3DMANAGER_PRINTER` 
+                    SET 
+                     `3DMANAGER_PRINTER_DELETED` = 1 
+                    WHERE `3DMANAGER_PRINTER_ID` = P_CD_PRINTER AND `3DMANAGER_PRINTER_GROUP_ID` = P_CD_GROUP;
+
+                    SELECT 
+            			`3DMANAGER_PRINTER_ID` AS ID,
+            			`3DMANAGER_PRINTER_IMAGE_KEY` AS FILE_KEY,
+                        `3DMANAGER_PRINTER_IMAGE_URL` AS FILE_URL
+                    FROM `3DMANAGER_PRINTER`
+                    WHERE `3DMANAGER_PRINTER_ID` = P_CD_PRINTER AND `3DMANAGER_PRINTER_GROUP_ID` = P_CD_GROUP;
+                COMMIT;
+            END
+            """;
+
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
+
+        private async Task CreateProcDeletePrintAsync()
+        {
+            var sql = """
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_PRINT_DELETE`;
+
+            CREATE PROCEDURE `3DMANAGER_pr_PRINT_DELETE`(
+                IN P_CD_GROUP INT,
+                IN P_CD_PRINT INT,
+                OUT CodigoError INT
+            )
+            BEGIN
+
+            	DECLARE v_err_msg TEXT;
+                DECLARE EXIT HANDLER FOR SQLEXCEPTION
+            	BEGIN
+            		GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
+
+            		-- Forzar un commit independiente
+            		START TRANSACTION;
+            		INSERT INTO 3DMANAGER_SYSTEM_LOGS(PROCEDURE_NAME, ERROR_MESSAGE)
+            		VALUES('3DMANAGER_pr_PRINT_DELETE', v_err_msg);
+            		COMMIT;
+
+            		SET CodigoError = -1;
+            		ROLLBACK;
+            	END;
+                SET CodigoError = 0;
+            	START TRANSACTION;
+            		UPDATE `3DMANAGER_3DPRINT` 
+                    SET 
+                     `3DMANAGER_3DPRINT_DELETED` = 1 
+                    WHERE `3DMANAGER_3DPRINT_ID` = P_CD_PRINT AND `3DMANAGER_3DPRINT_GROUP_ID` = P_CD_GROUP;
+
+                    SELECT 
+            			`3DMANAGER_3DPRINT_ID` AS ID,
+            			`3DMANAGER_3DPRINT_IMAGE_KEY` AS FILE_KEY,
+                        `3DMANAGER_3DPRINT_IMAGE_URL` AS FILE_URL
+                    FROM `3DMANAGER_3DPRINT` 
+                    WHERE `3DMANAGER_3DPRINT_ID` = P_CD_PRINT AND `3DMANAGER_3DPRINT_GROUP_ID` = P_CD_GROUP;
+                COMMIT;
             END
             """;
 

@@ -1,6 +1,7 @@
 ﻿using _3DMANAGER_APP.DAL.Base;
 using _3DMANAGER_APP.DAL.Models;
 using _3DMANAGER_APP.DAL.Models.File;
+using _3DMANAGER_APP.DAL.Models.Print;
 using _3DMANAGER_APP.DAL.Models.Printer;
 
 namespace _3DMANAGER_APP.DAL.Interfaces
@@ -14,5 +15,6 @@ namespace _3DMANAGER_APP.DAL.Interfaces
         public bool UpdatePrinter(PrinterDetailRequestDbObject requestDb);
         PrinterDetailDbObject GetPrinterDetail(int groupId, int printerId);
         List<PrinterTimesValuesDbObject> GetTimeVariation(int groupId, int printerId);
+        DeletedDbObject DeletePrinter(int printerId, int groupId, out int? error);
     }
 }

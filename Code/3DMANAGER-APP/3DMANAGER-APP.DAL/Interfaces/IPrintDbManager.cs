@@ -13,5 +13,6 @@ namespace _3DMANAGER_APP.DAL.Interfaces
         PrintDetailDbObject GetPrintDetail(int groupId, int printId);
         List<PrintCommentDbObject> GetPrintComments(int groupI, int printId);
         int PostPrintComment(PrintCommentRequestDbObject request);
+        DeletedDbObject DeletePrint(int printId, int groupId, out int? error);
     }
 }

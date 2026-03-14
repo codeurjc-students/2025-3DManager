@@ -2,6 +2,7 @@
 using _3DMANAGER_APP.DAL.Interfaces;
 using _3DMANAGER_APP.DAL.Models.Filament;
 using _3DMANAGER_APP.DAL.Models.File;
+using _3DMANAGER_APP.DAL.Models.Print;
 using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
 using System.Data;
@@ -249,6 +250,61 @@ namespace _3DMANAGER_APP.DAL.Managers
                 string msg = "Error al devolver el detalle de filamento de en BBDD";
                 Logger.LogError(ex, msg);
                 return null;
+            }
+        }
+
+        public DeletedDbObject DeleteFilament(int filamentId, int groupId, out int? error)
+        {
+            error = null;
+            try
+            {
+                DeletedDbObject response = new DeletedDbObject { SuccesfullDelete = false };
+
+                string procName = $"{ProcedurePrefix}_pr_FILAMENT_DELETE";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
+                cmd.Parameters.Add(new MySqlParameter("P_CD_FILAMENT", MySqlDbType.Int32) { Value = filamentId });
+
+                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                var errorDb = Convert.ToInt32(errorParam.Value);
+                if (errorDb != 0)
+                {
+                    error = errorDb;
+                    response.Id = filamentId;
+                    return response;
+                }
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    response = response.Create(ds.Tables[0].Rows[0]);
+                    response.SuccesfullDelete = true;
+                    return response;
+                }
+
+                return response;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = "Error al eliminar un filamento en BBDD";
+                Logger.LogError(ex, msg);
+                error = 500;
+                return new DeletedDbObject { SuccesfullDelete = false };
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error al eliminar un filamento en BBDD";
+                Logger.LogError(ex, msg);
+                error = 500;
+                return new DeletedDbObject { SuccesfullDelete = false };
             }
         }
     }

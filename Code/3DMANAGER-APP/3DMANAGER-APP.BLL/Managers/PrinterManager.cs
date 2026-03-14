@@ -6,6 +6,7 @@ using _3DMANAGER_APP.BLL.Models.Printer;
 using _3DMANAGER_APP.DAL.Base;
 using _3DMANAGER_APP.DAL.Interfaces;
 using _3DMANAGER_APP.DAL.Models.File;
+using _3DMANAGER_APP.DAL.Models.Print;
 using _3DMANAGER_APP.DAL.Models.Printer;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -175,12 +176,32 @@ namespace _3DMANAGER_APP.BLL.Managers
                     message = "Error al obtener el listado de tiempos de impresión"
                 };
             }
-            var variations = responseDb
-            .Where(time => time.PrinterTimeImpresion > 0)
+            var variations = responseDb.Count > 0 ?
+            responseDb.Where(time => time.PrinterTimeImpresion > 0)
             .Average(time => ((float)(time.PrinterRealTimeImpresion - time.PrinterTimeImpresion) / time.PrinterTimeImpresion) * 100
-            );
+            ) : 0;
 
             return variations;
+        }
+
+        public async Task<CommonResponse<bool>> DeletePrinter(int printerId, int groupId)
+        {
+            CommonResponse<bool> response = new CommonResponse<bool>();
+
+            DeletedDbObject responseDb = _printerDbManager.DeletePrinter(printerId, groupId, out int? errorDb);
+
+            if (errorDb != null)
+            {
+                string msg = $"Error al eliminar impresora con id: {printerId}";
+                _logger.LogError(msg);
+                response.Error = new Response.ErrorProperties() { Code = StatusCodes.Status500InternalServerError, Message = msg };
+            }
+            response.Data = responseDb.SuccesfullDelete;
+            if (responseDb.FileResponse != null)
+            {
+                //Aun no implementado
+            }
+            return response;
         }
     }
 }

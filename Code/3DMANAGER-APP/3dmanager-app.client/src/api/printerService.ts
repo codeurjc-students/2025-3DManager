@@ -42,3 +42,7 @@ export const getPrinterDetail = async (printerId: number): Promise<CommonRespons
     return response.data;
 }
 
+export const deletePrinter = async (printerId: number): Promise<CommonResponse<boolean>> => {
+    const response = await apiClient.delete<CommonResponse<boolean>>(`/api/v1/printers/DeletePrinter?printerId=${printerId}`);
+    return response.data;
+}
