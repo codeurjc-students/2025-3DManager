@@ -42,7 +42,7 @@ namespace _3DMANAGER_APP.BLL.Managers
             bool response = _groupDbManager.PostAcceptInvitation(groupId, isAccepted, userId, out int? errorDb);
             if (errorDb != null || errorDb > 0)
             {
-                error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = "Error al tratar de aceptar la invitacion del grupo" };
+                error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = $"Error al tratar de aceptar la invitacion del grupo {groupId}" };
                 return false;
             }
             return response;
@@ -54,7 +54,7 @@ namespace _3DMANAGER_APP.BLL.Managers
             GroupBasicDataResponseDbObject response = _groupDbManager.GetGroupBasicData(groupId);
             if (response == null)
             {
-                error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = "Error al tratar de recoger la información básica del grupo" };
+                error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = $"Error al tratar de recoger la información básica del grupo {groupId}" };
                 return null;
             }
             return _mapper.Map<GroupBasicDataResponse>(response);
@@ -85,7 +85,8 @@ namespace _3DMANAGER_APP.BLL.Managers
 
             if (!dbResponse)
             {
-                _logger.LogWarning($"No se pudo borrar el grupo {groupId} en la base de datos.");
+                string msg = $"No se pudo borrar el grupo {groupId} en la base de datos.";
+                _logger.LogError(msg);
                 return false;
             }
 
@@ -95,7 +96,8 @@ namespace _3DMANAGER_APP.BLL.Managers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error al borrar las imágenes del grupo {groupId} en S3.");
+                string msg = $"Error al borrar las imágenes del grupo {groupId} en S3.";
+                _logger.LogError(ex, msg);
             }
 
             return true;

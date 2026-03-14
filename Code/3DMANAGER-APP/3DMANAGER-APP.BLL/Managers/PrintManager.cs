@@ -144,11 +144,12 @@ namespace _3DMANAGER_APP.BLL.Managers
             var responseDb = _printDbManager.GetPrintDetail(groupId, printId);
             if (responseDb == null)
             {
-                _logger.LogError("Error al obtener el detalle de impresión");
+                string msg = $"Error al obtener el detalle de impresión {printId}";
+                _logger.LogError(msg);
                 error = new BaseError()
                 {
                     code = StatusCodes.Status500InternalServerError,
-                    message = "Error al obtener el detalle de impresión"
+                    message = msg
                 };
             }
             response = _mapper.Map<PrintDetailObject>(responseDb);
@@ -172,10 +173,12 @@ namespace _3DMANAGER_APP.BLL.Managers
 
             if (dbResult == null)
             {
+                string msg = $"Error obteniendo comentarios de la impresión {printId}";
+                _logger.LogError(msg);
                 error = new BaseError
                 {
                     code = 500,
-                    message = "Error obteniendo comentarios"
+                    message = msg
                 };
                 return null;
             }

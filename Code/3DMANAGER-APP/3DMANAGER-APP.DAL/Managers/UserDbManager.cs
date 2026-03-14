@@ -95,13 +95,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al acceder con un usuario en BBDD";
+                string msg = $"Error al acceder con un usuario {userName} en BBDD";
                 Logger.LogError(ex, msg);
                 return null;
             }
             catch (Exception ex)
             {
-                string msg = "Error al acceder con un usuario en BBDD";
+                string msg = $"Error al acceder con un usuario {userName} en BBDD";
                 Logger.LogError(ex, msg);
                 return null;
             }
@@ -137,13 +137,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al devolver el listado de usuarios de en BBDD";
+                string msg = $"Error al devolver el listado de usuarios del grupo {group} en BBDD";
                 Logger.LogError(ex, msg);
                 return null;
             }
             catch (Exception ex)
             {
-                string msg = "Error al devolver el listado de usuarios de en BBDD";
+                string msg = $"Error al devolver el listado de usuarios del grupo {group} en BBDD";
                 Logger.LogError(ex, msg);
                 return null;
             }
@@ -225,14 +225,14 @@ namespace _3DMANAGER_APP.DAL.Managers
             catch (MySqlException ex)
             {
                 error = 500;
-                string msg = "Error al devolver el listado de usuarios de en BBDD";
+                string msg = $"Error al invitar al usuario {userId} al grupo {groupId} en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
             catch (Exception ex)
             {
                 error = 500;
-                string msg = "Error al devolver el listado de usuarios de en BBDD";
+                string msg = $"Error al invitar al usuario {userId} al grupo {groupId} en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
@@ -268,13 +268,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al guardar los datos de la imagen en BBDD";
+                string msg = $"Error al guardar los datos de la imagen del usuario {userId} en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
             catch (Exception ex)
             {
-                string msg = "Error al guardar los datos de la imagen en BBDD";
+                string msg = $"Error al guardar los datos de la imagen del usuario {userId} en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
@@ -306,13 +306,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al obtener el usuario en BBDD";
+                string msg = $"Error al obtener el usuario por id : {userId} en BBDD";
                 Logger.LogError(ex, msg);
                 return null;
             }
             catch (Exception ex)
             {
-                string msg = "Error al obtener el usuario en BBDD";
+                string msg = $"Error al obtener el usuario por id : {userId} en BBDD";
                 Logger.LogError(ex, msg);
                 return null;
             }
@@ -344,13 +344,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al obtener el id de grupo del usuario en BBDD";
+                string msg = $"Error al obtener el id de grupo del usuario {userId} en BBDD";
                 Logger.LogError(ex, msg);
                 return 0;
             }
             catch (Exception ex)
             {
-                string msg = "Error al obtener el id de grupo del usuario en BBDD";
+                string msg = $"Error al obtener el id de grupo del usuario {userId} en BBDD";
                 Logger.LogError(ex, msg);
                 return 0;
             }
@@ -392,13 +392,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al actualizar el perfil del usuario en BBDD";
+                string msg = $"Error al actualizar el perfil del usuario {requestDb.UserId} en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
             catch (Exception ex)
             {
-                string msg = "Error al actualizar el perfil del usuario en BBDD";
+                string msg = $"Error al actualizar el perfil del usuario {requestDb.UserId} en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
@@ -432,13 +432,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al devolver el detalle de impresora de en BBDD";
+                string msg = $"Error al devolver el detalle de usuario {userId} de en BBDD";
                 Logger.LogError(ex, msg);
                 return null;
             }
             catch (Exception ex)
             {
-                string msg = "Error al devolver el detalle de impresora de en BBDD";
+                string msg = $"Error al devolver el detalle de usuario {userId} de en BBDD";
                 Logger.LogError(ex, msg);
                 return null;
             }

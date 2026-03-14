@@ -34,6 +34,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpGet]
         public CommonResponse<List<CatalogResponse>> GetFilamentType()
         {
+            _logger.LogInformation($"Llamada a la funcion GetFilamentType en el controlador CatalogController");
             List<CatalogResponse> catalog = _catalogManager.GetFilamentType();
             return new CommonResponse<List<CatalogResponse>>(catalog);
         }
@@ -52,6 +53,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpGet]
         public CommonResponse<List<CatalogResponse>> GetPrintState()
         {
+            _logger.LogInformation($"Llamada a la funcion GetPrintState en el controlador CatalogController");
             List<CatalogResponse> catalog = _catalogManager.GetPrintState();
             return new CommonResponse<List<CatalogResponse>>(catalog);
         }
@@ -70,6 +72,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpGet]
         public IActionResult GetFilamentCatalog()
         {
+            _logger.LogInformation($"Llamada a la funcion GetFilamentCatalog en el controlador CatalogController");
             if (GroupId == null)
                 return Unauthorized(new CommonResponse<bool>(new ErrorProperties(401, "No autenticado")));
 
@@ -91,6 +94,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpGet]
         public IActionResult GetPrinterCatalog()
         {
+            _logger.LogInformation($"Llamada a la funcion GetPrinterCatalog en el controlador CatalogController");
             if (GroupId == null)
                 return Unauthorized(new CommonResponse<bool>(new ErrorProperties(401, "No autenticado")));
             List<CatalogResponse> catalog = _catalogManager.GetPrinterCatalog(GroupId.Value);
@@ -111,6 +115,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpGet]
         public CommonResponse<List<CatalogResponse>> GetPrinterState()
         {
+            _logger.LogInformation($"Llamada a la funcion GetPrinterState en el controlador CatalogController");
             List<CatalogResponse> catalog = _catalogManager.GetPrinterState();
             return new CommonResponse<List<CatalogResponse>>(catalog);
         }
@@ -129,6 +134,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpGet]
         public CommonResponse<List<CatalogResponse>> GetFilamentState()
         {
+            _logger.LogInformation($"Llamada a la funcion GetFilamentState en el controlador CatalogController");
             List<CatalogResponse> catalog = _catalogManager.GetFilamentState();
             return new CommonResponse<List<CatalogResponse>>(catalog);
         }

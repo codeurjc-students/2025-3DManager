@@ -49,13 +49,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al devolver el listado de filamentos de en BBDD";
+                string msg = $"Error al devolver el listado de filamentos del grupo {group} en BBDD";
                 Logger.LogError(ex, msg);
                 return null;
             }
             catch (Exception ex)
             {
-                string msg = "Error al devolver el listado de filamentos de en BBDD";
+                string msg = $"Error al devolver el listado de filamentos del grupo {group} de en BBDD";
                 Logger.LogError(ex, msg);
                 return null;
             }
@@ -148,13 +148,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al guardar los datos de la imagen en BBDD";
+                string msg = $"Error al guardar los datos de la imagen del filamento {filamentId} en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
             catch (Exception ex)
             {
-                string msg = "Error al guardar los datos de la imagen en BBDD";
+                string msg = $"Error al guardar los datos de la imagen del filamento {filamentId}  en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
@@ -201,13 +201,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al actualizar el filamento en BBDD";
+                string msg = $"Error al actualizar el filamento {requestDb.FilamentId} en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
             catch (Exception ex)
             {
-                string msg = "Error al actualizar el filamento en BBDD";
+                string msg = $"Error al actualizar el filamento {requestDb.FilamentId} en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
@@ -241,13 +241,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al devolver el detalle de filamento de en BBDD";
+                string msg = $"Error al devolver el detalle de filamento {filamentId} de en BBDD";
                 Logger.LogError(ex, msg);
                 return null;
             }
             catch (Exception ex)
             {
-                string msg = "Error al devolver el detalle de filamento de en BBDD";
+                string msg = $"Error al devolver el detalle de filamento {filamentId} de en BBDD";
                 Logger.LogError(ex, msg);
                 return null;
             }
@@ -294,14 +294,14 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al eliminar un filamento en BBDD";
+                string msg = $"Error al eliminar un filamento {filamentId} en BBDD";
                 Logger.LogError(ex, msg);
                 error = 500;
                 return new DeletedDbObject { SuccesfullDelete = false };
             }
             catch (Exception ex)
             {
-                string msg = "Error al eliminar un filamento en BBDD";
+                string msg = $"Error al eliminar un filamento {filamentId} en BBDD";
                 Logger.LogError(ex, msg);
                 error = 500;
                 return new DeletedDbObject { SuccesfullDelete = false };

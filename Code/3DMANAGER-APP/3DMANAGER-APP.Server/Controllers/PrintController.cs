@@ -35,6 +35,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpGet]
         public IActionResult GetPrintList([FromQuery] PagedRequest pagination)
         {
+            _logger.LogInformation($"Llamada a la funcion GetPrintList en el controlador PrintController");
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<PrintListResponse>(new ErrorProperties(401, "No autenticado")));
 
@@ -65,6 +66,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> PostPrint([FromForm] PrintRequest print)
         {
+            _logger.LogInformation($"Llamada a la funcion PostPrint en el controlador PrintController");
             if (GroupId == null || UserId == null)
                 return Unauthorized(new Models.CommonResponse<GroupBasicDataResponse>(new ErrorProperties(401, "No autenticado")));
 
@@ -98,6 +100,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpGet]
         public IActionResult GetPrintListByType([FromQuery] PagedRequest pagination, [FromQuery] int type, [FromQuery] int id)
         {
+            _logger.LogInformation($"Llamada a la funcion GetPrintListByType en el controlador PrintController");
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<PrintListResponse>(new ErrorProperties(401, "No autenticado")));
 
@@ -126,6 +129,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpPut]
         public IActionResult UpdatePrint([FromBody] PrintDetailRequest request)
         {
+            _logger.LogInformation($"Llamada a la funcion UpdatePrint en el controlador PrintController");
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, "No autenticado")));
 
@@ -155,6 +159,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpGet]
         public IActionResult GetPrintDetail([FromQuery] int printId)
         {
+            _logger.LogInformation($"Llamada a la funcion GetPrintDetail en el controlador PrintController");
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<PrintDetailObject>(new ErrorProperties(401, "No autenticado")));
 
@@ -182,6 +187,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpGet]
         public IActionResult GetPrintComments([FromQuery] int printId)
         {
+            _logger.LogInformation($"Llamada a la funcion GetPrintComments en el controlador PrintController");
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<List<PrintCommentObject>>(new ErrorProperties(401, "No autenticado")));
 
@@ -209,6 +215,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpPost]
         public IActionResult PostPrintComment([FromBody] PrintCommentRequest request)
         {
+            _logger.LogInformation($"Llamada a la funcion PostPrintComment en el controlador PrintController");
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<int>(new ErrorProperties(401, "No autenticado")));
 
@@ -239,6 +246,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeletePrint([FromQuery] int printId)
         {
+            _logger.LogInformation($"Llamada a la funcion DeletePrint en el controlador PrintController");
             if (GroupId == null && UserId == null && UserRole == "Usuario-Manager")
                 return Unauthorized(new Models.CommonResponse<GroupBasicDataResponse>(new ErrorProperties(401, "No autorizado")));
 

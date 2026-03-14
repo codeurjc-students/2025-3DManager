@@ -50,7 +50,7 @@ namespace _3DMANAGER_APP.BLL.Managers
                 switch (errorDb)
                 {
                     case 1:
-                        msg = $"Error al crear filamento con nombre {filament.FilamentName}";
+                        msg = $"Error al crear filamento con nombre {filament.FilamentName}.";
                         _logger.LogError(msg);
                         response.Error = new Response.ErrorProperties() { Code = StatusCodes.Status409Conflict, Message = msg };
                         break;
@@ -70,7 +70,7 @@ namespace _3DMANAGER_APP.BLL.Managers
                 bool responseImage = await UpdateS3FilamentImage(responseDb, filament.ImageFile, filament.GroupId);
                 if (!responseImage)
                 {
-                    string msg = "El filamento se ha creado correctamente, pero la imagen ha fallado al ser guardada.";
+                    string msg = $"El filamento {filament.FilamentName} se ha creado correctamente, pero la imagen ha fallado al ser guardada.";
                     _logger.LogError(msg);
                     response.Error = new Response.ErrorProperties() { Code = StatusCodes.Status409Conflict, Message = msg };
                 }
@@ -109,11 +109,12 @@ namespace _3DMANAGER_APP.BLL.Managers
             var responseDb = _filamentDbManager.GetFilamentDetail(groupId, filamentId);
             if (responseDb == null)
             {
-                _logger.LogError("Error al obtener el detalle de filamento");
+                string msg = $"Error al obtener el detalle de filamento {filamentId}.";
+                _logger.LogError(msg);
                 error = new BaseError()
                 {
                     code = StatusCodes.Status500InternalServerError,
-                    message = "Error al obtener el detalle de filamento"
+                    message = msg
                 };
             }
             response = _mapper.Map<FilamentDetailObject>(responseDb);
@@ -137,7 +138,7 @@ namespace _3DMANAGER_APP.BLL.Managers
 
             if (errorDb != null)
             {
-                string msg = $"Error al eliminar el filamento con id: {filamentId}";
+                string msg = $"Error al eliminar el filamento con id: {filamentId}.";
                 _logger.LogError(msg);
                 response.Error = new Response.ErrorProperties() { Code = StatusCodes.Status500InternalServerError, Message = msg };
             }

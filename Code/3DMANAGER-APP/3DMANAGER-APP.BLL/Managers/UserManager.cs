@@ -102,24 +102,27 @@ namespace _3DMANAGER_APP.BLL.Managers
             var userDb = _userDbManager.Login(userName);
             if (userDb == null)
             {
+                string msg = $"El usuario {userName} no existe";
+                _logger.LogError(msg);
                 error = new BaseError
                 {
                     code = StatusCodes.Status404NotFound,
-                    message = "El usuario no existe"
+                    message = msg
                 };
                 return null;
             }
-
 
             var passwordHasher = new PasswordHasher<UserDbObject>();
             var result = passwordHasher.VerifyHashedPassword(userDb, userDb.UserPassword, userPassword);
 
             if (result != PasswordVerificationResult.Success)
             {
+                string msg = $"Contraseña incorrecta para el usuario {userName}";
+                _logger.LogError(msg);
                 error = new BaseError
                 {
                     code = StatusCodes.Status401Unauthorized,
-                    message = "Contraseña incorrecta"
+                    message = msg
                 };
                 return null;
             }
@@ -133,7 +136,12 @@ namespace _3DMANAGER_APP.BLL.Managers
             error = null;
             List<UserListResponseDbObject> list = _userDbManager.GetUserList(group);
             if (list == null)
-                error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = "Error al obtener listado de usuarios" };
+            {
+                string msg = $"Error al obtener listado de usuarios para el grupo {group}";
+                _logger.LogError(msg);
+                error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = msg };
+
+            }
 
             return _mapper.Map<List<UserListResponse>>(list);
         }
@@ -142,8 +150,10 @@ namespace _3DMANAGER_APP.BLL.Managers
             error = null;
             List<UserListResponseDbObject> list = _userDbManager.GetUserInvitationList(filter);
             if (list == null)
+            {
+                _logger.LogError("Error al obtener listado de usuarios para invitar");
                 error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = "Error al obtener listado de usuarios para invitar" };
-
+            }
             return _mapper.Map<List<UserListResponse>>(list);
         }
 
@@ -157,12 +167,12 @@ namespace _3DMANAGER_APP.BLL.Managers
                 switch (errorDb)
                 {
                     case 409:
-                        msg = $"Ya existe una invitacion del grupo a ese usuario.";
+                        msg = $"Ya existe una invitacion del grupo {groupId} al usuario {userId}.";
                         _logger.LogInformation(msg);
                         error = new BaseError { code = StatusCodes.Status409Conflict, message = msg };
                         break;
                     case 500:
-                        msg = $"Error al invitar al usuario en el servidor.";
+                        msg = $"Error al invitar al usuario {userId} al grupo {groupId} en el servidor.";
                         _logger.LogError(msg);
                         error = new BaseError { code = StatusCodes.Status500InternalServerError, message = msg };
                         break;
@@ -196,11 +206,12 @@ namespace _3DMANAGER_APP.BLL.Managers
             var responseDb = _userDbManager.GetUserDetail(groupId, userId);
             if (responseDb == null)
             {
-                _logger.LogError("Error al obtener el detalle de usuario");
+                string msg = $"Error al obtener el detalle de usuario {userId}";
+                _logger.LogError(msg);
                 error = new BaseError()
                 {
                     code = StatusCodes.Status500InternalServerError,
-                    message = "Error al obtener el detalle de usuario"
+                    message = msg
                 };
             }
             response = _mapper.Map<UserDetailObject>(responseDb);

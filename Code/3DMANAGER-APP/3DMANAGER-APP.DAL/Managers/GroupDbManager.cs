@@ -91,13 +91,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al devolver el listado de invitaciones de grupo de en BBDD";
+                string msg = $"Error al devolver el listado de invitaciones de grupo para el usuario {userId} de en BBDD";
                 Logger.LogError(ex, msg);
                 return null;
             }
             catch (Exception ex)
             {
-                string msg = "Error al devolver el listado de invitaciones de grupo de en BBDD";
+                string msg = $"Error al devolver el listado de invitaciones de grupo para el usuario {userId} de en BBDD";
                 Logger.LogError(ex, msg);
                 return null;
             }
@@ -140,13 +140,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al aceptar invitacion de grupo en BBDD";
+                string msg = $"Error al aceptar invitacion de grupo {groupId} para el usuario {userId} en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
             catch (Exception ex)
             {
-                string msg = "Error al aceptar invitacion de grupo en BBDD";
+                string msg = $"Error al aceptar invitacion de grupo {groupId} para el usuario {userId} en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
@@ -190,13 +190,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al aceptar invitacion de grupo en BBDD";
+                string msg = $"Error al aceptar invitacion de grupo {groupId} en BBDD";
                 Logger.LogError(ex, msg);
                 return null;
             }
             catch (Exception ex)
             {
-                string msg = "Error al aceptar invitacion de grupo en BBDD";
+                string msg = $"Error al aceptar invitacion de grupo {groupId} en BBDD";
                 Logger.LogError(ex, msg);
                 return null;
             }
@@ -238,13 +238,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al crear un grupo en BBDD";
+                string msg = $"Error al actualizar un grupo {groupId} en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
             catch (Exception ex)
             {
-                string msg = "Error al crear un grupo en BBDD";
+                string msg = $"Error al actualizar un grupo {groupId} en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
@@ -275,13 +275,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al abandonar un grupo en BBDD";
+                string msg = $"Error del usuario {userId} al abandonar un grupo en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
             catch (Exception ex)
             {
-                string msg = "Error al abandonar un grupo en BBDD";
+                string msg = $"Error del usuario {userId} al abandonar un grupo en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
@@ -311,13 +311,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al expulsar a un usuario de un grupo en BBDD";
+                string msg = $"Error al expulsar al usuario {userKickedId} de un grupo en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
             catch (Exception ex)
             {
-                string msg = "Error al expulsar a un usuario de un grupo en BBDD";
+                string msg = $"Error al expulsar al usuario {userKickedId} de un grupo en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
@@ -352,13 +352,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al eliminar un grupo en BBDD";
+                string msg = $"Error al eliminar el grupo {groupId} en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
             catch (Exception ex)
             {
-                string msg = "Error al eliminar un grupo en BBDD";
+                string msg = $"Error al eliminar el grupo {groupId} en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
@@ -390,13 +390,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al tranferir a un usuario el rol de manager de un grupo en BBDD";
+                string msg = $"Error al tranferir a el usuario {userId} el rol de manager de el grupo {groupId} en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
             catch (Exception ex)
             {
-                string msg = "Error al expulsar a un usuario el rol de manager de un grupo en BBDD";
+                string msg = $"Error al tranferir a el usuario {userId} el rol de manager de el grupo {groupId} en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
@@ -440,13 +440,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al obtener la información de grupo para el dashboard en BBDD";
+                string msg = $"Error al obtener la información de grupo {groupId} para el dashboard en BBDD";
                 Logger.LogError(ex, msg);
                 return null;
             }
             catch (Exception ex)
             {
-                string msg = "Error al obtener la información de grupo para el dashboard en BBDD";
+                string msg = $"Error al obtener la información de grupo {groupId} para el dashboard en BBDD";
                 Logger.LogError(ex, msg);
                 return null;
             }
