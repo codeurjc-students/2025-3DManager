@@ -222,6 +222,32 @@ namespace _3DMANAGER_APP.Server.Controllers
             return Ok(new CommonResponse<int>(newId));
         }
 
+        /// <summary>
+        /// Delete a print 3D 
+        /// </summary>
+        /// <returns>Boolean that indicates if operation was succesfull</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="401">No autorizado</response>
+        /// <response code="409">Conflicto en servidor</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Prints")]
+        [HttpDelete]
+        public async Task<IActionResult> DeletePrint([FromQuery] int printId)
+        {
+            if (GroupId == null && UserId == null && UserRole == "Usuario-Manager")
+                return Unauthorized(new Models.CommonResponse<GroupBasicDataResponse>(new ErrorProperties(401, "No autorizado")));
+
+            BLL.Models.Base.CommonResponse<bool> response = await _printManager.DeletePrint(printId, GroupId.Value);
+            if (response.Error != null || !response.Data)
+                return StatusCode(500, new Models.CommonResponse<bool>(new ErrorProperties(response.Error?.Code ?? StatusCodes.Status500InternalServerError, response.Error?.Message ?? "Error al eliminar la impresión")));
+
+            return Ok(new Models.CommonResponse<bool>(response.Data));
+        }
 
     }
 }

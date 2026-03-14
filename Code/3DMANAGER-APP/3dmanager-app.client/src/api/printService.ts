@@ -59,4 +59,9 @@ export const postPrintComment = async (data: PrintCommentRequest): Promise<Commo
     return response.data;
 };
 
+export const deletePrint = async (printId: number): Promise<CommonResponse<boolean>> => {
+    const response = await apiClient.delete<CommonResponse<boolean>>(`/api/v1/prints/DeletePrint?printId=${printId}`);
+    return response.data;
+}
+
 

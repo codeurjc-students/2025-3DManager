@@ -43,7 +43,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         }
 
         [Fact]
-        public async Task UpdateFilament_ShouldReturnSuccess()
+        public async Task UpdatePrinter_ShouldReturnSuccess()
         {
             var detailResponse = await _client.GetAsync("/api/v1/prints/GetPrintDetail?printId=1");
 
@@ -72,6 +72,38 @@ namespace _3DMANAGER_APP.TEST.E2ETest
             Assert.True(updateContent.Data);
         }
 
+        [Fact]
+        public async Task DeletePrint_ShouldReturnSuccess()
+        {
+
+            var printId = 1;
+
+            var response = await _client.DeleteAsync($"/api/v1/prints/DeletePrint?printId={printId}");
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var content = await response.Content.ReadFromJsonAsync<CommonResponse<bool>>();
+
+            Assert.NotNull(content);
+            Assert.True(content.Data);
+            Assert.Null(content.Error);
+        }
+
+        [Fact]
+        public async Task DeletePrint_ShouldReturnServerError_WhenPrintDoesNotExist()
+        {
+            var invalidPrintId = -1;
+            var response = await _client.DeleteAsync($"/api/v1/prints/DeletePrint?printId={invalidPrintId}");
+
+            Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+
+            var content = await response.Content.ReadFromJsonAsync<CommonResponse<bool>>();
+
+            Assert.NotNull(content);
+            Assert.False(content.Data);
+            Assert.NotNull(content.Error);
+            Assert.Equal(500, content.Error.Code);
+        }
 
     }
 }

@@ -412,5 +412,60 @@ namespace _3DMANAGER_APP.DAL.Managers
                 return 0;
             }
         }
+
+        public DeletedDbObject DeletePrint(int printId, int groupId, out int? error)
+        {
+            error = null;
+            try
+            {
+                DeletedDbObject response = new DeletedDbObject { SuccesfullDelete = false };
+
+                string procName = $"{ProcedurePrefix}_pr_PRINT_DELETE";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
+                cmd.Parameters.Add(new MySqlParameter("P_CD_PRINT", MySqlDbType.Int32) { Value = printId });
+
+                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                var errorDb = Convert.ToInt32(errorParam.Value);
+                if (errorDb != 0)
+                {
+                    error = errorDb;
+                    response.Id = printId;
+                    return response;
+                }
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    response = response.Create(ds.Tables[0].Rows[0]);
+                    response.SuccesfullDelete = true;
+                    return response;
+                }
+
+                return response;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = "Error al eliminar una impresión en BBDD";
+                Logger.LogError(ex, msg);
+                error = 500;
+                return new DeletedDbObject { SuccesfullDelete = false };
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error al eliminar una impresión en BBDD";
+                Logger.LogError(ex, msg);
+                error = 500;
+                return new DeletedDbObject { SuccesfullDelete = false };
+            }
+        }
     }
 }

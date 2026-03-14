@@ -10,7 +10,8 @@ namespace _3DMANAGER_APP.BLL.Interfaces
         public PrintListResponse GetPrintListByType(int group, PagedRequest pagination, int type, int id, out BaseError? error);
         bool UpdatePrint(PrintDetailRequest request);
         PrintDetailObject GetPrintDetail(int groupId, int printId, out BaseError? error);
-        List<PrintCommentObject> GetPrintComments(int groupI, int printId, out BaseError? error);
+        List<PrintCommentObject> GetPrintComments(int groupId, int printId, out BaseError? error);
         int PostPrintComment(PrintCommentRequest request, out BaseError? error);
+        public Task<CommonResponse<bool>> DeletePrint(int printId, int groupId);
     }
 }

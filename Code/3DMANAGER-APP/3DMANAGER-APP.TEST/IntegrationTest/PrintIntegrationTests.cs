@@ -150,5 +150,56 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
             Assert.Equal("Updated print", updated.PrintName);
             Assert.Equal("Updated description", updated.PrintDescription);
         }
+        [Fact]
+        public async Task DeletePrint_ShouldDeleteSuccessfully()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER"
+            );
+
+            var printDbManager = new PrintDbManager(
+                dataSource,
+                NullLogger<PrintDbManager>.Instance
+            );
+
+            var manager = new PrintManager(
+                printDbManager,
+                _mapper,
+                NullLogger<PrintManager>.Instance,
+                _fakeS3Service
+            );
+
+            var newPrint = new PrintRequest
+            {
+                GroupId = 1,
+                PrintName = "Print to delete",
+                PrintDescription = "Test delete",
+                PrintFilament = 1,
+                PrintFilamentUsed = 10,
+                PrintPrinter = 1,
+                PrintRealTime = 10,
+                PrintTime = 10,
+                PrintState = 1,
+                UserId = 1
+            };
+
+            var created = await manager.PostPrint(newPrint);
+            Assert.NotNull(created);
+            Assert.True(created.Data > 0);
+
+            int printId = created.Data;
+
+            var deleteResponse = await manager.DeletePrint(printId, 1);
+
+            Assert.NotNull(deleteResponse);
+            Assert.True(deleteResponse.Data);
+            Assert.Null(deleteResponse.Error);
+
+            var prints = manager.GetPrintList(1, new PagedRequest { PageNumber = 1, PageSize = 50 }, out BaseError? error);
+            Assert.Null(error);
+            Assert.DoesNotContain(prints.prints, p => p.PrintId == printId);
+        }
+
     }
 }
