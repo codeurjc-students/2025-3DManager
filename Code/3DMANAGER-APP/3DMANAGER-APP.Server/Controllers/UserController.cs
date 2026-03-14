@@ -36,6 +36,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpPost]
         public async Task<Models.CommonResponse<int>> PostNewUser([FromForm] UserCreateRequest user)
         {
+            _logger.LogInformation($"Llamada a la funcion PostNewUser en el controlador UserController");
             BLL.Models.Base.CommonResponse<int> response = await _userManager.PostNewUser(user);
             if (response.Error != null)
             {
@@ -61,6 +62,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpPost]
         public Models.CommonResponse<LoginResponse> Login(BLL.Models.User.LoginRequest request)
         {
+            _logger.LogInformation($"Llamada a la funcion Login en el controlador UserController");
             UserObject user = _userManager.Login(request.UserName, request.UserPassword, out BaseError error);
 
             if (user == null || error != null)
@@ -91,6 +93,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpPost]
         public Models.CommonResponse<LoginResponse> LoginGuest()
         {
+            _logger.LogInformation($"Llamada a la funcion LoginGuest en el controlador UserController");
             string userName = "Invitado";
             string userPassword = "invitado3dmanager";
             UserObject user = _userManager.Login(userName, userPassword, out BaseError error);
@@ -123,6 +126,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpGet]
         public IActionResult GetUserList()
         {
+            _logger.LogInformation($"Llamada a la funcion GetUserList en el controlador UserController");
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<UserListResponse>(new ErrorProperties(401, "No autenticado")));
 
@@ -148,6 +152,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpGet]
         public Models.CommonResponse<List<UserListResponse>> GetUserInvitationList([FromQuery] string? filter)
         {
+            _logger.LogInformation($"Llamada a la funcion GetUserInvitationList en el controlador UserController");
             List<UserListResponse> userList = _userManager.GetUserInvitationList(filter, out BaseError? error);
 
             if (error != null)
@@ -173,6 +178,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpPost]
         public IActionResult PostUserInvitation([FromQuery] int userId)
         {
+            _logger.LogInformation($"Llamada a la funcion PostUserInvitation en el controlador UserController");
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, "No autenticado")));
             bool response = _userManager.PostUserInvitation(GroupId.Value, userId, out BaseError? error);
@@ -196,6 +202,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpGet]
         public IActionResult GetUserAuth()
         {
+            _logger.LogInformation($"Llamada a la funcion GetUserAuth en el controlador UserController");
             if (UserId == null)
                 return Unauthorized();
 
@@ -229,6 +236,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpPut]
         public IActionResult UpdateUser([FromBody] UserUpdateRequest request)
         {
+            _logger.LogInformation($"Llamada a la funcion UpdateUser en el controlador UserController");
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, "No autenticado")));
 
@@ -258,6 +266,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpGet]
         public IActionResult GetUserDetail([FromQuery] int userId)
         {
+            _logger.LogInformation($"Llamada a la funcion GetUserDetail en el controlador UserController");
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<UserDetailObject>(new ErrorProperties(401, "No autenticado")));
 

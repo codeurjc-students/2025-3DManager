@@ -107,14 +107,14 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al crear un impresora en BBDD";
+                string msg = $"Error al crear un impresora en grupo {request.GroupId} BBDD";
                 Logger.LogError(ex, msg);
                 error = 500;
                 return 0;
             }
             catch (Exception ex)
             {
-                string msg = "Error al crear un impresora en BBDD";
+                string msg = $"Error al crear un impresora en grupo {request.GroupId} BBDD";
                 Logger.LogError(ex, msg);
                 error = 500;
                 return 0;
@@ -154,13 +154,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al devolver el listado de impresoras de en BBDD";
+                string msg = $"Error al devolver el listado de impresoras del grupo {group} en BBDD";
                 Logger.LogError(ex, msg);
                 return null;
             }
             catch (Exception ex)
             {
-                string msg = "Error al devolver el listado de impresoras de en BBDD";
+                string msg = $"Error al devolver el listado de impresoras del grupo {group} en BBDD";
                 Logger.LogError(ex, msg);
                 return null;
             }
@@ -195,13 +195,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al guardar los datos de la imagen en BBDD";
+                string msg = $"Error al guardar los datos de la imagen en la impresora {printerId} BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
             catch (Exception ex)
             {
-                string msg = "Error al guardar los datos de la imagen en BBDD";
+                string msg = $"Error al guardar los datos de la imagen en la impresora {printerId} BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
@@ -245,13 +245,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al actualizar el estado de la impresora en BBDD";
+                string msg = $"Error al actualizar de la impresora {requestDb.PrinterId} en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
             catch (Exception ex)
             {
-                string msg = "Error al actualizar el estado de la impresora en BBDD";
+                string msg = $"Error al actualizar de la impresora {requestDb.PrinterId} en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
@@ -285,13 +285,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al devolver el detalle de impresora de en BBDD";
+                string msg = $"Error al devolver el detalle de impresora {printerId} de en BBDD";
                 Logger.LogError(ex, msg);
                 return null;
             }
             catch (Exception ex)
             {
-                string msg = "Error al devolver el detalle de impresora de en BBDD";
+                string msg = $"Error al devolver el detalle de impresora {printerId} de en BBDD";
                 Logger.LogError(ex, msg);
                 return null;
             }
@@ -327,13 +327,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al devolver el listado de tiempos de impresiones de detalle en BBDD";
+                string msg = $"Error al devolver el listado de tiempos de impresiones de detalle de la impresora {printerId} en BBDD";
                 Logger.LogError(ex, msg);
                 return null;
             }
             catch (Exception ex)
             {
-                string msg = "Error al devolver el listado de tiempos de impresiones de en BBDD";
+                string msg = $"Error al devolver el listado de tiempos de impresiones de detalle de la impresora {printerId} en BBDD";
                 Logger.LogError(ex, msg);
                 return null;
             }
@@ -380,14 +380,14 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al eliminar una impresora en BBDD";
+                string msg = $"Error al eliminar la impresora {printerId} para el grupo {groupId} en BBDD";
                 Logger.LogError(ex, msg);
                 error = 500;
                 return new DeletedDbObject { SuccesfullDelete = false };
             }
             catch (Exception ex)
             {
-                string msg = "Error al eliminar una impresora en BBDD";
+                string msg = $"Error al eliminar la impresora {printerId} para el grupo {groupId} en BBDD";
                 Logger.LogError(ex, msg);
                 error = 500;
                 return new DeletedDbObject { SuccesfullDelete = false };

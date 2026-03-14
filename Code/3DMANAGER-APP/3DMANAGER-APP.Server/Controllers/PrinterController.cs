@@ -35,7 +35,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpGet]
         public IActionResult GetPrinterList()
         {
-            _logger.LogInformation("Calling GetPrinterList function");
+            _logger.LogInformation($"Llamada a la funcion GetPrinterList en el controlador PrinterController");
             List<PrinterObject> response = _printerManager.GetPrinterList(out BaseError error);
             if (error != null)
             {
@@ -63,7 +63,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> PostPrinter([FromForm] PrinterRequest printer)
         {
-
+            _logger.LogInformation($"Llamada a la funcion PostPrinter en el controlador PrinterController");
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<int>(new ErrorProperties(401, "No autenticado")));
 
@@ -97,6 +97,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpGet]
         public IActionResult GetPrinterDashboardList()
         {
+            _logger.LogInformation($"Llamada a la funcion GetPrinterDashboardList en el controlador PrinterController");
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<PrinterListObject>(new ErrorProperties(401, "No autenticado")));
 
@@ -124,6 +125,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpPut]
         public IActionResult UpdatePrinter([FromBody] PrinterDetailRequest request)
         {
+            _logger.LogInformation($"Llamada a la funcion UpdatePrinter en el controlador PrinterController");
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, "No autenticado")));
 
@@ -153,6 +155,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpGet]
         public IActionResult GetPrinterDetail([FromQuery] int printerId)
         {
+            _logger.LogInformation($"Llamada a la funcion GetPrinterDetail en el controlador PrinterController");
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<PrinterDetailObject>(new ErrorProperties(401, "No autenticado")));
 
@@ -181,6 +184,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeletePrinter([FromQuery] int printerId)
         {
+            _logger.LogInformation($"Llamada a la funcion DeletePrinter en el controlador PrinterController");
             if (GroupId == null && UserId == null && UserRole == "Usuario-Manager")
                 return Unauthorized(new Models.CommonResponse<GroupBasicDataResponse>(new ErrorProperties(401, "No autorizado")));
 

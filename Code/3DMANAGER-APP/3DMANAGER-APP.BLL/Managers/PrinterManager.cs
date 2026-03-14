@@ -141,11 +141,12 @@ namespace _3DMANAGER_APP.BLL.Managers
             var responseDb = _printerDbManager.GetPrinterDetail(groupId, printerId);
             if (responseDb == null)
             {
-                _logger.LogError("Error al obtener el detalle de impresora");
+                string msg = $"Error al obtener el detalle de impresora {printerId}";
+                _logger.LogError(msg);
                 error = new BaseError()
                 {
                     code = StatusCodes.Status500InternalServerError,
-                    message = "Error al obtener el detalle de impresora"
+                    message = msg
                 };
             }
             response = _mapper.Map<PrinterDetailObject>(responseDb);
@@ -169,14 +170,15 @@ namespace _3DMANAGER_APP.BLL.Managers
             var responseDb = _printerDbManager.GetTimeVariation(groupId, printerId);
             if (responseDb == null)
             {
-                _logger.LogError("Error al obtener el listado de tiempos de impresión");
+                string msg = $"Error al obtener el listado de tiempos de impresión de la impresora {printerId}";
+                _logger.LogError(msg);
                 error = new BaseError()
                 {
                     code = StatusCodes.Status500InternalServerError,
-                    message = "Error al obtener el listado de tiempos de impresión"
+                    message = msg
                 };
             }
-            var variations = responseDb.Count > 0 ?
+            var variations = responseDb?.Count > 0 ?
             responseDb.Where(time => time.PrinterTimeImpresion > 0)
             .Average(time => ((float)(time.PrinterRealTimeImpresion - time.PrinterTimeImpresion) / time.PrinterTimeImpresion) * 100
             ) : 0;

@@ -39,6 +39,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpGet]
         public IActionResult GetFilamentList()
         {
+            _logger.LogInformation($"Llamada a la funcion GetFilamentList en el controlador FilamentController");
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<List<FilamentListResponse>>(new ErrorProperties(401, "No autenticado")));
 
@@ -70,7 +71,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> PostFilament([FromForm] FilamentRequest filament)
         {
-
+            _logger.LogInformation($"Llamada a la funcion PostFilament en el controlador FilamentController");
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<int>(new ErrorProperties(401, "No autenticado")));
 
@@ -104,6 +105,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpPut]
         public IActionResult UpdateFilament([FromBody] FilamentUpdateRequest request)
         {
+            _logger.LogInformation($"Llamada a la funcion UpdateFilament en el controlador FilamentController");
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, "No autenticado")));
 
@@ -133,6 +135,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpGet]
         public IActionResult GetFilamentDetail([FromQuery] int filamentId)
         {
+            _logger.LogInformation($"Llamada a la funcion GetFilamentDetail en el controlador FilamentController");
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<FilamentDetailObject>(new ErrorProperties(401, "No autenticado")));
 
@@ -161,6 +164,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteFilament([FromQuery] int filamentId)
         {
+            _logger.LogInformation($"Llamada a la funcion DeleteFilament en el controlador FilamentController");
             if (GroupId == null && UserId == null && UserRole == "Usuario-Manager")
                 return Unauthorized(new Models.CommonResponse<GroupBasicDataResponse>(new ErrorProperties(401, "No autorizado")));
 

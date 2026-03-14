@@ -36,6 +36,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpPost]
         public IActionResult PostNewGroup(GroupRequest request)
         {
+            _logger.LogInformation($"Llamada a la funcion PostNewGroup en el controlador GroupController");
             if (UserId == null)
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, UnauthorizedMsg)));
 
@@ -64,6 +65,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpPost]
         public IActionResult GetGroupInvitations()
         {
+            _logger.LogInformation($"Llamada a la funcion GetGroupInvitations en el controlador GroupController");
             if (UserId == null)
                 return Unauthorized(new Models.CommonResponse<List<GroupInvitation>>(new ErrorProperties(401, UnauthorizedMsg)));
 
@@ -91,6 +93,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpPost]
         public IActionResult postAcceptInvitation(int groupId, bool isAccepted)
         {
+            _logger.LogInformation($"Llamada a la funcion postAcceptInvitation en el controlador GroupController");
             if (UserId == null)
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, UnauthorizedMsg)));
 
@@ -119,6 +122,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpGet]
         public IActionResult GetGroupBasicData()
         {
+            _logger.LogInformation($"Llamada a la funcion GetGroupBasicData en el controlador GroupController");
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<GroupBasicDataResponse>(new ErrorProperties(401, UnauthorizedMsg)));
             var response = _groupManager.GetGroupBasicData(GroupId.Value, out BaseError? error);
@@ -145,7 +149,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpPut]
         public IActionResult UpdateGroupData(GroupRequest request)
         {
-
+            _logger.LogInformation($"Llamada a la funcion UpdateGroupData en el controlador GroupController");
             if (UserId == null || GroupId == null)
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, UnauthorizedMsg)));
 
@@ -175,6 +179,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpPut]
         public IActionResult UpdateLeaveGroup()
         {
+            _logger.LogInformation($"Llamada a la funcion UpdateLeaveGroup en el controlador GroupController");
             if (UserId == null)
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, UnauthorizedMsg)));
 
@@ -202,7 +207,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpPut]
         public Models.CommonResponse<bool> UpdateMembership(int userKickedId)
         {
-
+            _logger.LogInformation($"Llamada a la funcion UpdateMembership en el controlador GroupController");
             var response = _groupManager.UpdateMembership(userKickedId);
             if (!response)
             {
@@ -227,6 +232,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteGroup()
         {
+            _logger.LogInformation($"Llamada a la funcion DeleteGroup en el controlador GroupController");
             if (GroupId == null || UserId == null)
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, UnauthorizedMsg)));
             var result = await _groupManager.DeleteGroup(UserId.Value, GroupId.Value);
@@ -256,6 +262,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpPut]
         public IActionResult TrasnferOwnership(int newOwnerUserId)
         {
+            _logger.LogInformation($"Llamada a la funcion TrasnferOwnership en el controlador GroupController");
             if (GroupId == null || UserId == null)
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, UnauthorizedMsg)));
 
@@ -286,6 +293,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpGet]
         public IActionResult GetGroupDashboardData()
         {
+            _logger.LogInformation($"Llamada a la funcion GetGroupDashboardData en el controlador GroupController");
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<GroupDashboardData>(new ErrorProperties(401, UnauthorizedMsg)));
             var response = _groupManager.GetGroupDashboardData(GroupId.Value, out BaseError? error);
