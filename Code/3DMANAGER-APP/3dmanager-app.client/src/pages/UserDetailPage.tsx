@@ -110,8 +110,9 @@ const UserDetailPage: React.FC = () => {
                         <div className="h-10 ">
                             <div className="d-flex flex row">
                                 <div className="col-6 mb-1 ">
-                                    <label className="form-label">Fecha de alta de usuario</label>
+                                    <label htmlFor="CreateDateUser" className="form-label">Fecha de alta de usuario</label>
                                     <input
+                                        id="CreateDateUser"
                                         type="text"
                                         className="input-value-2 w-100"
                                         value={data ? data.userCreateDate.toISOString().split("T")[0] : ""}
@@ -122,8 +123,8 @@ const UserDetailPage: React.FC = () => {
                         <div className="h-10">
                             <div className="d-flex flex row">
                                 <div className="col-12 mb-1 ">
-                                    <label className="form-label">Email</label>
-                                    <input type="text" className="input-value-5 me-5 w-100" value={email} disabled={!isMyUser}
+                                    <label htmlFor="Email" className="form-label">Email</label>
+                                    <input id="Email" type="text" className="input-value-5 me-5 w-100" value={email} disabled={!isMyUser}
                                         onChange={(e) => setEmail(e.target.value)}
                                     />
                                 </div>
@@ -132,24 +133,24 @@ const UserDetailPage: React.FC = () => {
                         <div className="h-10">
                             <div className="d-flex flex row">
                                 <div className="col-6 mb-1">
-                                    <label className="form-label">Horas mes actual</label>
-                                    <input type="text" className="input-value-2 w-100" value={data?.userPrintHours ?? 0} disabled />
+                                    <label htmlFor="HoursMonth" className="form-label">Horas mes actual</label>
+                                    <input id="HoursMonth" type="text" className="input-value-2 w-100" value={data?.userPrintHours ?? 0} disabled />
                                 </div>
                                 <div className="col-6 mb-1">
-                                    <label className="form-label">Horas totales</label>
-                                    <input type="text" className="input-value-2 w-100" value={data?.userTotalHours ?? 0} disabled />
+                                    <label htmlFor="HoursTotal" className="form-label">Horas totales</label>
+                                    <input id="HoursTotal" type="text" className="input-value-2 w-100" value={data?.userTotalHours ?? 0} disabled />
                                 </div>
                             </div>
                         </div>
                         <div className="h-10">
                             <div className="d-flex flex row">
                                 <div className="col-6 mb-1">
-                                    <label htmlFor="printerModel" className="form-label">Piezas impresas este mes</label>
-                                    <input type="text" className="input-value-2 w-100" value={data?.userPrintedPrints ?? 0} disabled />
+                                    <label htmlFor="printerPrintsMonth" className="form-label">Piezas impresas este mes</label>
+                                    <input id="printerPrintsMonth" type="text" className="input-value-2 w-100" value={data?.userPrintedPrints ?? 0} disabled />
                                 </div>
                                 <div className="col-6 mb-1">
-                                    <label htmlFor="printerModel" className="form-label">Piezas impresas en total</label>
-                                    <input type="text" className="input-value-2 w-100" value={data?.userTotalPrints ?? 0} disabled />
+                                    <label htmlFor="printerPrintsTotal" className="form-label">Piezas impresas en total</label>
+                                    <input id="printerPrintsTotal" type="text" className="input-value-2 w-100" value={data?.userTotalPrints ?? 0} disabled />
                                 </div>
                             </div>
                         </div>

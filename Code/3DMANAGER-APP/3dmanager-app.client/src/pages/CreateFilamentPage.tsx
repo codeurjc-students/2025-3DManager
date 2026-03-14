@@ -158,8 +158,9 @@ const CreateFilamentPage: React.FC = () => {
                                             onChange={(e) => setFilamentDescription(e.target.value)} />
                                     </div>
                                     <div className="mb-3">
-                                        <label className="form-label mt-2">Imagen del filamento(Opcional)</label>
+                                        <label htmlFor="ImageFilament" className="form-label mt-2">Imagen del filamento(Opcional)</label>
                                         <input
+                                            id="ImageFilament"
                                             type="file"
                                             className="form-control w-75"
                                             accept="image/*"

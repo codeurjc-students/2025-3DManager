@@ -210,7 +210,7 @@ const FilamentDetailPage: React.FC = () => {
                         <div className="h-08">
                             <div className="d-flex flex row">
                                 <div className="col-6">
-                                    <label htmlFor="printerModel" className="form-label">Color</label>
+                                    <label htmlFor="filamentColor" className="form-label">Color</label>
                                     <input id="filamentColor" type="color" className="input-value w-100" value={color}
                                         onChange={(e) => setColor(e.target.value)} disabled={!isManager} />
                                 </div>

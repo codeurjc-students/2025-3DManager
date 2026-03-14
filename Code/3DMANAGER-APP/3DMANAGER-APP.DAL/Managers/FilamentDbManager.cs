@@ -11,6 +11,8 @@ namespace _3DMANAGER_APP.DAL.Managers
 {
     public class FilamentDbManager : MySQLManager, IFilamentDbManager
     {
+        private const string ErrorConstant = "CodigoError";
+        private const string GroupParam = "P_CD_GROUP";
         public FilamentDbManager(IDataSource<MySqlConnection> dataSourceFactory, ILogger<FilamentDbManager> logger)
             : base(dataSourceFactory, logger)
         {
@@ -27,9 +29,9 @@ namespace _3DMANAGER_APP.DAL.Managers
                     CommandType = CommandType.StoredProcedure
                 };
 
-                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.VarChar) { Value = group });
+                cmd.Parameters.Add(new MySqlParameter(GroupParam, MySqlDbType.VarChar) { Value = group });
 
-                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                var errorParam = CreateReturnValueParameter(ErrorConstant, MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
 
                 using var adapter = new MySqlDataAdapter(cmd);
@@ -51,13 +53,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             {
                 string msg = $"Error al devolver el listado de filamentos del grupo {group} en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new List<FilamentListResponseDbObject>();
             }
             catch (Exception ex)
             {
                 string msg = $"Error al devolver el listado de filamentos del grupo {group} de en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new List<FilamentListResponseDbObject>();
             }
         }
 
@@ -83,7 +85,7 @@ namespace _3DMANAGER_APP.DAL.Managers
                 cmd.Parameters.Add(new MySqlParameter("P_FILAMENT_LENGHT", MySqlDbType.Decimal) { Value = request.FilamentLenght });
                 cmd.Parameters.Add(new MySqlParameter("P_FILAMENT_DESCRIPTION", MySqlDbType.VarChar) { Value = request.FilamentDescription });
 
-                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                var errorParam = CreateReturnValueParameter(ErrorConstant, MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
 
                 using var adapter = new MySqlDataAdapter(cmd);
@@ -131,7 +133,7 @@ namespace _3DMANAGER_APP.DAL.Managers
                 cmd.Parameters.Add(new MySqlParameter("P_KEY", MySqlDbType.VarChar) { Value = image.FileKey });
                 cmd.Parameters.Add(new MySqlParameter("P_URL", MySqlDbType.VarChar) { Value = image.FileUrl });
                 cmd.Parameters.Add(new MySqlParameter("P_FILAMENT_ID", MySqlDbType.Int32) { Value = filamentId });
-                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                var errorParam = CreateReturnValueParameter(ErrorConstant, MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
 
                 using var adapter = new MySqlDataAdapter(cmd);
@@ -170,7 +172,7 @@ namespace _3DMANAGER_APP.DAL.Managers
                     CommandType = CommandType.StoredProcedure
                 };
 
-                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = requestDb.GroupId });
+                cmd.Parameters.Add(new MySqlParameter(GroupParam, MySqlDbType.Int32) { Value = requestDb.GroupId });
                 cmd.Parameters.Add(new MySqlParameter("P_CD_FILAMENT", MySqlDbType.Int32) { Value = requestDb.FilamentId });
                 cmd.Parameters.Add(new MySqlParameter("P_CD_LENGHT", MySqlDbType.Decimal) { Value = requestDb.FilamentLenght });
                 cmd.Parameters.Add(new MySqlParameter("P_CD_TEMPERATURE", MySqlDbType.Int32) { Value = requestDb.FilamentTemperature });
@@ -180,7 +182,7 @@ namespace _3DMANAGER_APP.DAL.Managers
                 cmd.Parameters.Add(new MySqlParameter("P_CD_COST", MySqlDbType.Decimal) { Value = requestDb.FilamentCost });
 
 
-                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                var errorParam = CreateReturnValueParameter(ErrorConstant, MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
 
                 using var adapter = new MySqlDataAdapter(cmd);
@@ -217,14 +219,14 @@ namespace _3DMANAGER_APP.DAL.Managers
         {
             try
             {
-                FilamentDetailDbObject response = null;
+                FilamentDetailDbObject response = new FilamentDetailDbObject();
                 string procName = $"{ProcedurePrefix}_pr_FILAMENT_DETAIL_GET";
                 using var cmd = new MySqlCommand(procName, Connection)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
 
-                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.VarChar) { Value = groupId });
+                cmd.Parameters.Add(new MySqlParameter(GroupParam, MySqlDbType.VarChar) { Value = groupId });
                 cmd.Parameters.Add(new MySqlParameter("P_CD_FILAMENT", MySqlDbType.VarChar) { Value = filamentId });
 
                 using var adapter = new MySqlDataAdapter(cmd);
@@ -243,13 +245,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             {
                 string msg = $"Error al devolver el detalle de filamento {filamentId} de en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new FilamentDetailDbObject();
             }
             catch (Exception ex)
             {
                 string msg = $"Error al devolver el detalle de filamento {filamentId} de en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new FilamentDetailDbObject();
             }
         }
 
@@ -266,10 +268,10 @@ namespace _3DMANAGER_APP.DAL.Managers
                     CommandType = CommandType.StoredProcedure
                 };
 
-                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
+                cmd.Parameters.Add(new MySqlParameter(GroupParam, MySqlDbType.Int32) { Value = groupId });
                 cmd.Parameters.Add(new MySqlParameter("P_CD_FILAMENT", MySqlDbType.Int32) { Value = filamentId });
 
-                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                var errorParam = CreateReturnValueParameter(ErrorConstant, MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
 
                 using var adapter = new MySqlDataAdapter(cmd);

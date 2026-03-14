@@ -19,7 +19,7 @@ namespace _3DMANAGER_APP.DAL.Managers
 
         public List<PrinterDbObject> GetPrinterList(out ErrorDbObject error)
         {
-            error = null;
+            error = new ErrorDbObject();
             int errorCode = 0;
             List<PrinterDbObject> result = new List<PrinterDbObject>();
             try
@@ -41,13 +41,13 @@ namespace _3DMANAGER_APP.DAL.Managers
                 errorCode = Convert.ToInt32(errorParam.Value);
                 if (errorCode != 0)
                 {
-                    throw new Exception("Error al obtener listado de impresoras");
+                    return result;
                 }
                 if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                 {
                     foreach (DataRow row in ds.Tables[0].Rows)
                     {
-                        string value = row.Field<string>("3DMANAGER_PRINTER_NAME");
+                        string? value = row.Field<string>("3DMANAGER_PRINTER_NAME");
                         if (!string.IsNullOrEmpty(value))
                         {
                             result.Add(new PrinterDbObject() { PrinterName = value });
@@ -61,13 +61,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             {
                 Logger.LogError(ex, $"Error al obtener listado impresoras de BBDD");
                 error = new ErrorDbObject() { code = (int)HttpStatusCode.InternalServerError, message = "Error al obtener las impresoras de BBDD" };
-                return null;
+                return new List<PrinterDbObject>();
             }
             catch (Exception ex)
             {
                 Logger.LogError(ex, $"Error al obtener listado impresoras de BBDD");
                 error = new ErrorDbObject() { code = (int)HttpStatusCode.InternalServerError, message = "Error al obtener las impresoras de BBDD" };
-                return null;
+                return new List<PrinterDbObject>();
             }
         }
 

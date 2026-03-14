@@ -31,7 +31,7 @@ const Header: React.FC = () => {
                 {user ? (
                     <div className="row align-items-center">
                         <div className="col d-flex flex-column">
-                            <span className="header-name" onClick={() => navigate(`/dashboard/user/detail/${user.userId}`)}>{user.userName}</span>
+                            <button className="header-name" onClick={() => navigate(`/dashboard/user/detail/${user.userId}`)}>{user.userName}</button>
                             <button className="header-group" onClick={handleGroup}>{user.groupName}</button>
                         </div>
                         <div className="col-auto">

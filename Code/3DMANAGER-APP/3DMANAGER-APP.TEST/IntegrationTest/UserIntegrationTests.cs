@@ -76,7 +76,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 _fakeS3Service
             );
 
-            BaseError error;
+            BaseError? error;
             var users = manager.GetUserList(1, out error);
 
             Assert.Null(error);
@@ -100,7 +100,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 NullLogger<UserManager>.Instance,
                 _fakeS3Service);
 
-            BaseError error;
+            BaseError? error;
 
             var user = manager.GetUserDetail(1, 1, out error);
             Assert.Null(error);

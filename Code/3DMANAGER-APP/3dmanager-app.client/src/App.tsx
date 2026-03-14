@@ -22,13 +22,11 @@ import PrinterDetailPage from './pages/PrinterDetailsPage';
 import UserDetailPage from './pages/UserDetailPage';
 import FilamentDetailPage from './pages/FilamentDetailsPage';
 import PrintDetailPage from './pages/PrintDetailsPage';
+import ErrorPage from './pages/ErrorPage';
 
 
 
 const App: React.FC = () => {
-
-    
-
     return (
         <AuthProvider>
             <PopupProvider>
@@ -54,6 +52,7 @@ const App: React.FC = () => {
                                 <Route path="/dashboard/user/detail/:userId" element={<ProtectedRoute><UserDetailPage /></ProtectedRoute>} />
                                 <Route path="/dashboard/filament/detail/:filamentId" element={<ProtectedRoute><FilamentDetailPage /></ProtectedRoute>} />
                                 <Route path="/dashboard/print/detail/:printId" element={<ProtectedRoute><PrintDetailPage /></ProtectedRoute>} />
+                                <Route path="/error" element={<ErrorPage />} />
                             </Routes>
                         </main>
                     </div>

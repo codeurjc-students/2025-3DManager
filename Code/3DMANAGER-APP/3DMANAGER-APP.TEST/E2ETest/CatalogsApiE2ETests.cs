@@ -24,6 +24,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
 
             var content = await response.Content.ReadFromJsonAsync<Server.Models.CommonResponse<List<CatalogResponse>>>();
             Assert.NotNull(content);
+            Assert.NotNull(content.Data);
             Assert.True(content.Data.Count > 0);
         }
         [Fact]
@@ -35,6 +36,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
 
             var content = await response.Content.ReadFromJsonAsync<Server.Models.CommonResponse<List<CatalogResponse>>>();
             Assert.NotNull(content);
+            Assert.NotNull(content.Data);
             Assert.True(content.Data.Count > 0);
         }
         [Fact]
@@ -46,6 +48,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
 
             var content = await response.Content.ReadFromJsonAsync<Server.Models.CommonResponse<List<CatalogResponse>>>();
             Assert.NotNull(content);
+            Assert.NotNull(content.Data);
             Assert.True(content.Data.Count > 0);
         }
         [Fact]
@@ -57,6 +60,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
 
             var content = await response.Content.ReadFromJsonAsync<Server.Models.CommonResponse<List<CatalogResponse>>>();
             Assert.NotNull(content);
+            Assert.NotNull(content.Data);
             Assert.True(content.Data.Count > 0);
         }
     }
