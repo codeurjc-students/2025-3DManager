@@ -159,5 +159,58 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
             Assert.Equal(220, updated.FilamentTemperature);
         }
 
+        [Fact]
+        public async Task DeleteFilament_ShouldDeleteSuccessfully()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER"
+            );
+
+            var filamentDbManager = new FilamentDbManager(
+                dataSource,
+                NullLogger<FilamentDbManager>.Instance
+            );
+
+            var manager = new FilamentManager(
+                filamentDbManager,
+                _mapper,
+                NullLogger<FilamentManager>.Instance,
+                _fakeService
+            );
+
+            // Creamos un filamento de prueba
+            var newFilament = new FilamentRequest
+            {
+                GroupId = 1,
+                FilamentName = "Filament prueba",
+                FilamentDescription = "Test prueba",
+                FilamentColor = "#ffffff",
+                FilamentWeight = 1000,
+                FilamentCost = 20,
+                FilamentLenght = 300,
+                FilamentTemperature = 200,
+                FilamentThickness = 1,
+                FilamentType = 1
+
+            };
+
+            var created = await manager.PostFilament(newFilament);
+            Assert.NotNull(created);
+            Assert.True(created.Data > 0);
+
+            int filamentId = created.Data;
+
+            var deleteResponse = await manager.DeleteFilament(filamentId, 1);
+
+            Assert.NotNull(deleteResponse);
+            Assert.True(deleteResponse.Data);
+            Assert.Null(deleteResponse.Error);
+
+            var filaments = manager.GetFilamentList(1, out BaseError? error);
+            Assert.Null(error);
+            Assert.DoesNotContain(filaments, f => f.FilamentId == filamentId);
+        }
+
     }
 }

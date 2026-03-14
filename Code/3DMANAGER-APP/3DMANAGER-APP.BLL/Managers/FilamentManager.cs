@@ -5,6 +5,7 @@ using _3DMANAGER_APP.BLL.Models.File;
 using _3DMANAGER_APP.DAL.Interfaces;
 using _3DMANAGER_APP.DAL.Models.Filament;
 using _3DMANAGER_APP.DAL.Models.File;
+using _3DMANAGER_APP.DAL.Models.Print;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -124,6 +125,26 @@ namespace _3DMANAGER_APP.BLL.Managers
                 else
                     response.FilamentImageFile.FileUrl = _awsS3Service.GetPresignedUrl("default/3dmanager-default-filament.png", 1);
 
+            }
+            return response;
+        }
+
+        public async Task<CommonResponse<bool>> DeleteFilament(int filamentId, int groupId)
+        {
+            CommonResponse<bool> response = new CommonResponse<bool>();
+
+            DeletedDbObject responseDb = _filamentDbManager.DeleteFilament(filamentId, groupId, out int? errorDb);
+
+            if (errorDb != null)
+            {
+                string msg = $"Error al eliminar el filamento con id: {filamentId}";
+                _logger.LogError(msg);
+                response.Error = new Response.ErrorProperties() { Code = StatusCodes.Status500InternalServerError, Message = msg };
+            }
+            response.Data = responseDb.SuccesfullDelete;
+            if (responseDb.FileResponse != null)
+            {
+                //Aun no implementado
             }
             return response;
         }

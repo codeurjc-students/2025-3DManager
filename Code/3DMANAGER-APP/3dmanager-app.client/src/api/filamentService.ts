@@ -43,4 +43,9 @@ export const getFilamentDetail = async (filamentId: number): Promise<CommonRespo
     return response.data;
 }
 
+export const deleteFilament = async (filamentId: number): Promise<CommonResponse<boolean>> => {
+    const response = await apiClient.delete<CommonResponse<boolean>>(`/api/v1/filaments/DeleteFilament?printId=${filamentId}`);
+    return response.data;
+}
+
 
