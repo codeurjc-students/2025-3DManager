@@ -1,6 +1,7 @@
 ﻿using _3DMANAGER_APP.BLL.Interfaces;
 using _3DMANAGER_APP.BLL.Models;
 using _3DMANAGER_APP.BLL.Models.Base;
+using _3DMANAGER_APP.BLL.Models.Group;
 using _3DMANAGER_APP.BLL.Models.Printer;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
@@ -161,6 +162,33 @@ namespace _3DMANAGER_APP.Server.Controllers
                 return StatusCode(500, new Models.CommonResponse<PrinterDetailObject>(new ErrorProperties(error.code, error.message)));
 
             return Ok(new Models.CommonResponse<PrinterDetailObject>(printerResponse));
+        }
+
+        /// <summary>
+        /// Delete a printer
+        /// </summary>
+        /// <returns>Boolean that indicates if operation was succesfull</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="401">No autorizado</response>
+        /// <response code="409">Conflicto en servidor</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Printers")]
+        [HttpDelete]
+        public async Task<IActionResult> DeletePrinter([FromQuery] int printerId)
+        {
+            if (GroupId == null && UserId == null && UserRole == "Usuario-Manager")
+                return Unauthorized(new Models.CommonResponse<GroupBasicDataResponse>(new ErrorProperties(401, "No autorizado")));
+
+            BLL.Models.Base.CommonResponse<bool> response = await _printerManager.DeletePrinter(printerId, GroupId.Value);
+            if (response.Error != null || !response.Data)
+                return StatusCode(500, new Models.CommonResponse<bool>(new ErrorProperties(response.Error?.Code ?? StatusCodes.Status500InternalServerError, response.Error?.Message ?? "Error al eliminar la impresora")));
+
+            return Ok(new Models.CommonResponse<bool>(response.Data));
         }
     }
 }
