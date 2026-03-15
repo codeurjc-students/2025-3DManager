@@ -36,7 +36,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         public IActionResult GetPrinterList()
         {
             _logger.LogInformation($"Llamada a la funcion GetPrinterList en el controlador PrinterController");
-            List<PrinterObject> response = _printerManager.GetPrinterList(out BaseError error);
+            List<PrinterObject> response = _printerManager.GetPrinterList(out BaseError? error);
             if (error != null)
             {
                 return BadRequest(error);
@@ -101,11 +101,16 @@ namespace _3DMANAGER_APP.Server.Controllers
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<PrinterListObject>(new ErrorProperties(401, NoAuthConstant)));
 
-            List<PrinterListObject> printerList = _printerManager.GetPrinterDashboardList(GroupId.Value, out BaseError error);
+            List<PrinterListObject> printerList = _printerManager.GetPrinterDashboardList(GroupId.Value, out BaseError? error);
 
             if (printerList == null || error != null)
-                return StatusCode(500, new Models.CommonResponse<List<PrinterListObject>>(new ErrorProperties(error.code, error.message)));
-
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new Models.CommonResponse<List<PrinterListObject>>(new ErrorProperties(
+                    error == null ? StatusCodes.Status500InternalServerError : error.code,
+                    error == null ? $"Error al obtener la lista de impresoras para el dashboard para el grupo {GroupId}" : error.message
+                )));
+            }
             return Ok(new Models.CommonResponse<List<PrinterListObject>>(printerList));
         }
 

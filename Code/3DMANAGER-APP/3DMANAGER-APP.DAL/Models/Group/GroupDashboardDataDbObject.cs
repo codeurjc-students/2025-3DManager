@@ -5,6 +5,7 @@ namespace _3DMANAGER_APP.DAL.Models.Group
 
     public class GroupDashboardDataDbObject
     {
+        public int GroupId { get; set; }
         public double GroupTotalHours { get; set; }
         private const string GroupTotalHoursColumnName = "GROUP_TOTAL_HOURS";
         public int GroupTotalPrints { get; set; }
@@ -21,9 +22,10 @@ namespace _3DMANAGER_APP.DAL.Models.Group
 
         public GroupDashboardDataDbObject()
         {
+            GroupId = 0;
             GroupPrinterHours = new List<GroupPrinterHoursDbObject>();
         }
-        public GroupDashboardDataDbObject Create(DataRow row)
+        public static GroupDashboardDataDbObject Create(DataRow row)
         {
             var obj = new GroupDashboardDataDbObject();
 

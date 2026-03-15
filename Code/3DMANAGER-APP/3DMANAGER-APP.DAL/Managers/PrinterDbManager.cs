@@ -13,6 +13,11 @@ namespace _3DMANAGER_APP.DAL.Managers
 {
     public class PrinterDbManager : MySQLManager, IPrinterDbManager
     {
+
+        private const string ErrorConstant = "CodigoError";
+        private const string GroupParam = "P_CD_GROUP";
+        private const string PrinterParam = "P_CD_PRINTER";
+
         public PrinterDbManager(IDataSource<MySqlConnection> dataSourceFactory, ILogger<PrinterDbManager> logger)
             : base(dataSourceFactory, logger) { }
 
@@ -31,7 +36,7 @@ namespace _3DMANAGER_APP.DAL.Managers
                 };
 
 
-                var errorParam = CreateReturnValueParameter("@CodigoError", MySqlDbType.Int32);
+                var errorParam = CreateReturnValueParameter(ErrorConstant, MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
 
                 using var adapter = new MySqlDataAdapter(cmd);
@@ -86,7 +91,7 @@ namespace _3DMANAGER_APP.DAL.Managers
                 cmd.Parameters.Add(new MySqlParameter("P_PRINTER_NAME", MySqlDbType.VarChar) { Value = request.PrinterName });
                 cmd.Parameters.Add(new MySqlParameter("P_PRINTER_DESCRIPTION", MySqlDbType.VarChar) { Value = request.PrinterDescription });
                 cmd.Parameters.Add(new MySqlParameter("P_PRINTER_MODEL", MySqlDbType.VarChar) { Value = request.PrinterModel });
-                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                var errorParam = CreateReturnValueParameter(ErrorConstant, MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
 
                 using var adapter = new MySqlDataAdapter(cmd);
@@ -121,10 +126,11 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
         }
 
-        public List<PrinterListDbObject> GetPrinterDashboardList(int group)
+        public List<PrinterListDbObject> GetPrinterDashboardList(int group, out bool error)
         {
             try
             {
+                error = true;
                 List<PrinterListDbObject> list = new List<PrinterListDbObject>();
                 string procName = $"{ProcedurePrefix}_pr_PRINTER_LIST";
                 using var cmd = new MySqlCommand(procName, Connection)
@@ -132,9 +138,9 @@ namespace _3DMANAGER_APP.DAL.Managers
                     CommandType = CommandType.StoredProcedure
                 };
 
-                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.VarChar) { Value = group });
+                cmd.Parameters.Add(new MySqlParameter(GroupParam, MySqlDbType.VarChar) { Value = group });
 
-                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                var errorParam = CreateReturnValueParameter(ErrorConstant, MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
 
                 using var adapter = new MySqlDataAdapter(cmd);
@@ -143,6 +149,7 @@ namespace _3DMANAGER_APP.DAL.Managers
 
                 if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                 {
+                    error = false;
                     foreach (DataRow row in ds.Tables[0].Rows)
                     {
                         PrinterListDbObject listResponse = new PrinterListDbObject();
@@ -154,15 +161,17 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
+                error = true;
                 string msg = $"Error al devolver el listado de impresoras del grupo {group} en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new List<PrinterListDbObject>();
             }
             catch (Exception ex)
             {
+                error = true;
                 string msg = $"Error al devolver el listado de impresoras del grupo {group} en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new List<PrinterListDbObject>();
             }
         }
 
@@ -179,7 +188,7 @@ namespace _3DMANAGER_APP.DAL.Managers
                 cmd.Parameters.Add(new MySqlParameter("P_KEY", MySqlDbType.VarChar) { Value = image.FileKey });
                 cmd.Parameters.Add(new MySqlParameter("P_URL", MySqlDbType.VarChar) { Value = image.FileUrl });
                 cmd.Parameters.Add(new MySqlParameter("P_PRINTER_ID", MySqlDbType.Int32) { Value = printerId });
-                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                var errorParam = CreateReturnValueParameter(ErrorConstant, MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
 
                 using var adapter = new MySqlDataAdapter(cmd);
@@ -217,14 +226,14 @@ namespace _3DMANAGER_APP.DAL.Managers
                     CommandType = CommandType.StoredProcedure
                 };
 
-                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = requestDb.GroupId });
-                cmd.Parameters.Add(new MySqlParameter("P_CD_PRINTER", MySqlDbType.Int32) { Value = requestDb.PrinterId });
+                cmd.Parameters.Add(new MySqlParameter(GroupParam, MySqlDbType.Int32) { Value = requestDb.GroupId });
+                cmd.Parameters.Add(new MySqlParameter(PrinterParam, MySqlDbType.Int32) { Value = requestDb.PrinterId });
                 cmd.Parameters.Add(new MySqlParameter("P_CD_STATE", MySqlDbType.Int32) { Value = requestDb.PrinterStateId });
                 cmd.Parameters.Add(new MySqlParameter("P_DS_NAME", MySqlDbType.VarChar) { Value = requestDb.PrinterName });
                 cmd.Parameters.Add(new MySqlParameter("P_DS_MODEL", MySqlDbType.VarChar) { Value = requestDb.PrinterModel });
                 cmd.Parameters.Add(new MySqlParameter("P_DS_DESCRIPTION", MySqlDbType.VarChar) { Value = requestDb.PrinterDescription });
 
-                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                var errorParam = CreateReturnValueParameter(ErrorConstant, MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
 
                 using var adapter = new MySqlDataAdapter(cmd);
@@ -261,15 +270,15 @@ namespace _3DMANAGER_APP.DAL.Managers
         {
             try
             {
-                PrinterDetailDbObject response = null;
+                PrinterDetailDbObject response = new PrinterDetailDbObject();
                 string procName = $"{ProcedurePrefix}_pr_PRINTER_DETAIL_GET";
                 using var cmd = new MySqlCommand(procName, Connection)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
 
-                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.VarChar) { Value = groupId });
-                cmd.Parameters.Add(new MySqlParameter("P_CD_PRINTER", MySqlDbType.VarChar) { Value = printerId });
+                cmd.Parameters.Add(new MySqlParameter(GroupParam, MySqlDbType.VarChar) { Value = groupId });
+                cmd.Parameters.Add(new MySqlParameter(PrinterParam, MySqlDbType.VarChar) { Value = printerId });
 
                 using var adapter = new MySqlDataAdapter(cmd);
                 var ds = new DataSet();
@@ -287,20 +296,21 @@ namespace _3DMANAGER_APP.DAL.Managers
             {
                 string msg = $"Error al devolver el detalle de impresora {printerId} de en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new PrinterDetailDbObject();
             }
             catch (Exception ex)
             {
                 string msg = $"Error al devolver el detalle de impresora {printerId} de en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new PrinterDetailDbObject();
             }
         }
 
-        public List<PrinterTimesValuesDbObject> GetTimeVariation(int groupId, int printerId)
+        public List<PrinterTimesValuesDbObject> GetTimeVariation(int groupId, int printerId, out bool error)
         {
             try
             {
+                error = true;
                 List<PrinterTimesValuesDbObject> list = new List<PrinterTimesValuesDbObject>();
                 string procName = $"{ProcedurePrefix}_pr_PRINT_LIST_TIMES";
                 using var cmd = new MySqlCommand(procName, Connection)
@@ -308,8 +318,8 @@ namespace _3DMANAGER_APP.DAL.Managers
                     CommandType = CommandType.StoredProcedure
                 };
 
-                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
-                cmd.Parameters.Add(new MySqlParameter("P_CD_PRINTER", MySqlDbType.Int32) { Value = printerId });
+                cmd.Parameters.Add(new MySqlParameter(GroupParam, MySqlDbType.Int32) { Value = groupId });
+                cmd.Parameters.Add(new MySqlParameter(PrinterParam, MySqlDbType.Int32) { Value = printerId });
 
                 using var adapter = new MySqlDataAdapter(cmd);
                 var ds = new DataSet();
@@ -317,6 +327,7 @@ namespace _3DMANAGER_APP.DAL.Managers
 
                 if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                 {
+                    error = false;
                     foreach (DataRow row in ds.Tables[0].Rows)
                     {
                         PrinterTimesValuesDbObject listResponse = new PrinterTimesValuesDbObject();
@@ -327,15 +338,17 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
+                error = true;
                 string msg = $"Error al devolver el listado de tiempos de impresiones de detalle de la impresora {printerId} en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new List<PrinterTimesValuesDbObject>();
             }
             catch (Exception ex)
             {
+                error = true;
                 string msg = $"Error al devolver el listado de tiempos de impresiones de detalle de la impresora {printerId} en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new List<PrinterTimesValuesDbObject>();
             }
         }
 
@@ -352,10 +365,10 @@ namespace _3DMANAGER_APP.DAL.Managers
                     CommandType = CommandType.StoredProcedure
                 };
 
-                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
-                cmd.Parameters.Add(new MySqlParameter("P_CD_PRINTER", MySqlDbType.Int32) { Value = printerId });
+                cmd.Parameters.Add(new MySqlParameter(GroupParam, MySqlDbType.Int32) { Value = groupId });
+                cmd.Parameters.Add(new MySqlParameter(PrinterParam, MySqlDbType.Int32) { Value = printerId });
 
-                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                var errorParam = CreateReturnValueParameter(ErrorConstant, MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
 
                 using var adapter = new MySqlDataAdapter(cmd);

@@ -41,7 +41,7 @@ namespace _3DMANAGER_APP.Server.Controllers
 
             PrintListResponse printList = _printManager.GetPrintList(GroupId.Value, pagination, out BaseError? error);
 
-            if (printList == null || error != null)
+            if (error != null)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     new Models.CommonResponse<PrintListResponse>(new ErrorProperties(
@@ -211,15 +211,11 @@ namespace _3DMANAGER_APP.Server.Controllers
 
             var comments = _printManager.GetPrintComments(GroupId.Value, printId, out BaseError? error);
 
-            if (comments == null || error != null)
+            if (error != null)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                    new Models.CommonResponse<List<PrintCommentObject>>(new ErrorProperties(
-                error == null ? StatusCodes.Status500InternalServerError : error.code,
-                error == null ? $"Error al obtener los comentarios de la impresión {printId}" : error.message
-            )));
+                    new Models.CommonResponse<List<PrintCommentObject>>(new ErrorProperties(error.code, error.message)));
             }
-
             return Ok(new CommonResponse<List<PrintCommentObject>>(comments));
         }
 
@@ -245,17 +241,13 @@ namespace _3DMANAGER_APP.Server.Controllers
 
             request.UserId = UserId!.Value;
 
-            int newId = _printManager.PostPrintComment(request, out BaseError? error);
+            int newId = _printManager.PostPrintComment(request);
 
-            if (error != null || newId == 0)
+            if (newId == 0)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                    new Models.CommonResponse<int>(new ErrorProperties(
-                error == null ? StatusCodes.Status500InternalServerError : error.code,
-                error == null ? "Error al obtener la lista" : error.message
-            )));
+                    new Models.CommonResponse<int>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al obtener la lista")));
             }
-
             return Ok(new CommonResponse<int>(newId));
         }
 

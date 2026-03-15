@@ -11,7 +11,7 @@ namespace _3DMANAGER_APP.BLL.Interfaces
         bool UpdatePrint(PrintDetailRequest request);
         PrintDetailObject GetPrintDetail(int groupId, int printId, out BaseError? error);
         List<PrintCommentObject> GetPrintComments(int groupId, int printId, out BaseError? error);
-        int PostPrintComment(PrintCommentRequest request, out BaseError? error);
+        int PostPrintComment(PrintCommentRequest request);
         public Task<CommonResponse<bool>> DeletePrint(int printId, int groupId);
     }
 }

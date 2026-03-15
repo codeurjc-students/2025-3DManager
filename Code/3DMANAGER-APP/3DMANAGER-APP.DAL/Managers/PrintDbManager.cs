@@ -17,8 +17,9 @@ namespace _3DMANAGER_APP.DAL.Managers
         {
         }
 
-        public List<PrintListResponseDbObject> GetPrintList(int group, int pageNumber, int pageSize, out int totalItems)
+        public List<PrintListResponseDbObject> GetPrintList(int group, int pageNumber, int pageSize, out int totalItems, out bool error)
         {
+            error = true;
             totalItems = 0;
             try
             {
@@ -42,6 +43,7 @@ namespace _3DMANAGER_APP.DAL.Managers
 
                 if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                 {
+                    error = false;
                     foreach (DataRow row in ds.Tables[0].Rows)
                     {
                         PrintListResponseDbObject listResponse = new PrintListResponseDbObject();
@@ -58,12 +60,14 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
+                error = true;
                 string msg = $"Error al devolver el listado de impresiones del grupo {group} en BBDD";
                 Logger.LogError(ex, msg);
                 return new List<PrintListResponseDbObject>();
             }
             catch (Exception ex)
             {
+                error = true;
                 string msg = $"Error al devolver el listado de impresiones del grupo {group} en BBDD";
                 Logger.LogError(ex, msg);
                 return new List<PrintListResponseDbObject>();
@@ -171,9 +175,10 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
         }
 
-        public List<PrintListResponseDbObject> GetPrintListByType(int group, int pageNumber, int pageSize, int type, int id, out int totalItems)
+        public List<PrintListResponseDbObject> GetPrintListByType(int group, int pageNumber, int pageSize, int type, int id, out int totalItems, out bool error)
         {
             totalItems = 0;
+            error = true;
             try
             {
                 List<PrintListResponseDbObject> list = new List<PrintListResponseDbObject>();
@@ -207,6 +212,7 @@ namespace _3DMANAGER_APP.DAL.Managers
 
                 if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                 {
+                    error = false;
                     foreach (DataRow row in ds.Tables[0].Rows)
                     {
                         PrintListResponseDbObject listResponse = new PrintListResponseDbObject();
@@ -223,12 +229,14 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
+                error = true;
                 string msg = $"Error al devolver el listado de impresiones de detalle del grupo {group} para el tipo {type} en BBDD";
                 Logger.LogError(ex, msg);
                 return new List<PrintListResponseDbObject>();
             }
             catch (Exception ex)
             {
+                error = true;
                 string msg = $"Error al devolver el listado de impresiones de detalle del grupo {group} para el tipo {type} en BBDD";
                 Logger.LogError(ex, msg);
                 return new List<PrintListResponseDbObject>();
@@ -323,10 +331,11 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
         }
 
-        public List<PrintCommentDbObject> GetPrintComments(int groupId, int printId)
+        public List<PrintCommentDbObject> GetPrintComments(int groupId, int printId, out bool error)
         {
             try
             {
+                error = true;
                 List<PrintCommentDbObject> list = new List<PrintCommentDbObject>();
                 string procName = $"{ProcedurePrefix}_pr_PRINT_COMMENTS_LIST";
 
@@ -344,6 +353,7 @@ namespace _3DMANAGER_APP.DAL.Managers
 
                 if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                 {
+                    error = false;
                     foreach (DataRow row in ds.Tables[0].Rows)
                     {
                         PrintCommentDbObject comment = new PrintCommentDbObject();
@@ -355,12 +365,14 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
+                error = true;
                 string msg = $"Error al obtener los comentarios de impresión {printId} en BBDD";
                 Logger.LogError(ex, msg);
                 return new List<PrintCommentDbObject>();
             }
             catch (Exception ex)
             {
+                error = true;
                 string msg = $"Error al obtener los comentarios de impresión {printId} en BBDD";
                 Logger.LogError(ex, msg);
                 return new List<PrintCommentDbObject>();

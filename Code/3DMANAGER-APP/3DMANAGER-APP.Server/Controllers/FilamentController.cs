@@ -141,7 +141,7 @@ namespace _3DMANAGER_APP.Server.Controllers
 
             FilamentDetailObject filamentResponse = _filamentManager.GetFilamentDetail(GroupId.Value, filamentId, out BaseError? error);
 
-            if (filamentResponse == null || error != null)
+            if (error != null)
                 return StatusCode(500, new Models.CommonResponse<FilamentDetailObject>(new ErrorProperties(error!.code, error.message)));
 
             return Ok(new Models.CommonResponse<FilamentDetailObject>(filamentResponse));

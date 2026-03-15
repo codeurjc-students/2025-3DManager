@@ -36,7 +36,7 @@ const App: React.FC = () => {
                         <Header />
                         <main className="pages-container">
                             <Routes>
-                                <Route path="*" element={<Navigate to="/login" replace />} />
+                                
                                 <Route path="/login" element={<LoginPage />} />
                                 <Route path="/user-create" element={<CreateUserPage />} />
                                 <Route path="/group" element={<ProtectedRoute><GroupPage /></ProtectedRoute>} />
@@ -53,6 +53,7 @@ const App: React.FC = () => {
                                 <Route path="/dashboard/filament/detail/:filamentId" element={<ProtectedRoute><FilamentDetailPage /></ProtectedRoute>} />
                                 <Route path="/dashboard/print/detail/:printId" element={<ProtectedRoute><PrintDetailPage /></ProtectedRoute>} />
                                 <Route path="/error" element={<ErrorPage />} />
+                                <Route path="*" element={<Navigate to="/login" replace />} />
                             </Routes>
                         </main>
                     </div>

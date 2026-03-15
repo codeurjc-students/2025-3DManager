@@ -215,7 +215,7 @@ namespace _3DMANAGER_APP.Server.Controllers
 
             var user = _userManager.GetUserById(UserId.Value);
 
-            if (user == null)
+            if (user == null || user.UserId == 0)
                 return Unauthorized();
 
             return Ok(new

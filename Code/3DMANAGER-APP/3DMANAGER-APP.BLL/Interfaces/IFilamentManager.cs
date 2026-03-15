@@ -7,7 +7,7 @@ namespace _3DMANAGER_APP.BLL.Interfaces
     {
         public List<FilamentListResponse> GetFilamentList(int group, out BaseError? error);
         public Task<CommonResponse<int>> PostFilament(FilamentRequest filament);
-        public bool UpdateFilament(FilamentUpdateRequest requestDb);
+        public bool UpdateFilament(FilamentUpdateRequest request);
         FilamentDetailObject GetFilamentDetail(int groupId, int filamentId, out BaseError? error);
         public Task<CommonResponse<bool>> DeleteFilament(int filamentId, int groupId);
     }

@@ -8,12 +8,10 @@ namespace _3DMANAGER_APP.DAL.Models.Filament
 
         public int FilamentId { get; set; }
         private const string FilamentIdColumnName = "FILAMENT_ID";
-        public string FilamentName { get; set; }
+        public string? FilamentName { get; set; }
         private const string FilamentNameColumnName = "FILAMENT_NAME";
-        public string FilamentType { get; set; }
+        public string? FilamentType { get; set; }
         private const string FilamentTypeColumnName = "FILAMENT_TYPE";
-        public int FilamentWeight { get; set; }
-        private const string FilamentWeightColumnName = "FILAMENT_WEIGHT";
         public string? FilamentColor { get; set; }
         private const string FilamentColorColumnName = "FILAMENT_COLOR";
         public int? FilamentTemperature { get; set; }
@@ -51,7 +49,6 @@ namespace _3DMANAGER_APP.DAL.Models.Filament
             obj.FilamentId = row.Field<int>(FilamentIdColumnName);
             obj.FilamentName = row.Field<string>(FilamentNameColumnName);
             obj.FilamentType = row.Field<string>(FilamentTypeColumnName);
-            obj.FilamentWeight = row.Field<int>(FilamentWeightColumnName);
             obj.FilamentColor = row.Field<string>(FilamentColorColumnName);
             obj.FilamentTemperature = row.Field<int>(FilamentTemperatureColumnName);
             obj.FilamentCreateDate = row.Field<DateTime>(FilamentCreateDateColumnName);

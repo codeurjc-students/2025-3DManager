@@ -48,7 +48,7 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Print
                     PrintId = 1,
                     PrintName = "Test Print 1",
                     PrintUserCreator = "user1",
-                    PrintDate = new DateTime(2024, 1, 1),
+                    PrintDate = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                     PrintTime = 3720, // 1h 2min
                     PrintFilamentConsumed = 12.5m
                 },
@@ -57,15 +57,16 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Print
                     PrintId = 2,
                     PrintName = "Test Print 2",
                     PrintUserCreator = "user2",
-                    PrintDate = new DateTime(2024, 1, 2),
+                    PrintDate = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                     PrintTime = 780, // 0h 13min
                     PrintFilamentConsumed = 5.3m
                 }
             };
 
             int totalItems = 0;
+            bool errorDb = false;
             _printDbManagerMock
-                .Setup(db => db.GetPrintList(groupId, 1, 10, out totalItems))
+                .Setup(db => db.GetPrintList(groupId, 1, 10, out totalItems, out errorDb))
                 .Returns(dbResponse);
 
 
@@ -98,7 +99,7 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Print
             Assert.Equal("1h 2min", result.prints[0].PrintTime);
             Assert.Equal("0h 13min", result.prints[1].PrintTime);
 
-            _printDbManagerMock.Verify(db => db.GetPrintList(groupId, 1, 10, out totalItems), Times.Once);
+            _printDbManagerMock.Verify(db => db.GetPrintList(groupId, 1, 10, out totalItems, out errorDb), Times.Once);
         }
     }
 }

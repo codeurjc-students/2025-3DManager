@@ -64,8 +64,9 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
         }
 
-        public List<GroupInvitationDbObject> GetGroupInvitations(int userId)
+        public List<GroupInvitationDbObject> GetGroupInvitations(int userId, out int? errorDb)
         {
+            errorDb = 0;
             try
             {
                 List<GroupInvitationDbObject> list = new List<GroupInvitationDbObject>();
@@ -143,12 +144,14 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
+                errorDb = 500;
                 string msg = $"Error al aceptar invitacion de grupo {groupId} para el usuario {userId} en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
             catch (Exception ex)
             {
+                errorDb = 500;
                 string msg = $"Error al aceptar invitacion de grupo {groupId} para el usuario {userId} en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
@@ -427,8 +430,8 @@ namespace _3DMANAGER_APP.DAL.Managers
 
                 if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                 {
-                    response = new GroupDashboardDataDbObject();
-                    response = response.Create(ds.Tables[0].Rows[0]);
+                    response = GroupDashboardDataDbObject.Create(ds.Tables[0].Rows[0]);
+                    response.GroupId = groupId;
                 }
                 if (ds.Tables.Count > 1 && ds.Tables[1].Rows.Count > 0)
                 {

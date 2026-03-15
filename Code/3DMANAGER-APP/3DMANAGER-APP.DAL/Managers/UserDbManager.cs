@@ -88,22 +88,22 @@ namespace _3DMANAGER_APP.DAL.Managers
 
                 if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                 {
-                    return user.Create(ds.Tables[0].Rows[0]);
+                    return UserDbObject.Create(ds.Tables[0].Rows[0]);
                 }
 
-                return null;
+                return user;
             }
             catch (MySqlException ex)
             {
                 string msg = $"Error al acceder con un usuario {userName} en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new UserDbObject();
             }
             catch (Exception ex)
             {
                 string msg = $"Error al acceder con un usuario {userName} en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new UserDbObject();
             }
         }
 
@@ -139,20 +139,21 @@ namespace _3DMANAGER_APP.DAL.Managers
             {
                 string msg = $"Error al devolver el listado de usuarios del grupo {group} en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new List<UserListResponseDbObject>();
             }
             catch (Exception ex)
             {
                 string msg = $"Error al devolver el listado de usuarios del grupo {group} en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new List<UserListResponseDbObject>();
             }
         }
 
-        public List<UserListResponseDbObject> GetUserInvitationList(string? filter)
+        public List<UserListResponseDbObject> GetUserInvitationList(string? filter, out bool error)
         {
             try
             {
+                error = true;
                 List<UserListResponseDbObject> list = new List<UserListResponseDbObject>();
                 string procName = $"{ProcedurePrefix}_pr_USER_INVITATION_LIST";
                 using var cmd = new MySqlCommand(procName, Connection)
@@ -168,6 +169,7 @@ namespace _3DMANAGER_APP.DAL.Managers
 
                 if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                 {
+                    error = false;
                     foreach (DataRow row in ds.Tables[0].Rows)
                     {
                         UserListResponseDbObject listResponse = new UserListResponseDbObject();
@@ -179,15 +181,17 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al devolver el listado de usuarios para invitar de en BBDD";
+                error = true;
+                string msg = "Error al devolver el listado de usuarios para invitar  en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new List<UserListResponseDbObject>();
             }
             catch (Exception ex)
             {
+                error = true;
                 string msg = "Error al devolver el listado de usuarios para invitar de en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new List<UserListResponseDbObject>();
             }
         }
 
@@ -299,22 +303,22 @@ namespace _3DMANAGER_APP.DAL.Managers
 
                 if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                 {
-                    return user.Create(ds.Tables[0].Rows[0]);
+                    return UserDbObject.Create(ds.Tables[0].Rows[0]);
                 }
 
-                return null;
+                return user;
             }
             catch (MySqlException ex)
             {
                 string msg = $"Error al obtener el usuario por id : {userId} en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new UserDbObject();
             }
             catch (Exception ex)
             {
                 string msg = $"Error al obtener el usuario por id : {userId} en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new UserDbObject();
             }
         }
 
@@ -322,7 +326,6 @@ namespace _3DMANAGER_APP.DAL.Managers
         {
             try
             {
-                var user = new UserDbObject();
                 string procName = $"{ProcedurePrefix}_pr_USER_GROUP_GET_BY_ID";
                 using var cmd = new MySqlCommand(procName, Connection)
                 {
@@ -408,7 +411,7 @@ namespace _3DMANAGER_APP.DAL.Managers
         {
             try
             {
-                UserDetailDbObject response = null;
+                UserDetailDbObject response = new UserDetailDbObject();
                 string procName = $"{ProcedurePrefix}_pr_USER_DETAIL_GET";
                 using var cmd = new MySqlCommand(procName, Connection)
                 {
@@ -434,13 +437,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             {
                 string msg = $"Error al devolver el detalle de usuario {userId} de en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new UserDetailDbObject();
             }
             catch (Exception ex)
             {
                 string msg = $"Error al devolver el detalle de usuario {userId} de en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new UserDetailDbObject();
             }
         }
 
