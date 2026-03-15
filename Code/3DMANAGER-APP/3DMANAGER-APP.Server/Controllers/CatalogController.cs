@@ -67,6 +67,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
         [ProducesResponseType(typeof(CommonResponse<List<CatalogResponse>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CommonResponse<List<CatalogResponse>>), StatusCodes.Status401Unauthorized)]
         [ApiVersionNeutral]
         [Tags("Catalogs")]
         [HttpGet]
@@ -88,7 +89,8 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <response code="400">Conflicto en servidor</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
-        [ProducesResponseType(typeof(CommonResponse<List<CatalogResponse>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CommonResponse<List<CatalogPrinterResponse>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CommonResponse<List<CatalogPrinterResponse>>), StatusCodes.Status401Unauthorized)]
         [ApiVersionNeutral]
         [Tags("Catalogs")]
         [HttpGet]
@@ -97,8 +99,8 @@ namespace _3DMANAGER_APP.Server.Controllers
             _logger.LogInformation($"Llamada a la funcion GetPrinterCatalog en el controlador CatalogController");
             if (GroupId == null)
                 return Unauthorized(new CommonResponse<bool>(new ErrorProperties(401, "No autenticado")));
-            List<CatalogResponse> catalog = _catalogManager.GetPrinterCatalog(GroupId.Value);
-            return Ok(new CommonResponse<List<CatalogResponse>>(catalog));
+            List<CatalogPrinterResponse> catalog = _catalogManager.GetPrinterCatalog(GroupId.Value);
+            return Ok(new CommonResponse<List<CatalogPrinterResponse>>(catalog));
         }
 
         /// <summary>

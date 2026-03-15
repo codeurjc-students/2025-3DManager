@@ -36,7 +36,6 @@ const App: React.FC = () => {
                         <Header />
                         <main className="pages-container">
                             <Routes>
-                                
                                 <Route path="/login" element={<LoginPage />} />
                                 <Route path="/user-create" element={<CreateUserPage />} />
                                 <Route path="/group" element={<ProtectedRoute><GroupPage /></ProtectedRoute>} />

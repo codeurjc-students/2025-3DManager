@@ -1,6 +1,7 @@
 import apiClient from './apiClient'
 import type { CommonResponse } from '../models/base/CommonResponse'
 import type { CatalogResponse } from '../models/catalog/CatalogResponse';
+import type { CatalogPrinterResponse } from '../models/catalog/CatalogPrinterResponse';
 
 export const getFilamentType = async (): Promise<CommonResponse<CatalogResponse[]>> => {
     const response = await apiClient.get<CommonResponse<CatalogResponse[]>>("/api/v1/catalogs/GetFilamentType");
@@ -12,8 +13,8 @@ export const getFilamentState = async (): Promise<CommonResponse<CatalogResponse
     return response.data;
 };
 
-export const getPrinterCatalog = async (): Promise<CommonResponse<CatalogResponse[]>> => {
-    const response = await apiClient.get<CommonResponse<CatalogResponse[]>>("/api/v1/catalogs/GetPrinterCatalog");
+export const getPrinterCatalog = async (): Promise<CommonResponse<CatalogPrinterResponse[]>> => {
+    const response = await apiClient.get<CommonResponse<CatalogPrinterResponse[]>>("/api/v1/catalogs/GetPrinterCatalog");
     return response.data;
 };
 

@@ -38,10 +38,15 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 dataSource,
                 NullLogger<CatalogDbManager>.Instance
             );
-
+            var printerDbManager = new PrinterDbManager(
+               dataSource,
+               NullLogger<PrinterDbManager>.Instance
+           );
             var manager = new CatalogManager(
                 catalogDbManager,
-                _mapper
+                printerDbManager,
+                _mapper,
+                NullLogger<CatalogManager>.Instance
             );
 
             var states = manager.GetPrintState();
