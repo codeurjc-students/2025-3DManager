@@ -19,7 +19,7 @@ namespace _3DMANAGER_APP.DAL.Managers
 
         public List<PrintListResponseDbObject> GetPrintList(int group, int pageNumber, int pageSize, out int totalItems, out bool error)
         {
-            error = true;
+            error = false;
             totalItems = 0;
             try
             {
@@ -178,7 +178,7 @@ namespace _3DMANAGER_APP.DAL.Managers
         public List<PrintListResponseDbObject> GetPrintListByType(int group, int pageNumber, int pageSize, int type, int id, out int totalItems, out bool error)
         {
             totalItems = 0;
-            error = true;
+            error = false;
             try
             {
                 List<PrintListResponseDbObject> list = new List<PrintListResponseDbObject>();
@@ -335,7 +335,7 @@ namespace _3DMANAGER_APP.DAL.Managers
         {
             try
             {
-                error = true;
+                error = false;
                 List<PrintCommentDbObject> list = new List<PrintCommentDbObject>();
                 string procName = $"{ProcedurePrefix}_pr_PRINT_COMMENTS_LIST";
 

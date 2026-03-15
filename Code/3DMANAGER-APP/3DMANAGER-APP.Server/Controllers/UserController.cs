@@ -55,7 +55,8 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
         [ProducesResponseType(typeof(Models.CommonResponse<LoginResponse>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(Models.CommonResponse<LoginResponse>), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(Models.CommonResponse<LoginResponse>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<LoginResponse>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(Models.CommonResponse<LoginResponse>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Users")]
@@ -90,7 +91,8 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
         [ProducesResponseType(typeof(Models.CommonResponse<LoginResponse>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(Models.CommonResponse<LoginResponse>), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(Models.CommonResponse<LoginResponse>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<LoginResponse>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(Models.CommonResponse<LoginResponse>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Users")]

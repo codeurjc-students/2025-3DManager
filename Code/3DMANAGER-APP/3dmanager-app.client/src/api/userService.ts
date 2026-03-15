@@ -45,8 +45,23 @@ export const getUserInvitationList = async (filter?: string): Promise<CommonResp
 }
 
 export const postUserInvitation = async (userId: number): Promise<CommonResponse<boolean>> => {
-    const response = await apiClient.post<CommonResponse<boolean>>(`/api/v1/users/PostUserInvitation?userId=${userId}`);
-    return response.data;
+    try {
+        const response = await apiClient.post<CommonResponse<boolean>>(`/api/v1/users/PostUserInvitation?userId=${userId}`);
+        return response.data;
+    } catch (error: any) {
+        const status = error?.response?.status;
+        const backendResponse = error?.response?.data;
+        if (backendResponse?.error) {
+            return backendResponse;
+        }
+        return {
+            data: false,
+            error: {
+                code: status ?? 500,
+                message: backendResponse?.message ?? "Error desconocido"
+            }
+        };
+    }
 }
 
 export const GetUserAuth = async (): Promise<{ userId: number; groupId: number | null; rolId: string | null; groupName: string | null; }> => {
