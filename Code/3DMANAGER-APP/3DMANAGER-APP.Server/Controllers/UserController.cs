@@ -13,7 +13,7 @@ namespace _3DMANAGER_APP.Server.Controllers
     {
         private readonly IUserManager _userManager;
         private readonly JwtService _jwtService;
-
+        private const string NoAuthConstant = "No autenticado";
         public UserController(IUserManager userManager, ILogger<UserController> logger, JwtService jwtService) : base(logger)
         {
             _userManager = userManager;
@@ -63,11 +63,15 @@ namespace _3DMANAGER_APP.Server.Controllers
         public Models.CommonResponse<LoginResponse> Login(BLL.Models.User.LoginRequest request)
         {
             _logger.LogInformation($"Llamada a la funcion Login en el controlador UserController");
-            UserObject user = _userManager.Login(request.UserName, request.UserPassword, out BaseError error);
+            UserObject user = _userManager.Login(request.UserName, request.UserPassword, out BaseError? error);
 
             if (user == null || error != null)
-                return new Models.CommonResponse<LoginResponse>(new ErrorProperties(error.code, error.message));
-
+            {
+                return new Models.CommonResponse<LoginResponse>(new ErrorProperties(
+                error == null ? StatusCodes.Status500InternalServerError : error.code,
+                error == null ? $"Error al hacer el login de usuario {request.UserName}" : error.message
+                ));
+            }
             var token = _jwtService.GenerateToken(user);
 
             LoginResponse response = new LoginResponse();
@@ -95,12 +99,15 @@ namespace _3DMANAGER_APP.Server.Controllers
         {
             _logger.LogInformation($"Llamada a la funcion LoginGuest en el controlador UserController");
             string userName = "Invitado";
-            string userPassword = "invitado3dmanager";
-            UserObject user = _userManager.Login(userName, userPassword, out BaseError error);
+            UserObject user = _userManager.Login(userName, "invitado3dmanager", out BaseError? error);
 
             if (user == null || error != null)
-                return new Models.CommonResponse<LoginResponse>(new ErrorProperties(error.code, error.message));
-
+            {
+                return new Models.CommonResponse<LoginResponse>(new ErrorProperties(
+                error == null ? StatusCodes.Status500InternalServerError : error.code,
+                error == null ? "Error al hacer el login de invitado" : error.message
+                ));
+            }
             var token = _jwtService.GenerateToken(user);
 
             LoginResponse response = new LoginResponse();
@@ -128,7 +135,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         {
             _logger.LogInformation($"Llamada a la funcion GetUserList en el controlador UserController");
             if (GroupId == null)
-                return Unauthorized(new Models.CommonResponse<UserListResponse>(new ErrorProperties(401, "No autenticado")));
+                return Unauthorized(new Models.CommonResponse<UserListResponse>(new ErrorProperties(401, NoAuthConstant)));
 
             List<UserListResponse> userList = _userManager.GetUserList(GroupId.Value, out BaseError? error);
 
@@ -180,7 +187,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         {
             _logger.LogInformation($"Llamada a la funcion PostUserInvitation en el controlador UserController");
             if (GroupId == null)
-                return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, "No autenticado")));
+                return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, NoAuthConstant)));
             bool response = _userManager.PostUserInvitation(GroupId.Value, userId, out BaseError? error);
             if (error != null)
                 return StatusCode(error.code, new Models.CommonResponse<bool>(new ErrorProperties(error.code, error.message)));
@@ -208,7 +215,7 @@ namespace _3DMANAGER_APP.Server.Controllers
 
             var user = _userManager.GetUserById(UserId.Value);
 
-            if (user == null)
+            if (user == null || user.UserId == 0)
                 return Unauthorized();
 
             return Ok(new
@@ -238,7 +245,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         {
             _logger.LogInformation($"Llamada a la funcion UpdateUser en el controlador UserController");
             if (GroupId == null)
-                return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, "No autenticado")));
+                return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, NoAuthConstant)));
 
             request.GroupId = GroupId.Value;
             bool response = _userManager.UpdateUser(request);
@@ -268,12 +275,18 @@ namespace _3DMANAGER_APP.Server.Controllers
         {
             _logger.LogInformation($"Llamada a la funcion GetUserDetail en el controlador UserController");
             if (GroupId == null)
-                return Unauthorized(new Models.CommonResponse<UserDetailObject>(new ErrorProperties(401, "No autenticado")));
+                return Unauthorized(new Models.CommonResponse<UserDetailObject>(new ErrorProperties(401, NoAuthConstant)));
 
-            UserDetailObject userResponse = _userManager.GetUserDetail(GroupId.Value, userId, out BaseError error);
+            UserDetailObject userResponse = _userManager.GetUserDetail(GroupId.Value, userId, out BaseError? error);
 
             if (userResponse == null || error != null)
-                return StatusCode(500, new Models.CommonResponse<UserDetailObject>(new ErrorProperties(error.code, error.message)));
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new Models.CommonResponse<UserDetailObject>(new ErrorProperties(
+                error == null ? StatusCodes.Status500InternalServerError : error.code,
+                error == null ? $"Error al obtener el detalle de usuario {userId}" : error.message
+            )));
+            }
 
             return Ok(new Models.CommonResponse<UserDetailObject>(userResponse));
         }

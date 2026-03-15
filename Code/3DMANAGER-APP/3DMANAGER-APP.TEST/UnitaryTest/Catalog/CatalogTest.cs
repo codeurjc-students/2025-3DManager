@@ -3,28 +3,24 @@ using _3DMANAGER_APP.BLL.Models.Catalog;
 using _3DMANAGER_APP.DAL.Interfaces;
 using _3DMANAGER_APP.DAL.Models.Filament;
 using AutoMapper;
-using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace _3DMANAGER_APP.TEST.UnitaryTest.Catalogs
 {
     public class CatalogTests
     {
-        private readonly Mock<ILogger<CatalogManager>> _loggerMock;
         private readonly Mock<IMapper> _mapperMock;
         private readonly Mock<ICatalogDbManager> _catalogDbManagerMock;
         private readonly CatalogManager _manager;
 
         public CatalogTests()
         {
-            _loggerMock = new Mock<ILogger<CatalogManager>>();
             _mapperMock = new Mock<IMapper>();
             _catalogDbManagerMock = new Mock<ICatalogDbManager>();
 
             _manager = new CatalogManager(
                 _catalogDbManagerMock.Object,
-                _mapperMock.Object,
-                _loggerMock.Object
+                _mapperMock.Object
             );
         }
 

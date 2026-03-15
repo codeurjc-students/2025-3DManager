@@ -15,7 +15,7 @@ export const confirmAction = ({
     service: () => Promise<any>;
     successMessage: string;
     errorMessage: string;
-    onSuccess?: () => void;
+    onSuccess?: () => void | Promise<void>;
     onError?: () => void;
     showPopup: any;
     reopenGroupPopup: () => void;

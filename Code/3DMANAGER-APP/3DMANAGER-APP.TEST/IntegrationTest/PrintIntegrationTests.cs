@@ -57,7 +57,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
         }
 
         [Fact]
-        public void Print_ShouldReturnPrintsAndCreate()
+        public async Task Print_ShouldReturnPrintsAndCreate()
         {
             var dataSource = new MySQLDataSource(
                 _fixture.ConnectionString,
@@ -76,7 +76,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 _fakeS3Service
             );
 
-            BaseError error;
+            BaseError? error;
             PagedRequest pagedRequest = new PagedRequest { PageNumber = 1, PageSize = 10 };
             var prints = manager.GetPrintList(1, pagedRequest, out error);
 
@@ -97,9 +97,10 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 PrintState = 1,
                 UserId = 1
             };
-            var printPost = manager.PostPrint(newPrint);
+            var printPost = await manager.PostPrint(newPrint);
             Assert.Null(error);
-            Assert.NotEqual(0, printPost.Result.Data);
+            Assert.NotNull(printPost);
+            Assert.NotEqual(0, printPost.Data);
 
             var printsAfterPost = manager.GetPrintList(1, pagedRequest, out error);
             Assert.Null(error);
@@ -126,7 +127,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 NullLogger<PrintManager>.Instance,
                 _fakeS3Service);
 
-            BaseError error;
+            BaseError? error;
 
             var print = manager.GetPrintDetail(1, 1, out error);
             Assert.Null(error);

@@ -86,6 +86,8 @@ th, td {
     letter-spacing: 1px;
     font-family: Impact, sans-serif;
     cursor: pointer;
+    background: none;
+    border : none;
 }
 
 .header-group {

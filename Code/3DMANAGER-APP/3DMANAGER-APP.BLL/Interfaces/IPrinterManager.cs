@@ -5,9 +5,9 @@ namespace _3DMANAGER_APP.BLL.Interfaces
 {
     public interface IPrinterManager
     {
-        List<PrinterObject> GetPrinterList(out BaseError error);
+        List<PrinterObject> GetPrinterList(out BaseError? error);
         public Task<CommonResponse<int>> PostPrinter(PrinterRequest printer);
-        List<PrinterListObject> GetPrinterDashboardList(int groupId, out BaseError error);
+        List<PrinterListObject> GetPrinterDashboardList(int groupId, out BaseError? error);
         bool UpdatePrinter(PrinterDetailRequest request);
         PrinterDetailObject GetPrinterDetail(int groupId, int printerId, out BaseError? error);
         public Task<CommonResponse<bool>> DeletePrinter(int printerId, int groupId);

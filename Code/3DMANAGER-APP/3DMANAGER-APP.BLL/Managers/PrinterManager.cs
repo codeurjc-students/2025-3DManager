@@ -29,10 +29,9 @@ namespace _3DMANAGER_APP.BLL.Managers
             _awsS3Service = awsS3Service;
         }
 
-        public List<PrinterObject> GetPrinterList(out BaseError error)
+        public List<PrinterObject> GetPrinterList(out BaseError? error)
         {
             error = null;
-            List<PrinterObject> response = null;
             var responseDb = _printerDbManager.GetPrinterList(out ErrorDbObject errorDb);
             if (errorDb != null)
             {
@@ -43,7 +42,7 @@ namespace _3DMANAGER_APP.BLL.Managers
                     message = errorDb.message
                 };
             }
-            response = _mapper.Map<List<PrinterObject>>(responseDb);
+            var response = _mapper.Map<List<PrinterObject>>(responseDb);
             return response;
         }
 
@@ -109,8 +108,8 @@ namespace _3DMANAGER_APP.BLL.Managers
         public List<PrinterListObject> GetPrinterDashboardList(int groupId, out BaseError? error)
         {
             error = null;
-            List<PrinterListDbObject> list = _printerDbManager.GetPrinterDashboardList(groupId);
-            if (list == null)
+            List<PrinterListDbObject> list = _printerDbManager.GetPrinterDashboardList(groupId, out bool errorDb);
+            if (errorDb)
                 error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = "Error al obtener listado de impresoras" };
 
             List<PrinterListObject> response = _mapper.Map<List<PrinterListObject>>(list);
@@ -121,11 +120,11 @@ namespace _3DMANAGER_APP.BLL.Managers
                     if (p.PrinterImageData != null && p.PrinterImageData.FileUrl != null && p.PrinterImageData.FileKey != null)
                         p.PrinterImageData.FileUrl = _awsS3Service.GetPresignedUrl(p.PrinterImageData.FileKey, 1);
                     else
-                        p.PrinterImageData.FileUrl = _awsS3Service.GetPresignedUrl("default/3dmanager-default-printer.jpg", 1);
+                        p.PrinterImageData!.FileUrl = _awsS3Service.GetPresignedUrl("default/3dmanager-default-printer.jpg", 1);
                 }
             }
 
-            return response;
+            return response!;
         }
 
         public bool UpdatePrinter(PrinterDetailRequest request)
@@ -139,7 +138,7 @@ namespace _3DMANAGER_APP.BLL.Managers
             error = null;
             PrinterDetailObject response;
             var responseDb = _printerDbManager.GetPrinterDetail(groupId, printerId);
-            if (responseDb == null)
+            if (responseDb.PrinterId == 0)
             {
                 string msg = $"Error al obtener el detalle de impresora {printerId}";
                 _logger.LogError(msg);
@@ -156,19 +155,19 @@ namespace _3DMANAGER_APP.BLL.Managers
                 if (response.PrinterImageData != null && response.PrinterImageData.FileUrl != null && response.PrinterImageData.FileKey != null)
                     response.PrinterImageData.FileUrl = _awsS3Service.GetPresignedUrl(response.PrinterImageData.FileKey, 1);
                 else
-                    response.PrinterImageData.FileUrl = _awsS3Service.GetPresignedUrl("default/3dmanager-default-printer.jpg", 1);
+                    response.PrinterImageData!.FileUrl = _awsS3Service.GetPresignedUrl("default/3dmanager-default-printer.jpg", 1);
 
                 response.PrinterTimeVariation = GetPrinterTimeVariation(groupId, printerId, out error);
             }
 
-            return response;
+            return response!;
         }
 
         public float GetPrinterTimeVariation(int groupId, int printerId, out BaseError? error)
         {
             error = null;
-            var responseDb = _printerDbManager.GetTimeVariation(groupId, printerId);
-            if (responseDb == null)
+            var responseDb = _printerDbManager.GetTimeVariation(groupId, printerId, out bool errorDb);
+            if (errorDb)
             {
                 string msg = $"Error al obtener el listado de tiempos de impresión de la impresora {printerId}";
                 _logger.LogError(msg);

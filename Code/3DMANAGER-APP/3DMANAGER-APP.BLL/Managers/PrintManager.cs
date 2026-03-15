@@ -29,8 +29,8 @@ namespace _3DMANAGER_APP.BLL.Managers
         public PrintListResponse GetPrintList(int group, PagedRequest pagination, out BaseError? error)
         {
             error = null;
-            var result = _printDbManager.GetPrintList(group, pagination.PageNumber, pagination.PageSize, out int totalItems);
-            if (result == null)
+            var result = _printDbManager.GetPrintList(group, pagination.PageNumber, pagination.PageSize, out int totalItems, out bool errorDb);
+            if (errorDb)
             {
                 error = new BaseError()
                 {
@@ -112,8 +112,8 @@ namespace _3DMANAGER_APP.BLL.Managers
         {
             error = null;
             List<PrintListResponseDbObject> result;
-            result = _printDbManager.GetPrintListByType(group, pagination.PageNumber, pagination.PageSize, type, id, out int totalItems);
-            if (result == null)
+            result = _printDbManager.GetPrintListByType(group, pagination.PageNumber, pagination.PageSize, type, id, out int totalItems, out bool errorDb);
+            if (errorDb)
             {
                 error = new BaseError()
                 {
@@ -142,7 +142,7 @@ namespace _3DMANAGER_APP.BLL.Managers
             error = null;
             PrintDetailObject response;
             var responseDb = _printDbManager.GetPrintDetail(groupId, printId);
-            if (responseDb == null)
+            if (responseDb.PrintId == 0)
             {
                 string msg = $"Error al obtener el detalle de impresión {printId}";
                 _logger.LogError(msg);
@@ -159,19 +159,19 @@ namespace _3DMANAGER_APP.BLL.Managers
                 if (response.PrintImageData != null && response.PrintImageData.FileUrl != null && response.PrintImageData.FileKey != null)
                     response.PrintImageData.FileUrl = _awsS3Service.GetPresignedUrl(response.PrintImageData.FileKey, 1);
                 else
-                    response.PrintImageData.FileUrl = _awsS3Service.GetPresignedUrl("default/3dmanager-default-3dprint.png", 1);
+                    response.PrintImageData!.FileUrl = _awsS3Service.GetPresignedUrl("default/3dmanager-default-3dprint.png", 1);
 
             }
-            return response;
+            return response!;
         }
 
         public List<PrintCommentObject> GetPrintComments(int groupId, int printId, out BaseError? error)
         {
             error = null;
 
-            var dbResult = _printDbManager.GetPrintComments(groupId, printId);
+            var dbResult = _printDbManager.GetPrintComments(groupId, printId, out bool errorDb);
 
-            if (dbResult == null)
+            if (errorDb)
             {
                 string msg = $"Error obteniendo comentarios de la impresión {printId}";
                 _logger.LogError(msg);
@@ -180,16 +180,15 @@ namespace _3DMANAGER_APP.BLL.Managers
                     code = 500,
                     message = msg
                 };
-                return null;
+                return new List<PrintCommentObject>();
             }
 
             return _mapper.Map<List<PrintCommentObject>>(dbResult);
         }
 
 
-        public int PostPrintComment(PrintCommentRequest request, out BaseError? error)
+        public int PostPrintComment(PrintCommentRequest request)
         {
-            error = null;
             PrintCommentRequestDbObject requestDb = _mapper.Map<PrintCommentRequestDbObject>(request);
             return _printDbManager.PostPrintComment(requestDb);
         }

@@ -16,13 +16,19 @@ apiClient.interceptors.request.use(config => {
 });
 
 apiClient.interceptors.response.use(response => response, error => {
+    const rawStatus = error?.response?.status;
+    const status = Number(rawStatus);
+
     if (error.response?.status === 401) {
         localStorage.removeItem("user");
         localStorage.removeItem("token");
         globalThis.location.href = "/login";
     }
-    if (error.response) {
-        return error.response;
+    if (!status || status >= 500) {
+        const errorId = crypto.randomUUID();
+        sessionStorage.setItem("lastErrorId", errorId);
+        globalThis.location.href = `/error?code=${errorId}`;
+        return;
     }
     return Promise.reject(error);
 });

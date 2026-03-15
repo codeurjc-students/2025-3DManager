@@ -13,7 +13,7 @@ namespace _3DMANAGER_APP.Server.Controllers
     public class PrintController : BaseController
     {
         private readonly IPrintManager _printManager;
-
+        private const string NoAuthConstant = "No autenticado";
         public PrintController(IPrintManager printManager, ILogger<PrintController> logger) : base(logger)
         {
             _printManager = printManager;
@@ -37,13 +37,20 @@ namespace _3DMANAGER_APP.Server.Controllers
         {
             _logger.LogInformation($"Llamada a la funcion GetPrintList en el controlador PrintController");
             if (GroupId == null)
-                return Unauthorized(new Models.CommonResponse<PrintListResponse>(new ErrorProperties(401, "No autenticado")));
+                return Unauthorized(new Models.CommonResponse<PrintListResponse>(new ErrorProperties(401, NoAuthConstant)));
 
             PrintListResponse printList = _printManager.GetPrintList(GroupId.Value, pagination, out BaseError? error);
 
-            if (printList == null || error != null)
+            if (error != null)
+            {
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                    new Models.CommonResponse<PrintListResponse>(new ErrorProperties(error.code, error.message)));
+                    new Models.CommonResponse<PrintListResponse>(new ErrorProperties(
+                error == null ? StatusCodes.Status500InternalServerError : error.code,
+                error == null ? "Error al obtener la lista" : error.message
+            )));
+            }
+
+
 
             return Ok(new Models.CommonResponse<PrintListResponse>(printList));
         }
@@ -68,7 +75,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         {
             _logger.LogInformation($"Llamada a la funcion PostPrint en el controlador PrintController");
             if (GroupId == null || UserId == null)
-                return Unauthorized(new Models.CommonResponse<GroupBasicDataResponse>(new ErrorProperties(401, "No autenticado")));
+                return Unauthorized(new Models.CommonResponse<GroupBasicDataResponse>(new ErrorProperties(401, NoAuthConstant)));
 
             print.GroupId = GroupId.Value;
             print.UserId = UserId.Value;
@@ -102,13 +109,18 @@ namespace _3DMANAGER_APP.Server.Controllers
         {
             _logger.LogInformation($"Llamada a la funcion GetPrintListByType en el controlador PrintController");
             if (GroupId == null)
-                return Unauthorized(new Models.CommonResponse<PrintListResponse>(new ErrorProperties(401, "No autenticado")));
+                return Unauthorized(new Models.CommonResponse<PrintListResponse>(new ErrorProperties(401, NoAuthConstant)));
 
             PrintListResponse printList = _printManager.GetPrintListByType(GroupId.Value, pagination, type, id, out BaseError? error);
 
             if (printList == null || error != null)
+            {
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                    new Models.CommonResponse<PrintListResponse>(new ErrorProperties(error.code, error.message)));
+                    new Models.CommonResponse<PrintListResponse>(new ErrorProperties(
+                error == null ? StatusCodes.Status500InternalServerError : error.code,
+                error == null ? "Error al obtener la lista segun el tipo" : error.message
+            )));
+            }
 
             return Ok(new Models.CommonResponse<PrintListResponse>(printList));
         }
@@ -131,7 +143,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         {
             _logger.LogInformation($"Llamada a la funcion UpdatePrint en el controlador PrintController");
             if (GroupId == null)
-                return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, "No autenticado")));
+                return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, NoAuthConstant)));
 
             request.GroupId = GroupId.Value;
             bool response = _printManager.UpdatePrint(request);
@@ -161,12 +173,18 @@ namespace _3DMANAGER_APP.Server.Controllers
         {
             _logger.LogInformation($"Llamada a la funcion GetPrintDetail en el controlador PrintController");
             if (GroupId == null)
-                return Unauthorized(new Models.CommonResponse<PrintDetailObject>(new ErrorProperties(401, "No autenticado")));
+                return Unauthorized(new Models.CommonResponse<PrintDetailObject>(new ErrorProperties(401, NoAuthConstant)));
 
-            PrintDetailObject printerResponse = _printManager.GetPrintDetail(GroupId.Value, printId, out BaseError error);
+            PrintDetailObject printerResponse = _printManager.GetPrintDetail(GroupId.Value, printId, out BaseError? error);
 
             if (printerResponse == null || error != null)
-                return StatusCode(500, new Models.CommonResponse<PrintDetailObject>(new ErrorProperties(error.code, error.message)));
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new Models.CommonResponse<PrintDetailObject>(new ErrorProperties(
+                error == null ? StatusCodes.Status500InternalServerError : error.code,
+                error == null ? "Error al obtener el detalle de impresión" : error.message
+            )));
+            }
 
             return Ok(new Models.CommonResponse<PrintDetailObject>(printerResponse));
         }
@@ -189,13 +207,15 @@ namespace _3DMANAGER_APP.Server.Controllers
         {
             _logger.LogInformation($"Llamada a la funcion GetPrintComments en el controlador PrintController");
             if (GroupId == null)
-                return Unauthorized(new Models.CommonResponse<List<PrintCommentObject>>(new ErrorProperties(401, "No autenticado")));
+                return Unauthorized(new Models.CommonResponse<List<PrintCommentObject>>(new ErrorProperties(401, NoAuthConstant)));
 
-            var comments = _printManager.GetPrintComments(GroupId.Value, printId, out BaseError error);
+            var comments = _printManager.GetPrintComments(GroupId.Value, printId, out BaseError? error);
 
-            if (comments == null || error != null)
-                return StatusCode(500, new Models.CommonResponse<List<PrintCommentObject>>(new ErrorProperties(error.code, error.message)));
-
+            if (error != null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new Models.CommonResponse<List<PrintCommentObject>>(new ErrorProperties(error.code, error.message)));
+            }
             return Ok(new CommonResponse<List<PrintCommentObject>>(comments));
         }
 
@@ -216,16 +236,18 @@ namespace _3DMANAGER_APP.Server.Controllers
         public IActionResult PostPrintComment([FromBody] PrintCommentRequest request)
         {
             _logger.LogInformation($"Llamada a la funcion PostPrintComment en el controlador PrintController");
-            if (GroupId == null)
-                return Unauthorized(new Models.CommonResponse<int>(new ErrorProperties(401, "No autenticado")));
+            if (GroupId == null && UserId == null)
+                return Unauthorized(new Models.CommonResponse<int>(new ErrorProperties(401, NoAuthConstant)));
 
-            request.UserId = UserId.Value;
+            request.UserId = UserId!.Value;
 
-            int newId = _printManager.PostPrintComment(request, out BaseError error);
+            int newId = _printManager.PostPrintComment(request);
 
-            if (error != null || newId == 0)
-                return StatusCode(500, new Models.CommonResponse<int>(new ErrorProperties(error != null ? error.code : StatusCodes.Status500InternalServerError, error.message ?? "Error al crear comentario")));
-
+            if (newId == 0)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new Models.CommonResponse<int>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al obtener la lista")));
+            }
             return Ok(new CommonResponse<int>(newId));
         }
 
@@ -248,9 +270,9 @@ namespace _3DMANAGER_APP.Server.Controllers
         {
             _logger.LogInformation($"Llamada a la funcion DeletePrint en el controlador PrintController");
             if (GroupId == null && UserId == null && UserRole == "Usuario-Manager")
-                return Unauthorized(new Models.CommonResponse<GroupBasicDataResponse>(new ErrorProperties(401, "No autorizado")));
+                return Unauthorized(new Models.CommonResponse<GroupBasicDataResponse>(new ErrorProperties(401, NoAuthConstant)));
 
-            BLL.Models.Base.CommonResponse<bool> response = await _printManager.DeletePrint(printId, GroupId.Value);
+            BLL.Models.Base.CommonResponse<bool> response = await _printManager.DeletePrint(printId, GroupId!.Value);
             if (response.Error != null || !response.Data)
                 return StatusCode(500, new Models.CommonResponse<bool>(new ErrorProperties(response.Error?.Code ?? StatusCodes.Status500InternalServerError, response.Error?.Message ?? "Error al eliminar la impresión")));
 

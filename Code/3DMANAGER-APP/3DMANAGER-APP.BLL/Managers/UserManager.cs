@@ -95,12 +95,12 @@ namespace _3DMANAGER_APP.BLL.Managers
             }
 
         }
-        public UserObject? Login(string userName, string userPassword, out BaseError? error)
+        public UserObject Login(string userName, string userPassword, out BaseError? error)
         {
             error = null;
 
             var userDb = _userDbManager.Login(userName);
-            if (userDb == null)
+            if (userDb.UserId == 0)
             {
                 string msg = $"El usuario {userName} no existe";
                 _logger.LogError(msg);
@@ -109,7 +109,7 @@ namespace _3DMANAGER_APP.BLL.Managers
                     code = StatusCodes.Status404NotFound,
                     message = msg
                 };
-                return null;
+                return new UserObject();
             }
 
             var passwordHasher = new PasswordHasher<UserDbObject>();
@@ -124,7 +124,7 @@ namespace _3DMANAGER_APP.BLL.Managers
                     code = StatusCodes.Status401Unauthorized,
                     message = msg
                 };
-                return null;
+                return new UserObject();
             }
             UserObject userResponse = _mapper.Map<UserObject>(userDb);
             userResponse.UserPassword = string.Empty;
@@ -135,7 +135,7 @@ namespace _3DMANAGER_APP.BLL.Managers
         {
             error = null;
             List<UserListResponseDbObject> list = _userDbManager.GetUserList(group);
-            if (list == null)
+            if (list.Count == 0)
             {
                 string msg = $"Error al obtener listado de usuarios para el grupo {group}";
                 _logger.LogError(msg);
@@ -148,8 +148,8 @@ namespace _3DMANAGER_APP.BLL.Managers
         public List<UserListResponse> GetUserInvitationList(string? filter, out BaseError? error)
         {
             error = null;
-            List<UserListResponseDbObject> list = _userDbManager.GetUserInvitationList(filter);
-            if (list == null)
+            List<UserListResponseDbObject> list = _userDbManager.GetUserInvitationList(filter, out bool errorDb);
+            if (errorDb)
             {
                 _logger.LogError("Error al obtener listado de usuarios para invitar");
                 error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = "Error al obtener listado de usuarios para invitar" };
@@ -204,7 +204,7 @@ namespace _3DMANAGER_APP.BLL.Managers
             error = null;
             UserDetailObject response;
             var responseDb = _userDbManager.GetUserDetail(groupId, userId);
-            if (responseDb == null)
+            if (responseDb.UserId == 0)
             {
                 string msg = $"Error al obtener el detalle de usuario {userId}";
                 _logger.LogError(msg);
@@ -221,10 +221,10 @@ namespace _3DMANAGER_APP.BLL.Managers
                 if (response.UserImageData != null && response.UserImageData.FileUrl != null && response.UserImageData.FileKey != null)
                     response.UserImageData.FileUrl = _awsS3Service.GetPresignedUrl(response.UserImageData.FileKey, 1);
                 else
-                    response.UserImageData.FileUrl = _awsS3Service.GetPresignedUrl("default/3dmanager-default-user.png", 1);
+                    response.UserImageData!.FileUrl = _awsS3Service.GetPresignedUrl("default/3dmanager-default-user.png", 1);
 
             }
-            return response;
+            return response!;
         }
     }
 }

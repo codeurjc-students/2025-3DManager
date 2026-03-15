@@ -10,6 +10,9 @@ namespace _3DMANAGER_APP.DAL.Managers
 {
     public class GroupDbManager : MySQLManager, IGroupDbManager
     {
+        private const string ErrorConstant = "CodigoError";
+        private const string UserContant = "P_CD_USER";
+        private const string GroupContant = "P_CD_GROUP";
         public GroupDbManager(IDataSource<MySqlConnection> dataSourceFactory, ILogger<GroupDbManager> logger) : base(dataSourceFactory, logger)
         {
         }
@@ -28,7 +31,7 @@ namespace _3DMANAGER_APP.DAL.Managers
                 cmd.Parameters.Add(new MySqlParameter("P_DS_GROUP_DESCRIPTION", MySqlDbType.VarChar) { Value = request.GroupDescription });
                 cmd.Parameters.Add(new MySqlParameter("P_CD_USER_ID", MySqlDbType.Int32) { Value = request.UserId });
 
-                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                var errorParam = CreateReturnValueParameter(ErrorConstant, MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
 
                 using var adapter = new MySqlDataAdapter(cmd);
@@ -61,8 +64,9 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
         }
 
-        public List<GroupInvitationDbObject> GetGroupInvitations(int userId)
+        public List<GroupInvitationDbObject> GetGroupInvitations(int userId, out int? errorDb)
         {
+            errorDb = 0;
             try
             {
                 List<GroupInvitationDbObject> list = new List<GroupInvitationDbObject>();
@@ -72,7 +76,7 @@ namespace _3DMANAGER_APP.DAL.Managers
                     CommandType = CommandType.StoredProcedure
                 };
 
-                cmd.Parameters.Add(new MySqlParameter("P_CD_USER", MySqlDbType.VarChar) { Value = userId });
+                cmd.Parameters.Add(new MySqlParameter(UserContant, MySqlDbType.VarChar) { Value = userId });
 
                 using var adapter = new MySqlDataAdapter(cmd);
                 var ds = new DataSet();
@@ -93,13 +97,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             {
                 string msg = $"Error al devolver el listado de invitaciones de grupo para el usuario {userId} de en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new List<GroupInvitationDbObject>();
             }
             catch (Exception ex)
             {
                 string msg = $"Error al devolver el listado de invitaciones de grupo para el usuario {userId} de en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new List<GroupInvitationDbObject>();
             }
         }
 
@@ -114,11 +118,11 @@ namespace _3DMANAGER_APP.DAL.Managers
                     CommandType = CommandType.StoredProcedure
                 };
 
-                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
+                cmd.Parameters.Add(new MySqlParameter(GroupContant, MySqlDbType.Int32) { Value = groupId });
                 cmd.Parameters.Add(new MySqlParameter("P_IT_ACCEPTED", MySqlDbType.Bit) { Value = isAccepted });
-                cmd.Parameters.Add(new MySqlParameter("P_CD_USER", MySqlDbType.Int32) { Value = userId });
+                cmd.Parameters.Add(new MySqlParameter(UserContant, MySqlDbType.Int32) { Value = userId });
 
-                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                var errorParam = CreateReturnValueParameter(ErrorConstant, MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
 
                 using var adapter = new MySqlDataAdapter(cmd);
@@ -140,12 +144,14 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
+                errorDb = 500;
                 string msg = $"Error al aceptar invitacion de grupo {groupId} para el usuario {userId} en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
             catch (Exception ex)
             {
+                errorDb = 500;
                 string msg = $"Error al aceptar invitacion de grupo {groupId} para el usuario {userId} en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
@@ -156,16 +162,16 @@ namespace _3DMANAGER_APP.DAL.Managers
         {
             try
             {
-                GroupBasicDataResponseDbObject response = null;
+                GroupBasicDataResponseDbObject response = new GroupBasicDataResponseDbObject();
                 string procName = $"{ProcedurePrefix}_pr_GROUP_BASIC_DATA_GET";
                 using var cmd = new MySqlCommand(procName, Connection)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
 
-                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
+                cmd.Parameters.Add(new MySqlParameter(GroupContant, MySqlDbType.Int32) { Value = groupId });
 
-                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                var errorParam = CreateReturnValueParameter(ErrorConstant, MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
 
                 using var adapter = new MySqlDataAdapter(cmd);
@@ -192,13 +198,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             {
                 string msg = $"Error al aceptar invitacion de grupo {groupId} en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new GroupBasicDataResponseDbObject();
             }
             catch (Exception ex)
             {
                 string msg = $"Error al aceptar invitacion de grupo {groupId} en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new GroupBasicDataResponseDbObject();
             }
         }
 
@@ -215,9 +221,9 @@ namespace _3DMANAGER_APP.DAL.Managers
                 cmd.Parameters.Add(new MySqlParameter("P_DS_GROUP_NAME", MySqlDbType.VarChar) { Value = request.GroupName });
                 cmd.Parameters.Add(new MySqlParameter("P_DS_GROUP_DESCRIPTION", MySqlDbType.VarChar) { Value = request.GroupDescription });
                 cmd.Parameters.Add(new MySqlParameter("P_CD_USER_ID", MySqlDbType.Int32) { Value = request.UserId });
-                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
+                cmd.Parameters.Add(new MySqlParameter(GroupContant, MySqlDbType.Int32) { Value = groupId });
 
-                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                var errorParam = CreateReturnValueParameter(ErrorConstant, MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
 
                 using var adapter = new MySqlDataAdapter(cmd);
@@ -260,9 +266,9 @@ namespace _3DMANAGER_APP.DAL.Managers
                     CommandType = CommandType.StoredProcedure
                 };
 
-                cmd.Parameters.Add(new MySqlParameter("P_CD_USER", MySqlDbType.Int32) { Value = userId });
+                cmd.Parameters.Add(new MySqlParameter(UserContant, MySqlDbType.Int32) { Value = userId });
 
-                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                var errorParam = CreateReturnValueParameter(ErrorConstant, MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
 
                 using var adapter = new MySqlDataAdapter(cmd);
@@ -299,7 +305,7 @@ namespace _3DMANAGER_APP.DAL.Managers
 
                 cmd.Parameters.Add(new MySqlParameter("P_CD_USER_KICKED", MySqlDbType.Int32) { Value = userKickedId });
 
-                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                var errorParam = CreateReturnValueParameter(ErrorConstant, MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
 
                 using var adapter = new MySqlDataAdapter(cmd);
@@ -333,10 +339,10 @@ namespace _3DMANAGER_APP.DAL.Managers
                     CommandType = CommandType.StoredProcedure
                 };
 
-                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
-                cmd.Parameters.Add(new MySqlParameter("P_CD_USER", MySqlDbType.Int32) { Value = userId });
+                cmd.Parameters.Add(new MySqlParameter(GroupContant, MySqlDbType.Int32) { Value = groupId });
+                cmd.Parameters.Add(new MySqlParameter(UserContant, MySqlDbType.Int32) { Value = userId });
 
-                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                var errorParam = CreateReturnValueParameter(ErrorConstant, MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
 
                 using var adapter = new MySqlDataAdapter(cmd);
@@ -375,10 +381,10 @@ namespace _3DMANAGER_APP.DAL.Managers
                 };
 
                 cmd.Parameters.Add(new MySqlParameter("P_CD_NEW_OWNER", MySqlDbType.Int32) { Value = newOwnerUserId });
-                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
-                cmd.Parameters.Add(new MySqlParameter("P_CD_USER", MySqlDbType.Int32) { Value = userId });
+                cmd.Parameters.Add(new MySqlParameter(GroupContant, MySqlDbType.Int32) { Value = groupId });
+                cmd.Parameters.Add(new MySqlParameter(UserContant, MySqlDbType.Int32) { Value = userId });
 
-                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                var errorParam = CreateReturnValueParameter(ErrorConstant, MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
 
                 using var adapter = new MySqlDataAdapter(cmd);
@@ -406,16 +412,16 @@ namespace _3DMANAGER_APP.DAL.Managers
         {
             try
             {
-                GroupDashboardDataDbObject response = null;
+                GroupDashboardDataDbObject response = new GroupDashboardDataDbObject();
                 string procName = $"{ProcedurePrefix}_pr_GROUP_DASHBOARD_DATA_GET";
                 using var cmd = new MySqlCommand(procName, Connection)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
 
-                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
+                cmd.Parameters.Add(new MySqlParameter(GroupContant, MySqlDbType.Int32) { Value = groupId });
 
-                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                var errorParam = CreateReturnValueParameter(ErrorConstant, MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
 
                 using var adapter = new MySqlDataAdapter(cmd);
@@ -424,8 +430,8 @@ namespace _3DMANAGER_APP.DAL.Managers
 
                 if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                 {
-                    response = new GroupDashboardDataDbObject();
-                    response = response.Create(ds.Tables[0].Rows[0]);
+                    response = GroupDashboardDataDbObject.Create(ds.Tables[0].Rows[0]);
+                    response.GroupId = groupId;
                 }
                 if (ds.Tables.Count > 1 && ds.Tables[1].Rows.Count > 0)
                 {
@@ -442,13 +448,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             {
                 string msg = $"Error al obtener la información de grupo {groupId} para el dashboard en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new GroupDashboardDataDbObject();
             }
             catch (Exception ex)
             {
                 string msg = $"Error al obtener la información de grupo {groupId} para el dashboard en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new GroupDashboardDataDbObject();
             }
         }
     }

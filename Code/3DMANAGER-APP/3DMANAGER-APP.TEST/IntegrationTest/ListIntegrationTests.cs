@@ -41,8 +41,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
 
             var manager = new CatalogManager(
                 catalogDbManager,
-                _mapper,
-                NullLogger<CatalogManager>.Instance
+                _mapper
             );
 
             var states = manager.GetPrintState();

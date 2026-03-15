@@ -206,6 +206,7 @@ const PrinterDetailPage: React.FC = () => {
                                 <div className="col-6 mb-1 ">
                                     <label htmlFor="CreateDatePrinter" className="form-label">Fecha de alta de impresora</label>
                                     <input
+                                        id="CreateDatePrinter"
                                         type="text"
                                         className="input-value-2 w-100"
                                         value={data ? data.printerCreateDate.toISOString().split("T")[0] : ""}
@@ -231,11 +232,11 @@ const PrinterDetailPage: React.FC = () => {
                             <div className="d-flex flex row">
                                 <div className="col-6">
                                     <label htmlFor="printerHoursMonth" className="form-label">Horas mes actual</label>
-                                    <input type="text" className="input-value-2 w-100" value={data?.printerTotalHoursMonth ?? 0} disabled />
+                                    <input id="printerHoursMonth" type="text" className="input-value-2 w-100" value={data?.printerTotalHoursMonth ?? 0} disabled />
                                 </div>
                                 <div className="col-6">
                                     <label htmlFor="printerHours" className="form-label">Horas totales</label>
-                                    <input type="text" className="input-value-2 w-100" value={data?.printerTotalHours ?? 0} disabled />
+                                    <input id="printerHours" type="text" className="input-value-2 w-100" value={data?.printerTotalHours ?? 0} disabled />
                                 </div>
                             </div>
                         </div>
@@ -243,11 +244,11 @@ const PrinterDetailPage: React.FC = () => {
                             <div className="d-flex flex row">
                                 <div className="col-6">
                                     <label htmlFor="printerPrintsMonth" className="form-label">Piezas impresas este mes</label>
-                                    <input type="text" className="input-value-2 w-100" value={data?.printerPrintsTotalMonth ?? 0} disabled />
+                                    <input id="printerPrintsMonth" type="text" className="input-value-2 w-100" value={data?.printerPrintsTotalMonth ?? 0} disabled />
                                 </div>
                                 <div className="col-6">
                                     <label htmlFor="printerPrintsTotal" className="form-label">Piezas impresas en total</label>
-                                    <input type="text" className="input-value-2 w-100" value={data?.printerPrintsTotal ?? 0} disabled />
+                                    <input id="printerPrintsTotal" type="text" className="input-value-2 w-100" value={data?.printerPrintsTotal ?? 0} disabled />
                                 </div>
                             </div>
                         </div>
@@ -255,11 +256,11 @@ const PrinterDetailPage: React.FC = () => {
                             <div className="d-flex flex row">
                                 <div className="col-6">
                                     <label htmlFor="printerCompleteMonth" className="form-label">Piezas completas impresas este mes</label>
-                                    <input type="text" className="input-value-2 w-100" value={data?.printerPrintsCompleteMonth ?? 0} disabled />
+                                    <input id="printerCompleteMonth" type="text" className="input-value-2 w-100" value={data?.printerPrintsCompleteMonth ?? 0} disabled />
                                 </div>
                                 <div className="col-6">
                                     <label htmlFor="printerComplete" className="form-label">Piezas completas impresas en total</label>
-                                    <input type="text" className="input-value-2 w-100" value={data?.printerPrintsComplete ?? 0} disabled />
+                                    <input id="printerComplete" type="text" className="input-value-2 w-100" value={data?.printerPrintsComplete ?? 0} disabled />
                                 </div>
                             </div>
                         </div>
@@ -271,12 +272,12 @@ const PrinterDetailPage: React.FC = () => {
                         <div className="d-flex flex-row h-100">
                             <div className="col-2 ms-3 me-5 d-flex flex-column">
                                 <div className="mt-3 mb-4">
-                                    <label htmlFor="printerEstimations" className="form-label">Tasa de éxito</label>
-                                    <input type="text" className="input-value-2 w-100" value={((data?.printerSuccessRate ?? 0) * 100).toFixed(2)} disabled/>
+                                    <label htmlFor="printerSuccesRate" className="form-label">Tasa de éxito</label>
+                                    <input id="printerSuccesRate" type="text" className="input-value-2 w-100" value={((data?.printerSuccessRate ?? 0) * 100).toFixed(2)} disabled/>
                                 </div>
                                 <div>
-                                    <label htmlFor="printerEstimations" className="form-label">Porcentaje eficiencia tiempo real en impresión </label>
-                                    <input type="text" className={`input-value-2 w-100 ${variationClass}`} value={formatVariationText(variation)} disabled/>
+                                    <label htmlFor="printerEficcency" className="form-label">Porcentaje eficiencia tiempo real en impresión </label>
+                                    <input id="printerEficcency" type="text" className={`input-value-2 w-100 ${variationClass}`} value={formatVariationText(variation)} disabled/>
                                 </div>
                             </div>
                             <div className="col-10 ms-5">

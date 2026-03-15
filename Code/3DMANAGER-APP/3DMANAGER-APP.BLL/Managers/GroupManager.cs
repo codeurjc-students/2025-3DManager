@@ -23,15 +23,20 @@ namespace _3DMANAGER_APP.BLL.Managers
             _awsS3Service = awsS3Service;
         }
 
-        public List<GroupInvitation> GetGroupInvitations(int userId)
+        public List<GroupInvitation> GetGroupInvitations(int userId, out bool error)
         {
-            return _mapper.Map<List<GroupInvitation>>(_groupDbManager.GetGroupInvitations(userId));
+            error = false;
+            var list = _groupDbManager.GetGroupInvitations(userId, out int? errorDb);
+            if (errorDb != 0)
+            {
+                error = true;
+            }
+
+            return _mapper.Map<List<GroupInvitation>>(list);
         }
 
-        public bool PostNewGroup(GroupRequest request, out BaseError? error)
+        public bool PostNewGroup(GroupRequest request)
         {
-            error = null;
-
             GroupRequestDbObject groupDbObject = _mapper.Map<GroupRequestDbObject>(request);
             return _groupDbManager.PostNewGroup(groupDbObject);
         }
@@ -52,10 +57,10 @@ namespace _3DMANAGER_APP.BLL.Managers
         {
             error = null;
             GroupBasicDataResponseDbObject response = _groupDbManager.GetGroupBasicData(groupId);
-            if (response == null)
+            if (response.GroupId == 0)
             {
                 error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = $"Error al tratar de recoger la información básica del grupo {groupId}" };
-                return null;
+                return new GroupBasicDataResponse();
             }
             return _mapper.Map<GroupBasicDataResponse>(response);
         }
@@ -112,10 +117,10 @@ namespace _3DMANAGER_APP.BLL.Managers
         {
             error = null;
             GroupDashboardDataDbObject response = _groupDbManager.GetGroupDashboardData(groupId);
-            if (response == null)
+            if (response.GroupId == 0)
             {
                 error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = "Error al tratar de recoger la información del dashboard del grupo" };
-                return null;
+                return new GroupDashboardData();
             }
             return _mapper.Map<GroupDashboardData>(response);
         }

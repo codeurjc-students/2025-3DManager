@@ -31,7 +31,7 @@ namespace _3DMANAGER_APP.BLL.Managers
         {
             error = null;
             List<FilamentListResponseDbObject> list = _filamentDbManager.GetFilamentList(group);
-            if (list == null)
+            if (list == null || list.Count == 0)
                 error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = "Error al obtener listado de filamentos" };
 
             return _mapper.Map<List<FilamentListResponse>>(list);
@@ -39,7 +39,7 @@ namespace _3DMANAGER_APP.BLL.Managers
 
         public async Task<CommonResponse<int>> PostFilament(FilamentRequest filament)
         {
-            CommonResponse<int> response = new CommonResponse<int>(); ;
+            CommonResponse<int> response = new CommonResponse<int>();
 
             FilamentRequestDbObject filamentDbObject = _mapper.Map<FilamentRequestDbObject>(filament);
             var responseDb = _filamentDbManager.PostFilament(filamentDbObject, out int? errorDb);
@@ -105,9 +105,8 @@ namespace _3DMANAGER_APP.BLL.Managers
         public FilamentDetailObject GetFilamentDetail(int groupId, int filamentId, out BaseError? error)
         {
             error = null;
-            FilamentDetailObject response;
             var responseDb = _filamentDbManager.GetFilamentDetail(groupId, filamentId);
-            if (responseDb == null)
+            if (responseDb.FilamentId == 0)
             {
                 string msg = $"Error al obtener el detalle de filamento {filamentId}.";
                 _logger.LogError(msg);
@@ -116,18 +115,19 @@ namespace _3DMANAGER_APP.BLL.Managers
                     code = StatusCodes.Status500InternalServerError,
                     message = msg
                 };
+                return new FilamentDetailObject();
             }
-            response = _mapper.Map<FilamentDetailObject>(responseDb);
+            var response = _mapper.Map<FilamentDetailObject>(responseDb);
 
             if (response != null)
             {
                 if (response.FilamentImageFile != null && response.FilamentImageFile.FileUrl != null && response.FilamentImageFile.FileKey != null)
                     response.FilamentImageFile.FileUrl = _awsS3Service.GetPresignedUrl(response.FilamentImageFile.FileKey, 1);
                 else
-                    response.FilamentImageFile.FileUrl = _awsS3Service.GetPresignedUrl("default/3dmanager-default-filament.png", 1);
+                    response.FilamentImageFile!.FileUrl = _awsS3Service.GetPresignedUrl("default/3dmanager-default-filament.png", 1);
 
             }
-            return response;
+            return response!;
         }
 
         public async Task<CommonResponse<bool>> DeleteFilament(int filamentId, int groupId)

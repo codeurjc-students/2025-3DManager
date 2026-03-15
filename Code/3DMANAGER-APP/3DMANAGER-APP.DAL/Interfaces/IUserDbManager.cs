@@ -8,12 +8,12 @@ namespace _3DMANAGER_APP.DAL.Interfaces
         public int PostNewUser(UserCreateRequestDbObject user, out int? error);
         public UserDbObject Login(string userName);
         public List<UserListResponseDbObject> GetUserList(int group);
-        public List<UserListResponseDbObject> GetUserInvitationList(string? filter);
+        public List<UserListResponseDbObject> GetUserInvitationList(string? filter, out bool error);
         public bool PostUserInvitation(int groupId, int userId, out int? error);
         public bool UpdateUserImageData(int userId, FileResponseDbObject image);
         public UserDbObject GetUserById(int userId);
         public int GetGroupIdByUserId(int userId);
-        bool UpdateUser(UserUpdateRequestDbObject request);
+        bool UpdateUser(UserUpdateRequestDbObject requestDb);
         UserDetailDbObject GetUserDetail(int groupId, int userId);
     }
 }

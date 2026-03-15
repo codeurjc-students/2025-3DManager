@@ -169,7 +169,7 @@ const PrintDetailPage: React.FC = () => {
                                 </div>
                                 <div className="col-6 mb-1">
                                     <label htmlFor="printUser" className="form-label">Usuario</label>
-                                    <input type="text" className="input-value-2 w-100" value={data?.printUserName}
+                                    <input id="printUser" type="text" className="input-value-2 w-100" value={data?.printUserName}
                                         onClick={() => navigate(`/dashboard/user/detail/${data?.printUserId}`)} disabled />
                                 </div>
                             </div>
@@ -178,12 +178,12 @@ const PrintDetailPage: React.FC = () => {
                             <div className="d-flex flex row">
                                 <div className="col-6 mb-1">
                                     <label htmlFor="printPrinter" className="form-label">Impresora</label>
-                                    <input type="text" className="input-value-2 w-100" value={data?.printPrinterName}
+                                    <input id="printPrinter" type="text" className="input-value-2 w-100" value={data?.printPrinterName}
                                         onClick={() => navigate(`/dashboard/print/detail/${data?.printPrinterId}`)} disabled />
                                 </div>
                                 <div className="col-6 mb-1">
                                     <label htmlFor="printFilament" className="form-label">Filamento</label>
-                                    <input type="text" className="input-value-2 w-100" value={data?.printFilamentName}
+                                    <input id="printFilament" type="text" className="input-value-2 w-100" value={data?.printFilamentName}
                                         onClick={() => navigate(`/dashboard/filament/detail/${data?.printFilamentName}`)} disabled />
                                 </div>
                             </div>
@@ -192,11 +192,12 @@ const PrintDetailPage: React.FC = () => {
                             <div className="d-flex flex row">
                                 <div className="col-6 mb-1">
                                     <label htmlFor="printMaterial" className="form-label">Material</label>
-                                    <input type="text" className="input-value-2 w-100" value={data?.printMaterial} disabled />
+                                    <input id="printMaterial" type="text" className="input-value-2 w-100" value={data?.printMaterial} disabled />
                                 </div>
                                 <div className="col-6 mb-1 ">
                                     <label htmlFor="CreateDatePrint" className="form-label">Fecha de alta de impresión</label>
                                     <input
+                                        id= "CreateDatePrint"
                                         type="text"
                                         className="input-value-2 w-100"
                                         value={data ? data.printCreateDate.toISOString().split("T")[0] : ""}
@@ -214,19 +215,19 @@ const PrintDetailPage: React.FC = () => {
                             <div className="d-flex flex row">
                                 <div className="col-3 ">
                                     <label htmlFor="printTime" className="form-label">Tiempo impresión</label>
-                                    <input type="text" className="input-value-2 w-100" value={data?.printTimeImpression} disabled />
+                                    <input id="printTime" type="text" className="input-value-2 w-100" value={data?.printTimeImpression} disabled />
                                 </div>
                                 <div className="col-3 ">
                                     <label htmlFor="printRealTime" className="form-label">Tiempo real impresión</label>
-                                    <input type="text" className="input-value-2 w-100" value={data?.printRealTimeImpression} disabled />
+                                    <input id="printRealTime" type="text" className="input-value-2 w-100" value={data?.printRealTimeImpression} disabled />
                                 </div>
                                 <div className="col-3">
                                     <label htmlFor="printMaterialConsumed" className="form-label">Material usado</label>
-                                    <input type="text" className="input-value-2 w-100" value={data?.printMaterialConsumed} disabled />
+                                    <input id="printMaterialConsumed" type="text" className="input-value-2 w-100" value={data?.printMaterialConsumed} disabled />
                                 </div>
                                 <div className="col-3">
                                     <label htmlFor="printEstimatedCost" className="form-label">Estimación de coste</label>
-                                    <input type="text" className="input-value-2 w-100" value={data?.printEstimedCost} disabled />
+                                    <input id="printEstimatedCost" type="text" className="input-value-2 w-100" value={data?.printEstimedCost} disabled />
                                 </div>
                             </div>
                         </div>
@@ -234,7 +235,7 @@ const PrintDetailPage: React.FC = () => {
                             <div className="d-flex flex-rows ">
                                 <div className="col-10 w-100">
                                     <label htmlFor="printDescription" className="form-label">Descripcion</label>
-                                    <textarea className="input-value-5 table-scroll w-100" value={description}
+                                    <textarea id="printDescription" className="input-value-5 table-scroll w-100" value={description}
                                         onChange={(e) => setDescription(e.target.value)} disabled={!isManagerOrOwner} />
                                 </div>
                             </div>

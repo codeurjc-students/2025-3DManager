@@ -78,7 +78,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 _s3
             );
 
-            BaseError error;
+            BaseError? error;
             var printers = manager.GetPrinterDashboardList(1, out error);
 
             Assert.Null(error);
@@ -124,7 +124,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 _s3
             );
 
-            BaseError error;
+            BaseError? error;
 
             var printers = manager.GetPrinterDashboardList(1, out error);
             Assert.Null(error);

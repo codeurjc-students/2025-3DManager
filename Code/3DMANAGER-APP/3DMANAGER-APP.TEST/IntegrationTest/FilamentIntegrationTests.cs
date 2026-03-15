@@ -56,7 +56,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
         }
 
         [Fact]
-        public void Filament_ShouldReturnFilamentsAndCreate()
+        public async Task Filament_ShouldReturnFilamentsAndCreate()
         {
             var dataSource = new MySQLDataSource(
                 _fixture.ConnectionString,
@@ -75,7 +75,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 _fakeService
             );
 
-            BaseError error;
+            BaseError? error;
             var filaments = manager.GetFilamentList(1, out error);
 
             Assert.Null(error);
@@ -97,10 +97,11 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
 
 
             };
-            var filamentPost = manager.PostFilament(newFilament);
+            var filamentPost = await manager.PostFilament(newFilament);
             Assert.Null(error);
             Assert.NotNull(filamentPost);
-            Assert.NotEqual(0, filamentPost.Result.Data);
+            Assert.NotEqual(0, filamentPost.Data);
+
             var filamentsAfterPost = manager.GetFilamentList(1, out error);
             Assert.Null(error);
             Assert.Equal(filaments.Count + 1, filamentsAfterPost.Count);
@@ -126,7 +127,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 NullLogger<FilamentManager>.Instance,
                 _fakeService);
 
-            BaseError error;
+            BaseError? error;
 
             var filament = manager.GetFilamentDetail(1, 1, out error);
             Assert.Null(error);

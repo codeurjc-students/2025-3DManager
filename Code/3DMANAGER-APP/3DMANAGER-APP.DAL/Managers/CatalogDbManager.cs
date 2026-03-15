@@ -9,6 +9,7 @@ namespace _3DMANAGER_APP.DAL.Managers
 {
     public class CatalogDbManager : MySQLManager, ICatalogDbManager
     {
+        public const string ErrorCodeParam = "CodigoError";
         public CatalogDbManager(IDataSource<MySqlConnection> dataSourceFactory, ILogger<CatalogDbManager> logger)
             : base(dataSourceFactory, logger)
         {
@@ -26,7 +27,7 @@ namespace _3DMANAGER_APP.DAL.Managers
                 };
 
 
-                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                var errorParam = CreateReturnValueParameter(ErrorCodeParam, MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
 
                 using var adapter = new MySqlDataAdapter(cmd);
@@ -48,13 +49,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             {
                 string msg = "Error al devolver el listado de tipos de filamentos de en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new List<CatalogResponseDbObject>();
             }
             catch (Exception ex)
             {
                 string msg = "Error al devolver el listado de tipo de filamentos de en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new List<CatalogResponseDbObject>();
             }
         }
 
@@ -70,7 +71,7 @@ namespace _3DMANAGER_APP.DAL.Managers
                 };
 
 
-                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                var errorParam = CreateReturnValueParameter(ErrorCodeParam, MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
 
                 using var adapter = new MySqlDataAdapter(cmd);
@@ -92,13 +93,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             {
                 string msg = "Error al devolver el listado de tipos de estado de impresiones de en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new List<CatalogResponseDbObject>();
             }
             catch (Exception ex)
             {
                 string msg = "Error al devolver el listado de tipos de estado de impresiones de en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new List<CatalogResponseDbObject>();
             }
         }
 
@@ -114,7 +115,7 @@ namespace _3DMANAGER_APP.DAL.Managers
                 };
 
                 cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.VarChar) { Value = groupId });
-                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                var errorParam = CreateReturnValueParameter(ErrorCodeParam, MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
 
                 using var adapter = new MySqlDataAdapter(cmd);
@@ -136,13 +137,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             {
                 string msg = "Error al devolver el catalogo de filamentos de en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new List<CatalogResponseDbObject>();
             }
             catch (Exception ex)
             {
                 string msg = "Error al devolver el catalogo de filamentos de en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new List<CatalogResponseDbObject>();
             }
         }
 
@@ -158,7 +159,7 @@ namespace _3DMANAGER_APP.DAL.Managers
                 };
 
                 cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.VarChar) { Value = groupId });
-                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                var errorParam = CreateReturnValueParameter(ErrorCodeParam, MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
 
                 using var adapter = new MySqlDataAdapter(cmd);
@@ -178,15 +179,15 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al devolver el catalogo de filamentos de en BBDD";
+                string msg = "Error al devolver el catalogo de impresoras de en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new List<CatalogResponseDbObject>();
             }
             catch (Exception ex)
             {
-                string msg = "Error al devolver el catalogo de filamentos de en BBDD";
+                string msg = "Error al devolver el catalogo de impresoras de en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new List<CatalogResponseDbObject>();
             }
         }
 
@@ -202,7 +203,7 @@ namespace _3DMANAGER_APP.DAL.Managers
                 };
 
 
-                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                var errorParam = CreateReturnValueParameter(ErrorCodeParam, MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
 
                 using var adapter = new MySqlDataAdapter(cmd);
@@ -224,13 +225,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             {
                 string msg = "Error al devolver el listado de tipos de estado de impresoras de en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new List<CatalogResponseDbObject>();
             }
             catch (Exception ex)
             {
                 string msg = "Error al devolver el listado de tipos de estado de impresoras de en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new List<CatalogResponseDbObject>();
             }
         }
 
@@ -246,7 +247,7 @@ namespace _3DMANAGER_APP.DAL.Managers
                 };
 
 
-                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                var errorParam = CreateReturnValueParameter(ErrorCodeParam, MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
 
                 using var adapter = new MySqlDataAdapter(cmd);
@@ -268,13 +269,13 @@ namespace _3DMANAGER_APP.DAL.Managers
             {
                 string msg = "Error al devolver el listado de estados de filamentos de en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new List<CatalogResponseDbObject>();
             }
             catch (Exception ex)
             {
                 string msg = "Error al devolver el listado  de estados de filamentos de en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new List<CatalogResponseDbObject>();
             }
         }
     }

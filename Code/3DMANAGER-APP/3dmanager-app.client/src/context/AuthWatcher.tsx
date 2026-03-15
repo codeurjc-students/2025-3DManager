@@ -9,6 +9,7 @@ const AuthWatcher: React.FC = () => {
     useEffect(() => {
         if (!user) return;
 
+        if (window.location.pathname.startsWith("/error")) return;
         if (user.groupId) {
             navigate("/dashboard");
         } else {

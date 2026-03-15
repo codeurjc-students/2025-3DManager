@@ -23,7 +23,7 @@ const GroupPopup: React.FC = () => {
     const [description, setDescription] = useState("");
     const [creationDate, setCreationDate] = useState("");
     const isManager = user?.rolId === "Usuario-Manager";
-
+    
     useEffect(() => {
         getGroupBasicData().then(response => {
             const group = response.data;
@@ -141,34 +141,36 @@ const GroupPopup: React.FC = () => {
 
     const isOnlyMember = data.groupMembers.length === 1;
 
+    const canTransferControl = isManager && !isOnlyMember;
+    const showOnlyMemberWarning = isManager && isOnlyMember;
 
     return (
         <div className="container-fluid">
-            <div className="row mt-3">
-                <div className="col-12 grey-container p-4">
+            <div className="row mt-1">
+                <div className="col-12 grey-container p-2">
 
                     <h2 className="title-impact mb-4">Información del grupo</h2>
 
                     <div className="white-container p-3 mb-4 text-start">
                         <div className="mb-1 d-flex flex-column">
-                            <label className="form-label">Nombre del grupo</label>
-                            <input type="text" className="input-value w-100" value={name} disabled={!isManager}
+                            <label htmlFor="groupName" className="form-label">Nombre del grupo</label>
+                            <input id="groupName" type="text" className="input-value w-100" value={name} disabled={!isManager}
                                 onChange={(e) => setName(e.target.value)} />
                         </div>
 
                         <div className="mb-1 d-flex flex-column">
-                            <label className="form-label">Descripción</label>
-                            <textarea className="input-value w-100" value={description} disabled={!isManager}
+                            <label htmlFor="groupDescription" className="form-label">Descripción</label>
+                            <textarea id="groupDescription" className="input-value w-100" value={description} disabled={!isManager}
                                 onChange={(e) => setDescription(e.target.value)} />
                         </div>
                         <div className="d-flex flex-row mt-2">
                             <div className="mb-1 w-100 me-2 d-flex flex-column">
-                                <label className="form-label">Fecha de creación</label>
-                                <input type="date" className="input-value w-100" value={creationDate} disabled />
+                                <label htmlFor="creationDate" className="form-label">Fecha de creación</label>
+                                <input id="creationDate" type="date" className="input-value w-100" value={creationDate} disabled />
                             </div>
                             <div className="mb-1 w-100 ms-2 d-flex flex-column">
-                                <label className="form-label ">Dueño del grupo</label>
-                                <input type="text" className="input-value w-100" value={data.groupOwner} disabled/>
+                                <label htmlFor="groupOwner" className="form-label ">Dueño del grupo</label>
+                                <input id="groupOwner" type="text" className="input-value w-100" value={data.groupOwner} disabled/>
                             </div>
                         </div>                     
                     </div>
@@ -206,14 +208,14 @@ const GroupPopup: React.FC = () => {
                             </div>
                         </div>
                     </div>
-                    {isManager && !isOnlyMember ? (
+                    {canTransferControl && (
                         <div className="white-container h-5 mt-2">
                             <div className="d-flex p-2">
                                 <button className="button-red w-20" onClick={handleTransferGroup}>
                                     Transferir control
                                 </button>
-                                <select id="newOwner" className="input-value w-75 ms-2" value={newOwner ?? ""} onChange={(e) => setNewOwner(Number(e.target.value))}
-                                >
+
+                                <select id="newOwner" className="input-value w-75 ms-2" value={newOwner ?? ""} onChange={(e) => setNewOwner(Number(e.target.value))}>
                                     {data.groupMembers
                                         .filter(member => member.userId !== user!.userId)
                                         .map(member => (
@@ -224,11 +226,12 @@ const GroupPopup: React.FC = () => {
                                 </select>
                             </div>
                         </div>
-                    ) : isManager && isOnlyMember ? (
+                    )}
+                    {showOnlyMemberWarning && (
                         <div className="white-container h-5 mt-2 p-3 text-muted">
                             Eres el único miembro del grupo. No puedes transferir el control.
                         </div>
-                    ) : null}
+                    )}
                     <div className="d-flex justify-content-between mt-4">
 
                         {user?.rolId == "Usuario-Base" && (

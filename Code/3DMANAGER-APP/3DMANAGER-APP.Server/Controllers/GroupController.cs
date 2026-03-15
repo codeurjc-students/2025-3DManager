@@ -24,12 +24,10 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <returns>A boolean that indicates if the creation has been successful</returns>
         /// <response code="200">Respuesta correcta</response>
         /// <response code="401">No autorizado</response>
-        /// <response code="409">Conflicto en servidor</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Groups")]
@@ -41,10 +39,10 @@ namespace _3DMANAGER_APP.Server.Controllers
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, UnauthorizedMsg)));
 
             request.UserId = UserId.Value;
-            var response = _groupManager.PostNewGroup(request, out BaseError? error);
-            if (error != null)
+            var response = _groupManager.PostNewGroup(request);
+            if (!response)
             {
-                return StatusCode(error.code, new Models.CommonResponse<bool>(new ErrorProperties(error.code, error.message)));
+                return StatusCode(StatusCodes.Status500InternalServerError, new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Ha ocurrido un error al intentar crear el grupo")));
             }
             return Ok(new Models.CommonResponse<bool>(response));
         }
@@ -69,9 +67,9 @@ namespace _3DMANAGER_APP.Server.Controllers
             if (UserId == null)
                 return Unauthorized(new Models.CommonResponse<List<GroupInvitation>>(new ErrorProperties(401, UnauthorizedMsg)));
 
-            var response = _groupManager.GetGroupInvitations(UserId.Value);
+            var response = _groupManager.GetGroupInvitations(UserId.Value, out bool error);
 
-            if (response == null)
+            if (error)
                 return StatusCode(500, new Models.CommonResponse<List<GroupInvitation>>(new ErrorProperties(500, "Error al obtener la lista de invitaciones a grupo")));
 
             return Ok(new Models.CommonResponse<List<GroupInvitation>>(response));
@@ -91,7 +89,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Tags("Groups")]
         [HttpPost]
-        public IActionResult postAcceptInvitation(int groupId, bool isAccepted)
+        public IActionResult PostAcceptInvitation(int groupId, bool isAccepted)
         {
             _logger.LogInformation($"Llamada a la funcion postAcceptInvitation en el controlador GroupController");
             if (UserId == null)

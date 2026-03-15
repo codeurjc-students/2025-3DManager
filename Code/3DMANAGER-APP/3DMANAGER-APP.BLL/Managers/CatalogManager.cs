@@ -2,7 +2,6 @@
 using _3DMANAGER_APP.BLL.Models.Catalog;
 using _3DMANAGER_APP.DAL.Interfaces;
 using AutoMapper;
-using Microsoft.Extensions.Logging;
 
 namespace _3DMANAGER_APP.BLL.Managers
 {
@@ -10,12 +9,10 @@ namespace _3DMANAGER_APP.BLL.Managers
     {
         private readonly ICatalogDbManager _catalogDbManager;
         private readonly IMapper _mapper;
-        private readonly ILogger<CatalogManager> _logger;
-        public CatalogManager(ICatalogDbManager catalogDbManager, IMapper mapper, ILogger<CatalogManager> logger)
+        public CatalogManager(ICatalogDbManager catalogDbManager, IMapper mapper)
         {
             _catalogDbManager = catalogDbManager;
             _mapper = mapper;
-            _logger = logger;
         }
 
         public List<CatalogResponse> GetFilamentType()

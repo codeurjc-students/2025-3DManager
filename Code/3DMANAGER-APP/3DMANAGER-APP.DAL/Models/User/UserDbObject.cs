@@ -21,7 +21,7 @@ namespace _3DMANAGER_APP.DAL.Models.User
 
 
 
-        public UserDbObject Create(DataRow row)
+        public static UserDbObject Create(DataRow row)
         {
             var obj = new UserDbObject();
 
