@@ -130,7 +130,7 @@ namespace _3DMANAGER_APP.DAL.Managers
         {
             try
             {
-                error = true;
+                error = false;
                 List<PrinterListDbObject> list = new List<PrinterListDbObject>();
                 string procName = $"{ProcedurePrefix}_pr_PRINTER_LIST";
                 using var cmd = new MySqlCommand(procName, Connection)
@@ -310,7 +310,7 @@ namespace _3DMANAGER_APP.DAL.Managers
         {
             try
             {
-                error = true;
+                error = false;
                 List<PrinterTimesValuesDbObject> list = new List<PrinterTimesValuesDbObject>();
                 string procName = $"{ProcedurePrefix}_pr_PRINT_LIST_TIMES";
                 using var cmd = new MySqlCommand(procName, Connection)

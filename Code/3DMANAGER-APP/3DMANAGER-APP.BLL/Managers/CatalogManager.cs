@@ -1,18 +1,25 @@
 ﻿using _3DMANAGER_APP.BLL.Interfaces;
+using _3DMANAGER_APP.BLL.Models.Base;
 using _3DMANAGER_APP.BLL.Models.Catalog;
 using _3DMANAGER_APP.DAL.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace _3DMANAGER_APP.BLL.Managers
 {
     public class CatalogManager : ICatalogManager
     {
         private readonly ICatalogDbManager _catalogDbManager;
+        private readonly IPrinterDbManager _printerDbManager;
         private readonly IMapper _mapper;
-        public CatalogManager(ICatalogDbManager catalogDbManager, IMapper mapper)
+        private readonly ILogger<CatalogManager> _logger;
+        public CatalogManager(ICatalogDbManager catalogDbManager, IPrinterDbManager printerDbManager, IMapper mapper, ILogger<CatalogManager> logger)
         {
             _catalogDbManager = catalogDbManager;
             _mapper = mapper;
+            _printerDbManager = printerDbManager;
+            _logger = logger;
         }
 
         public List<CatalogResponse> GetFilamentType()
@@ -23,9 +30,37 @@ namespace _3DMANAGER_APP.BLL.Managers
         {
             return _mapper.Map<List<CatalogResponse>>(_catalogDbManager.GetFilamentCatalog(groupId));
         }
-        public List<CatalogResponse> GetPrinterCatalog(int groupId)
+        public List<CatalogPrinterResponse> GetPrinterCatalog(int groupId)
         {
-            return _mapper.Map<List<CatalogResponse>>(_catalogDbManager.GetPrinterCatalog(groupId));
+            List<CatalogPrinterResponse> list = _mapper.Map<List<CatalogPrinterResponse>>(_catalogDbManager.GetPrinterCatalog(groupId));
+            foreach (var printer in list)
+            {
+                var variation = GetPrinterTimeVariation(groupId, printer.Id, out var error);
+                printer.TimeVariation = variation;
+            }
+            return list;
+        }
+
+        public float GetPrinterTimeVariation(int groupId, int printerId, out BaseError? error)
+        {
+            error = null;
+            var responseDb = _printerDbManager.GetTimeVariation(groupId, printerId, out bool errorDb);
+            if (errorDb)
+            {
+                string msg = $"Error al obtener el listado de tiempos de impresión de la impresora {printerId}";
+                _logger.LogError(msg);
+                error = new BaseError()
+                {
+                    code = StatusCodes.Status500InternalServerError,
+                    message = msg
+                };
+            }
+            var variations = responseDb?.Count > 0 ?
+            responseDb.Where(time => time.PrinterTimeImpresion > 0)
+            .Average(time => ((float)(time.PrinterRealTimeImpresion - time.PrinterTimeImpresion) / time.PrinterTimeImpresion) * 100
+            ) : 0;
+
+            return variations;
         }
         public List<CatalogResponse> GetPrintState()
         {

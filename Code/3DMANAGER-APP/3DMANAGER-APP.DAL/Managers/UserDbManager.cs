@@ -153,7 +153,7 @@ namespace _3DMANAGER_APP.DAL.Managers
         {
             try
             {
-                error = true;
+                error = false;
                 List<UserListResponseDbObject> list = new List<UserListResponseDbObject>();
                 string procName = $"{ProcedurePrefix}_pr_USER_INVITATION_LIST";
                 using var cmd = new MySqlCommand(procName, Connection)

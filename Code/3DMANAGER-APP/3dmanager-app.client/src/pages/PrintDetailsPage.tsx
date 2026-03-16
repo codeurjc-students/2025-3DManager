@@ -155,7 +155,7 @@ const PrintDetailPage: React.FC = () => {
                                 </div>
                             ) : ""}
                         </div>
-                        <div className="col-6 ms-5">
+                        <div className="col-6 ms-5 h-75">
                             <img src={data?.printImageData?.fileUrl} alt={name} className="image-container-3" />
                         </div>
                     </div>
