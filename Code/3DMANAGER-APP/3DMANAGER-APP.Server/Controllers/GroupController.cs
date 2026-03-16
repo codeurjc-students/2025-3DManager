@@ -203,15 +203,18 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Tags("Groups")]
         [HttpPut]
-        public Models.CommonResponse<bool> UpdateMembership(int userKickedId)
+        public IActionResult UpdateMembership(int userKickedId)
         {
+            if (UserId == null || UserRole != "Usuario-Manager")
+                return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, UnauthorizedMsg)));
             _logger.LogInformation($"Llamada a la funcion UpdateMembership en el controlador GroupController");
             var response = _groupManager.UpdateMembership(userKickedId);
             if (!response)
             {
-                return new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al expulsar del grupo "));
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al expulsar del grupo ")));
             }
-            return new Models.CommonResponse<bool>(true);
+            return Ok(new Models.CommonResponse<bool>(true));
         }
 
         /// <summary>

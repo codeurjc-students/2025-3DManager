@@ -34,8 +34,24 @@ export const LoginGuest = async (): Promise<CommonResponse<LoginResponse>> => {
 }
 
 export const getUserList = async (): Promise<CommonResponse<UserListResponse[]>> => {
-    const response = await apiClient.get<CommonResponse<UserListResponse[]>>("/api/v1/users/GetUserList");
-    return response.data;
+    
+    try {
+        const response = await apiClient.get<CommonResponse<UserListResponse[]>>("/api/v1/users/GetUserList");
+        return response.data;
+    } catch (error: any) {
+        const status = error?.response?.status;
+        const backendResponse = error?.response?.data;
+        if (backendResponse?.error) {
+            return backendResponse;
+        }
+        return {
+            data: undefined,
+            error: {
+                code: status ?? 500,
+                message: backendResponse?.message ?? "Error desconocido en el servidor al obtener el listado de usuarios"
+            }
+        };
+    }
 }
 
 export const getUserInvitationList = async (filter?: string): Promise<CommonResponse<UserListResponse[]>> => {
@@ -58,7 +74,7 @@ export const postUserInvitation = async (userId: number): Promise<CommonResponse
             data: false,
             error: {
                 code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido"
+                message: backendResponse?.message ?? "Error desconocido en el servidor al enviar una invitacion al grupo"
             }
         };
     }
@@ -70,11 +86,42 @@ export const GetUserAuth = async (): Promise<{ userId: number; groupId: number |
 };
 
 export const updateUser = async (data: UserUpdateRequest): Promise<CommonResponse<boolean>> => {
-    const response = await apiClient.put<CommonResponse<boolean>>(`/api/v1/users/UpdateUser`, data);
-    return response.data;
+    try {
+        const response = await apiClient.put<CommonResponse<boolean>>(`/api/v1/users/UpdateUser`, data);
+        return response.data;
+    } catch (error: any) {
+        const status = error?.response?.status;
+        const backendResponse = error?.response?.data;
+        if (backendResponse?.error) {
+            return backendResponse;
+        }
+        return {
+            data: false,
+            error: {
+                code: status ?? 500,
+                message: backendResponse?.message ?? "Error desconocido en el servidor al actualizar el usuario"
+            }
+        };
+    }
 }
 
 export const getUserDetail = async (userId: number): Promise<CommonResponse<UserDetailObject>> => {
-    const response = await apiClient.get<CommonResponse<UserDetailObject>>(`/api/v1/users/GetUserDetail?userId=${userId}`);
-    return response.data;
+    
+    try {
+        const response = await apiClient.get<CommonResponse<UserDetailObject>>(`/api/v1/users/GetUserDetail?userId=${userId}`);
+        return response.data;
+    } catch (error: any) {
+        const status = error?.response?.status;
+        const backendResponse = error?.response?.data;
+        if (backendResponse?.error) {
+            return backendResponse;
+        }
+        return {
+            data: undefined,
+            error: {
+                code: status ?? 500,
+                message: backendResponse?.message ?? "Error desconocido en el servidor al obtener el detalle de usuario"
+            }
+        };
+    }
 }
