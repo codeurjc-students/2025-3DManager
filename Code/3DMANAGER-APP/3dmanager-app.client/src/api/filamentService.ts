@@ -17,7 +17,7 @@ export const getFilamentList = async (): Promise<CommonResponse<FilamentListResp
             return backendResponse;
         }
         return {
-            data: false,
+            data: undefined,
             error: {
                 code: status ?? 500,
                 message: backendResponse?.message ?? "Error desconocido en el servidor al recoger el listado de filamentos"
