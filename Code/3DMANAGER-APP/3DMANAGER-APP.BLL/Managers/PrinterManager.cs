@@ -12,6 +12,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Net;
+using static _3DMANAGER_APP.BLL.Models.Base.Response;
 
 namespace _3DMANAGER_APP.BLL.Managers
 {
@@ -204,5 +205,63 @@ namespace _3DMANAGER_APP.BLL.Managers
             }
             return response;
         }
+
+        public async Task<CommonResponse<bool>> DeletePrinterImage(int printerId, int groupId)
+        {
+            CommonResponse<bool> response = new CommonResponse<bool>();
+
+            FileResponseDbObject imageData = _printerDbManager.GetPrinterImageData(printerId, groupId, out bool error);
+
+            if (error)
+            {
+                response.Error = new ErrorProperties(StatusCodes.Status404NotFound, "Ha ocurrido un error al buscar en la impresora la imagen asociada.");
+                return response;
+            }
+            else if (imageData.FileKey == null && !error)
+            {
+                response.Data = true;
+                return response;
+            }
+
+            await _awsS3Service.DeleteImageAsync(imageData!.FileKey!);
+            bool dbResponse = _printerDbManager.DeletePrinterImageData(printerId, groupId);
+
+            if (!dbResponse)
+            {
+                response.Error = new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al eliminar la imagen en la base de datos.");
+                return response;
+            }
+
+            response.Data = true;
+            return response;
+        }
+
+        public async Task<CommonResponse<bool>> UpdatePrinterImage(int printerId, int groupId, IFormFile imageFile)
+        {
+            CommonResponse<bool> response = new CommonResponse<bool>();
+            response.Data = false;
+            if (imageFile == null)
+            {
+                response.Error = new ErrorProperties(StatusCodes.Status400BadRequest, "Error, no se ha recibido una imagen para actualizar");
+                return response;
+            }
+            var s3Response = await _awsS3Service.UploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName, imageFile.ContentType, "printers", groupId);
+            if (s3Response == null)
+            {
+                response.Error = new ErrorProperties(StatusCodes.Status409Conflict, "Error al subir la imagen a S3.");
+                return response;
+            }
+
+            bool dbResponse = _printerDbManager.UpdatePrinterImageData(printerId, _mapper.Map<FileResponseDbObject>(s3Response));
+            if (!dbResponse)
+            {
+                response.Error = new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al actualizar la imagen en la base de datos.");
+                return response;
+            }
+
+            response.Data = true;
+            return response;
+        }
+
     }
 }

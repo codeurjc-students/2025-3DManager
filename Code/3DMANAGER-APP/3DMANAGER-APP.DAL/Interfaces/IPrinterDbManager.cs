@@ -16,5 +16,7 @@ namespace _3DMANAGER_APP.DAL.Interfaces
         PrinterDetailDbObject GetPrinterDetail(int groupId, int printerId);
         List<PrinterTimesValuesDbObject> GetTimeVariation(int groupId, int printerId, out bool error);
         DeletedDbObject DeletePrinter(int printerId, int groupId, out int? error);
+        public FileResponseDbObject GetPrinterImageData(int printerId, int groupId, out bool error);
+        public bool DeletePrinterImageData(int printerId, int groupId);
     }
 }

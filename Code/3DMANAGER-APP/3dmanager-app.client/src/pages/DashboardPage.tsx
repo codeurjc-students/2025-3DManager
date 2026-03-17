@@ -48,7 +48,7 @@ const DashboardPage: React.FC = () => {
         <div id="dashboard" className="d-flex vh-100">
             <div className="grey-container col-6 vh-100 scroll-container">
                 <h2 className="title-impact-2 ms-3 mt-4">Impresoras</h2>
-                <hr className="m-3"></hr>
+                <hr className="m-2"></hr>
                 <div>
                     {printers.map((printer) => (
                         <button
