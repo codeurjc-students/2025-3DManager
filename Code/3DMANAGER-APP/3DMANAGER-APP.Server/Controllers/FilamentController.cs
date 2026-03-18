@@ -174,5 +174,63 @@ namespace _3DMANAGER_APP.Server.Controllers
 
             return Ok(new Models.CommonResponse<bool>(response.Data));
         }
+
+        /// <summary>
+        /// Update a filament image
+        /// </summary>
+        /// <returns>Boolean that indicates if operation was succesfull</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="401">No autorizado</response>
+        /// <response code="409">Conflicto en servidor</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Filaments")]
+        [HttpPut]
+        public async Task<IActionResult> UpdateFilamentImage(int filamentId, IFormFile imageFile)
+        {
+            _logger.LogInformation($"Llamada a UpdateFilamentImage en el controlador FilamentController");
+            if (GroupId == null && UserId == null && UserRole == "Usuario-Manager")
+                return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, NoAuthConstant)));
+
+            var result = await _filamentManager.UpdateFilamentImage(filamentId, GroupId!.Value, imageFile);
+
+            if (result.Error != null)
+                return StatusCode(StatusCodes.Status500InternalServerError, new CommonResponse<bool>(result.Error));
+
+            return Ok(new CommonResponse<bool>(true));
+        }
+
+        /// <summary>
+        /// Delete a filament image
+        /// </summary>
+        /// <returns>Boolean that indicates if operation was succesfull</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="401">No autorizado</response>
+        /// <response code="409">Conflicto en servidor</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Filaments")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteFilamentImage(int filamentId)
+        {
+            _logger.LogInformation($"Llamada a la funcion DeleteFilamentImage en el controlador FilamentController");
+            if (GroupId == null && UserId == null && UserRole == "Usuario-Manager")
+                return Unauthorized(new Models.CommonResponse<GroupBasicDataResponse>(new ErrorProperties(401, NoAuthConstant)));
+
+            var result = await _filamentManager.DeleteFilamentImage(filamentId, GroupId!.Value);
+
+            if (result.Error != null)
+                return StatusCode(result.Error.Code, new CommonResponse<bool>(result.Error));
+
+            return Ok(new CommonResponse<bool>(true));
+        }
     }
 }
