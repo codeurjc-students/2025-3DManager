@@ -167,51 +167,68 @@ const PrinterDetailPage: React.FC = () => {
                         const response = await updatePrinterImage(Number(printerId), file);
 
                         if (response.error) {
+                            const { message } = response.error;
+
+                            closePopup();
+                            await Promise.resolve(); 
+
                             showPopup({
                                 type: "error",
-                                content: (<InfoPopup title="Error" description={response.error.message} />),
+                                content: (<InfoPopup title="Error" description={message}/>),
                                 onClose: () => {
+                                    navigate(`/dashboard/printer/detail/${printerId}`);
                                     closePopup();
-                                    navigate(0);
                                 }
                             });
+
                             return;
                         }
 
+                        closePopup();
+                        await Promise.resolve(); 
                         showPopup({
                             type: "info",
-                            content: (<InfoPopup title="Imagen actualizada" description="La imagen se ha actualizado correctamente." />),
+                            content: (<InfoPopup title="Imagen actualizada" description="La imagen se ha actualizado correctamente."/>),
                             onClose: () => {
+                                navigate(`/dashboard/printer/detail/${printerId}`);
                                 closePopup();
-                                navigate(0);
                             }
                         });
-
                     }}
                     onDelete={async () => {
                         const response = await deletePrinterImage(Number(printerId));
 
                         if (response.error) {
+                            const { message } = response.error;
+
+                            closePopup();
+                            await Promise.resolve(); 
+
                             showPopup({
                                 type: "error",
-                                content: (<InfoPopup title="Error" description={response.error.message}/>)
+                                content: (<InfoPopup title="Error" description={message}/>
+                                )
                             });
+
                             return;
                         }
 
+                        closePopup();
+                        await Promise.resolve(); 
                         showPopup({
                             type: "info",
-                            content: (
-                                <InfoPopup title="Imagen eliminada" description="La imagen ha sido eliminada."/>)
+                            content: (<InfoPopup title="Imagen eliminada" description="La imagen ha sido eliminada."/>),
+                            onClose: () => {
+                                navigate(`/dashboard/printer/detail/${printerId}`);
+                                closePopup();
+                            }
                         });
-
                     }}
                     onClose={closePopup}
                 />
             )
         });
     };
-
 
     return (
         <div className="d-flex flex-column vh-100">

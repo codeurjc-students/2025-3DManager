@@ -18,5 +18,6 @@ namespace _3DMANAGER_APP.DAL.Interfaces
         DeletedDbObject DeletePrinter(int printerId, int groupId, out int? error);
         public FileResponseDbObject GetPrinterImageData(int printerId, int groupId, out bool error);
         public bool DeletePrinterImageData(int printerId, int groupId);
+
     }
 }

@@ -201,7 +201,13 @@ namespace _3DMANAGER_APP.BLL.Managers
             response.Data = responseDb.SuccesfullDelete;
             if (responseDb.FileResponse != null)
             {
-                //Aun no implementado
+                var responseImage = await DeletePrinterImage(printerId, groupId);
+                if (!responseImage.Data)
+                {
+                    string msg = $"Impresora eliminada correctamento. Pero ha ocurrido un error al eliminar la imagen en S3 del fichero {responseDb.FileResponse.FileKey}.";
+                    response.Error = new ErrorProperties(StatusCodes.Status500InternalServerError, msg);
+                    return response;
+                }
             }
             return response;
         }
@@ -245,13 +251,21 @@ namespace _3DMANAGER_APP.BLL.Managers
                 response.Error = new ErrorProperties(StatusCodes.Status400BadRequest, "Error, no se ha recibido una imagen para actualizar");
                 return response;
             }
+
             var s3Response = await _awsS3Service.UploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName, imageFile.ContentType, "printers", groupId);
             if (s3Response == null)
             {
                 response.Error = new ErrorProperties(StatusCodes.Status409Conflict, "Error al subir la imagen a S3.");
                 return response;
             }
-
+            var deletedImage = await DeletePrinterImage(printerId, groupId);
+            if (!deletedImage.Data)
+            {
+                var fileData = _printerDbManager.GetPrinterImageData(printerId, groupId, out bool errorDbImage);
+                string? keyValue = errorDbImage ? "FileKey Desconocido" : fileData.FileKey;
+                string msg = $"Se ha intentado eliminar una foto de la impresora {printerId} del grupo {groupId} con el fileKey {keyValue}";
+                _logger.LogError(msg);
+            }
             bool dbResponse = _printerDbManager.UpdatePrinterImageData(printerId, _mapper.Map<FileResponseDbObject>(s3Response));
             if (!dbResponse)
             {

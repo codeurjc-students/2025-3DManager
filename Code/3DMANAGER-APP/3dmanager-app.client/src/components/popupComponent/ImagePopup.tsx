@@ -21,14 +21,12 @@ const ImagePopup: React.FC<ImagePopupProps> = ({
         setLoading(true);
         await onUpload(file);
         setLoading(false);
-        onClose();
     };
 
     const handleDelete = async () => {
         setLoading(true);
         await onDelete();
         setLoading(false);
-        onClose();
     };
 
     return (
