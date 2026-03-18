@@ -447,5 +447,89 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
         }
 
+        public FileResponseDbObject GetUserImageData(int userId, int groupId, out bool error)
+        {
+            error = false;
+            FileResponseDbObject responseDb = new FileResponseDbObject();
+            try
+            {
+                string procName = $"{ProcedurePrefix}_pr_USER_GET_IMAGE";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
+                cmd.Parameters.Add(new MySqlParameter("P_CD_USER", MySqlDbType.Int32) { Value = userId });
+                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    error = false;
+                    return responseDb.Create(ds.Tables[0].Rows[0]);
+                }
+
+                return responseDb;
+            }
+            catch (MySqlException ex)
+            {
+                error = true;
+                string msg = $"Error al guardar los datos de la imagen en el usuario {userId} BBDD";
+                Logger.LogError(ex, msg);
+                return new FileResponseDbObject();
+            }
+            catch (Exception ex)
+            {
+                error = true;
+                string msg = $"Error al guardar los datos de la imagen en el usuario {userId} BBDD";
+                Logger.LogError(ex, msg);
+                return new FileResponseDbObject();
+            }
+        }
+
+        public bool DeleteUserImageData(int userId, int groupId)
+        {
+            try
+            {
+                string procName = $"{ProcedurePrefix}_pr_USER_DELETE_IMAGE";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
+                cmd.Parameters.Add(new MySqlParameter("P_CD_USER", MySqlDbType.Int32) { Value = userId });
+                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = $"Error al borrar los datos de la imagen en el usuario {userId} BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                string msg = $"Error al borrar los datos de la imagen en la usuario {userId} BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+        }
     }
 }

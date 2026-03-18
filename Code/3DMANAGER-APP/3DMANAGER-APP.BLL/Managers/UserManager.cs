@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using System.Net;
+using static _3DMANAGER_APP.BLL.Models.Base.Response;
 
 namespace _3DMANAGER_APP.BLL.Managers
 {
@@ -225,6 +226,71 @@ namespace _3DMANAGER_APP.BLL.Managers
 
             }
             return response!;
+        }
+
+        public async Task<CommonResponse<bool>> DeleteUserImage(int userId, int groupId)
+        {
+            CommonResponse<bool> response = new CommonResponse<bool>();
+
+            FileResponseDbObject imageData = _userDbManager.GetUserImageData(userId, groupId, out bool error);
+
+            if (error)
+            {
+                response.Error = new ErrorProperties(StatusCodes.Status404NotFound, "Ha ocurrido un error al buscar en el usuario la imagen asociada.");
+                return response;
+            }
+            else if (imageData.FileKey == null && !error)
+            {
+                response.Data = true;
+                return response;
+            }
+
+            await _awsS3Service.DeleteImageAsync(imageData!.FileKey!);
+            bool dbResponse = _userDbManager.DeleteUserImageData(userId, groupId);
+
+            if (!dbResponse)
+            {
+                response.Error = new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al eliminar la imagen en la base de datos.");
+                return response;
+            }
+
+            response.Data = true;
+            return response;
+        }
+
+        public async Task<CommonResponse<bool>> UpdateUserImage(int userId, int groupId, IFormFile imageFile)
+        {
+            CommonResponse<bool> response = new CommonResponse<bool>();
+            response.Data = false;
+            if (imageFile == null)
+            {
+                response.Error = new ErrorProperties(StatusCodes.Status400BadRequest, "Error, no se ha recibido una imagen para actualizar");
+                return response;
+            }
+
+            var s3Response = await _awsS3Service.UploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName, imageFile.ContentType, "users", null);
+            if (s3Response == null)
+            {
+                response.Error = new ErrorProperties(StatusCodes.Status409Conflict, "Error al subir la imagen a S3.");
+                return response;
+            }
+            var deletedImage = await DeleteUserImage(userId, groupId);
+            if (!deletedImage.Data)
+            {
+                var fileData = _userDbManager.GetUserImageData(userId, groupId, out bool errorDbImage);
+                string? keyValue = errorDbImage ? "FileKey Desconocido" : fileData.FileKey;
+                string msg = $"Se ha intentado eliminar una foto del usuario {userId} del grupo {groupId} con el fileKey {keyValue}";
+                _logger.LogError(msg);
+            }
+            bool dbResponse = _userDbManager.UpdateUserImageData(userId, _mapper.Map<FileResponseDbObject>(s3Response));
+            if (!dbResponse)
+            {
+                response.Error = new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al actualizar la imagen en la base de datos.");
+                return response;
+            }
+
+            response.Data = true;
+            return response;
         }
     }
 }
