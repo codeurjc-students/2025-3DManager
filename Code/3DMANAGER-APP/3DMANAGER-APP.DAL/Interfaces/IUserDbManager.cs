@@ -15,5 +15,7 @@ namespace _3DMANAGER_APP.DAL.Interfaces
         public int GetGroupIdByUserId(int userId);
         bool UpdateUser(UserUpdateRequestDbObject requestDb);
         UserDetailDbObject GetUserDetail(int groupId, int userId);
+        public FileResponseDbObject GetUserImageData(int userId, int groupId, out bool error);
+        public bool DeleteUserImageData(int userId, int groupId);
     }
 }

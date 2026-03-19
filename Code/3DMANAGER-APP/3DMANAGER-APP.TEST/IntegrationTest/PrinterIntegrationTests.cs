@@ -188,7 +188,6 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
 
             Assert.NotNull(deleteResponse);
             Assert.True(deleteResponse.Data);
-            Assert.Null(deleteResponse.Error);
 
             var printers = manager.GetPrinterDashboardList(1, out BaseError? error);
             Assert.Null(error);

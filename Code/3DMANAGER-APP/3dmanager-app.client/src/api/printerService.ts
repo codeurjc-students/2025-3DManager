@@ -138,3 +138,48 @@ export const deletePrinter = async (printerId: number): Promise<CommonResponse<b
         };
     }
 }
+
+export const updatePrinterImage = async (printerId: number,file: File): Promise<CommonResponse<boolean>> => {
+    const formData = new FormData();
+    formData.append("imageFile", file);
+
+    try {
+        const response = await apiClient.put<CommonResponse<boolean>>(`/api/v1/printers/UpdatePrinterImage?printerId=${printerId}`,
+            formData, { headers: { "Content-Type": "multipart/form-data" }});
+        return response.data;
+    } catch (error: any) {
+        const status = error?.response?.status;
+        const backendResponse = error?.response?.data;
+
+        if (backendResponse?.error) return backendResponse;
+
+        return {
+            data: false,
+            error: {
+                code: status ?? 500,
+                message: backendResponse?.message ?? "Error al actualizar la imagen de la impresora"
+            }
+        };
+    }
+};
+
+export const deletePrinterImage = async (printerId: number): Promise<CommonResponse<boolean>> => {
+    try {
+        const response = await apiClient.delete<CommonResponse<boolean>>(`/api/v1/printers/DeletePrinterImage?printerId=${printerId}`);
+        return response.data;
+    } catch (error: any) {
+        const status = error?.response?.status;
+        const backendResponse = error?.response?.data;
+
+        if (backendResponse?.error) return backendResponse;
+
+        return {
+            data: false,
+            error: {
+                code: status ?? 500,
+                message: backendResponse?.message ?? "Error al eliminar la imagen de la impresora"
+            }
+        };
+    }
+};
+

@@ -1,5 +1,6 @@
 ﻿using _3DMANAGER_APP.BLL.Models.Base;
 using _3DMANAGER_APP.BLL.Models.User;
+using Microsoft.AspNetCore.Http;
 
 namespace _3DMANAGER_APP.BLL.Interfaces
 {
@@ -14,5 +15,7 @@ namespace _3DMANAGER_APP.BLL.Interfaces
         public int GetGroupIdByUserId(int userId);
         bool UpdateUser(UserUpdateRequest request);
         UserDetailObject GetUserDetail(int groupId, int userId, out BaseError? error);
+        public Task<CommonResponse<bool>> DeleteUserImage(int userId, int groupId);
+        public Task<CommonResponse<bool>> UpdateUserImage(int userId, int groupId, IFormFile imageFile);
     }
 }

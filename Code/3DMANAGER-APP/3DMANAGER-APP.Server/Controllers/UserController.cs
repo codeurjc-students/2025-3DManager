@@ -1,5 +1,6 @@
 ﻿using _3DMANAGER_APP.BLL.Interfaces;
 using _3DMANAGER_APP.BLL.Models.Base;
+using _3DMANAGER_APP.BLL.Models.Group;
 using _3DMANAGER_APP.BLL.Models.User;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
@@ -291,6 +292,64 @@ namespace _3DMANAGER_APP.Server.Controllers
             }
 
             return Ok(new Models.CommonResponse<UserDetailObject>(userResponse));
+        }
+
+        /// <summary>
+        /// Update a user image
+        /// </summary>
+        /// <returns>Boolean that indicates if operation was succesfull</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="401">No autorizado</response>
+        /// <response code="409">Conflicto en servidor</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Users")]
+        [HttpPut]
+        public async Task<IActionResult> UpdateUserImage(int userId, IFormFile imageFile)
+        {
+            _logger.LogInformation($"Llamada a UpdateUserImage en el controlador UserController");
+            if (GroupId == null && UserId == null && UserRole == "Usuario-Manager")
+                return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, NoAuthConstant)));
+
+            var result = await _userManager.UpdateUserImage(userId, GroupId!.Value, imageFile);
+
+            if (result.Error != null)
+                return StatusCode(StatusCodes.Status500InternalServerError, new CommonResponse<bool>(result.Error));
+
+            return Ok(new CommonResponse<bool>(true));
+        }
+
+        /// <summary>
+        /// Delete a user image
+        /// </summary>
+        /// <returns>Boolean that indicates if operation was succesfull</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="401">No autorizado</response>
+        /// <response code="409">Conflicto en servidor</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Users")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteUserImage(int userId)
+        {
+            _logger.LogInformation($"Llamada a la funcion DeleteUserImage en el controlador UserController");
+            if (GroupId == null && UserId == null && UserRole == "Usuario-Manager")
+                return Unauthorized(new Models.CommonResponse<GroupBasicDataResponse>(new ErrorProperties(401, NoAuthConstant)));
+
+            var result = await _userManager.DeleteUserImage(userId, GroupId!.Value);
+
+            if (result.Error != null)
+                return StatusCode(result.Error.Code, new CommonResponse<bool>(result.Error));
+
+            return Ok(new CommonResponse<bool>(true));
         }
 
     }

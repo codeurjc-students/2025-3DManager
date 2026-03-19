@@ -6,7 +6,8 @@ import { usePopupContext } from "../context/PopupContext";
 import InfoPopup from "../components/popupComponent/InfoPopup";
 import type { UserDetailObject } from "../models/user/UserDetailObject";
 import type { UserUpdateRequest } from "../models/user/UserUpdateRequest";
-import { getUserDetail, updateUser } from "../api/userService";
+import { deleteUserImage, getUserDetail, updateUser, updateUserImage } from "../api/userService";
+import ImagePopup from "../components/popupComponent/ImagePopup";
 
 
 const UserDetailPage: React.FC = () => {
@@ -17,7 +18,7 @@ const UserDetailPage: React.FC = () => {
     const [name, setName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const isMyUser = user?.userId == Number(userId) && user?.rolId != "Usuario-Invitado";
-    const { showPopup } = usePopupContext();
+    const { showPopup, closePopup } = usePopupContext();
 
 
     useEffect(() => {
@@ -68,6 +69,81 @@ const UserDetailPage: React.FC = () => {
         }
     };
 
+    const openImagePopup = () => {
+        showPopup({
+            type: "base",
+            width: "600px",
+            hideCloseButton: true,
+            content: (
+                <ImagePopup
+                    title="Actualizar imagen de usuario"
+                    onUpload={async (file) => {
+                        const response = await updateUserImage(Number(userId), file);
+
+                        if (response.error) {
+                            const { message } = response.error;
+
+                            closePopup();
+                            await Promise.resolve();
+
+                            showPopup({
+                                type: "error",
+                                content: (<InfoPopup title="Error" description={message} />),
+                                onClose: () => {
+                                    navigate(`/dashboard/user/detail/${userId}`);
+                                    closePopup();
+                                }
+                            });
+
+                            return;
+                        }
+
+                        closePopup();
+                        await Promise.resolve();
+                        showPopup({
+                            type: "info",
+                            content: (<InfoPopup title="Imagen actualizada" description="La imagen se ha actualizado correctamente." />),
+                            onClose: () => {
+                                navigate(`/dashboard/user/detail/${userId}`);
+                                closePopup();
+                            }
+                        });
+                    }}
+                    onDelete={async () => {
+                        const response = await deleteUserImage(Number(userId));
+
+                        if (response.error) {
+                            const { message } = response.error;
+
+                            closePopup();
+                            await Promise.resolve();
+
+                            showPopup({
+                                type: "error",
+                                content: (<InfoPopup title="Error" description={message} />
+                                )
+                            });
+
+                            return;
+                        }
+
+                        closePopup();
+                        await Promise.resolve();
+                        showPopup({
+                            type: "info",
+                            content: (<InfoPopup title="Imagen eliminada" description="La imagen ha sido eliminada." />),
+                            onClose: () => {
+                                navigate(`/dashboard/user/detail/${userId}`);
+                                closePopup();
+                            }
+                        });
+                    }}
+                    onClose={closePopup}
+                />
+            )
+        });
+    };
+
     return (
         <div className="d-flex flex-column vh-100">
             <div className="row h-10 w-100">
@@ -92,11 +168,18 @@ const UserDetailPage: React.FC = () => {
                                 onChange={(e) => setName(e.target.value)}
                             />
                             {isMyUser ? (
-                                <button className="button-yellow ms-1 me-2" onClick={handleUpdate}>
-                                    <svg width="27" height="28" viewBox="0 0 27 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M19.125 24.5V15.1667H7.875V24.5M7.875 3.5V9.33333H16.875M21.375 24.5H5.625C5.02826 24.5 4.45597 24.2542 4.03401 23.8166C3.61205 23.379 3.375 22.7855 3.375 22.1667V5.83333C3.375 5.21449 3.61205 4.621 4.03401 4.18342C4.45597 3.74583 5.02826 3.5 5.625 3.5H18L23.625 9.33333V22.1667C23.625 22.7855 23.3879 23.379 22.966 23.8166C22.544 24.2542 21.9717 24.5 21.375 24.5Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                </button>
+                                <div className="d-flex flex-row">
+                                    <button className="button-yellow ms-1 me-2" onClick={handleUpdate}>
+                                        <svg width="27" height="28" viewBox="0 0 27 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M19.125 24.5V15.1667H7.875V24.5M7.875 3.5V9.33333H16.875M21.375 24.5H5.625C5.02826 24.5 4.45597 24.2542 4.03401 23.8166C3.61205 23.379 3.375 22.7855 3.375 22.1667V5.83333C3.375 5.21449 3.61205 4.621 4.03401 4.18342C4.45597 3.74583 5.02826 3.5 5.625 3.5H18L23.625 9.33333V22.1667C23.625 22.7855 23.3879 23.379 22.966 23.8166C22.544 24.2542 21.9717 24.5 21.375 24.5Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </button>
+                                    <button className="button-yellow me-2" onClick={openImagePopup}>
+                                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M6.66667 28H25.3333C26.8061 28 28 26.8061 28 25.3333V6.66667C28 5.19391 26.8061 4 25.3333 4H6.66667C5.19391 4 4 5.19391 4 6.66667V25.3333C4 26.8061 5.19391 28 6.66667 28ZM6.66667 28L21.3333 13.3333L28 20M13.3333 11.3333C13.3333 12.4379 12.4379 13.3333 11.3333 13.3333C10.2288 13.3333 9.33333 12.4379 9.33333 11.3333C9.33333 10.2288 10.2288 9.33333 11.3333 9.33333C12.4379 9.33333 13.3333 10.2288 13.3333 11.3333Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </button>
+                                </div>
                             ) : ""}
                         </div>
                         <div className="title-impact-3 col-2 mt-2 ms-2 mb-1 w-100 d-flex flex-row justify-content-between">

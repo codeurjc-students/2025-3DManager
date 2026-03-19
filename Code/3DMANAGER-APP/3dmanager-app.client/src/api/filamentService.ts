@@ -107,7 +107,7 @@ export const getFilamentDetail = async (filamentId: number): Promise<CommonRespo
 
 export const deleteFilament = async (filamentId: number): Promise<CommonResponse<boolean>> => {
     try {
-        const response = await apiClient.delete<CommonResponse<boolean>>(`/api/v1/filaments/DeleteFilament?printId=${filamentId}`);
+        const response = await apiClient.delete<CommonResponse<boolean>>(`/api/v1/filaments/DeleteFilament?filamentId=${filamentId}`);
         return response.data;
     } catch (error: any) {
         const status = error?.response?.status;
@@ -124,5 +124,48 @@ export const deleteFilament = async (filamentId: number): Promise<CommonResponse
         };
     }
 }
+
+export const updateFilamentImage = async (filamentId: number, file: File): Promise<CommonResponse<boolean>> => {
+    const formData = new FormData();
+    formData.append("imageFile", file);
+
+    try {
+        const response = await apiClient.put<CommonResponse<boolean>>(`/api/v1/filaments/UpdateFilamentImage?filamentId=${filamentId}`,
+            formData, { headers: { "Content-Type": "multipart/form-data" } });
+        return response.data;
+    } catch (error: any) {
+        const status = error?.response?.status;
+        const backendResponse = error?.response?.data;
+
+        if (backendResponse?.error) return backendResponse;
+
+        return {
+            data: false,
+            error: {
+                code: status ?? 500,
+                message: backendResponse?.message ?? "Error al actualizar la imagen del filamento"
+            }
+        };
+    }
+};
+
+export const deleteFilamentImage = async (filamentId: number): Promise<CommonResponse<boolean>> => {
+    try {
+        const response = await apiClient.delete<CommonResponse<boolean>>(`/api/v1/filaments/DeleteFilamentImage?filamentId=${filamentId}`);
+        return response.data;
+    } catch (error: any) {
+        const status = error?.response?.status;
+        const backendResponse = error?.response?.data;
+
+        if (backendResponse?.error) return backendResponse;
+        return {
+            data: false,
+            error: {
+                code: status ?? 500,
+                message: backendResponse?.message ?? "Error al eliminar la imagen del filamento"
+            }
+        };
+    }
+};
 
 

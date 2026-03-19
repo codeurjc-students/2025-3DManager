@@ -125,3 +125,46 @@ export const getUserDetail = async (userId: number): Promise<CommonResponse<User
         };
     }
 }
+
+export const updateUserImage = async (userId: number, file: File): Promise<CommonResponse<boolean>> => {
+    const formData = new FormData();
+    formData.append("imageFile", file);
+
+    try {
+        const response = await apiClient.put<CommonResponse<boolean>>(`/api/v1/users/UpdateUserImage?userId=${userId}`,
+            formData, { headers: { "Content-Type": "multipart/form-data" } });
+        return response.data;
+    } catch (error: any) {
+        const status = error?.response?.status;
+        const backendResponse = error?.response?.data;
+
+        if (backendResponse?.error) return backendResponse;
+
+        return {
+            data: false,
+            error: {
+                code: status ?? 500,
+                message: backendResponse?.message ?? "Error al actualizar la imagen del usuario"
+            }
+        };
+    }
+};
+
+export const deleteUserImage = async (userId: number): Promise<CommonResponse<boolean>> => {
+    try {
+        const response = await apiClient.delete<CommonResponse<boolean>>(`/api/v1/users/DeleteUserImage?userId=${userId}`);
+        return response.data;
+    } catch (error: any) {
+        const status = error?.response?.status;
+        const backendResponse = error?.response?.data;
+
+        if (backendResponse?.error) return backendResponse;
+        return {
+            data: false,
+            error: {
+                code: status ?? 500,
+                message: backendResponse?.message ?? "Error al eliminar la imagen del usuario"
+            }
+        };
+    }
+};

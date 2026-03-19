@@ -406,6 +406,91 @@ namespace _3DMANAGER_APP.DAL.Managers
                 return new DeletedDbObject { SuccesfullDelete = false };
             }
         }
+
+        public FileResponseDbObject GetPrinterImageData(int printerId, int groupId, out bool error)
+        {
+            error = false;
+            FileResponseDbObject responseDb = new FileResponseDbObject();
+            try
+            {
+                string procName = $"{ProcedurePrefix}_pr_PRINTER_GET_IMAGE";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter(PrinterParam, MySqlDbType.Int32) { Value = printerId });
+                cmd.Parameters.Add(new MySqlParameter(GroupParam, MySqlDbType.Int32) { Value = groupId });
+                var errorParam = CreateReturnValueParameter(ErrorConstant, MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    error = false;
+                    return responseDb.Create(ds.Tables[0].Rows[0]);
+                }
+
+                return responseDb;
+            }
+            catch (MySqlException ex)
+            {
+                error = true;
+                string msg = $"Error al guardar los datos de la imagen en la impresora {printerId} BBDD";
+                Logger.LogError(ex, msg);
+                return new FileResponseDbObject();
+            }
+            catch (Exception ex)
+            {
+                error = true;
+                string msg = $"Error al guardar los datos de la imagen en la impresora {printerId} BBDD";
+                Logger.LogError(ex, msg);
+                return new FileResponseDbObject();
+            }
+        }
+
+        public bool DeletePrinterImageData(int printerId, int groupId)
+        {
+            try
+            {
+                string procName = $"{ProcedurePrefix}_pr_PRINTER_DELETE_IMAGE";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter(PrinterParam, MySqlDbType.Int32) { Value = printerId });
+                cmd.Parameters.Add(new MySqlParameter(GroupParam, MySqlDbType.Int32) { Value = groupId });
+                var errorParam = CreateReturnValueParameter(ErrorConstant, MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = $"Error al borrar los datos de la imagen en la impresora {printerId} BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                string msg = $"Error al borrar los datos de la imagen en la impresora {printerId} BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+        }
     }
 
 }

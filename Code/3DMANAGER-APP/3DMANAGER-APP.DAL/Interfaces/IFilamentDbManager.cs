@@ -12,5 +12,7 @@ namespace _3DMANAGER_APP.DAL.Interfaces
         public bool UpdateFilament(FilamentUpdateRequestDbObject requestDb);
         FilamentDetailDbObject GetFilamentDetail(int groupId, int filamentId);
         DeletedDbObject DeleteFilament(int filamentId, int groupId, out int? error);
+        public FileResponseDbObject GetFilamentImageData(int filamentId, int groupId, out bool error);
+        public bool DeleteFilamentImageData(int filamentId, int groupId);
     }
 }

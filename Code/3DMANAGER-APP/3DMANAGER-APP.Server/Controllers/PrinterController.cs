@@ -197,7 +197,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         {
             _logger.LogInformation($"Llamada a la funcion DeletePrinter en el controlador PrinterController");
             if (GroupId == null && UserId == null && UserRole == "Usuario-Manager")
-                return Unauthorized(new Models.CommonResponse<GroupBasicDataResponse>(new ErrorProperties(401, NoAuthConstant)));
+                return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, NoAuthConstant)));
 
             BLL.Models.Base.CommonResponse<bool> response = await _printerManager.DeletePrinter(printerId, GroupId!.Value);
             if (response.Error != null || !response.Data)
@@ -205,5 +205,65 @@ namespace _3DMANAGER_APP.Server.Controllers
 
             return Ok(new Models.CommonResponse<bool>(response.Data));
         }
+
+
+        /// <summary>
+        /// Update a printer image
+        /// </summary>
+        /// <returns>Boolean that indicates if operation was succesfull</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="401">No autorizado</response>
+        /// <response code="409">Conflicto en servidor</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Printers")]
+        [HttpPut]
+        public async Task<IActionResult> UpdatePrinterImage(int printerId, IFormFile imageFile)
+        {
+            _logger.LogInformation($"Llamada a UpdatePrinterImage en el controlador PrinterController");
+            if (GroupId == null && UserId == null && UserRole == "Usuario-Manager")
+                return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, NoAuthConstant)));
+
+            var result = await _printerManager.UpdatePrinterImage(printerId, GroupId!.Value, imageFile);
+
+            if (result.Error != null)
+                return StatusCode(StatusCodes.Status500InternalServerError, new CommonResponse<bool>(result.Error));
+
+            return Ok(new CommonResponse<bool>(true));
+        }
+
+        /// <summary>
+        /// Delete a printer image
+        /// </summary>
+        /// <returns>Boolean that indicates if operation was succesfull</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="401">No autorizado</response>
+        /// <response code="409">Conflicto en servidor</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Printers")]
+        [HttpDelete]
+        public async Task<IActionResult> DeletePrinterImage(int printerId)
+        {
+            _logger.LogInformation($"Llamada a la funcion DeletePrinterImage en el controlador PrinterController");
+            if (GroupId == null && UserId == null && UserRole == "Usuario-Manager")
+                return Unauthorized(new Models.CommonResponse<GroupBasicDataResponse>(new ErrorProperties(401, NoAuthConstant)));
+
+            var result = await _printerManager.DeletePrinterImage(printerId, GroupId!.Value);
+
+            if (result.Error != null)
+                return StatusCode(result.Error.Code, new CommonResponse<bool>(result.Error));
+
+            return Ok(new CommonResponse<bool>(true));
+        }
+
     }
 }

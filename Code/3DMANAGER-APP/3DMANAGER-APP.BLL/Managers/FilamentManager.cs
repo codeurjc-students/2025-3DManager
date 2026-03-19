@@ -10,6 +10,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Net;
+using static _3DMANAGER_APP.BLL.Models.Base.Response;
 
 namespace _3DMANAGER_APP.BLL.Managers
 {
@@ -145,8 +146,79 @@ namespace _3DMANAGER_APP.BLL.Managers
             response.Data = responseDb.SuccesfullDelete;
             if (responseDb.FileResponse != null)
             {
-                //Aun no implementado
+                var responseImage = await DeleteFilamentImage(filamentId, groupId);
+                if (!responseImage.Data)
+                {
+                    string msg = $"Filamento eliminado correctamento. Pero ha ocurrido un error al eliminar la imagen en S3 del fichero {responseDb.FileResponse.FileKey}.";
+                    response.Error = new ErrorProperties(StatusCodes.Status500InternalServerError, msg);
+                    return response;
+                }
             }
+            return response;
+        }
+
+        public async Task<CommonResponse<bool>> DeleteFilamentImage(int filamentId, int groupId)
+        {
+            CommonResponse<bool> response = new CommonResponse<bool>();
+
+            FileResponseDbObject imageData = _filamentDbManager.GetFilamentImageData(filamentId, groupId, out bool error);
+
+            if (error)
+            {
+                response.Error = new ErrorProperties(StatusCodes.Status404NotFound, "Ha ocurrido un error al buscar en el filamento la imagen asociada.");
+                return response;
+            }
+            else if (imageData.FileKey == null && !error)
+            {
+                response.Data = true;
+                return response;
+            }
+
+            await _awsS3Service.DeleteImageAsync(imageData!.FileKey!);
+            bool dbResponse = _filamentDbManager.DeleteFilamentImageData(filamentId, groupId);
+
+            if (!dbResponse)
+            {
+                response.Error = new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al eliminar la imagen en la base de datos.");
+                return response;
+            }
+
+            response.Data = true;
+            return response;
+        }
+
+        public async Task<CommonResponse<bool>> UpdateFilamentImage(int filamentId, int groupId, IFormFile imageFile)
+        {
+            CommonResponse<bool> response = new CommonResponse<bool>();
+            response.Data = false;
+            if (imageFile == null)
+            {
+                response.Error = new ErrorProperties(StatusCodes.Status400BadRequest, "Error, no se ha recibido una imagen para actualizar");
+                return response;
+            }
+
+            var s3Response = await _awsS3Service.UploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName, imageFile.ContentType, "filaments", groupId);
+            if (s3Response == null)
+            {
+                response.Error = new ErrorProperties(StatusCodes.Status409Conflict, "Error al subir la imagen a S3.");
+                return response;
+            }
+            var deletedImage = await DeleteFilamentImage(filamentId, groupId);
+            if (!deletedImage.Data)
+            {
+                var fileData = _filamentDbManager.GetFilamentImageData(filamentId, groupId, out bool errorDbImage);
+                string? keyValue = errorDbImage ? "FileKey Desconocido" : fileData.FileKey;
+                string msg = $"Se ha intentado eliminar una foto del filamento {filamentId} del grupo {groupId} con el fileKey {keyValue}";
+                _logger.LogError(msg);
+            }
+            bool dbResponse = _filamentDbManager.UpdateFilamentImageData(filamentId, _mapper.Map<FileResponseDbObject>(s3Response));
+            if (!dbResponse)
+            {
+                response.Error = new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al actualizar la imagen en la base de datos.");
+                return response;
+            }
+
+            response.Data = true;
             return response;
         }
     }
