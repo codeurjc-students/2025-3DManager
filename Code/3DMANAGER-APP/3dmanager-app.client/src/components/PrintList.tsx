@@ -1,5 +1,4 @@
 ﻿import React, { useEffect, useState } from 'react';
-import type { PrintListResponse } from '../models/print/PrintListResponse';
 import { getPrintList } from '../api/printService';
 import { useNavigate } from 'react-router-dom';
 import Pagination from './Pagination';
