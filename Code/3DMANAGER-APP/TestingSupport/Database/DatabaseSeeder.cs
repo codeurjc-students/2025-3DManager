@@ -416,7 +416,6 @@
                 IN P_CD_GROUP INT
             )
             BEGIN
-                SET CodigoError = 0;
 
                 SELECT 
                     `USER_ID`,

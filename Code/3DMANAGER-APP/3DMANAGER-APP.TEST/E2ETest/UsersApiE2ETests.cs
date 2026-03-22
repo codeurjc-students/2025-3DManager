@@ -1,4 +1,6 @@
-﻿using _3DMANAGER_APP.TEST.Fixture;
+﻿using _3DMANAGER_APP.BLL.Models.User;
+using _3DMANAGER_APP.Server.Models;
+using _3DMANAGER_APP.TEST.Fixture;
 using System.Net;
 using System.Net.Http.Json;
 
