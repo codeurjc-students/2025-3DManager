@@ -20,11 +20,8 @@ Ultimately, the goal is to centralize collaboration, monitoring, and optimizatio
 
 A common use case is the application for managing the resources of a 3D printing shop. In this scenario, a group is created to centralize the administration of the shop’s resources and maintain accurate inventory control. This includes monitoring printer usage time, tracking filament and material consumption, as well as recording 3dPrints and the resources utilized, whether in terms of time or supplies.
 
-<<<<<<< HEAD
-=======
 --- 
 
->>>>>>> release/0.2.0
 ### Version 0.1
 
 In version 0.1, the application introduces the foundational features for user and group management. After registering, each user can choose to create a new group or join an existing one.
@@ -53,18 +50,6 @@ These are several screenshots of the current version of the application, illustr
 
 Description of functionality shown: ## [Funcionalities v.01](Documentation/Readme/FUNCTIONALITIES.md#functionality-v-01)
 
-<<<<<<< HEAD
-> [!IMPORTANT]  
-> The application is currently under development in phase 4.
-
-> [!NOTE]  
->  For version 0.2, the goal is to deliver a significantly more complete feature set, enabling full editing capabilities across all content managed by the platform. This upcoming release will also introduce intermediate algorithms designed to enhance the information displayed to users, providing a more contextual, dynamic, and insightful experience throughout the application.
-
-## Progress
-**Current Phase** : 4
-### Grant Diagram
-
-=======
 --- 
 ### Version 0.2
 
@@ -111,7 +96,6 @@ Description of functionality shown: ## [Funcionalities v.02](Documentation/Readm
 ### Grant Diagram
 
 (This picture has been taken on phase 1)
->>>>>>> release/0.2.0
 ![](Documentation/Diagrams/GranttDiagram.png)
 
 ## Methodology
@@ -121,15 +105,9 @@ The project is developed in phases, structured as follows:
 |-------|-------------|-----------|---------|----------|
 | Phase 1 | Definition of functionalities and screens |September 01 |September 14 | September 15 |
 | Phase 2 | Repository, testing, and CI |September 16 | October 28 | October 15 |
-<<<<<<< HEAD
-| Phase 3 | Version 0.1 - Basic functionality and Docker | October 29| | December 15 | January 28
-| Phase 4 | Version 0.2 - Intermediate functionality | January 28 | | March 1 |
-| Phase 5 | Version 1.0 - Advanced functionality | | | April 15 |
-=======
 | Phase 3 | Version 0.1 - Basic functionality and Docker | October 29| January 28 | December 15 | 
 | Phase 4 | Version 0.2 - Intermediate functionality | January 28 | March 22 | March 15 |
 | Phase 5 | Version 1.0 - Advanced functionality | March 23 | | April 15 |
->>>>>>> release/0.2.0
 | Phase 6 | Report | | | May 15 |
 | Phase 7 | Defense | | | June 15 |
 

@@ -1,11 +1,7 @@
 services:
   app:
     container_name: 3dmanager-app
-<<<<<<< HEAD
-    image: ivicenter2018/3dmanager-app:0.1
-=======
     image: ivicenter2018/3dmanager-app:0.2
->>>>>>> release/0.2.0
     command: ["dotnet", "3dmanager-app.dll"]
     depends_on:
       db:
@@ -33,11 +29,7 @@ services:
       start_period: 20s
 
   db:
-<<<<<<< HEAD
-    image: ivicenter2018/3dmanager-db:0.1
-=======
     image: ivicenter2018/3dmanager-db:0.2
->>>>>>> release/0.2.0
     environment:
       MYSQL_ROOT_PASSWORD: "3dmanagerpass"
       MYSQL_DATABASE: "3dmanager"

@@ -70,8 +70,6 @@
                 }
               }
             }
-<<<<<<< HEAD
-=======
           },
           "401": {
             "description": "Unauthorized",
@@ -82,7 +80,6 @@
                 }
               }
             }
->>>>>>> release/0.2.0
           }
         }
       }
@@ -98,8 +95,6 @@
             "content": {
               "application/json": {
                 "schema": {
-<<<<<<< HEAD
-=======
                   "$ref": "#/components/schemas/CatalogPrinterResponseListCommonResponse"
                 }
               }
@@ -148,7 +143,6 @@
             "content": {
               "application/json": {
                 "schema": {
->>>>>>> release/0.2.0
                   "$ref": "#/components/schemas/CatalogResponseListCommonResponse"
                 }
               }
@@ -173,13 +167,8 @@
               }
             }
           },
-<<<<<<< HEAD
-          "409": {
-            "description": "Conflict",
-=======
           "204": {
             "description": "No Content",
->>>>>>> release/0.2.0
             "content": {
               "application/json": {
                 "schema": {
@@ -208,26 +197,6 @@
         ],
         "requestBody": {
           "content": {
-<<<<<<< HEAD
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/FilamentRequest"
-              }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FilamentRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FilamentRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/FilamentRequest"
-=======
             "multipart/form-data": {
               "schema": {
                 "type": "object",
@@ -309,7 +278,6 @@
                 "ImageFile": {
                   "style": "form"
                 }
->>>>>>> release/0.2.0
               }
             }
           }
@@ -320,8 +288,6 @@
             "content": {
               "application/json": {
                 "schema": {
-<<<<<<< HEAD
-=======
                   "$ref": "#/components/schemas/Int32CommonResponse"
                 }
               }
@@ -631,7 +597,6 @@
             "content": {
               "application/json": {
                 "schema": {
->>>>>>> release/0.2.0
                   "$ref": "#/components/schemas/BooleanCommonResponse"
                 }
               }
@@ -680,13 +645,8 @@
               }
             }
           },
-<<<<<<< HEAD
-          "409": {
-            "description": "Conflict",
-=======
           "401": {
             "description": "Unauthorized",
->>>>>>> release/0.2.0
             "content": {
               "application/json": {
                 "schema": {
@@ -724,8 +684,6 @@
               }
             }
           },
-<<<<<<< HEAD
-=======
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -736,7 +694,6 @@
               }
             }
           },
->>>>>>> release/0.2.0
           "500": {
             "description": "Internal Server Error",
             "content": {
@@ -750,11 +707,7 @@
         }
       }
     },
-<<<<<<< HEAD
-    "/api/v1/groups/postAcceptInvitation": {
-=======
     "/api/v1/groups/PostAcceptInvitation": {
->>>>>>> release/0.2.0
       "post": {
         "tags": [
           "Groups"
@@ -787,8 +740,6 @@
               }
             }
           },
-<<<<<<< HEAD
-=======
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -799,7 +750,6 @@
               }
             }
           },
->>>>>>> release/0.2.0
           "500": {
             "description": "Internal Server Error",
             "content": {
@@ -813,8 +763,6 @@
         }
       }
     },
-<<<<<<< HEAD
-=======
     "/api/v1/groups/GetGroupBasicData": {
       "get": {
         "tags": [
@@ -1122,7 +1070,6 @@
         }
       }
     },
->>>>>>> release/0.2.0
     "/api/v1/printers/GetPrinterList": {
       "get": {
         "tags": [
@@ -1208,9 +1155,6 @@
             "content": {
               "application/json": {
                 "schema": {
-<<<<<<< HEAD
-                  "$ref": "#/components/schemas/BooleanCommonResponse"
-=======
                   "$ref": "#/components/schemas/Int32CommonResponse"
                 }
               }
@@ -1242,7 +1186,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Int32CommonResponse"
->>>>>>> release/0.2.0
                 }
               }
             }
@@ -1266,13 +1209,8 @@
               }
             }
           },
-<<<<<<< HEAD
-          "409": {
-            "description": "Conflict",
-=======
           "401": {
             "description": "Unauthorized",
->>>>>>> release/0.2.0
             "content": {
               "application/json": {
                 "schema": {
@@ -1294,13 +1232,6 @@
         }
       }
     },
-<<<<<<< HEAD
-    "/api/v1/prints/GetPrintList": {
-      "get": {
-        "tags": [
-          "Prints"
-        ],
-=======
     "/api/v1/printers/UpdatePrinter": {
       "put": {
         "tags": [
@@ -1330,37 +1261,23 @@
             }
           }
         },
->>>>>>> release/0.2.0
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-<<<<<<< HEAD
-                  "$ref": "#/components/schemas/PrintListResponseListCommonResponse"
-=======
                   "$ref": "#/components/schemas/BooleanCommonResponse"
->>>>>>> release/0.2.0
                 }
               }
             }
           },
-<<<<<<< HEAD
-          "409": {
-            "description": "Conflict",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PrintListResponseListCommonResponse"
-=======
           "401": {
             "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BooleanCommonResponse"
->>>>>>> release/0.2.0
                 }
               }
             }
@@ -1370,9 +1287,6 @@
             "content": {
               "application/json": {
                 "schema": {
-<<<<<<< HEAD
-                  "$ref": "#/components/schemas/PrintListResponseListCommonResponse"
-=======
                   "$ref": "#/components/schemas/BooleanCommonResponse"
                 }
               }
@@ -1647,7 +1561,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PrintListResponseCommonResponse"
->>>>>>> release/0.2.0
                 }
               }
             }
@@ -1662,26 +1575,6 @@
         ],
         "requestBody": {
           "content": {
-<<<<<<< HEAD
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/PrintRequest"
-              }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PrintRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PrintRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/PrintRequest"
-=======
             "multipart/form-data": {
               "schema": {
                 "type": "object",
@@ -1771,7 +1664,6 @@
                 "ImageFile": {
                   "style": "form"
                 }
->>>>>>> release/0.2.0
               }
             }
           }
@@ -1782,8 +1674,6 @@
             "content": {
               "application/json": {
                 "schema": {
-<<<<<<< HEAD
-=======
                   "$ref": "#/components/schemas/Int32CommonResponse"
                 }
               }
@@ -2160,7 +2050,6 @@
             "content": {
               "application/json": {
                 "schema": {
->>>>>>> release/0.2.0
                   "$ref": "#/components/schemas/BooleanCommonResponse"
                 }
               }
@@ -2176,26 +2065,6 @@
         ],
         "requestBody": {
           "content": {
-<<<<<<< HEAD
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserCreateRequest"
-              }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserCreateRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserCreateRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserCreateRequest"
-=======
             "multipart/form-data": {
               "schema": {
                 "type": "object",
@@ -2228,7 +2097,6 @@
                 "ImageFile": {
                   "style": "form"
                 }
->>>>>>> release/0.2.0
               }
             }
           }
@@ -2239,11 +2107,7 @@
             "content": {
               "application/json": {
                 "schema": {
-<<<<<<< HEAD
-                  "$ref": "#/components/schemas/BooleanCommonResponse"
-=======
                   "$ref": "#/components/schemas/Int32CommonResponse"
->>>>>>> release/0.2.0
                 }
               }
             }
@@ -2253,11 +2117,7 @@
             "content": {
               "application/json": {
                 "schema": {
-<<<<<<< HEAD
-                  "$ref": "#/components/schemas/BooleanCommonResponse"
-=======
                   "$ref": "#/components/schemas/Int32CommonResponse"
->>>>>>> release/0.2.0
                 }
               }
             }
@@ -2267,11 +2127,7 @@
             "content": {
               "application/json": {
                 "schema": {
-<<<<<<< HEAD
-                  "$ref": "#/components/schemas/BooleanCommonResponse"
-=======
                   "$ref": "#/components/schemas/Int32CommonResponse"
->>>>>>> release/0.2.0
                 }
               }
             }
@@ -2319,10 +2175,6 @@
               }
             }
           },
-<<<<<<< HEAD
-          "409": {
-            "description": "Conflict",
-=======
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -2335,7 +2187,6 @@
           },
           "404": {
             "description": "Not Found",
->>>>>>> release/0.2.0
             "content": {
               "application/json": {
                 "schema": {
@@ -2373,10 +2224,6 @@
               }
             }
           },
-<<<<<<< HEAD
-          "409": {
-            "description": "Conflict",
-=======
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -2389,7 +2236,6 @@
           },
           "404": {
             "description": "Not Found",
->>>>>>> release/0.2.0
             "content": {
               "application/json": {
                 "schema": {
@@ -2427,13 +2273,8 @@
               }
             }
           },
-<<<<<<< HEAD
-          "409": {
-            "description": "Conflict",
-=======
           "401": {
             "description": "Unauthorized",
->>>>>>> release/0.2.0
             "content": {
               "application/json": {
                 "schema": {
@@ -2460,8 +2301,6 @@
         "tags": [
           "Users"
         ],
-<<<<<<< HEAD
-=======
         "parameters": [
           {
             "name": "filter",
@@ -2471,7 +2310,6 @@
             }
           }
         ],
->>>>>>> release/0.2.0
         "responses": {
           "200": {
             "description": "OK",
@@ -2517,9 +2355,6 @@
             "content": {
               "application/json": {
                 "schema": {
-<<<<<<< HEAD
-                  "$ref": "#/components/schemas/UserListResponseListCommonResponse"
-=======
                   "$ref": "#/components/schemas/BooleanCommonResponse"
                 }
               }
@@ -2541,7 +2376,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BooleanCommonResponse"
->>>>>>> release/0.2.0
                 }
               }
             }
@@ -2551,9 +2385,6 @@
             "content": {
               "application/json": {
                 "schema": {
-<<<<<<< HEAD
-                  "$ref": "#/components/schemas/UserListResponseListCommonResponse"
-=======
                   "$ref": "#/components/schemas/BooleanCommonResponse"
                 }
               }
@@ -2814,7 +2645,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BooleanCommonResponse"
->>>>>>> release/0.2.0
                 }
               }
             }
@@ -2837,8 +2667,6 @@
         },
         "additionalProperties": false
       },
-<<<<<<< HEAD
-=======
       "CatalogPrinterResponse": {
         "type": "object",
         "properties": {
@@ -2873,7 +2701,6 @@
         },
         "additionalProperties": false
       },
->>>>>>> release/0.2.0
       "CatalogResponse": {
         "type": "object",
         "properties": {
@@ -2918,8 +2745,6 @@
         },
         "additionalProperties": false
       },
-<<<<<<< HEAD
-=======
       "FilamentDetailObject": {
         "type": "object",
         "properties": {
@@ -3001,7 +2826,6 @@
         },
         "additionalProperties": false
       },
->>>>>>> release/0.2.0
       "FilamentListResponse": {
         "type": "object",
         "properties": {
@@ -3044,78 +2868,45 @@
         },
         "additionalProperties": false
       },
-<<<<<<< HEAD
-      "FilamentRequest": {
-=======
       "FilamentUpdateRequest": {
->>>>>>> release/0.2.0
         "type": "object",
         "properties": {
           "groupId": {
             "type": "integer",
             "format": "int32"
           },
-<<<<<<< HEAD
-=======
           "filamentId": {
             "type": "integer",
             "format": "int32"
           },
->>>>>>> release/0.2.0
           "filamentName": {
             "type": "string",
             "nullable": true
           },
-<<<<<<< HEAD
-          "filamentType": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "filamentWeight": {
-            "type": "number",
-            "format": "double"
-          },
-=======
->>>>>>> release/0.2.0
           "filamentColor": {
             "type": "string",
             "nullable": true
           },
           "filamentTemperature": {
             "type": "integer",
-<<<<<<< HEAD
-            "format": "int32"
-=======
             "format": "int32",
             "nullable": true
->>>>>>> release/0.2.0
           },
           "filamentLenght": {
             "type": "number",
             "format": "double"
           },
-<<<<<<< HEAD
-          "filamentThickness": {
-            "type": "number",
-            "format": "double"
-=======
           "filamentDescription": {
             "type": "string",
             "nullable": true
->>>>>>> release/0.2.0
           },
           "filamentCost": {
             "type": "number",
             "format": "double"
           },
-<<<<<<< HEAD
-          "filamentDescription": {
-            "type": "string",
-=======
           "imageFile": {
             "type": "string",
             "format": "binary",
->>>>>>> release/0.2.0
             "nullable": true
           }
         },
@@ -3135,8 +2926,6 @@
         },
         "additionalProperties": false
       },
-<<<<<<< HEAD
-=======
       "GroupBasicDataResponse": {
         "type": "object",
         "properties": {
@@ -3231,7 +3020,6 @@
         },
         "additionalProperties": false
       },
->>>>>>> release/0.2.0
       "GroupInvitation": {
         "type": "object",
         "properties": {
@@ -3288,8 +3076,6 @@
         },
         "additionalProperties": false
       },
-<<<<<<< HEAD
-=======
       "Int32CommonResponse": {
         "type": "object",
         "properties": {
@@ -3303,7 +3089,6 @@
         },
         "additionalProperties": false
       },
->>>>>>> release/0.2.0
       "LoginRequest": {
         "type": "object",
         "properties": {
@@ -3343,11 +3128,6 @@
         },
         "additionalProperties": false
       },
-<<<<<<< HEAD
-      "PrintListResponse": {
-        "type": "object",
-        "properties": {
-=======
       "PrintCommentObject": {
         "type": "object",
         "properties": {
@@ -3551,7 +3331,6 @@
       "PrintResponse": {
         "type": "object",
         "properties": {
->>>>>>> release/0.2.0
           "printId": {
             "type": "integer",
             "format": "int32"
@@ -3579,9 +3358,6 @@
         },
         "additionalProperties": false
       },
-<<<<<<< HEAD
-      "PrintListResponseListCommonResponse": {
-=======
       "PrinterDetailObject": {
         "type": "object",
         "properties": {
@@ -3658,74 +3434,24 @@
         "additionalProperties": false
       },
       "PrinterDetailObjectCommonResponse": {
->>>>>>> release/0.2.0
         "type": "object",
         "properties": {
           "error": {
             "$ref": "#/components/schemas/ErrorProperties"
           },
           "data": {
-<<<<<<< HEAD
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PrintListResponse"
-            },
-            "nullable": true
-=======
             "$ref": "#/components/schemas/PrinterDetailObject"
->>>>>>> release/0.2.0
           }
         },
         "additionalProperties": false
       },
-<<<<<<< HEAD
-      "PrintRequest": {
-=======
       "PrinterDetailRequest": {
->>>>>>> release/0.2.0
         "type": "object",
         "properties": {
           "groupId": {
             "type": "integer",
             "format": "int32"
           },
-<<<<<<< HEAD
-          "userId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "printName": {
-            "type": "string",
-            "nullable": true
-          },
-          "printState": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "printPrinter": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "printFilament": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "printDescription": {
-            "type": "string",
-            "nullable": true
-          },
-          "printTime": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "printFilamentUsed": {
-            "type": "number",
-            "format": "double"
-          },
-          "printRealTime": {
-            "type": "integer",
-            "format": "int32"
-=======
           "printerId": {
             "type": "integer",
             "format": "int32"
@@ -3763,7 +3489,6 @@
           "printerHours": {
             "type": "string",
             "nullable": true
->>>>>>> release/0.2.0
           }
         },
         "additionalProperties": false
@@ -3845,11 +3570,6 @@
         },
         "additionalProperties": false
       },
-<<<<<<< HEAD
-      "UserCreateRequest": {
-        "type": "object",
-        "properties": {
-=======
       "UserDetailObject": {
         "type": "object",
         "properties": {
@@ -3857,24 +3577,17 @@
             "type": "integer",
             "format": "int32"
           },
->>>>>>> release/0.2.0
           "userName": {
             "type": "string",
             "nullable": true
           },
-<<<<<<< HEAD
-          "userPassword": {
-=======
           "userRole": {
->>>>>>> release/0.2.0
             "type": "string",
             "nullable": true
           },
           "userEmail": {
             "type": "string",
             "nullable": true
-<<<<<<< HEAD
-=======
           },
           "userCreateDate": {
             "type": "string",
@@ -3910,7 +3623,6 @@
           },
           "data": {
             "$ref": "#/components/schemas/UserDetailObject"
->>>>>>> release/0.2.0
           }
         },
         "additionalProperties": false
@@ -3987,8 +3699,6 @@
           }
         },
         "additionalProperties": false
-<<<<<<< HEAD
-=======
       },
       "UserUpdateRequest": {
         "type": "object",
@@ -4011,7 +3721,6 @@
           }
         },
         "additionalProperties": false
->>>>>>> release/0.2.0
       }
     }
   }
