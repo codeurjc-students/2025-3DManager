@@ -285,9 +285,17 @@ the frontend, backend, and database. Each component runs as an independent proce
 **Domain Model**
 The domain model represents the persistent entities of the application, their main attributes, and the relationships between them. This diagram provides a clear view of how data is structured within the system.
 The illustration shown corresponds to the EER diagram used during the database design phase.
-
+Scheme on v 0.1
 ![](../Screensv01/ERR_3DMANAGER_BBDD_v01.png)
 
+Scheme on v 0.2
+![](../Screensv02/ERR_3DMANAGER_BBDD_v02.png)
+
+Summary:
+  - Tables : 15
+  - Stored Procedures/ Rountines : 57
+
+![](../Screensv02/BBDDSummary.png)
 
 ### Communication and Protocols
 
@@ -372,6 +380,10 @@ It adopts selected practices from Kanban, focusing on continuous improvement, fr
 
 ![](../DocsImages/ProjectGitHub.png)
 
+Project state capture while phase 4 still in process
+
+![](../Screensv02/GithubProjectv02.png)
+
 This setup allows for a clear visual representation of the project’s status and facilitates iterative planning and progress tracking.
 
 ### Git Version Control
@@ -401,17 +413,23 @@ During development, each new feature or bug fix is implemented in its own branch
 |-------|-------------|-----|
 |Commits|	Approximately 12 commits across all branches.| Phase 2 |
 |Commits|	Approximately 120-125 commits across all branches.| Phase 3 |
+|Commits|	Approximately 100 commits across all branches.| Phase 4 |
 |Branches|	Around 4 active branches during development.| Phase 2 |
 |Branches|	Around 14 branches created during development.| Phase 3 |
+|Branches|	Around 19 branches created during development.| Phase 4 |
 |Pull Requests|	Around 1 pull request .| Phase 2 |
-|Pull Requests|	Around 14 pull request .| Phase 3 |
-|Contributors|	1 developer and 1 Supervisor .| Phase 2 and 3 |
+|Pull Requests|	Around 23 pull request .| Phase 3 |
+|Pull Requests|	Around 24 pull request .| Phase 4 |
+|Contributors|	1 developer and 1 Supervisor .| Phase 2, 3 and 4 |
 
 Phase 2 metrics:
 ![](../DocsImages/GitHubMetrics.png)
 
 Phase 3 metrics (Last month of the phase) 
 ![](../DocsImages/GitHubMetricsP3.png)
+
+Phase 4 metrics (Last month of the phase)
+![](../Screensv02/GitHubMetricsP4.png)
 
 ### Continuous Integration (CI)
 
@@ -490,7 +508,7 @@ The project repository is publicly hosted under the URJC (Universidad Rey Juan C
 ### Generate OpenAPI file (swagger.json)
 
 - Downloads the OpenAPI document directly from the running API and saves it into the SwaggerDoc folder.
-   ```Invoke-WebRequest -Uri "https://localhost:7284/swagger/v1/swagger.json" -OutFile .\SwaggerDoc\openapi.json```
+   ```Invoke-WebRequest -Uri "https://localhost/swagger/v1/swagger.json" -OutFile .\SwaggerDoc\openapi.json```
 
 - Generate HTML documentation with Redocly
    ```npx @redocly/cli build-docs SwaggerDoc/openapi.json --output SwaggerDoc/swagger.html```
@@ -508,6 +526,10 @@ The project repository is publicly hosted under the URJC (Universidad Rey Juan C
 Another picture of tests explorer in version 0.1.0 
 
 ![](../DocsImages/TestExplorerBackend_v01.png) 
+
+On version 0.2.0
+
+![](../Screensv02/TestServerImagev02.png)
 
 - To execute de test in backend using the standard .NET CLI command:
     -`dotnet test` 
