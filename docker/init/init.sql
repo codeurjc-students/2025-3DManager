@@ -5,7 +5,7 @@ CREATE DATABASE IF NOT EXISTS 3dmanager; USE 3dmanager;
 CREATE TABLE `3DMANAGER_C_ROLES` (
   `3DMANAGER_C_ROLES_ID` int NOT NULL AUTO_INCREMENT,
   `3DMANAGER_C_ROLES_NAME` varchar(30) NOT NULL,
-  PRIMARY KEY (`3DMANAGER_C_ROLES_ID`
+  PRIMARY KEY (`3DMANAGER_C_ROLES_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `3DMANAGER_C_STATE_FILAMENT` (
@@ -272,7 +272,7 @@ VALUES
 ('Impresion 1',2,5184,4380,4.58,1,1,2,1,'Benchy test 1 con filamento 1'),
 ('Impresion 2',2,5184,4800,4.74,1,1,2,2,'Benchy test 2 con filamento 2'),
 ('Impresion 3',2,5184,5180,4.96,1,2,2,3,'Benchy test 3 con filamento 3'),
-('Impresion 4 Fallida',2,5184,2000,4.2.5,1,2,2,3,'Benchy test 4 con filamento 3'),
+('Impresion 4 Fallida',2,5184,2000,4.5,1,2,2,3,'Benchy test 4 con filamento 3')
 ;
 
 -- STORED PROCEDURES		
