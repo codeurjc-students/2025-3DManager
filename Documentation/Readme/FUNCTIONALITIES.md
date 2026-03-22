@@ -33,11 +33,13 @@ A user is able to create a new group that includes users, printers, filaments, a
 A user is able to edit the details of an existing group.
 - Scope: Basic
 - Users: Manager
+- Implemented in v 0.2
 
 ### Delete a group
 A user is able to delete an existing group.
 - Scope: Basic
 - Users: Manager
+- Implemented in v 0.2
 
 ### Join a group
 A user is able to join an existing group by invitation of the owners of groups.
@@ -49,11 +51,13 @@ A user is able to join an existing group by invitation of the owners of groups.
 A user is able to leave a group. Their resources are no longer shown in listings but remain available in history and estimations.  
 - Scope: Intermediate  
 - Users: Base user  
+- Implemented in v 0.2
 
 ### Transfer management
 A user is able to transfer their manager role to another user in the group.
 - Scope: Intermediate  
 - Users: Manager  
+- Implemented in v 0.2
 
 ---
 
@@ -63,11 +67,13 @@ A user is able to transfer their manager role to another user in the group.
 A user is able to view a summary with aggregated printing metrics, including hours, 3DPrints, and material.
 - Scope: Basic  
 - Users: All  
+- Implemented in v 0.2
   
 ### Retrieve group data for pop-up
 A user is able to quickly view group statistics in pop-up windows. 
 - Scope: Intermediate  
 - Users: All  
+- Implemented in v 0.2
 
 ### Upload 3dPrint
 A user is able to upload a GCODE file and generate a new 3D print in the system with its metrics. The relevant data of the file upload it can be seen by the user beofre extracction.   
@@ -118,7 +124,7 @@ A user is able to view the 3D prints associated with the group and basic metric 
   
 ### Notifications list (app)
 A user is able to view app notifications.  
-- Scope: Intermediate  
+- Scope: Advanced  
 - Users: All  
 
 ### Printer list
@@ -127,6 +133,18 @@ A user is able to view the printers associated with the groupand the basic data 
 - Users: All  
 - Implemented in v 0.1
   
+### Pagination
+Pagination has been implemented both on the server side for entities with potentially large data volumes—such as 3D prints—and on the client side for smaller entities like printers, where large quantities per group are not expected.
+- Scope: Intermediate
+- Users: All
+- Implemented in: v0.2
+
+### User search
+A user is able to search for other users within the group to improve navigation and management efficiency.
+- Scope: Basic
+- Users: All
+- Implemented in: v0.2
+
 ---
 
 ## Details
@@ -135,21 +153,25 @@ A user is able to view the printers associated with the groupand the basic data 
 A user is able to view complete information about a filament, including its consumption and associated 3D prints. 
 - Scope: Intermediate  
 - Users: All  
+- Implemented in v 0.2
 
 ### User details
 A user is able to view activity metrics of a user within the group.
 - Scope: Intermediate  
 - Users: All  
+- Implemented in v 0.2
 
 ### Printer details
 A user is able to view detailed information about a printer, including hours, 3D prints, and success rate.
 - Scope: Intermediate  
 - Users: All  
+- Implemented in v 0.2
 
 ### 3dPrint details
 A user is able to view printing metrics, including estimated vs. actual time, material used, and printer. 
 - Scope: Intermediate  
 - Users: All  
+- Implemented in v 0.2
 
 ### 3D Print files
 A user is able to view and download files related to a 3D print.
@@ -160,6 +182,7 @@ A user is able to view and download files related to a 3D print.
 A user is able to write and view comments about a 3D print in the interaction section. 
 - Scope: Intermediate  
 - Users: Base user, Manager  
+- Implemented in v 0.2
 
 ---
 
@@ -169,28 +192,32 @@ A user is able to write and view comments about a 3D print in the interaction se
 A user is able to adjust predictions by comparing them with previously printed 3D prints. 
 - Scope: Intermediate  
 - Users: Base user, Manager  
+- Implemented in v 0.2
 
 ### Estimated time variation per printer
 A user is able to adjust printing times for each printer based on its historical data. 
 - Scope: Intermediate  
-- Users: Base user, Manager  
+- Users: Base user, Manager 
+- Implemented in v 0.2 
 
 ### Dashboard charts
 A user is able to view visual representations of monthly usage, material consumption, and 3D prints. 
 - Scope: Intermediate  
 - Users: All  
+- Implemented in v 0.2
 
 ### Printer detail chart – success rate
 A user is able to view a visual indicator of the percentage of successful prints. 
 - Scope: Intermediate  
 - Users: All  
+- Implemented in v 0.2
 
 ### Image processing
 A user is able to associate and view photos of 3D prints, printers or users to complement the information. In v 0.1 only in the printers.
 - Scope: Intermediate  
 - Users: Base user, Manager  
 - Implemented in v 0.1 (only on printers)
-  
+- Implemented in v 0.2 All entities  
 ---
 
 ## Additional information
@@ -246,7 +273,68 @@ Group owners can access creation forms and provide the required information to a
 Group members can view the same information as the owner and are allowed to register new prints. However, they cannot expand the group’s inventory, meaning they are not permitted to create printers, filaments, or manage users.
 
 ---
-### Final List of developed
+
+## Functionality v 0.2
+
+### Edit Group  
+Users with manager permissions can modify the basic details of an existing group.
+
+### Delete Group  
+Managers can remove a group entirely, ensuring a controlled and secure deletion process.
+
+### Leave Group  
+Base users can exit a group. Their resources are removed from active listings but remain available in history and estimations.
+
+### Transfer Management  
+A manager can delegate their role to another member of the group.
+
+### General Data Summary  
+All users can access aggregated printing metrics, including total hours, number of 3D prints, and material usage.
+
+### Group Data Pop‑ups  
+Quick‑access pop‑up windows provide immediate visibility into key group statistics.
+
+### Filament Details  
+Complete filament information, including consumption metrics and associated 3D prints.
+
+### User Details  
+Activity metrics for each user within the group.
+
+### Printer Details  
+Detailed printer statistics, including total hours, number of prints, and success rate.
+
+### 3DPrint Details  
+Metrics such as estimated vs. actual time, material usage, and the printer used.
+
+### 3DPrint Comments  
+Base users and managers can write and view comments in the interaction section of each print.
+
+### Estimated Real Printing Time  
+Predictions can be adjusted based on historical data from previously completed prints.
+
+### Estimated Time Variation per Printer  
+Users can get time estimates for each printer according to its historical performance.
+
+### Dashboard Charts  
+Visual representations of monthly usage, and number of 3D prints.
+
+### Printer Success Rate Chart  
+A visual indicator showing the percentage of successful prints for each printer when you pick a printer and a gcode file.
+
+### Extended Image Support  
+Users can associate and view photos for all entities (3D prints, filaments, users, and printers).
+This expands the functionality introduced in Version 0.1, where images were supported only for printers.
+
+### Reusable popup system
+Users can view  information, warnings , view errors, or confirm actions in the UI through popups
+
+### Pagination
+Pagination has been implemented both on the server side for entities with potentially large data volumes—such as 3D prints—and on the client side for smaller entities like printers, where large quantities per group are not expected.
+
+### User search
+A user is able to search for other users within the group to improve navigation and management efficiency.
+------
+### Final List of developed 
 
 Version 0.1 delivers the initial set of core functionalities for user, group, and inventory management within the application. The full scope of this release includes:
 
@@ -266,3 +354,24 @@ Version 0.1 delivers the initial set of core functionalities for user, group, an
 - Inviting users to the group (group owner only).
 - G-code file upload, including:
    - An algorithm to extract relevant data from the file to enhance the information shown to the user.
+
+Version 0.2 expands the application with advanced group management capabilities, detailed resource insights, and enhanced analytical tools. This release strengthens user autonomy and improves the depth of information available throughout the platform. The full scope of this release includes:
+
+- Editing an existing group (manager only).
+- Deleting a group (manager only).
+- Leaving a group, removing the user’s resources from active listings while preserving historical data (base user).
+- Transferring the manager role to another group member.
+- Access to a general summary of aggregated printing metrics, including hours, number of 3D prints, and material usage.
+- Filament details, including consumption metrics and associated 3D prints.
+- User details, showing activity metrics within the group.
+- Printer details, including total hours, number of prints, and success rate.
+- 3DPrint details, including estimated vs. actual time, material usage, and printer information.
+- 3DPrint comments, allowing users to write and view comments on each print (base user and manager).
+- Estimated real printing time based on historical data.
+- Estimated time variation per printer, adjusted according to its performance history.
+- Dashboard charts showing monthly usage, material consumption, and number of 3D prints.
+- Printer success rate chart, providing a visual indicator of print reliability.
+- Image Processing
+   - Extended image support for all entities (3D prints, filaments, users, and printers).This expands the functionality introduced in Version 0.1, where images were supported only for printers.
+- General update and cleanup of warnings to make the code more reliable and aligned with good practices through static code analysis. This could not be applied in the same way as in other areas due to the initial development requirements, which were later adapted.
+---

@@ -20,6 +20,8 @@ Ultimately, the goal is to centralize collaboration, monitoring, and optimizatio
 
 A common use case is the application for managing the resources of a 3D printing shop. In this scenario, a group is created to centralize the administration of the shop’s resources and maintain accurate inventory control. This includes monitoring printer usage time, tracking filament and material consumption, as well as recording 3dPrints and the resources utilized, whether in terms of time or supplies.
 
+--- 
+
 ### Version 0.1
 
 In version 0.1, the application introduces the foundational features for user and group management. After registering, each user can choose to create a new group or join an existing one.
@@ -48,16 +50,52 @@ These are several screenshots of the current version of the application, illustr
 
 Description of functionality shown: ## [Funcionalities v.01](Documentation/Readme/FUNCTIONALITIES.md#functionality-v-01)
 
+--- 
+### Version 0.2
+
+In version 0.2, the application expands its capabilities with new group‑management features and deeper access to resource information. Users can now edit or delete a group, leave it while preserving their historical data, and even transfer management responsibilities to another member.
+
+The platform also introduces detailed views for printers, filaments, users, and 3D prints, offering insights such as consumption, activity metrics, success rates, and time comparisons.
+
+This version enhances analytical capabilities through improved estimations, including real printing time and printer‑specific time variations. Dashboard charts now visualize usage trends, and print volume. Pagination has been added both on the server side for large datasets and on the client side for smaller ones, and user search is now available to streamline navigation. Image support has also been extended, allowing photos to be associated with all entities across the system.
+
+Below is a set of images showcasing the visual layout of some pages of the application
+
+#### Dashboard
+![](Documentation/Screensv02/Dashboard.png)
+
+#### Submit 3dprint or estimate print time 
+![](Documentation/Screensv02/AddPrintOrEstimatePage.png)
+
+#### Filament detail page
+![](Documentation/Screensv02/FilamentDetails.png)
+
+#### 3dPrint detail page
+![](Documentation/Screensv02/PrintDetails.png)
+
+#### Printer detail page
+![](Documentation/Screensv02/PrinterDetail.png)
+
+#### User detail page
+![](Documentation/Screensv02/UserDetails.png)
+
+#### Generic error page
+![](Documentation/Screensv02/GenericErrorPage.png)
+
+Description of functionality shown: ## [Funcionalities v.02](Documentation/Readme/FUNCTIONALITIES.md#functionality-v-02)
+
+
 > [!IMPORTANT]  
-> The application is currently under development in phase 4.
+> The application is currently under development in phase 5.
 
 > [!NOTE]  
->  For version 0.2, the goal is to deliver a significantly more complete feature set, enabling full editing capabilities across all content managed by the platform. This upcoming release will also introduce intermediate algorithms designed to enhance the information displayed to users, providing a more contextual, dynamic, and insightful experience throughout the application.
+>  For version 1.0, the goal is to deliver a complete feature set, enabling emails on relevant events, generate a 3d image using the gcode file and a complete release functionality on Azure.
 
 ## Progress
-**Current Phase** : 4
+**Current Phase** : 5
 ### Grant Diagram
 
+(This picture has been taken on phase 1)
 ![](Documentation/Diagrams/GranttDiagram.png)
 
 ## Methodology
@@ -67,9 +105,9 @@ The project is developed in phases, structured as follows:
 |-------|-------------|-----------|---------|----------|
 | Phase 1 | Definition of functionalities and screens |September 01 |September 14 | September 15 |
 | Phase 2 | Repository, testing, and CI |September 16 | October 28 | October 15 |
-| Phase 3 | Version 0.1 - Basic functionality and Docker | October 29| | December 15 | January 28
-| Phase 4 | Version 0.2 - Intermediate functionality | January 28 | | March 1 |
-| Phase 5 | Version 1.0 - Advanced functionality | | | April 15 |
+| Phase 3 | Version 0.1 - Basic functionality and Docker | October 29| January 28 | December 15 | 
+| Phase 4 | Version 0.2 - Intermediate functionality | January 28 | March 22 | March 15 |
+| Phase 5 | Version 1.0 - Advanced functionality | March 23 | | April 15 |
 | Phase 6 | Report | | | May 15 |
 | Phase 7 | Defense | | | June 15 |
 
