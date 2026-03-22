@@ -380,7 +380,7 @@ It adopts selected practices from Kanban, focusing on continuous improvement, fr
 
 ![](../DocsImages/ProjectGitHub.png)
 
-Project state capture while phase still in process
+Project state capture while phase 4 still in process
 
 ![](../Screensv02/GithubProjectv02.png)
 
@@ -508,7 +508,7 @@ The project repository is publicly hosted under the URJC (Universidad Rey Juan C
 ### Generate OpenAPI file (swagger.json)
 
 - Downloads the OpenAPI document directly from the running API and saves it into the SwaggerDoc folder.
-   ```Invoke-WebRequest -Uri "https://localhost:7284/swagger/v1/swagger.json" -OutFile .\SwaggerDoc\openapi.json```
+   ```Invoke-WebRequest -Uri "https://localhost/swagger/v1/swagger.json" -OutFile .\SwaggerDoc\openapi.json```
 
 - Generate HTML documentation with Redocly
    ```npx @redocly/cli build-docs SwaggerDoc/openapi.json --output SwaggerDoc/swagger.html```
