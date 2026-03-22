@@ -1,14 +1,24 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from "react-router-dom";
+import { usePopupContext } from "../context/PopupContext";
+import GroupPopup from './popupComponent/GroupPopup';
+
 
 const Header: React.FC = () => {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
+    const { showPopup } = usePopupContext();
 
     const handleLogoutClick = () => {
         logout();
         navigate("/login");
+    };
+
+    const handleGroup = () => {
+        showPopup({
+            type: "base", width: "80vh", content: (<GroupPopup/>)
+        });
     };
 
     return (
@@ -21,8 +31,8 @@ const Header: React.FC = () => {
                 {user ? (
                     <div className="row align-items-center">
                         <div className="col d-flex flex-column">
-                            <span className="header-name">{user.userName}</span>
-                            <span className="header-group">{user.groupName}</span>
+                            <button className="header-name" onClick={() => navigate(`/dashboard/user/detail/${user.userId}`)}>{user.userName}</button>
+                            <button className="header-group" onClick={handleGroup}>{user.groupName}</button>
                         </div>
                         <div className="col-auto">
                             <svg width="48" height="48" viewBox="0 0 48 48" fill="none" className="logout-icon" onClick={handleLogoutClick}>

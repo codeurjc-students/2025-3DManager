@@ -70,6 +70,19 @@
                 }
               }
             }
+<<<<<<< HEAD
+=======
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CatalogResponseListCommonResponse"
+                }
+              }
+            }
+>>>>>>> release/0.2.0
           }
         }
       }
@@ -85,6 +98,57 @@
             "content": {
               "application/json": {
                 "schema": {
+<<<<<<< HEAD
+=======
+                  "$ref": "#/components/schemas/CatalogPrinterResponseListCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CatalogPrinterResponseListCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/catalogs/GetPrinterState": {
+      "get": {
+        "tags": [
+          "Catalogs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CatalogResponseListCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/catalogs/GetFilamentState": {
+      "get": {
+        "tags": [
+          "Catalogs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+>>>>>>> release/0.2.0
                   "$ref": "#/components/schemas/CatalogResponseListCommonResponse"
                 }
               }
@@ -109,8 +173,13 @@
               }
             }
           },
+<<<<<<< HEAD
           "409": {
             "description": "Conflict",
+=======
+          "204": {
+            "description": "No Content",
+>>>>>>> release/0.2.0
             "content": {
               "application/json": {
                 "schema": {
@@ -139,6 +208,7 @@
         ],
         "requestBody": {
           "content": {
+<<<<<<< HEAD
             "application/json-patch+json": {
               "schema": {
                 "$ref": "#/components/schemas/FilamentRequest"
@@ -157,6 +227,89 @@
             "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/FilamentRequest"
+=======
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "GroupId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "FilamentName": {
+                    "type": "string"
+                  },
+                  "FilamentType": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "FilamentWeight": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "FilamentColor": {
+                    "type": "string"
+                  },
+                  "FilamentTemperature": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "FilamentLenght": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "FilamentThickness": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "FilamentCost": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "FilamentDescription": {
+                    "type": "string"
+                  },
+                  "ImageFile": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "GroupId": {
+                  "style": "form"
+                },
+                "FilamentName": {
+                  "style": "form"
+                },
+                "FilamentType": {
+                  "style": "form"
+                },
+                "FilamentWeight": {
+                  "style": "form"
+                },
+                "FilamentColor": {
+                  "style": "form"
+                },
+                "FilamentTemperature": {
+                  "style": "form"
+                },
+                "FilamentLenght": {
+                  "style": "form"
+                },
+                "FilamentThickness": {
+                  "style": "form"
+                },
+                "FilamentCost": {
+                  "style": "form"
+                },
+                "FilamentDescription": {
+                  "style": "form"
+                },
+                "ImageFile": {
+                  "style": "form"
+                }
+>>>>>>> release/0.2.0
               }
             }
           }
@@ -167,6 +320,318 @@
             "content": {
               "application/json": {
                 "schema": {
+<<<<<<< HEAD
+=======
+                  "$ref": "#/components/schemas/Int32CommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int32CommonResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int32CommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int32CommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/filaments/UpdateFilament": {
+      "put": {
+        "tags": [
+          "Filaments"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/FilamentUpdateRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FilamentUpdateRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FilamentUpdateRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/FilamentUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/filaments/GetFilamentDetail": {
+      "get": {
+        "tags": [
+          "Filaments"
+        ],
+        "parameters": [
+          {
+            "name": "filamentId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FilamentDetailObjectCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FilamentDetailObjectCommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FilamentDetailObjectCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/filaments/DeleteFilament": {
+      "delete": {
+        "tags": [
+          "Filaments"
+        ],
+        "parameters": [
+          {
+            "name": "filamentId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/filaments/UpdateFilamentImage": {
+      "put": {
+        "tags": [
+          "Filaments"
+        ],
+        "parameters": [
+          {
+            "name": "filamentId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "imageFile": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "imageFile": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/filaments/DeleteFilamentImage": {
+      "delete": {
+        "tags": [
+          "Filaments"
+        ],
+        "parameters": [
+          {
+            "name": "filamentId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+>>>>>>> release/0.2.0
                   "$ref": "#/components/schemas/BooleanCommonResponse"
                 }
               }
@@ -215,8 +680,13 @@
               }
             }
           },
+<<<<<<< HEAD
           "409": {
             "description": "Conflict",
+=======
+          "401": {
+            "description": "Unauthorized",
+>>>>>>> release/0.2.0
             "content": {
               "application/json": {
                 "schema": {
@@ -254,6 +724,19 @@
               }
             }
           },
+<<<<<<< HEAD
+=======
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupInvitationListCommonResponse"
+                }
+              }
+            }
+          },
+>>>>>>> release/0.2.0
           "500": {
             "description": "Internal Server Error",
             "content": {
@@ -267,7 +750,11 @@
         }
       }
     },
+<<<<<<< HEAD
     "/api/v1/groups/postAcceptInvitation": {
+=======
+    "/api/v1/groups/PostAcceptInvitation": {
+>>>>>>> release/0.2.0
       "post": {
         "tags": [
           "Groups"
@@ -300,6 +787,19 @@
               }
             }
           },
+<<<<<<< HEAD
+=======
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+>>>>>>> release/0.2.0
           "500": {
             "description": "Internal Server Error",
             "content": {
@@ -313,6 +813,316 @@
         }
       }
     },
+<<<<<<< HEAD
+=======
+    "/api/v1/groups/GetGroupBasicData": {
+      "get": {
+        "tags": [
+          "Groups"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupBasicDataResponseCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupBasicDataResponseCommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupBasicDataResponseCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/groups/UpdateGroupData": {
+      "put": {
+        "tags": [
+          "Groups"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GroupRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GroupRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GroupRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GroupRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/groups/UpdateLeaveGroup": {
+      "put": {
+        "tags": [
+          "Groups"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/groups/UpdateMembership": {
+      "put": {
+        "tags": [
+          "Groups"
+        ],
+        "parameters": [
+          {
+            "name": "userKickedId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/groups/DeleteGroup": {
+      "delete": {
+        "tags": [
+          "Groups"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/groups/TrasnferOwnership": {
+      "put": {
+        "tags": [
+          "Groups"
+        ],
+        "parameters": [
+          {
+            "name": "newOwnerUserId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/groups/GetGroupDashboardData": {
+      "get": {
+        "tags": [
+          "Groups"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupDashboardDataCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupDashboardDataCommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupDashboardDataCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+>>>>>>> release/0.2.0
     "/api/v1/printers/GetPrinterList": {
       "get": {
         "tags": [
@@ -398,7 +1208,41 @@
             "content": {
               "application/json": {
                 "schema": {
+<<<<<<< HEAD
                   "$ref": "#/components/schemas/BooleanCommonResponse"
+=======
+                  "$ref": "#/components/schemas/Int32CommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int32CommonResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int32CommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int32CommonResponse"
+>>>>>>> release/0.2.0
                 }
               }
             }
@@ -422,8 +1266,13 @@
               }
             }
           },
+<<<<<<< HEAD
           "409": {
             "description": "Conflict",
+=======
+          "401": {
+            "description": "Unauthorized",
+>>>>>>> release/0.2.0
             "content": {
               "application/json": {
                 "schema": {
@@ -445,28 +1294,73 @@
         }
       }
     },
+<<<<<<< HEAD
     "/api/v1/prints/GetPrintList": {
       "get": {
         "tags": [
           "Prints"
         ],
+=======
+    "/api/v1/printers/UpdatePrinter": {
+      "put": {
+        "tags": [
+          "Printers"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrinterDetailRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrinterDetailRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrinterDetailRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrinterDetailRequest"
+              }
+            }
+          }
+        },
+>>>>>>> release/0.2.0
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
+<<<<<<< HEAD
                   "$ref": "#/components/schemas/PrintListResponseListCommonResponse"
+=======
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+>>>>>>> release/0.2.0
                 }
               }
             }
           },
+<<<<<<< HEAD
           "409": {
             "description": "Conflict",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PrintListResponseListCommonResponse"
+=======
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+>>>>>>> release/0.2.0
                 }
               }
             }
@@ -476,7 +1370,284 @@
             "content": {
               "application/json": {
                 "schema": {
+<<<<<<< HEAD
                   "$ref": "#/components/schemas/PrintListResponseListCommonResponse"
+=======
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/printers/GetPrinterDetail": {
+      "get": {
+        "tags": [
+          "Printers"
+        ],
+        "parameters": [
+          {
+            "name": "printerId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrinterDetailObjectCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrinterDetailObjectCommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrinterDetailObjectCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/printers/DeletePrinter": {
+      "delete": {
+        "tags": [
+          "Printers"
+        ],
+        "parameters": [
+          {
+            "name": "printerId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/printers/UpdatePrinterImage": {
+      "put": {
+        "tags": [
+          "Printers"
+        ],
+        "parameters": [
+          {
+            "name": "printerId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "imageFile": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "imageFile": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/printers/DeletePrinterImage": {
+      "delete": {
+        "tags": [
+          "Printers"
+        ],
+        "parameters": [
+          {
+            "name": "printerId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/prints/GetPrintList": {
+      "get": {
+        "tags": [
+          "Prints"
+        ],
+        "parameters": [
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrintListResponseCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrintListResponseCommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrintListResponseCommonResponse"
+>>>>>>> release/0.2.0
                 }
               }
             }
@@ -491,6 +1662,7 @@
         ],
         "requestBody": {
           "content": {
+<<<<<<< HEAD
             "application/json-patch+json": {
               "schema": {
                 "$ref": "#/components/schemas/PrintRequest"
@@ -509,6 +1681,97 @@
             "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/PrintRequest"
+=======
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "GroupId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "UserId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "PrintName": {
+                    "type": "string"
+                  },
+                  "PrintState": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "PrintPrinter": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "PrintFilament": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "PrintDescription": {
+                    "type": "string"
+                  },
+                  "PrintTime": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "PrintFilamentUsed": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "PrintRealTime": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "PrintProgress": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "ImageFile": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "GroupId": {
+                  "style": "form"
+                },
+                "UserId": {
+                  "style": "form"
+                },
+                "PrintName": {
+                  "style": "form"
+                },
+                "PrintState": {
+                  "style": "form"
+                },
+                "PrintPrinter": {
+                  "style": "form"
+                },
+                "PrintFilament": {
+                  "style": "form"
+                },
+                "PrintDescription": {
+                  "style": "form"
+                },
+                "PrintTime": {
+                  "style": "form"
+                },
+                "PrintFilamentUsed": {
+                  "style": "form"
+                },
+                "PrintRealTime": {
+                  "style": "form"
+                },
+                "PrintProgress": {
+                  "style": "form"
+                },
+                "ImageFile": {
+                  "style": "form"
+                }
+>>>>>>> release/0.2.0
               }
             }
           }
@@ -519,6 +1782,385 @@
             "content": {
               "application/json": {
                 "schema": {
+<<<<<<< HEAD
+=======
+                  "$ref": "#/components/schemas/Int32CommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int32CommonResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int32CommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int32CommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/prints/GetPrintListByType": {
+      "get": {
+        "tags": [
+          "Prints"
+        ],
+        "parameters": [
+          {
+            "name": "PageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrintListResponseCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrintListResponseCommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrintListResponseCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/prints/UpdatePrint": {
+      "put": {
+        "tags": [
+          "Prints"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrintDetailRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrintDetailRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrintDetailRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrintDetailRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/prints/GetPrintDetail": {
+      "get": {
+        "tags": [
+          "Prints"
+        ],
+        "parameters": [
+          {
+            "name": "printId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrintDetailObjectCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrintDetailObjectCommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrintDetailObjectCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/prints/GetPrintComments": {
+      "get": {
+        "tags": [
+          "Prints"
+        ],
+        "parameters": [
+          {
+            "name": "printId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrintCommentObjectListCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrintCommentObjectListCommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrintCommentObjectListCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/prints/PostPrintComment": {
+      "post": {
+        "tags": [
+          "Prints"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrintCommentRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrintCommentRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrintCommentRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrintCommentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int32CommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int32CommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int32CommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/prints/DeletePrint": {
+      "delete": {
+        "tags": [
+          "Prints"
+        ],
+        "parameters": [
+          {
+            "name": "printId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+>>>>>>> release/0.2.0
                   "$ref": "#/components/schemas/BooleanCommonResponse"
                 }
               }
@@ -534,6 +2176,7 @@
         ],
         "requestBody": {
           "content": {
+<<<<<<< HEAD
             "application/json-patch+json": {
               "schema": {
                 "$ref": "#/components/schemas/UserCreateRequest"
@@ -552,6 +2195,40 @@
             "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/UserCreateRequest"
+=======
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "UserName": {
+                    "type": "string"
+                  },
+                  "UserPassword": {
+                    "type": "string"
+                  },
+                  "UserEmail": {
+                    "type": "string"
+                  },
+                  "ImageFile": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "UserName": {
+                  "style": "form"
+                },
+                "UserPassword": {
+                  "style": "form"
+                },
+                "UserEmail": {
+                  "style": "form"
+                },
+                "ImageFile": {
+                  "style": "form"
+                }
+>>>>>>> release/0.2.0
               }
             }
           }
@@ -562,7 +2239,11 @@
             "content": {
               "application/json": {
                 "schema": {
+<<<<<<< HEAD
                   "$ref": "#/components/schemas/BooleanCommonResponse"
+=======
+                  "$ref": "#/components/schemas/Int32CommonResponse"
+>>>>>>> release/0.2.0
                 }
               }
             }
@@ -572,7 +2253,11 @@
             "content": {
               "application/json": {
                 "schema": {
+<<<<<<< HEAD
                   "$ref": "#/components/schemas/BooleanCommonResponse"
+=======
+                  "$ref": "#/components/schemas/Int32CommonResponse"
+>>>>>>> release/0.2.0
                 }
               }
             }
@@ -582,7 +2267,11 @@
             "content": {
               "application/json": {
                 "schema": {
+<<<<<<< HEAD
                   "$ref": "#/components/schemas/BooleanCommonResponse"
+=======
+                  "$ref": "#/components/schemas/Int32CommonResponse"
+>>>>>>> release/0.2.0
                 }
               }
             }
@@ -630,8 +2319,23 @@
               }
             }
           },
+<<<<<<< HEAD
           "409": {
             "description": "Conflict",
+=======
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponseCommonResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+>>>>>>> release/0.2.0
             "content": {
               "application/json": {
                 "schema": {
@@ -669,8 +2373,23 @@
               }
             }
           },
+<<<<<<< HEAD
           "409": {
             "description": "Conflict",
+=======
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponseCommonResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+>>>>>>> release/0.2.0
             "content": {
               "application/json": {
                 "schema": {
@@ -708,8 +2427,13 @@
               }
             }
           },
+<<<<<<< HEAD
           "409": {
             "description": "Conflict",
+=======
+          "401": {
+            "description": "Unauthorized",
+>>>>>>> release/0.2.0
             "content": {
               "application/json": {
                 "schema": {
@@ -736,6 +2460,18 @@
         "tags": [
           "Users"
         ],
+<<<<<<< HEAD
+=======
+        "parameters": [
+          {
+            "name": "filter",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+>>>>>>> release/0.2.0
         "responses": {
           "200": {
             "description": "OK",
@@ -781,7 +2517,31 @@
             "content": {
               "application/json": {
                 "schema": {
+<<<<<<< HEAD
                   "$ref": "#/components/schemas/UserListResponseListCommonResponse"
+=======
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+>>>>>>> release/0.2.0
                 }
               }
             }
@@ -791,7 +2551,270 @@
             "content": {
               "application/json": {
                 "schema": {
+<<<<<<< HEAD
                   "$ref": "#/components/schemas/UserListResponseListCommonResponse"
+=======
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/GetUserAuth": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/UpdateUser": {
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdateRequest"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdateRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdateRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/GetUserDetail": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDetailObjectCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDetailObjectCommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDetailObjectCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/UpdateUserImage": {
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "imageFile": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "imageFile": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/DeleteUserImage": {
+      "delete": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+>>>>>>> release/0.2.0
                 }
               }
             }
@@ -814,6 +2837,43 @@
         },
         "additionalProperties": false
       },
+<<<<<<< HEAD
+=======
+      "CatalogPrinterResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "timeVariation": {
+            "type": "number",
+            "format": "float"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CatalogPrinterResponseListCommonResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorProperties"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CatalogPrinterResponse"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+>>>>>>> release/0.2.0
       "CatalogResponse": {
         "type": "object",
         "properties": {
@@ -858,6 +2918,90 @@
         },
         "additionalProperties": false
       },
+<<<<<<< HEAD
+=======
+      "FilamentDetailObject": {
+        "type": "object",
+        "properties": {
+          "filamentId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "filamentName": {
+            "type": "string",
+            "nullable": true
+          },
+          "filamentType": {
+            "type": "string",
+            "nullable": true
+          },
+          "filamentWeight": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "filamentColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "filamentTemperature": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "filamentLenght": {
+            "type": "number",
+            "format": "double"
+          },
+          "filamentRemainingLenght": {
+            "type": "number",
+            "format": "double"
+          },
+          "filamentThickness": {
+            "type": "number",
+            "format": "float"
+          },
+          "filamentCost": {
+            "type": "number",
+            "format": "double"
+          },
+          "filamentDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "filamentCreateDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "filamentState": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "filamentPrintedPrintsMonth": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "filamentPrintedPrintsTotal": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "filamentImageFile": {
+            "$ref": "#/components/schemas/FileResponse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FilamentDetailObjectCommonResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorProperties"
+          },
+          "data": {
+            "$ref": "#/components/schemas/FilamentDetailObject"
+          }
+        },
+        "additionalProperties": false
+      },
+>>>>>>> release/0.2.0
       "FilamentListResponse": {
         "type": "object",
         "properties": {
@@ -900,17 +3044,29 @@
         },
         "additionalProperties": false
       },
+<<<<<<< HEAD
       "FilamentRequest": {
+=======
+      "FilamentUpdateRequest": {
+>>>>>>> release/0.2.0
         "type": "object",
         "properties": {
           "groupId": {
             "type": "integer",
             "format": "int32"
           },
+<<<<<<< HEAD
+=======
+          "filamentId": {
+            "type": "integer",
+            "format": "int32"
+          },
+>>>>>>> release/0.2.0
           "filamentName": {
             "type": "string",
             "nullable": true
           },
+<<<<<<< HEAD
           "filamentType": {
             "type": "integer",
             "format": "int32"
@@ -919,28 +3075,47 @@
             "type": "number",
             "format": "double"
           },
+=======
+>>>>>>> release/0.2.0
           "filamentColor": {
             "type": "string",
             "nullable": true
           },
           "filamentTemperature": {
             "type": "integer",
+<<<<<<< HEAD
             "format": "int32"
+=======
+            "format": "int32",
+            "nullable": true
+>>>>>>> release/0.2.0
           },
           "filamentLenght": {
             "type": "number",
             "format": "double"
           },
+<<<<<<< HEAD
           "filamentThickness": {
             "type": "number",
             "format": "double"
+=======
+          "filamentDescription": {
+            "type": "string",
+            "nullable": true
+>>>>>>> release/0.2.0
           },
           "filamentCost": {
             "type": "number",
             "format": "double"
           },
+<<<<<<< HEAD
           "filamentDescription": {
             "type": "string",
+=======
+          "imageFile": {
+            "type": "string",
+            "format": "binary",
+>>>>>>> release/0.2.0
             "nullable": true
           }
         },
@@ -960,6 +3135,103 @@
         },
         "additionalProperties": false
       },
+<<<<<<< HEAD
+=======
+      "GroupBasicDataResponse": {
+        "type": "object",
+        "properties": {
+          "groupId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "groupName": {
+            "type": "string",
+            "nullable": true
+          },
+          "groupDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "groupOwner": {
+            "type": "string",
+            "nullable": true
+          },
+          "groupDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "groupMembers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserListResponse"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GroupBasicDataResponseCommonResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorProperties"
+          },
+          "data": {
+            "$ref": "#/components/schemas/GroupBasicDataResponse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GroupDashboardData": {
+        "type": "object",
+        "properties": {
+          "groupTotalHours": {
+            "type": "string",
+            "nullable": true
+          },
+          "groupTotalPrints": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "groupTotalFilament": {
+            "type": "number",
+            "format": "double"
+          },
+          "groupUserCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "groupFilamentCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "groupPrinterCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "groupPrinterHours": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PrinterHoursObject"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GroupDashboardDataCommonResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorProperties"
+          },
+          "data": {
+            "$ref": "#/components/schemas/GroupDashboardData"
+          }
+        },
+        "additionalProperties": false
+      },
+>>>>>>> release/0.2.0
       "GroupInvitation": {
         "type": "object",
         "properties": {
@@ -1016,6 +3288,22 @@
         },
         "additionalProperties": false
       },
+<<<<<<< HEAD
+=======
+      "Int32CommonResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorProperties"
+          },
+          "data": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+>>>>>>> release/0.2.0
       "LoginRequest": {
         "type": "object",
         "properties": {
@@ -1055,9 +3343,215 @@
         },
         "additionalProperties": false
       },
+<<<<<<< HEAD
       "PrintListResponse": {
         "type": "object",
         "properties": {
+=======
+      "PrintCommentObject": {
+        "type": "object",
+        "properties": {
+          "commentId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "comment": {
+            "type": "string",
+            "nullable": true
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "userName": {
+            "type": "string",
+            "nullable": true
+          },
+          "registerDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PrintCommentObjectListCommonResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorProperties"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PrintCommentObject"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PrintCommentRequest": {
+        "type": "object",
+        "properties": {
+          "printId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "comment": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PrintDetailObject": {
+        "type": "object",
+        "properties": {
+          "printId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "printFilamentId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "printFilamentName": {
+            "type": "string",
+            "nullable": true
+          },
+          "printMaterial": {
+            "type": "string",
+            "nullable": true
+          },
+          "printPrinterId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "printPrinterName": {
+            "type": "string",
+            "nullable": true
+          },
+          "printUserId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "printUserName": {
+            "type": "string",
+            "nullable": true
+          },
+          "printName": {
+            "type": "string",
+            "nullable": true
+          },
+          "printState": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "printDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "printImageData": {
+            "$ref": "#/components/schemas/FileResponse"
+          },
+          "printCreateDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "printMaterialConsumed": {
+            "type": "number",
+            "format": "double"
+          },
+          "printTimeImpression": {
+            "type": "string",
+            "nullable": true
+          },
+          "printRealTimeImpression": {
+            "type": "string",
+            "nullable": true
+          },
+          "printEstimedCost": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PrintDetailObjectCommonResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorProperties"
+          },
+          "data": {
+            "$ref": "#/components/schemas/PrintDetailObject"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PrintDetailRequest": {
+        "type": "object",
+        "properties": {
+          "groupId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "printId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "printName": {
+            "type": "string",
+            "nullable": true
+          },
+          "printDescription": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PrintListResponse": {
+        "type": "object",
+        "properties": {
+          "totalItems": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "prints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PrintResponse"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PrintListResponseCommonResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorProperties"
+          },
+          "data": {
+            "$ref": "#/components/schemas/PrintListResponse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PrintResponse": {
+        "type": "object",
+        "properties": {
+>>>>>>> release/0.2.0
           "printId": {
             "type": "integer",
             "format": "int32"
@@ -1085,29 +3579,117 @@
         },
         "additionalProperties": false
       },
+<<<<<<< HEAD
       "PrintListResponseListCommonResponse": {
+=======
+      "PrinterDetailObject": {
+        "type": "object",
+        "properties": {
+          "printerId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "printerName": {
+            "type": "string",
+            "nullable": true
+          },
+          "printerModel": {
+            "type": "string",
+            "nullable": true
+          },
+          "printerDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "printerStateId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "printerStateName": {
+            "type": "string",
+            "nullable": true
+          },
+          "printerImageData": {
+            "$ref": "#/components/schemas/FileResponse"
+          },
+          "printerCreateDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "printerTotalHours": {
+            "type": "string",
+            "nullable": true
+          },
+          "printerTotalHoursMonth": {
+            "type": "string",
+            "nullable": true
+          },
+          "printerPrintsTotal": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "printerPrintsTotalMonth": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "printerPrintsComplete": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "printerPrintsNoComplete": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "printerPrintsCompleteMonth": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "printerSuccessRate": {
+            "type": "number",
+            "format": "float"
+          },
+          "printerTimeVariation": {
+            "type": "number",
+            "format": "float"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PrinterDetailObjectCommonResponse": {
+>>>>>>> release/0.2.0
         "type": "object",
         "properties": {
           "error": {
             "$ref": "#/components/schemas/ErrorProperties"
           },
           "data": {
+<<<<<<< HEAD
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/PrintListResponse"
             },
             "nullable": true
+=======
+            "$ref": "#/components/schemas/PrinterDetailObject"
+>>>>>>> release/0.2.0
           }
         },
         "additionalProperties": false
       },
+<<<<<<< HEAD
       "PrintRequest": {
+=======
+      "PrinterDetailRequest": {
+>>>>>>> release/0.2.0
         "type": "object",
         "properties": {
           "groupId": {
             "type": "integer",
             "format": "int32"
           },
+<<<<<<< HEAD
           "userId": {
             "type": "integer",
             "format": "int32"
@@ -1143,6 +3725,45 @@
           "printRealTime": {
             "type": "integer",
             "format": "int32"
+=======
+          "printerId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "printerName": {
+            "type": "string",
+            "nullable": true
+          },
+          "printerDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "printerModel": {
+            "type": "string",
+            "nullable": true
+          },
+          "printerStateId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PrinterHoursObject": {
+        "type": "object",
+        "properties": {
+          "printerId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "printerName": {
+            "type": "string",
+            "nullable": true
+          },
+          "printerHours": {
+            "type": "string",
+            "nullable": true
+>>>>>>> release/0.2.0
           }
         },
         "additionalProperties": false
@@ -1224,20 +3845,72 @@
         },
         "additionalProperties": false
       },
+<<<<<<< HEAD
       "UserCreateRequest": {
         "type": "object",
         "properties": {
+=======
+      "UserDetailObject": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "format": "int32"
+          },
+>>>>>>> release/0.2.0
           "userName": {
             "type": "string",
             "nullable": true
           },
+<<<<<<< HEAD
           "userPassword": {
+=======
+          "userRole": {
+>>>>>>> release/0.2.0
             "type": "string",
             "nullable": true
           },
           "userEmail": {
             "type": "string",
             "nullable": true
+<<<<<<< HEAD
+=======
+          },
+          "userCreateDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "userTotalPrints": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "userTotalHours": {
+            "type": "string",
+            "nullable": true
+          },
+          "userPrintedPrints": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "userPrintHours": {
+            "type": "string",
+            "nullable": true
+          },
+          "userImageData": {
+            "$ref": "#/components/schemas/FileResponse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserDetailObjectCommonResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorProperties"
+          },
+          "data": {
+            "$ref": "#/components/schemas/UserDetailObject"
+>>>>>>> release/0.2.0
           }
         },
         "additionalProperties": false
@@ -1314,6 +3987,31 @@
           }
         },
         "additionalProperties": false
+<<<<<<< HEAD
+=======
+      },
+      "UserUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "groupId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "userName": {
+            "type": "string",
+            "nullable": true
+          },
+          "userEmail": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+>>>>>>> release/0.2.0
       }
     }
   }

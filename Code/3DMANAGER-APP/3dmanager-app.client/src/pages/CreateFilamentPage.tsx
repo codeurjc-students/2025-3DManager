@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { postFilament } from "../api/filamentService";
 import type { CatalogResponse } from "../models/catalog/CatalogResponse";
 import { getFilamentType } from "../api/catalogService";
+import { usePopupContext } from "../context/PopupContext";
+import InfoPopup from "../components/popupComponent/InfoPopup";
 
 const CreateFilamentPage: React.FC = () => {
 
@@ -16,7 +18,8 @@ const CreateFilamentPage: React.FC = () => {
     const [filamentCost, setFilamentCost] = useState<number>(0);
     const [filamentDescription, setFilamentDescription] = useState("");
     const [catalogTypes, setCatalogTypes] = useState<CatalogResponse[]>([]);
-
+    const [imageFile, setImageFile] = useState<File | null>(null);
+    const { showPopup } = usePopupContext();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -32,8 +35,13 @@ const CreateFilamentPage: React.FC = () => {
         e.preventDefault(); 
 
         if (!filamentName || !filamentType || !filamentWeight || !filamentColor || !filamentTemperature || !filamentLenght
-            || !filamentThickness || !filamentCost ) {
-            alert("Todos los campos salvo la descripción son campos obligatorios");
+            || !filamentThickness || !filamentCost || !filamentDescription) {
+            showPopup({
+                type: "warning", content: (
+                    <InfoPopup title="Completar formulario" description="Todos los campos salvo la foto son obligatorios" />
+                )
+            });
+
             return;
         }
         
@@ -51,17 +59,30 @@ const CreateFilamentPage: React.FC = () => {
                 filamentThickness, 
                 filamentCost, 
                 filamentDescription,
+                imageFile
             });
 
-            if (response.data) {
-                alert("Filamento creado correctamente.");
-                navigate("/dashboard");
+            if (response.data == 0) {
+                showPopup({
+                    type: "error", content: (
+                        <InfoPopup title="Operación cancelada" description={response.error?.message ?? "No se pudo crear el filamento."} />
+                    )
+                });
             } else {
-                alert(response.error?.message || "No se pudo crear el filamento.");
+                showPopup({
+                    type: "info", content: (
+                        <InfoPopup title="Operacion realizada" description= "Filamento creado correctamente" />
+                    )
+                });
+                navigate("/dashboard");
             }
         } catch (error) {
-            console.error("Error al crear el filamento:", error);
-            alert("Ha ocurrido un error en el registro del filamento.");
+            console.log( "Error al crear el filamento:" + error)
+            showPopup({
+                type: "error", content: (
+                    <InfoPopup title="Operación cancelada" description="No se pudo crear el filamento." />
+                )
+            });
         }
     };
 
@@ -84,8 +105,7 @@ const CreateFilamentPage: React.FC = () => {
                                         <label htmlFor="filamentType" className="form-label">Tipo Filamento</label>
                                         <select id="filamentType" className="input-value w-75" value={filamentType}
                                             onChange={(e) => setFilamentType(Number(e.target.value))}>
-                                            <option value="">Seleccione un tipo</option>
-
+                                            <option value={0}>Seleccione un material</option>
                                             {catalogTypes.map(t => (
                                                 <option key={t.id} value={t.id}>
                                                     {t.description}
@@ -131,17 +151,32 @@ const CreateFilamentPage: React.FC = () => {
                                     </div>
                                 </div>
                                 <div className="row-3">
-                                    <div className="">
+                                    <div className="mt-2">
                                         <label htmlFor="filamentDescription" className="form-label">Descripción</label>
                                         <textarea id="filamentDescription" className="input-value w-75" value={filamentDescription} placeholder="Descripción"
                                             onChange={(e) => setFilamentDescription(e.target.value)} />
                                     </div>
+                                    <div className="mb-3">
+                                        <label htmlFor="ImageFilament" className="form-label mt-2">Imagen del filamento(Opcional)</label>
+                                        <input
+                                            id="ImageFilament"
+                                            type="file"
+                                            className="form-control w-75"
+                                            accept="image/*"
+                                            onChange={(e) => {
+                                                if (e.target.files && e.target.files.length > 0) {
+                                                    setImageFile(e.target.files[0]);
+                                                }
+                                            }}
+                                        />
+                                    </div>
                                 </div>
-                            </div>                           
+                            </div>  
+                            
                         </div>
                         <div className="col-6 d-flex justify-content-between mt-3 p-2">
-                            <button type="submit" className="botton-yellow createUser h-70">Crear filamento</button>
-                            <button type="button" className="botton-darkGrey" onClick={() => navigate("/dashboard")}>Cancelar</button>
+                            <button type="submit" className="button-yellow createUser h-70">Crear filamento</button>
+                            <button type="button" className="button-darkGrey" onClick={() => navigate("/dashboard")}>Cancelar</button>
                         </div>                                      
                     </form>
                 </div>

@@ -3,7 +3,8 @@ export interface UserObject {
     userName: string;
     userEmail: string;
     userPassword: string;
-    rolId?: string;
-    groupId?: number;
-    groupName?: string;
+    rolId: string | null;
+    groupId: number | null;
+    groupName?: string | null;
 }
+

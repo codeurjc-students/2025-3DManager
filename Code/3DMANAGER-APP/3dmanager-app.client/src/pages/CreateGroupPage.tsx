@@ -2,19 +2,26 @@
 import { useNavigate } from "react-router-dom";
 import { postNewGroup } from "../api/groupService";
 import { useAuth } from '../context/AuthContext';
+import { usePopupContext } from "../context/PopupContext";
+import InfoPopup from "../components/popupComponent/InfoPopup";
 
 const CreateGroupPage: React.FC = () => {
 
     const [groupName, setGroupName] = useState("");
     const [groupDescription, setGroupDescription] = useState("");
-    const { logout } = useAuth();
+    const { refreshUser } = useAuth();
     const navigate = useNavigate();
+    const { showPopup } = usePopupContext();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault(); 
 
         if (!groupName || !groupDescription) {
-            alert("Todos los campos son obligatorios");
+            showPopup({
+                type: "warning", content: (
+                    <InfoPopup title="Completar formulario" description="Todos los campos son obligatorios" />
+                )
+            });
             return;
         }
         
@@ -28,14 +35,27 @@ const CreateGroupPage: React.FC = () => {
             });
 
             if (response.data) {
-                alert("Grupo creado correctamente. Se va a proceder a hacer un logout para entrar al nuevo grupo");
-                logout();
+                showPopup({
+                    type: "info", content: (
+                        <InfoPopup title="Operación realizada" description="Grupo creado correctamente." />
+                    )
+                });
+                refreshUser();
+                navigate("/dashboard");
             } else {
-                alert(response.error?.message || "No se pudo crear el grupo.");
+                showPopup({
+                    type: "error", content: (
+                        <InfoPopup title="Operación cancelada" description={response.error?.message || "No se pudo crear el grupo"} />
+                    )
+                });
             }
         } catch (error) {
-            console.error("Error al crear grupo:", error);
-            alert("Ha ocurrido un error en el registro del grupo.");
+            console.log("Error al crear grupo: " + error)
+            showPopup({
+                type: "error", content: (
+                    <InfoPopup title="Operación cancelada" description=" Ha ocurrido un error en el registro del grupo." />
+                )
+            });
         }
     };
 
@@ -62,8 +82,8 @@ const CreateGroupPage: React.FC = () => {
                             </div>                           
                         </div>
                         <div className="d-flex justify-content-between  m-5">
-                            <button type="submit" className="botton-yellow createUser">Crear grupo</button>
-                            <button type="button" className="botton-darkGrey" onClick={() => navigate("/group")}>Cancelar</button>
+                            <button type="submit" className="button-yellow createUser">Crear grupo</button>
+                            <button type="button" className="button-darkGrey" onClick={() => navigate("/group")}>Cancelar</button>
                         </div>                                      
                     </form>
                 </div>

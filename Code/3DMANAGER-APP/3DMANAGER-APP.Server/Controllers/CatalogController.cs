@@ -3,6 +3,7 @@ using _3DMANAGER_APP.BLL.Models.Catalog;
 using _3DMANAGER_APP.Server.Models;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
+using static _3DMANAGER_APP.Server.Models.Response;
 
 namespace _3DMANAGER_APP.Server.Controllers
 {
@@ -33,6 +34,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpGet]
         public CommonResponse<List<CatalogResponse>> GetFilamentType()
         {
+            _logger.LogInformation($"Llamada a la funcion GetFilamentType en el controlador CatalogController");
             List<CatalogResponse> catalog = _catalogManager.GetFilamentType();
             return new CommonResponse<List<CatalogResponse>>(catalog);
         }
@@ -51,6 +53,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [HttpGet]
         public CommonResponse<List<CatalogResponse>> GetPrintState()
         {
+            _logger.LogInformation($"Llamada a la funcion GetPrintState en el controlador CatalogController");
             List<CatalogResponse> catalog = _catalogManager.GetPrintState();
             return new CommonResponse<List<CatalogResponse>>(catalog);
         }
@@ -64,13 +67,18 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
         [ProducesResponseType(typeof(CommonResponse<List<CatalogResponse>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CommonResponse<List<CatalogResponse>>), StatusCodes.Status401Unauthorized)]
         [ApiVersionNeutral]
         [Tags("Catalogs")]
         [HttpGet]
-        public CommonResponse<List<CatalogResponse>> GetFilamentCatalog()
+        public IActionResult GetFilamentCatalog()
         {
-            List<CatalogResponse> catalog = _catalogManager.GetFilamentCatalog(GroupId);
-            return new CommonResponse<List<CatalogResponse>>(catalog);
+            _logger.LogInformation($"Llamada a la funcion GetFilamentCatalog en el controlador CatalogController");
+            if (GroupId == null)
+                return Unauthorized(new CommonResponse<bool>(new ErrorProperties(401, "No autenticado")));
+
+            List<CatalogResponse> catalog = _catalogManager.GetFilamentCatalog(GroupId.Value);
+            return Ok(new CommonResponse<List<CatalogResponse>>(catalog));
         }
 
         /// <summary>
@@ -81,13 +89,55 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <response code="400">Conflicto en servidor</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
+        [ProducesResponseType(typeof(CommonResponse<List<CatalogPrinterResponse>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CommonResponse<List<CatalogPrinterResponse>>), StatusCodes.Status401Unauthorized)]
+        [ApiVersionNeutral]
+        [Tags("Catalogs")]
+        [HttpGet]
+        public IActionResult GetPrinterCatalog()
+        {
+            _logger.LogInformation($"Llamada a la funcion GetPrinterCatalog en el controlador CatalogController");
+            if (GroupId == null)
+                return Unauthorized(new CommonResponse<bool>(new ErrorProperties(401, "No autenticado")));
+            List<CatalogPrinterResponse> catalog = _catalogManager.GetPrinterCatalog(GroupId.Value);
+            return Ok(new CommonResponse<List<CatalogPrinterResponse>>(catalog));
+        }
+
+        /// <summary>
+        /// A catalog of printer states
+        /// </summary>
+        /// <returns>A catalog of print states</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="400">Conflicto en servidor</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
         [ProducesResponseType(typeof(CommonResponse<List<CatalogResponse>>), StatusCodes.Status200OK)]
         [ApiVersionNeutral]
         [Tags("Catalogs")]
         [HttpGet]
-        public CommonResponse<List<CatalogResponse>> GetPrinterCatalog()
+        public CommonResponse<List<CatalogResponse>> GetPrinterState()
         {
-            List<CatalogResponse> catalog = _catalogManager.GetPrinterCatalog(GroupId);
+            _logger.LogInformation($"Llamada a la funcion GetPrinterState en el controlador CatalogController");
+            List<CatalogResponse> catalog = _catalogManager.GetPrinterState();
+            return new CommonResponse<List<CatalogResponse>>(catalog);
+        }
+
+        /// <summary>
+        /// A catalog of filament states
+        /// </summary>
+        /// <returns>A catalog of filament states</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="400">Conflicto en servidor</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(CommonResponse<List<CatalogResponse>>), StatusCodes.Status200OK)]
+        [ApiVersionNeutral]
+        [Tags("Catalogs")]
+        [HttpGet]
+        public CommonResponse<List<CatalogResponse>> GetFilamentState()
+        {
+            _logger.LogInformation($"Llamada a la funcion GetFilamentState en el controlador CatalogController");
+            List<CatalogResponse> catalog = _catalogManager.GetFilamentState();
             return new CommonResponse<List<CatalogResponse>>(catalog);
         }
     }

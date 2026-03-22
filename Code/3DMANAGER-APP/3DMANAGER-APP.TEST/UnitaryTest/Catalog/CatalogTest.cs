@@ -14,17 +14,21 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Catalogs
         private readonly Mock<IMapper> _mapperMock;
         private readonly Mock<ICatalogDbManager> _catalogDbManagerMock;
         private readonly CatalogManager _manager;
-
+        private readonly Mock<IPrinterDbManager> _printerDbManagerMock;
         public CatalogTests()
         {
             _loggerMock = new Mock<ILogger<CatalogManager>>();
             _mapperMock = new Mock<IMapper>();
             _catalogDbManagerMock = new Mock<ICatalogDbManager>();
+            _printerDbManagerMock = new Mock<IPrinterDbManager>();
+            _loggerMock = new Mock<ILogger<CatalogManager>>();
 
             _manager = new CatalogManager(
                 _catalogDbManagerMock.Object,
+                _printerDbManagerMock.Object,
                 _mapperMock.Object,
                 _loggerMock.Object
+
             );
         }
 
@@ -113,21 +117,21 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Catalogs
             int groupId = 2;
 
             var dbResponse = new List<CatalogResponseDbObject>
-    {
-        new CatalogResponseDbObject { Id = 1, Description = "Ender 3" }
-    };
+            {
+                new CatalogResponseDbObject { Id = 1, Description = "Ender 3" }
+            };
 
-            var mappedResponse = new List<CatalogResponse>
-    {
-        new CatalogResponse { Id = 1, Description = "Ender 3 VE" }
-    };
+            var mappedResponse = new List<CatalogPrinterResponse>
+            {
+                new CatalogPrinterResponse { Id = 1, Description = "Ender 3 VE" , TimeVariation = 0}
+            };
 
             _catalogDbManagerMock
                 .Setup(db => db.GetPrinterCatalog(groupId))
                 .Returns(dbResponse);
 
             _mapperMock
-                .Setup(m => m.Map<List<CatalogResponse>>(dbResponse))
+                .Setup(m => m.Map<List<CatalogPrinterResponse>>(dbResponse))
                 .Returns(mappedResponse);
 
 
@@ -137,7 +141,7 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Catalogs
             Assert.Single(result);
 
             _catalogDbManagerMock.Verify(db => db.GetPrinterCatalog(groupId), Times.Once);
-            _mapperMock.Verify(m => m.Map<List<CatalogResponse>>(dbResponse), Times.Once);
+            _mapperMock.Verify(m => m.Map<List<CatalogPrinterResponse>>(dbResponse), Times.Once);
         }
 
 

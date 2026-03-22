@@ -21,7 +21,7 @@
         public decimal PrintFilamentUsed { get; set; }
         private const string PrintFilamentUsedColumnName = "PRINT_FILAMENT_USED";
         public int PrintRealTime { get; set; }
-        private const string PrintRealTimeColumnName = "PRINT_REAL_TIME";
+        public int? PrintProgress { get; set; }
 
 
 

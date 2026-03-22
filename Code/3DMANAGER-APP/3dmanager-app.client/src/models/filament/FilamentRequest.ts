@@ -9,4 +9,5 @@ export interface FilamentRequest {
     filamentThickness: number;
     filamentCost: number;
     filamentDescription: string;
+    imageFile?: File | null;
 }

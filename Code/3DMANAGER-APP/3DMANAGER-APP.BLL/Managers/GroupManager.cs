@@ -14,22 +14,29 @@ namespace _3DMANAGER_APP.BLL.Managers
         private readonly IGroupDbManager _groupDbManager;
         private readonly IMapper _mapper;
         private readonly ILogger<GroupManager> _logger;
-        public GroupManager(IGroupDbManager groupDbManager, IMapper mapper, ILogger<GroupManager> logger)
+        private readonly IAwsS3Service _awsS3Service;
+        public GroupManager(IGroupDbManager groupDbManager, IMapper mapper, ILogger<GroupManager> logger, IAwsS3Service awsS3Service)
         {
             _groupDbManager = groupDbManager;
             _mapper = mapper;
             _logger = logger;
+            _awsS3Service = awsS3Service;
         }
 
-        public List<GroupInvitation> GetGroupInvitations(int userId)
+        public List<GroupInvitation> GetGroupInvitations(int userId, out bool error)
         {
-            return _mapper.Map<List<GroupInvitation>>(_groupDbManager.GetGroupInvitations(userId));
+            error = false;
+            var list = _groupDbManager.GetGroupInvitations(userId, out int? errorDb);
+            if (errorDb != 0)
+            {
+                error = true;
+            }
+
+            return _mapper.Map<List<GroupInvitation>>(list);
         }
 
-        public bool PostNewGroup(GroupRequest request, out BaseError? error)
+        public bool PostNewGroup(GroupRequest request)
         {
-            error = null;
-
             GroupRequestDbObject groupDbObject = _mapper.Map<GroupRequestDbObject>(request);
             return _groupDbManager.PostNewGroup(groupDbObject);
         }
@@ -40,10 +47,82 @@ namespace _3DMANAGER_APP.BLL.Managers
             bool response = _groupDbManager.PostAcceptInvitation(groupId, isAccepted, userId, out int? errorDb);
             if (errorDb != null || errorDb > 0)
             {
-                error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = "Error al tratar de aceptar la invitacion del grupo" };
+                error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = $"Error al tratar de aceptar la invitacion del grupo {groupId}" };
                 return false;
             }
             return response;
+        }
+
+        public GroupBasicDataResponse GetGroupBasicData(int groupId, out BaseError? error)
+        {
+            error = null;
+            GroupBasicDataResponseDbObject response = _groupDbManager.GetGroupBasicData(groupId);
+            if (response.GroupId == 0)
+            {
+                error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = $"Error al tratar de recoger la información básica del grupo {groupId}" };
+                return new GroupBasicDataResponse();
+            }
+            return _mapper.Map<GroupBasicDataResponse>(response);
+        }
+
+        public bool UpdateGroupData(GroupRequest request, int groupId)
+        {
+            GroupRequestDbObject groupDbObject = _mapper.Map<GroupRequestDbObject>(request);
+            return _groupDbManager.UpdateGroupData(groupDbObject, groupId);
+
+        }
+
+        public bool UpdateLeaveGroup(int userId)
+        {
+            return _groupDbManager.UpdateLeaveGroup(userId);
+
+        }
+
+        public bool UpdateMembership(int userKickedId)
+        {
+            return _groupDbManager.UpdateMembership(userKickedId);
+
+        }
+
+        public async Task<bool> DeleteGroup(int userId, int groupId)
+        {
+            var dbResponse = _groupDbManager.DeleteGroup(userId, groupId);
+
+            if (!dbResponse)
+            {
+                string msg = $"No se pudo borrar el grupo {groupId} en la base de datos.";
+                _logger.LogError(msg);
+                return false;
+            }
+
+            try
+            {
+                await _awsS3Service.DeleteGroupAsync(groupId);
+            }
+            catch (Exception ex)
+            {
+                string msg = $"Error al borrar las imágenes del grupo {groupId} en S3.";
+                _logger.LogError(ex, msg);
+            }
+
+            return true;
+        }
+
+        public bool TrasnferOwnership(int userId, int groupId, int newOwnerUserId)
+        {
+            return _groupDbManager.TrasnferOwnership(userId, groupId, newOwnerUserId);
+        }
+
+        public GroupDashboardData GetGroupDashboardData(int groupId, out BaseError? error)
+        {
+            error = null;
+            GroupDashboardDataDbObject response = _groupDbManager.GetGroupDashboardData(groupId);
+            if (response.GroupId == 0)
+            {
+                error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = "Error al tratar de recoger la información del dashboard del grupo" };
+                return new GroupDashboardData();
+            }
+            return _mapper.Map<GroupDashboardData>(response);
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { postPrinter } from "../api/printerService";
+import { usePopupContext } from "../context/PopupContext";
+import InfoPopup from "../components/popupComponent/InfoPopup";
 
 const CreatePrinterPage: React.FC = () => {
 
@@ -8,13 +10,18 @@ const CreatePrinterPage: React.FC = () => {
     const [printerDescription, setPrinterDescription] = useState("");
     const [printerModel, setPrinterModel] = useState("");
     const [imageFile, setImageFile] = useState<File | null>(null);
+    const { showPopup } = usePopupContext();
 
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault(); 
         if (!printerName || !printerModel) {
-            alert("El nombre y el modelo son campos obligatorios");
+            showPopup({
+                type: "warning", content: (
+                    <InfoPopup title="Completar formulario" description="El nombre y el modelo de la impresora son campos obligatorios" />
+                )
+            });
             return;
         }
         
@@ -29,20 +36,32 @@ const CreatePrinterPage: React.FC = () => {
             });
 
             if (response.data) {
-                alert("Impresora creada correctamente.");
+                showPopup({
+                    type: "info", content: (
+                        <InfoPopup title="Operación realizada" description="La impresora ha sido creada correctamente." />
+                    )
+                });
                 navigate("/dashboard");
             } else {
-                alert(response.error?.message || "No se pudo crear la impresora.");
+                showPopup({
+                    type: "error", content: (
+                        <InfoPopup title="Operación cancelada" description={response.error?.message || "No se ha podido crear la impresora."} />
+                    )
+                });
             }
         } catch (error) {
             console.error("Error al crear impresora:", error);
-            alert("Ha ocurrido un error en el registro del impresora.");
+            showPopup({
+                type: "error", content: (
+                    <InfoPopup title="Operación cancelada" description= "Ha ocurrido un error en la creación de la impresora."/>
+                )
+            });
         }
     };
 
     return (
         <div className="container-fluid vh-100">         
-            <div className="row h-50 mt-5">
+            <div className="row h-70 mt-5">
                 <div className="col-3"></div>
                 <div className="grey-container col-6 ps-4 pb-4 d-flex flex-column">
                     <h2 className="title-impact mt-5 mb-5">Crear impresora</h2>
@@ -80,8 +99,8 @@ const CreatePrinterPage: React.FC = () => {
                             </div>                           
                         </div>
                         <div className="col-6 d-flex justify-content-between mt-5 p-2">
-                            <button type="submit" className="botton-yellow createUser h-70">Crear impresora</button>
-                            <button type="button" className="botton-darkGrey" onClick={() => navigate("/dashboard")}>Cancelar</button>
+                            <button type="submit" className="button-yellow createUser h-70">Crear impresora</button>
+                            <button type="button" className="button-darkGrey" onClick={() => navigate("/dashboard")}>Cancelar</button>
                         </div>                                      
                     </form>
                 </div>

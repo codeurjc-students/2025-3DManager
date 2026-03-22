@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Login, LoginGuest } from "../api/userService";
 import { useAuth } from "../context/AuthContext";
 import type { LoginResponse } from "../models/user/LoginResponse";
+import { usePopupContext } from "../context/PopupContext";
+import InfoPopup from "../components/popupComponent/InfoPopup";
 
 const LoginPage: React.FC = () => {
     const navigate = useNavigate();
@@ -10,6 +12,7 @@ const LoginPage: React.FC = () => {
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const { showPopup } = usePopupContext();
 
     useEffect(() => {
         if (user) {
@@ -28,16 +31,24 @@ const LoginPage: React.FC = () => {
             const result = await LoginGuest();
 
             if (!result || result.error != null) {
-                alert(result?.error?.message || "Problema al intentar acceder como invitado");
+                showPopup({
+                    type: "warning", content: (
+                        <InfoPopup title="Operación cancelada" description={result?.error?.message || "Problema al intentar acceder como invitado"} />
+                    )
+                });
                 return;
             }
 
             const userLogged = result.data!;
-            authLoad(userLogged);
+            authLoad(userLogged);  
 
         } catch (err) {
             console.error("Error login como invitado:", err);
-            alert("Error conectando con el servidor como invitado");
+            showPopup({
+                type: "error", content: (
+                    <InfoPopup title="Operación cancelada" description="Error conectando con el servidor como invitado" />
+                )
+            });
         } finally {
             setLoading(false);
         }
@@ -59,7 +70,11 @@ const LoginPage: React.FC = () => {
             const result = await Login({ userName: userName, userPassword: password });
 
             if (!result || result.error != null) {
-                alert(result?.error?.message || "Problema al intentar acceder");
+                showPopup({
+                    type: "error", content: (
+                        <InfoPopup title="Problema de acceso" description={result?.error?.message || "Problema al intentar acceder"} />
+                    )
+                });
                 return;
             }
 
@@ -68,7 +83,11 @@ const LoginPage: React.FC = () => {
             
         } catch (err) {
             console.error("Error login:", err);
-            alert("Error conectando con el servidor");
+            showPopup({
+                type: "error", content: (
+                    <InfoPopup title="Problema de acceso" description="Error conectando con el servidor" />
+                )
+            });
         } finally {
             setLoading(false);
         }
@@ -77,7 +96,10 @@ const LoginPage: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!userName || !password) {
-            alert("Introduce usuario y contraseña");
+            showPopup({
+                type: "error", content: (
+                    <InfoPopup title="Completa autenticación" description="Debes introducir usuario y contraseña"/>
+                )});
             return;
         }
         loginUser();
@@ -116,10 +138,10 @@ const LoginPage: React.FC = () => {
                         </div>
 
                         <div className="d-flex justify-content-between w-50 mt-5">
-                            <button type="submit" className="botton-yellow" disabled={loading}>
+                            <button type="submit" className="button-yellow" disabled={loading}>
                                 {loading ? "Accediendo..." : "Acceder"}
                             </button>
-                            <button type="button" className="botton-darkGrey" onClick={() => loginAsGuest() }>
+                            <button type="button" className="button-darkGrey" onClick={() => loginAsGuest() }>
                                 Acceder como invitado
                             </button>
                         </div>
@@ -131,7 +153,7 @@ const LoginPage: React.FC = () => {
             <div className="row mt-5">
                 <div className="col-3"></div>
                 <div className="col-6 mt-2 d-flex flex-column">
-                    <button type="button" className="botton-darkGrey" onClick={() => navigate("/user-create")}>
+                    <button type="button" className="button-darkGrey" onClick={() => navigate("/user-create")}>
                         Crear cuenta
                     </button>
                 </div>

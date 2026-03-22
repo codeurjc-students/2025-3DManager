@@ -1,5 +1,6 @@
 ﻿using _3DMANAGER_APP.DAL.Base;
 using _3DMANAGER_APP.DAL.Interfaces;
+using _3DMANAGER_APP.DAL.Models.File;
 using _3DMANAGER_APP.DAL.Models.User;
 using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
@@ -14,7 +15,7 @@ namespace _3DMANAGER_APP.DAL.Managers
         {
         }
 
-        public bool PostNewUser(UserCreateRequestDbObject user, out int? error)
+        public int PostNewUser(UserCreateRequestDbObject user, out int? error)
         {
             error = null;
             try
@@ -36,31 +37,32 @@ namespace _3DMANAGER_APP.DAL.Managers
                 var ds = new DataSet();
                 adapter.Fill(ds);
 
-                error = Convert.ToInt32(errorParam.Value);
-                if (error != 0)
+                var errorDb = Convert.ToInt32(errorParam.Value);
+                if (errorDb != 0)
                 {
-                    return false;
+                    error = errorDb;
+                    return 0;
                 }
                 if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                 {
-                    return true;
+                    return ds.Tables[0].Rows[0].Field<int>("USER_ID");
                 }
 
-                return false;
+                return 0;
             }
             catch (MySqlException ex)
             {
                 string msg = "Error al crear un usuario en BBDD";
                 Logger.LogError(ex, msg);
                 error = 500;
-                return false;
+                return 0;
             }
             catch (Exception ex)
             {
                 string msg = "Error al crear un usuario en BBDD";
                 Logger.LogError(ex, msg);
                 error = 500;
-                return false;
+                return 0;
             }
         }
 
@@ -86,22 +88,22 @@ namespace _3DMANAGER_APP.DAL.Managers
 
                 if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                 {
-                    return user.Create(ds.Tables[0].Rows[0]);
+                    return UserDbObject.Create(ds.Tables[0].Rows[0]);
                 }
 
-                return null;
+                return user;
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al acceder con un usuario en BBDD";
+                string msg = $"Error al acceder con un usuario {userName} en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new UserDbObject();
             }
             catch (Exception ex)
             {
-                string msg = "Error al acceder con un usuario en BBDD";
+                string msg = $"Error al acceder con un usuario {userName} en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new UserDbObject();
             }
         }
 
@@ -138,22 +140,23 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al devolver el listado de usuarios de en BBDD";
+                string msg = $"Error al devolver el listado de usuarios del grupo {group} en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new List<UserListResponseDbObject>();
             }
             catch (Exception ex)
             {
-                string msg = "Error al devolver el listado de usuarios de en BBDD";
+                string msg = $"Error al devolver el listado de usuarios del grupo {group} en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new List<UserListResponseDbObject>();
             }
         }
 
-        public List<UserListResponseDbObject> GetUserInvitationList()
+        public List<UserListResponseDbObject> GetUserInvitationList(string? filter, out bool error)
         {
             try
             {
+                error = false;
                 List<UserListResponseDbObject> list = new List<UserListResponseDbObject>();
                 string procName = $"{ProcedurePrefix}_pr_USER_INVITATION_LIST";
                 using var cmd = new MySqlCommand(procName, Connection)
@@ -161,12 +164,15 @@ namespace _3DMANAGER_APP.DAL.Managers
                     CommandType = CommandType.StoredProcedure
                 };
 
+                cmd.Parameters.Add(new MySqlParameter("P_FILTER", MySqlDbType.VarChar) { Value = filter });
+
                 using var adapter = new MySqlDataAdapter(cmd);
                 var ds = new DataSet();
                 adapter.Fill(ds);
 
                 if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                 {
+                    error = false;
                     foreach (DataRow row in ds.Tables[0].Rows)
                     {
                         UserListResponseDbObject listResponse = new UserListResponseDbObject();
@@ -178,20 +184,23 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al devolver el listado de usuarios para invitar de en BBDD";
+                error = true;
+                string msg = "Error al devolver el listado de usuarios para invitar  en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new List<UserListResponseDbObject>();
             }
             catch (Exception ex)
             {
+                error = true;
                 string msg = "Error al devolver el listado de usuarios para invitar de en BBDD";
                 Logger.LogError(ex, msg);
-                return null;
+                return new List<UserListResponseDbObject>();
             }
         }
 
-        public void PostUserInvitation(int groupId, int userId)
+        public bool PostUserInvitation(int groupId, int userId, out int? error)
         {
+            error = null;
             try
             {
                 string procName = $"{ProcedurePrefix}_pr_USER_INVITATION";
@@ -202,23 +211,328 @@ namespace _3DMANAGER_APP.DAL.Managers
 
                 cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
                 cmd.Parameters.Add(new MySqlParameter("P_CD_USER", MySqlDbType.Int32) { Value = userId });
+                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                var errorDb = Convert.ToInt32(errorParam.Value);
+                if (errorDb != 0)
+                {
+                    error = errorDb;
+                    return false;
+                }
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (MySqlException ex)
+            {
+                error = 500;
+                string msg = $"Error al invitar al usuario {userId} al grupo {groupId} en BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                error = 500;
+                string msg = $"Error al invitar al usuario {userId} al grupo {groupId} en BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+        }
+
+        public bool UpdateUserImageData(int userId, FileResponseDbObject image)
+        {
+            try
+            {
+                string procName = $"{ProcedurePrefix}_pr_USER_POST_IMAGE";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_KEY", MySqlDbType.VarChar) { Value = image.FileKey });
+                cmd.Parameters.Add(new MySqlParameter("P_URL", MySqlDbType.VarChar) { Value = image.FileUrl });
+                cmd.Parameters.Add(new MySqlParameter("P_USER_ID", MySqlDbType.Int32) { Value = userId });
+                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
 
                 using var adapter = new MySqlDataAdapter(cmd);
                 var ds = new DataSet();
                 adapter.Fill(ds);
 
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    return true;
+                }
+
+                return false;
+
             }
             catch (MySqlException ex)
             {
-                string msg = "Error al devolver el listado de usuarios de en BBDD";
+                string msg = $"Error al guardar los datos de la imagen del usuario {userId} en BBDD";
                 Logger.LogError(ex, msg);
+                return false;
             }
             catch (Exception ex)
             {
-                string msg = "Error al devolver el listado de usuarios de en BBDD";
+                string msg = $"Error al guardar los datos de la imagen del usuario {userId} en BBDD";
                 Logger.LogError(ex, msg);
+                return false;
+            }
+        }
+
+        public UserDbObject GetUserById(int userId)
+        {
+            try
+            {
+                var user = new UserDbObject();
+                string procName = $"{ProcedurePrefix}_pr_USER_GET_BY_ID";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_USER", MySqlDbType.Int32) { Value = userId });
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    return UserDbObject.Create(ds.Tables[0].Rows[0]);
+                }
+
+                return user;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = $"Error al obtener el usuario por id : {userId} en BBDD";
+                Logger.LogError(ex, msg);
+                return new UserDbObject();
+            }
+            catch (Exception ex)
+            {
+                string msg = $"Error al obtener el usuario por id : {userId} en BBDD";
+                Logger.LogError(ex, msg);
+                return new UserDbObject();
+            }
+        }
+
+        public int GetGroupIdByUserId(int userId)
+        {
+            try
+            {
+                string procName = $"{ProcedurePrefix}_pr_USER_GROUP_GET_BY_ID";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_USER", MySqlDbType.Int32) { Value = userId });
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    return ds.Tables[0].Rows[0].Field<int>("USER_GROUP_ID");
+                }
+
+                return 0;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = $"Error al obtener el id de grupo del usuario {userId} en BBDD";
+                Logger.LogError(ex, msg);
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                string msg = $"Error al obtener el id de grupo del usuario {userId} en BBDD";
+                Logger.LogError(ex, msg);
+                return 0;
+            }
+        }
+
+        public bool UpdateUser(UserUpdateRequestDbObject requestDb)
+        {
+            try
+            {
+                string procName = $"{ProcedurePrefix}_pr_USER_UPDATE";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = requestDb.GroupId });
+                cmd.Parameters.Add(new MySqlParameter("P_CD_USER", MySqlDbType.Int32) { Value = requestDb.UserId });
+                cmd.Parameters.Add(new MySqlParameter("P_DS_NAME", MySqlDbType.VarChar) { Value = requestDb.UserName });
+                cmd.Parameters.Add(new MySqlParameter("P_DS_EMAIL", MySqlDbType.VarChar) { Value = requestDb.UserEmail });
+
+                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                var error = Convert.ToInt32(errorParam.Value);
+                if (error != 0)
+                {
+                    return false;
+                }
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    return ds.Tables[0].Rows[0].Field<long>("Total") > 0;
+                }
+
+                return false;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = $"Error al actualizar el perfil del usuario {requestDb.UserId} en BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                string msg = $"Error al actualizar el perfil del usuario {requestDb.UserId} en BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+        }
+
+        public UserDetailDbObject GetUserDetail(int groupId, int userId)
+        {
+            try
+            {
+                UserDetailDbObject response = new UserDetailDbObject();
+                string procName = $"{ProcedurePrefix}_pr_USER_DETAIL_GET";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.VarChar) { Value = groupId });
+                cmd.Parameters.Add(new MySqlParameter("P_CD_USER", MySqlDbType.VarChar) { Value = userId });
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    response = new UserDetailDbObject();
+                    return response.Create(ds.Tables[0].Rows[0]);
+                }
+
+                return response;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = $"Error al devolver el detalle de usuario {userId} de en BBDD";
+                Logger.LogError(ex, msg);
+                return new UserDetailDbObject();
+            }
+            catch (Exception ex)
+            {
+                string msg = $"Error al devolver el detalle de usuario {userId} de en BBDD";
+                Logger.LogError(ex, msg);
+                return new UserDetailDbObject();
+            }
+        }
+
+        public FileResponseDbObject GetUserImageData(int userId, int groupId, out bool error)
+        {
+            error = false;
+            FileResponseDbObject responseDb = new FileResponseDbObject();
+            try
+            {
+                string procName = $"{ProcedurePrefix}_pr_USER_GET_IMAGE";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
+                cmd.Parameters.Add(new MySqlParameter("P_CD_USER", MySqlDbType.Int32) { Value = userId });
+                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    error = false;
+                    return responseDb.Create(ds.Tables[0].Rows[0]);
+                }
+
+                return responseDb;
+            }
+            catch (MySqlException ex)
+            {
+                error = true;
+                string msg = $"Error al guardar los datos de la imagen en el usuario {userId} BBDD";
+                Logger.LogError(ex, msg);
+                return new FileResponseDbObject();
+            }
+            catch (Exception ex)
+            {
+                error = true;
+                string msg = $"Error al guardar los datos de la imagen en el usuario {userId} BBDD";
+                Logger.LogError(ex, msg);
+                return new FileResponseDbObject();
+            }
+        }
+
+        public bool DeleteUserImageData(int userId, int groupId)
+        {
+            try
+            {
+                string procName = $"{ProcedurePrefix}_pr_USER_DELETE_IMAGE";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
+                cmd.Parameters.Add(new MySqlParameter("P_CD_USER", MySqlDbType.Int32) { Value = userId });
+                var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = $"Error al borrar los datos de la imagen en el usuario {userId} BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                string msg = $"Error al borrar los datos de la imagen en la usuario {userId} BBDD";
+                Logger.LogError(ex, msg);
+                return false;
             }
         }
     }
-
 }
