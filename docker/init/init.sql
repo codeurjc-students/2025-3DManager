@@ -269,9 +269,9 @@ INSERT INTO `3DMANAGER_3DPRINT`
 `3DMANAGER_3DPRINT_FILAMENT_ID`,
 `3DMANAGER_3DPRINT_DESCRIPTION`)
 VALUES
-('Impresion 1',2,5184,4380,4.58,1,1,2,1,'Benchy test 1 con filamento 1'),
-('Impresion 2',2,5184,4800,4.74,1,1,2,2,'Benchy test 2 con filamento 2'),
-('Impresion 3',2,5184,5180,4.96,1,2,2,3,'Benchy test 3 con filamento 3'),
+('Impresion 1',1,5184,4380,4.58,1,1,2,1,'Benchy test 1 con filamento 1'),
+('Impresion 2',1,5184,4800,4.74,1,1,2,2,'Benchy test 2 con filamento 2'),
+('Impresion 3',1,5184,5180,4.96,1,2,2,3,'Benchy test 3 con filamento 3'),
 ('Impresion 4 Fallida',2,5184,2000,4.5,1,2,2,3,'Benchy test 4 con filamento 3')
 ;
 
