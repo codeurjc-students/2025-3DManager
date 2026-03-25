@@ -60,10 +60,11 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.User
                 }
             };
 
-            _userDbManagerMock
-                .Setup(db => db.GetUserList(groupId))
-                .Returns(dbResponse);
+            bool outError;
 
+            _userDbManagerMock
+                .Setup(db => db.GetUserList(groupId, out outError))
+                .Returns(dbResponse);
 
             var mapperConfig = new MapperConfiguration(cfg =>
             {
@@ -93,7 +94,7 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.User
             Assert.Equal("1h 2min", result[0].UserHours);
             Assert.Equal("0h 13min", result[1].UserHours);
 
-            _userDbManagerMock.Verify(db => db.GetUserList(groupId), Times.Once);
+            _userDbManagerMock.Verify(db => db.GetUserList(groupId, out outError), Times.Once);
         }
     }
 
