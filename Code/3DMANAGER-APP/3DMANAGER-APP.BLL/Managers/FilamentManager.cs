@@ -19,13 +19,13 @@ namespace _3DMANAGER_APP.BLL.Managers
         private readonly IFilamentDbManager _filamentDbManager;
         private readonly IMapper _mapper;
         private readonly ILogger<FilamentManager> _logger;
-        private readonly IAwsS3Service _awsS3Service;
-        public FilamentManager(IFilamentDbManager filamentDbManager, IMapper mapper, ILogger<FilamentManager> logger, IAwsS3Service awsS3Service)
+        private readonly IAzureBlobStorageService _absService;
+        public FilamentManager(IFilamentDbManager filamentDbManager, IMapper mapper, ILogger<FilamentManager> logger, IAzureBlobStorageService absService)
         {
             _filamentDbManager = filamentDbManager;
             _mapper = mapper;
             _logger = logger;
-            _awsS3Service = awsS3Service;
+            _absService = absService;
         }
 
         public List<FilamentListResponse> GetFilamentList(int group, out BaseError? error)
@@ -68,7 +68,7 @@ namespace _3DMANAGER_APP.BLL.Managers
             response.Data = responseDb;
             if (filament.ImageFile != null)
             {
-                bool responseImage = await UpdateS3FilamentImage(responseDb, filament.ImageFile, filament.GroupId);
+                bool responseImage = await UpdateABSFilamentImage(responseDb, filament.ImageFile, filament.GroupId);
                 if (!responseImage)
                 {
                     string msg = $"El filamento {filament.FilamentName} se ha creado correctamente, pero la imagen ha fallado al ser guardada.";
@@ -78,13 +78,13 @@ namespace _3DMANAGER_APP.BLL.Managers
             }
             return response;
         }
-        public async Task<bool> UpdateS3FilamentImage(int filamentId, IFormFile imageFile, int groupId)
+        public async Task<bool> UpdateABSFilamentImage(int filamentId, IFormFile imageFile, int groupId)
         {
             FileResponse? image = null;
 
             if (imageFile != null)
             {
-                image = await _awsS3Service.UploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName,
+                image = await _absService.UploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName,
                     imageFile.ContentType, "filaments", groupId);
                 if (image != null)
                     return _filamentDbManager.UpdateFilamentImageData(filamentId, _mapper.Map<FileResponseDbObject>(image));
@@ -123,9 +123,9 @@ namespace _3DMANAGER_APP.BLL.Managers
             if (response != null)
             {
                 if (response.FilamentImageFile != null && response.FilamentImageFile.FileUrl != null && response.FilamentImageFile.FileKey != null)
-                    response.FilamentImageFile.FileUrl = _awsS3Service.GetPresignedUrl(response.FilamentImageFile.FileKey, 1);
+                    response.FilamentImageFile.FileUrl = _absService.GetPresignedUrl(response.FilamentImageFile.FileKey, 1);
                 else
-                    response.FilamentImageFile!.FileUrl = _awsS3Service.GetPresignedUrl("default/3dmanager-default-filament.png", 1);
+                    response.FilamentImageFile!.FileUrl = _absService.GetPresignedUrl("default/3dmanager-default-filament.png", 1);
 
             }
             return response!;
@@ -149,7 +149,7 @@ namespace _3DMANAGER_APP.BLL.Managers
                 var responseImage = await DeleteFilamentImage(filamentId, groupId);
                 if (!responseImage.Data)
                 {
-                    string msg = $"Filamento eliminado correctamento. Pero ha ocurrido un error al eliminar la imagen en S3 del fichero {responseDb.FileResponse.FileKey}.";
+                    string msg = $"Filamento eliminado correctamento. Pero ha ocurrido un error al eliminar la imagen en Azure Blob Storage del fichero {responseDb.FileResponse.FileKey}.";
                     response.Error = new ErrorProperties(StatusCodes.Status500InternalServerError, msg);
                     return response;
                 }
@@ -174,7 +174,7 @@ namespace _3DMANAGER_APP.BLL.Managers
                 return response;
             }
 
-            await _awsS3Service.DeleteImageAsync(imageData!.FileKey!);
+            await _absService.DeleteImageAsync(imageData!.FileKey!);
             bool dbResponse = _filamentDbManager.DeleteFilamentImageData(filamentId, groupId);
 
             if (!dbResponse)
@@ -197,10 +197,10 @@ namespace _3DMANAGER_APP.BLL.Managers
                 return response;
             }
 
-            var s3Response = await _awsS3Service.UploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName, imageFile.ContentType, "filaments", groupId);
-            if (s3Response == null)
+            var aBSResponse = await _absService.UploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName, imageFile.ContentType, "filaments", groupId);
+            if (aBSResponse == null)
             {
-                response.Error = new ErrorProperties(StatusCodes.Status409Conflict, "Error al subir la imagen a S3.");
+                response.Error = new ErrorProperties(StatusCodes.Status409Conflict, "Error al subir la imagen a Azure Blob Storage.");
                 return response;
             }
             var deletedImage = await DeleteFilamentImage(filamentId, groupId);
@@ -211,7 +211,7 @@ namespace _3DMANAGER_APP.BLL.Managers
                 string msg = $"Se ha intentado eliminar una foto del filamento {filamentId} del grupo {groupId} con el fileKey {keyValue}";
                 _logger.LogError(msg);
             }
-            bool dbResponse = _filamentDbManager.UpdateFilamentImageData(filamentId, _mapper.Map<FileResponseDbObject>(s3Response));
+            bool dbResponse = _filamentDbManager.UpdateFilamentImageData(filamentId, _mapper.Map<FileResponseDbObject>(aBSResponse));
             if (!dbResponse)
             {
                 response.Error = new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al actualizar la imagen en la base de datos.");

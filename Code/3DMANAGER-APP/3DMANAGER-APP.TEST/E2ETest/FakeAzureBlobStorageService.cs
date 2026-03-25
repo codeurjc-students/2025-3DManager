@@ -3,7 +3,7 @@ using _3DMANAGER_APP.BLL.Models.File;
 
 namespace _3DMANAGER_APP.TEST.E2ETest
 {
-    public class FakeAwsS3Service : IAwsS3Service
+    public class FakeAzureBlobStorageService : IAzureBlobStorageService
     {
         public Task DeleteGroupAsync(int groupId)
         {
@@ -24,8 +24,8 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         {
             return Task.FromResult<FileResponse?>(new FileResponse
             {
-                FileKey = "folder/aws_S3service_3dmanager_key",
-                FileUrl = $"https://fake-s3/{folder}/{fileName}"
+                FileKey = "folder/abs_storage_3dmanager_key",
+                FileUrl = $"https://fake-abs/{folder}/{fileName}"
             });
         }
 

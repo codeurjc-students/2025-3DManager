@@ -19,13 +19,13 @@ namespace _3DMANAGER_APP.BLL.Managers
         private readonly IUserDbManager _userDbManager;
         private readonly IMapper _mapper;
         private readonly ILogger<UserManager> _logger;
-        private readonly IAwsS3Service _awsS3Service;
-        public UserManager(IUserDbManager userDbManager, IMapper mapper, ILogger<UserManager> logger, IAwsS3Service awsS3Service)
+        private readonly IAzureBlobStorageService _absService;
+        public UserManager(IUserDbManager userDbManager, IMapper mapper, ILogger<UserManager> logger, IAzureBlobStorageService absService)
         {
             _userDbManager = userDbManager;
             _mapper = mapper;
             _logger = logger;
-            _awsS3Service = awsS3Service;
+            _absService = absService;
         }
 
         public async Task<CommonResponse<int>> PostNewUser(UserCreateRequest user)
@@ -67,7 +67,7 @@ namespace _3DMANAGER_APP.BLL.Managers
             response.Data = responseDb;
             if (user.ImageFile != null)
             {
-                bool responseImage = await UpdateS3UserImage(responseDb, user.ImageFile);
+                bool responseImage = await UpdateABSUserImage(responseDb, user.ImageFile);
                 if (!responseImage)
                 {
                     string msg = "El usuario se ha creado correctamente, pero la imagen ha fallado al ser guardada.";
@@ -78,13 +78,13 @@ namespace _3DMANAGER_APP.BLL.Managers
             return response;
         }
 
-        public async Task<bool> UpdateS3UserImage(int userId, IFormFile imageFile)
+        public async Task<bool> UpdateABSUserImage(int userId, IFormFile imageFile)
         {
             FileResponse? image = null;
 
             if (imageFile != null)
             {
-                image = await _awsS3Service.UploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName,
+                image = await _absService.UploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName,
                     imageFile.ContentType, "users", null);
                 if (image != null)
                     return _userDbManager.UpdateUserImageData(userId, _mapper.Map<FileResponseDbObject>(image));
@@ -220,9 +220,9 @@ namespace _3DMANAGER_APP.BLL.Managers
             if (response != null)
             {
                 if (response.UserImageData != null && response.UserImageData.FileUrl != null && response.UserImageData.FileKey != null)
-                    response.UserImageData.FileUrl = _awsS3Service.GetPresignedUrl(response.UserImageData.FileKey, 1);
+                    response.UserImageData.FileUrl = _absService.GetPresignedUrl(response.UserImageData.FileKey, 1);
                 else
-                    response.UserImageData!.FileUrl = _awsS3Service.GetPresignedUrl("default/3dmanager-default-user.png", 1);
+                    response.UserImageData!.FileUrl = _absService.GetPresignedUrl("default/3dmanager-default-user.png", 1);
 
             }
             return response!;
@@ -245,7 +245,7 @@ namespace _3DMANAGER_APP.BLL.Managers
                 return response;
             }
 
-            await _awsS3Service.DeleteImageAsync(imageData!.FileKey!);
+            await _absService.DeleteImageAsync(imageData!.FileKey!);
             bool dbResponse = _userDbManager.DeleteUserImageData(userId, groupId);
 
             if (!dbResponse)
@@ -268,10 +268,10 @@ namespace _3DMANAGER_APP.BLL.Managers
                 return response;
             }
 
-            var s3Response = await _awsS3Service.UploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName, imageFile.ContentType, "users", null);
-            if (s3Response == null)
+            var aBSResponse = await _absService.UploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName, imageFile.ContentType, "users", null);
+            if (aBSResponse == null)
             {
-                response.Error = new ErrorProperties(StatusCodes.Status409Conflict, "Error al subir la imagen a S3.");
+                response.Error = new ErrorProperties(StatusCodes.Status409Conflict, "Error al subir la imagen a Azure Blob Storage.");
                 return response;
             }
             var deletedImage = await DeleteUserImage(userId, groupId);
@@ -282,7 +282,7 @@ namespace _3DMANAGER_APP.BLL.Managers
                 string msg = $"Se ha intentado eliminar una foto del usuario {userId} del grupo {groupId} con el fileKey {keyValue}";
                 _logger.LogError(msg);
             }
-            bool dbResponse = _userDbManager.UpdateUserImageData(userId, _mapper.Map<FileResponseDbObject>(s3Response));
+            bool dbResponse = _userDbManager.UpdateUserImageData(userId, _mapper.Map<FileResponseDbObject>(aBSResponse));
             if (!dbResponse)
             {
                 response.Error = new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al actualizar la imagen en la base de datos.");

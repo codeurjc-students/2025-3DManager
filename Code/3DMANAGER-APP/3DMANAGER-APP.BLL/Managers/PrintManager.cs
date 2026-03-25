@@ -17,13 +17,13 @@ namespace _3DMANAGER_APP.BLL.Managers
         private readonly IPrintDbManager _printDbManager;
         private readonly IMapper _mapper;
         private readonly ILogger<PrintManager> _logger;
-        private readonly IAwsS3Service _awsS3Service;
-        public PrintManager(IPrintDbManager printDbManager, IMapper mapper, ILogger<PrintManager> logger, IAwsS3Service awsS3Service)
+        private readonly IAzureBlobStorageService _absService;
+        public PrintManager(IPrintDbManager printDbManager, IMapper mapper, ILogger<PrintManager> logger, IAzureBlobStorageService absService)
         {
             _printDbManager = printDbManager;
             _mapper = mapper;
             _logger = logger;
-            _awsS3Service = awsS3Service;
+            _absService = absService;
         }
 
         public PrintListResponse GetPrintList(int group, PagedRequest pagination, out BaseError? error)
@@ -78,7 +78,7 @@ namespace _3DMANAGER_APP.BLL.Managers
             response.Data = responseDb;
             if (print.ImageFile != null)
             {
-                bool responseImage = await UpdateS3PrintImage(responseDb, print.ImageFile, print.GroupId);
+                bool responseImage = await UpdateABSPrintImage(responseDb, print.ImageFile, print.GroupId);
                 if (!responseImage)
                 {
                     string msg = "La impresion 3d se ha creado correctamente, pero la imagen ha fallado al ser guardada.";
@@ -89,13 +89,13 @@ namespace _3DMANAGER_APP.BLL.Managers
             return response;
         }
 
-        public async Task<bool> UpdateS3PrintImage(int printerId, IFormFile imageFile, int groupId)
+        public async Task<bool> UpdateABSPrintImage(int printerId, IFormFile imageFile, int groupId)
         {
             FileResponse? image = null;
 
             if (imageFile != null)
             {
-                image = await _awsS3Service.UploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName,
+                image = await _absService.UploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName,
                     imageFile.ContentType, "prints", groupId);
                 if (image != null)
                     return _printDbManager.UpdatePrintImageData(printerId, _mapper.Map<FileResponseDbObject>(image));
@@ -157,9 +157,9 @@ namespace _3DMANAGER_APP.BLL.Managers
             if (response != null)
             {
                 if (response.PrintImageData != null && response.PrintImageData.FileUrl != null && response.PrintImageData.FileKey != null)
-                    response.PrintImageData.FileUrl = _awsS3Service.GetPresignedUrl(response.PrintImageData.FileKey, 1);
+                    response.PrintImageData.FileUrl = _absService.GetPresignedUrl(response.PrintImageData.FileKey, 1);
                 else
-                    response.PrintImageData!.FileUrl = _awsS3Service.GetPresignedUrl("default/3dmanager-default-3dprint.png", 1);
+                    response.PrintImageData!.FileUrl = _absService.GetPresignedUrl("default/3dmanager-default-3dprint.png", 1);
 
             }
             return response!;

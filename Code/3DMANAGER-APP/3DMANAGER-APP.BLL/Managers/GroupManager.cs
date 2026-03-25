@@ -14,13 +14,13 @@ namespace _3DMANAGER_APP.BLL.Managers
         private readonly IGroupDbManager _groupDbManager;
         private readonly IMapper _mapper;
         private readonly ILogger<GroupManager> _logger;
-        private readonly IAwsS3Service _awsS3Service;
-        public GroupManager(IGroupDbManager groupDbManager, IMapper mapper, ILogger<GroupManager> logger, IAwsS3Service awsS3Service)
+        private readonly IAzureBlobStorageService _absService;
+        public GroupManager(IGroupDbManager groupDbManager, IMapper mapper, ILogger<GroupManager> logger, IAzureBlobStorageService absService)
         {
             _groupDbManager = groupDbManager;
             _mapper = mapper;
             _logger = logger;
-            _awsS3Service = awsS3Service;
+            _absService = absService;
         }
 
         public List<GroupInvitation> GetGroupInvitations(int userId, out bool error)
@@ -97,11 +97,11 @@ namespace _3DMANAGER_APP.BLL.Managers
 
             try
             {
-                await _awsS3Service.DeleteGroupAsync(groupId);
+                await _absService.DeleteGroupAsync(groupId);
             }
             catch (Exception ex)
             {
-                string msg = $"Error al borrar las imágenes del grupo {groupId} en S3.";
+                string msg = $"Error al borrar las imágenes del grupo {groupId} en Azure Blob Storage.";
                 _logger.LogError(ex, msg);
             }
 
