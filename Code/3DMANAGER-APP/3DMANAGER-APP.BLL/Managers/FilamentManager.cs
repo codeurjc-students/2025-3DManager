@@ -31,8 +31,8 @@ namespace _3DMANAGER_APP.BLL.Managers
         public List<FilamentListResponse> GetFilamentList(int group, out BaseError? error)
         {
             error = null;
-            List<FilamentListResponseDbObject> list = _filamentDbManager.GetFilamentList(group);
-            if (list == null || list.Count == 0)
+            List<FilamentListResponseDbObject> list = _filamentDbManager.GetFilamentList(group, out bool errordb);
+            if (errordb)
                 error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = "Error al obtener listado de filamentos" };
 
             return _mapper.Map<List<FilamentListResponse>>(list);

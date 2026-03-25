@@ -135,8 +135,8 @@ namespace _3DMANAGER_APP.BLL.Managers
         public List<UserListResponse> GetUserList(int group, out BaseError? error)
         {
             error = null;
-            List<UserListResponseDbObject> list = _userDbManager.GetUserList(group);
-            if (list.Count == 0)
+            List<UserListResponseDbObject> list = _userDbManager.GetUserList(group, out bool errorDb);
+            if (errorDb)
             {
                 string msg = $"Error al obtener listado de usuarios para el grupo {group}";
                 _logger.LogError(msg);

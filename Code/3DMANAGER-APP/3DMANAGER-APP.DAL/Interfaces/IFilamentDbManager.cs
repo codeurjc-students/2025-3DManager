@@ -6,7 +6,7 @@ namespace _3DMANAGER_APP.DAL.Interfaces
 {
     public interface IFilamentDbManager
     {
-        public List<FilamentListResponseDbObject> GetFilamentList(int group);
+        public List<FilamentListResponseDbObject> GetFilamentList(int group, out bool error);
         public int PostFilament(FilamentRequestDbObject request, out int? error);
         public bool UpdateFilamentImageData(int filamentId, FileResponseDbObject image);
         public bool UpdateFilament(FilamentUpdateRequestDbObject requestDb);

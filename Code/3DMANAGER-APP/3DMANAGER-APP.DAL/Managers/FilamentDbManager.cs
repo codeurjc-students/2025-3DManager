@@ -18,10 +18,11 @@ namespace _3DMANAGER_APP.DAL.Managers
         {
         }
 
-        public List<FilamentListResponseDbObject> GetFilamentList(int group)
+        public List<FilamentListResponseDbObject> GetFilamentList(int group, out bool error)
         {
             try
             {
+                error = false;
                 List<FilamentListResponseDbObject> list = new List<FilamentListResponseDbObject>();
                 string procName = $"{ProcedurePrefix}_pr_FILAMENT_LIST";
                 using var cmd = new MySqlCommand(procName, Connection)
@@ -51,12 +52,14 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
+                error = true;
                 string msg = $"Error al devolver el listado de filamentos del grupo {group} en BBDD";
                 Logger.LogError(ex, msg);
                 return new List<FilamentListResponseDbObject>();
             }
             catch (Exception ex)
             {
+                error = true;
                 string msg = $"Error al devolver el listado de filamentos del grupo {group} de en BBDD";
                 Logger.LogError(ex, msg);
                 return new List<FilamentListResponseDbObject>();
