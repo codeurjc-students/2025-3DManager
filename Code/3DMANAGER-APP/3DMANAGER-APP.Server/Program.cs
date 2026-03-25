@@ -158,10 +158,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "3DManager API v1"));
 }
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseHttpsRedirection();
-}
 
 app.UseStaticFiles();
 app.UseRouting();
