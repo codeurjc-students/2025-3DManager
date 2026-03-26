@@ -93,7 +93,7 @@
             ('Grupo Test', 'Grupo de pruebas CI');
 
             INSERT INTO `3DMANAGER_USER`
-            (USER_NAME,USER_PASSWORD,USER_EMAIL, USER_ROLE, USER_GROUP_ID)
+            (`3DMANAGER_USER_NAME`,`3DMANAGER_USER_PASSWORD`,`3DMANAGER_USER_EMAIL`, `3DMANAGER_USER_ROLE`, `3DMANAGER_USER_GROUP_ID`)
             VALUES
             ('user_test','AQAAAAIAAYagAAAAENxwolbYGMFDoMUv/KEjKYtH7Vg1yQ3J5BKFMYp30ZrCXD5Xz0bxofJaat+FUBgCDQ==','user@test.com',2,1);
 
@@ -222,17 +222,17 @@
         {
             var sql = """
             CREATE TABLE IF NOT EXISTS `3DMANAGER_USER` (
-                `USER_ID` INT AUTO_INCREMENT PRIMARY KEY,
-                `USER_NAME` VARCHAR(100) NOT NULL,
-                `USER_PASSWORD` VARCHAR(100) NOT NULL,
-                `USER_EMAIL` VARCHAR(100) NOT NULL,
-                `USER_ROLE` INT NULL,
-                `USER_GROUP_ID` INT NOT NULL,
-                `USER_PHOTO_URL` VARCHAR(255),
-                `USER_REGISTER_DATE` DATETIME DEFAULT CURRENT_TIMESTAMP,
-                `USER_IMAGE_URL` varchar(255) DEFAULT NULL,
-                `USER_IMAGE_KEY` varchar(255) DEFAULT NULL,
-                FOREIGN KEY (`USER_GROUP_ID`)
+                `3DMANAGER_USER_ID` INT AUTO_INCREMENT PRIMARY KEY,
+                `3DMANAGER_USER_NAME` VARCHAR(100) NOT NULL,
+                `3DMANAGER_USER_PASSWORD` VARCHAR(100) NOT NULL,
+                `3DMANAGER_USER_EMAIL` VARCHAR(100) NOT NULL,
+                `3DMANAGER_USER_ROLE` INT NULL,
+                `3DMANAGER_USER_GROUP_ID` INT NOT NULL,
+                `3DMANAGER_USER_PHOTO_URL` VARCHAR(255),
+                `3DMANAGER_USER_REGISTER_DATE` DATETIME DEFAULT CURRENT_TIMESTAMP,
+                `3DMANAGER_USER_IMAGE_URL` varchar(255) DEFAULT NULL,
+                `3DMANAGER_USER_IMAGE_KEY` varchar(255) DEFAULT NULL,
+                FOREIGN KEY (`3DMANAGER_USER_GROUP_ID`)
                     REFERENCES `3DMANAGER_GROUP` (`3DMANAGER_GROUP_ID`)
             );
             """;
@@ -358,9 +358,9 @@
 
                 INSERT INTO `3DMANAGER_USER`
                 (
-                    `USER_NAME`,
-                    `USER_PASSWORD`,
-                    `USER_EMAIL`
+                    `3DMANAGER_USER_NAME`,
+                    `3DMANAGER_USER_PASSWORD`,
+                    `3DMANAGER_USER_EMAIL`
                 )
                 VALUES
                 (
@@ -369,7 +369,7 @@
                     P_DS_USER_EMAIL
                 );
 
-                SELECT LAST_INSERT_ID() AS USER_ID;
+                SELECT LAST_INSERT_ID() AS `3DMANAGER_USER_ID`;
             END;
             
             """;
@@ -387,19 +387,19 @@
             )
             BEGIN
                 SELECT 
-                    u.`USER_ID`,
-                    u.`USER_NAME`,
-                    u.`USER_PASSWORD`,
-                    u.`USER_EMAIL`,
-                    u.`USER_GROUP_ID`,
+                    u.`3DMANAGER_USER_ID`,
+                    u.`3DMANAGER_USER_NAME`,
+                    u.`3DMANAGER_USER_PASSWORD`,
+                    u.`3DMANAGER_USER_EMAIL`,
+                    u.`3DMANAGER_USER_GROUP_ID`,
                     r.`3DMANAGER_C_ROLES_NAME` AS USER_ROLE,
                     g.`3DMANAGER_GROUP_NAME` AS GROUP_NAME
                 FROM `3DMANAGER_USER` u
                 LEFT JOIN `3DMANAGER_C_ROLES` r
-                    ON u.`USER_ROLE` = r.`3DMANAGER_C_ROLES_ID`
+                    ON u.`3DMANAGER_USER_ROLE` = r.`3DMANAGER_C_ROLES_ID`
                 LEFT JOIN `3DMANAGER_GROUP` g
-                    ON g.`3DMANAGER_GROUP_ID` = u.`USER_GROUP_ID`
-                WHERE u.`USER_NAME` = P_DS_USER_NAME;
+                    ON g.`3DMANAGER_GROUP_ID` = u.`3DMANAGER_USER_GROUP_ID`
+                WHERE u.`3DMANAGER_USER_NAME` = P_DS_USER_NAME;
             END;
             
             """;
@@ -418,24 +418,24 @@
             BEGIN
 
                 SELECT 
-                    `USER_ID`,
-                    `USER_NAME`,
+                    `3DMANAGER_USER_ID`,
+                    `3DMANAGER_USER_NAME`,
                     IFNULL(
                         (
                             SELECT SUM(`3DMANAGER_3DPRINT_IMPRESSION_TIME`)
                             FROM `3DMANAGER_3DPRINT`
                             WHERE `3DMANAGER_3DPRINT_GROUP_ID` = P_CD_GROUP
-                              AND `3DMANAGER_3DPRINT_USER_ID` = `USER_ID`
+                              AND `3DMANAGER_3DPRINT_USER_ID` = `3DMANAGER_USER_ID`
                         ), 0
                     ) AS USER_HOURS,
                     (
                         SELECT COUNT(*)
                         FROM `3DMANAGER_3DPRINT`
                         WHERE `3DMANAGER_3DPRINT_GROUP_ID` = P_CD_GROUP
-                          AND `3DMANAGER_3DPRINT_USER_ID` = `USER_ID`
+                          AND `3DMANAGER_3DPRINT_USER_ID` = `3DMANAGER_USER_ID`
                     ) AS NUMBER_PRINTS
                 FROM `3DMANAGER_USER`
-                WHERE `USER_GROUP_ID` = P_CD_GROUP;
+                WHERE `3DMANAGER_USER_GROUP_ID` = P_CD_GROUP;
             END;
             
             """;
@@ -453,20 +453,20 @@
             )
             BEGIN
                 SELECT 
-            		u.USER_ID,
-                    u.USER_NAME,
-                    u.USER_PASSWORD,
-                    u.USER_EMAIL,
-                    u.USER_GROUP_ID,
+            		u.`3DMANAGER_USER_ID`,
+                    u.`3DMANAGER_USER_NAME`,
+                    u.`3DMANAGER_USER_PASSWORD`,
+                    u.`3DMANAGER_USER_EMAIL`,
+                    u.`3DMANAGER_USER_GROUP_ID`,
                     r.`3DMANAGER_C_ROLES_NAME` AS USER_ROLE,
                     g.`3DMANAGER_GROUP_NAME` AS GROUP_NAME
 
                 FROM `3DMANAGER_USER` AS u
                 LEFT JOIN `3DMANAGER_C_ROLES` AS r 
-                    ON u.USER_ROLE = r.`3DMANAGER_C_ROLES_ID`
+                    ON u.`3DMANAGER_USER_ROLE` = r.`3DMANAGER_C_ROLES_ID`
             	LEFT JOIN `3DMANAGER_GROUP` AS g
-            		ON G.`3DMANAGER_GROUP_ID` = u.USER_GROUP_ID 
-                WHERE u.USER_ID= P_CD_USER;
+            		ON g.`3DMANAGER_GROUP_ID` = u.`3DMANAGER_USER_GROUP_ID` 
+                WHERE u.`3DMANAGER_USER_ID` = P_CD_USER;
             END;
             
             """;
@@ -484,9 +484,9 @@
             )
             BEGIN
                 SELECT 
-                    u.USER_GROUP_ID
+                    u.`3DMANAGER_USER_GROUP_ID`
                 FROM `3DMANAGER_USER` AS u
-                WHERE u.USER_ID= P_CD_USER;
+                WHERE u.`3DMANAGER_USER_ID` = P_CD_USER;
             END;
             
             """;
@@ -678,13 +678,13 @@
                 SELECT 
                     p.`3DMANAGER_3DPRINT_ID` AS PRINT_ID,
                     p.`3DMANAGER_3DPRINT_NAME` AS PRINT_NAME,
-                    u.`USER_NAME` AS PRINT_USER,
+                    u.`3DMANAGER_USER_NAME` AS PRINT_USER,
                     p.`3DMANAGER_3DPRINT_REGISTER_DATE` AS PRINT_DATE,
                     p.`3DMANAGER_3DPRINT_IMPRESSION_TIME` AS PRINT_TIME,
                     p.`3DMANAGER_3DPRINT_MATERIAL_CONSUMED` AS PRINT_FILAMENT_USED
                 FROM `3DMANAGER_3DPRINT` p
                 LEFT JOIN `3DMANAGER_USER` u
-                    ON p.`3DMANAGER_3DPRINT_USER_ID` = u.`USER_ID`
+                    ON p.`3DMANAGER_3DPRINT_USER_ID` = u.`3DMANAGER_USER_ID`
                 WHERE p.`3DMANAGER_3DPRINT_GROUP_ID` = P_CD_GROUP AND `3DMANAGER_3DPRINT_DELETED` = 0;
             END;
             
@@ -921,9 +921,9 @@
                 SET CodigoError = 0;
             	START TRANSACTION;
             		UPDATE `3DMANAGER_USER` 
-                    SET `USER_NAME` = P_DS_NAME ,
-                     `USER_EMAIL` = P_DS_EMAIL 
-                    WHERE `USER_ID` = P_CD_USER AND `USER_GROUP_ID` = P_CD_GROUP;
+                    SET `3DMANAGER_USER_NAME` = P_DS_NAME ,
+                     `3DMANAGER_USER_EMAIL` = P_DS_EMAIL 
+                    WHERE `3DMANAGER_USER_ID` = P_CD_USER AND `3DMANAGER_USER_GROUP_ID` = P_CD_GROUP;
 
                     SELECT ROW_COUNT() AS Total;
                 COMMIT;
@@ -945,11 +945,11 @@
             )
             BEGIN
             	SELECT 
-            		U.`USER_ID`,
-                    U.`USER_NAME`,
+            		U.`3DMANAGER_USER_ID`,
+                    U.`3DMANAGER_USER_NAME`,
                     R.`3DMANAGER_C_ROLES_NAME` AS USER_ROLE,
-                    U.`USER_EMAIL`,
-                    U.`USER_REGISTER_DATE` AS USER_CREATE_DATE,
+                    U.`3DMANAGER_USER_EMAIL`,
+                    U.`3DMANAGER_USER_REGISTER_DATE` AS USER_CREATE_DATE,
                     (SELECT COUNT(*) 
             			FROM `3DMANAGER_3DPRINT`
                         WHERE `3DMANAGER_3DPRINT_USER_ID` = P_CD_USER 
@@ -968,10 +968,10 @@
             			FROM 3DMANAGER_3DPRINT
             			WHERE  `3DMANAGER_3DPRINT_USER_ID` = P_CD_USER 
             				AND `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP ) AS USER_TOTAL_HOURS,
-                    `USER_IMAGE_URL` AS FILE_URL,
-                    `USER_IMAGE_KEY` AS FILE_KEY
-                    FROM `3DMANAGER_USER` U LEFT JOIN `3DMANAGER_C_ROLES` R ON  U.`USER_ROLE` = R.`3DMANAGER_C_ROLES_ID`
-                    WHERE `USER_ID` = P_CD_USER AND `USER_GROUP_ID` = P_CD_GROUP;
+                    `3DMANAGER_USER_IMAGE_URL` AS FILE_URL,
+                    `3DMANAGER_USER_IMAGE_KEY` AS FILE_KEY
+                    FROM `3DMANAGER_USER` U LEFT JOIN `3DMANAGER_C_ROLES` R ON  U.`3DMANAGER_USER_ROLE` = R.`3DMANAGER_C_ROLES_ID`
+                    WHERE `3DMANAGER_USER_ID` = P_CD_USER AND `3DMANAGER_USER_GROUP_ID` = P_CD_GROUP;
             END
             """;
 
@@ -1134,7 +1134,7 @@
                     P.`3DMANAGER_3DPRINT_PRINTER_ID` AS PRINT_PRINTER_ID,
                     PR.`3DMANAGER_PRINTER_NAME` AS PRINT_PRINTER_NAME,
                     P.`3DMANAGER_3DPRINT_USER_ID` AS PRINT_USER_ID,
-                    U.`USER_NAME` AS PRINT_USER_NAME,
+                    U.`3DMANAGER_USER_NAME` AS PRINT_USER_NAME,
                     P.`3DMANAGER_3DPRINT_NAME` AS PRINT_NAME,
                     S.`3DMANAGER_C_STATE_PRINT_ID` AS PRINT_STATE,
                     P.`3DMANAGER_3DPRINT_DESCRIPTION` AS PRINT_DESCRIPTION,
@@ -1147,7 +1147,7 @@
                     P.`3DMANAGER_3DPRINT_IMAGE_KEY` AS FILE_KEY
                 FROM `3DMANAGER_3DPRINT` P
                 LEFT JOIN `3DMANAGER_FILAMENT` F ON F.`3DMANAGER_FILAMENT_ID` = P.`3DMANAGER_3DPRINT_FILAMENT_ID`
-                LEFT JOIN `3DMANAGER_USER` U ON U.`USER_ID` = P.`3DMANAGER_3DPRINT_USER_ID`
+                LEFT JOIN `3DMANAGER_USER` U ON U.`3DMANAGER_USER_ID` = P.`3DMANAGER_3DPRINT_USER_ID`
                 LEFT JOIN `3DMANAGER_PRINTER` PR ON PR.`3DMANAGER_PRINTER_ID` = P.`3DMANAGER_3DPRINT_PRINTER_ID`
                 LEFT JOIN `3DMANAGER_C_STATE_PRINT` S ON S.`3DMANAGER_C_STATE_PRINT_ID` = P.`3DMANAGER_3DPRINT_STATE`
                 LEFT JOIN `3DMANAGER_C_TYPE_FILAMENT` TP ON F.`3DMANAGER_FILAMENT_MATERIAL_TYPE` = TP.`3DMANAGER_C_TYPE_FILAMENT_ID`
@@ -1231,7 +1231,7 @@
             			WHERE `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP) AS GROUP_TOTAL_HOURS,
                     (SELECT COUNT(*) FROM 3DMANAGER_3DPRINT WHERE `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP) AS GROUP_TOTAL_PRINTS,
                     (SELECT SUM(`3DMANAGER_3DPRINT_MATERIAL_CONSUMED`) FROM 3DMANAGER_3DPRINT WHERE `3DMANAGER_3DPRINT_GROUP_ID`= P_CD_GROUP) AS GROUP_TOTAL_FILAMENT,
-                    (SELECT COUNT(*) FROM 3DMANAGER_USER WHERE `USER_GROUP_ID`= P_CD_GROUP) AS GROUP_TOTAL_USER,
+                    (SELECT COUNT(*) FROM 3DMANAGER_USER WHERE `3DMANAGER_USER_GROUP_ID`= P_CD_GROUP) AS GROUP_TOTAL_USER,
                     (SELECT COUNT(*) FROM 3DMANAGER_FILAMENT WHERE `3DMANAGER_FILAMENT_GROUP_ID`= P_CD_GROUP) AS GROUP_FILAMENT_COUNT,
                     (SELECT COUNT(*) FROM 3DMANAGER_PRINTER WHERE `3DMANAGER_PRINTER_GROUP_ID`= P_CD_GROUP) AS GROUP_TOTAL_PRINTER;
 

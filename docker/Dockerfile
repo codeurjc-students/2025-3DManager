@@ -30,22 +30,7 @@ RUN dotnet publish -c Release -o /app/publish
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final 
 WORKDIR /app
 
-# Generate PFX certificate
-RUN mkdir -p /https && \
-    openssl req -x509 -newkey rsa:2048 -nodes \
-        -keyout /https/key.pem \
-        -out /https/cert.pem \
-        -days 365 \
-        -subj "/CN=localhost" && \
-    openssl pkcs12 -export \
-        -out /https/https.pfx \
-        -inkey /https/key.pem \
-        -in /https/cert.pem \
-        -password pass:3dmanagerPASS1234
-
-# Environment variables
-ENV ASPNETCORE_URLS=https://+:443
-ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/https/https.pfx
+ENV ASPNETCORE_URLS=http://+:8080
 
 COPY --from=build /app/publish ./
 
@@ -54,8 +39,8 @@ COPY --from=frontend-build /app/dist /app/wwwroot
 
 # Health check
 HEALTHCHECK --interval=10s --timeout=3s --retries=5 \
- CMD curl -k https://localhost/health || exit 1
+ CMD curl http://localhost:8080/health || exit 1
 
-EXPOSE 443
+EXPOSE 8080
 
 ENTRYPOINT ["dotnet", "3DMANAGER-APP.Server.dll"]

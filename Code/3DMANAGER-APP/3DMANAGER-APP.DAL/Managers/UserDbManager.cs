@@ -45,7 +45,7 @@ namespace _3DMANAGER_APP.DAL.Managers
                 }
                 if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                 {
-                    return ds.Tables[0].Rows[0].Field<int>("USER_ID");
+                    return ds.Tables[0].Rows[0].Field<int>("3DMANAGER_USER_ID");
                 }
 
                 return 0;
@@ -107,10 +107,11 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
         }
 
-        public List<UserListResponseDbObject> GetUserList(int group)
+        public List<UserListResponseDbObject> GetUserList(int group, out bool error)
         {
             try
             {
+                error = false;
                 List<UserListResponseDbObject> list = new List<UserListResponseDbObject>();
                 string procName = $"{ProcedurePrefix}_pr_USER_LIST";
                 using var cmd = new MySqlCommand(procName, Connection)
@@ -137,12 +138,14 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
+                error = true;
                 string msg = $"Error al devolver el listado de usuarios del grupo {group} en BBDD";
                 Logger.LogError(ex, msg);
                 return new List<UserListResponseDbObject>();
             }
             catch (Exception ex)
             {
+                error = true;
                 string msg = $"Error al devolver el listado de usuarios del grupo {group} en BBDD";
                 Logger.LogError(ex, msg);
                 return new List<UserListResponseDbObject>();
@@ -340,7 +343,7 @@ namespace _3DMANAGER_APP.DAL.Managers
 
                 if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                 {
-                    return ds.Tables[0].Rows[0].Field<int>("USER_GROUP_ID");
+                    return ds.Tables[0].Rows[0].Field<int>("3DMANAGER_USER_GROUP_ID");
                 }
 
                 return 0;

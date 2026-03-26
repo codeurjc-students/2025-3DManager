@@ -5,9 +5,9 @@ namespace _3DMANAGER_APP.DAL.Models.User
     public class UserListResponseDbObject
     {
         public int UserId { get; set; }
-        private const string UserIdColumnName = "USER_ID";
+        private const string UserIdColumnName = "3DMANAGER_USER_ID";
         public string UserName { get; set; }
-        private const string UserNameColumnName = "USER_NAME";
+        private const string UserNameColumnName = "3DMANAGER_USER_NAME";
         public decimal UserHours { get; set; }
         private const string UserHoursColumnName = "USER_HOURS";
         public int UserNumberPrints { get; set; }

@@ -21,13 +21,13 @@ namespace _3DMANAGER_APP.BLL.Managers
         private readonly IPrinterDbManager _printerDbManager;
         private readonly IMapper _mapper;
         private readonly ILogger<PrinterManager> _logger;
-        private readonly IAwsS3Service _awsS3Service;
-        public PrinterManager(IPrinterDbManager printerDbManager, IMapper mapper, ILogger<PrinterManager> logger, IAwsS3Service awsS3Service)
+        private readonly IAzureBlobStorageService _absService;
+        public PrinterManager(IPrinterDbManager printerDbManager, IMapper mapper, ILogger<PrinterManager> logger, IAzureBlobStorageService absService)
         {
             _printerDbManager = printerDbManager;
             _mapper = mapper;
             _logger = logger;
-            _awsS3Service = awsS3Service;
+            _absService = absService;
         }
 
         public List<PrinterObject> GetPrinterList(out BaseError? error)
@@ -78,7 +78,7 @@ namespace _3DMANAGER_APP.BLL.Managers
             response.Data = responseDb;
             if (printer.ImageFile != null)
             {
-                bool responseImage = await UpdateS3PrinterImage(responseDb, printer.ImageFile, printer.GroupId);
+                bool responseImage = await UpdateABSPrinterImage(responseDb, printer.ImageFile, printer.GroupId);
                 if (!responseImage)
                 {
                     string msg = "La impresora se ha creado correctamente, pero la imagen ha fallado al ser guardada.";
@@ -88,13 +88,13 @@ namespace _3DMANAGER_APP.BLL.Managers
             }
             return response;
         }
-        public async Task<bool> UpdateS3PrinterImage(int printerId, IFormFile imageFile, int groupId)
+        public async Task<bool> UpdateABSPrinterImage(int printerId, IFormFile imageFile, int groupId)
         {
             FileResponse? image = null;
 
             if (imageFile != null)
             {
-                image = await _awsS3Service.UploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName,
+                image = await _absService.UploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName,
                     imageFile.ContentType, "printers", groupId);
                 if (image != null)
                     return _printerDbManager.UpdatePrinterImageData(printerId, _mapper.Map<FileResponseDbObject>(image));
@@ -119,9 +119,9 @@ namespace _3DMANAGER_APP.BLL.Managers
                 foreach (PrinterListObject p in response)
                 {
                     if (p.PrinterImageData != null && p.PrinterImageData.FileUrl != null && p.PrinterImageData.FileKey != null)
-                        p.PrinterImageData.FileUrl = _awsS3Service.GetPresignedUrl(p.PrinterImageData.FileKey, 1);
+                        p.PrinterImageData.FileUrl = _absService.GetPresignedUrl(p.PrinterImageData.FileKey, 1);
                     else
-                        p.PrinterImageData!.FileUrl = _awsS3Service.GetPresignedUrl("default/3dmanager-default-printer.jpg", 1);
+                        p.PrinterImageData!.FileUrl = _absService.GetPresignedUrl("default/3dmanager-default-printer.jpg", 1);
                 }
             }
 
@@ -154,9 +154,9 @@ namespace _3DMANAGER_APP.BLL.Managers
             if (response != null)
             {
                 if (response.PrinterImageData != null && response.PrinterImageData.FileUrl != null && response.PrinterImageData.FileKey != null)
-                    response.PrinterImageData.FileUrl = _awsS3Service.GetPresignedUrl(response.PrinterImageData.FileKey, 1);
+                    response.PrinterImageData.FileUrl = _absService.GetPresignedUrl(response.PrinterImageData.FileKey, 1);
                 else
-                    response.PrinterImageData!.FileUrl = _awsS3Service.GetPresignedUrl("default/3dmanager-default-printer.jpg", 1);
+                    response.PrinterImageData!.FileUrl = _absService.GetPresignedUrl("default/3dmanager-default-printer.jpg", 1);
 
                 response.PrinterTimeVariation = GetPrinterTimeVariation(groupId, printerId, out error);
             }
@@ -204,7 +204,7 @@ namespace _3DMANAGER_APP.BLL.Managers
                 var responseImage = await DeletePrinterImage(printerId, groupId);
                 if (!responseImage.Data)
                 {
-                    string msg = $"Impresora eliminada correctamento. Pero ha ocurrido un error al eliminar la imagen en S3 del fichero {responseDb.FileResponse.FileKey}.";
+                    string msg = $"Impresora eliminada correctamento. Pero ha ocurrido un error al eliminar la imagen en Azure Blob Storage del fichero {responseDb.FileResponse.FileKey}.";
                     response.Error = new ErrorProperties(StatusCodes.Status500InternalServerError, msg);
                     return response;
                 }
@@ -229,7 +229,7 @@ namespace _3DMANAGER_APP.BLL.Managers
                 return response;
             }
 
-            await _awsS3Service.DeleteImageAsync(imageData!.FileKey!);
+            await _absService.DeleteImageAsync(imageData!.FileKey!);
             bool dbResponse = _printerDbManager.DeletePrinterImageData(printerId, groupId);
 
             if (!dbResponse)
@@ -252,10 +252,10 @@ namespace _3DMANAGER_APP.BLL.Managers
                 return response;
             }
 
-            var s3Response = await _awsS3Service.UploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName, imageFile.ContentType, "printers", groupId);
-            if (s3Response == null)
+            var aBSResponse = await _absService.UploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName, imageFile.ContentType, "printers", groupId);
+            if (aBSResponse == null)
             {
-                response.Error = new ErrorProperties(StatusCodes.Status409Conflict, "Error al subir la imagen a S3.");
+                response.Error = new ErrorProperties(StatusCodes.Status409Conflict, "Error al subir la imagen a Azure Blob Storage.");
                 return response;
             }
             var deletedImage = await DeletePrinterImage(printerId, groupId);
@@ -266,7 +266,7 @@ namespace _3DMANAGER_APP.BLL.Managers
                 string msg = $"Se ha intentado eliminar una foto de la impresora {printerId} del grupo {groupId} con el fileKey {keyValue}";
                 _logger.LogError(msg);
             }
-            bool dbResponse = _printerDbManager.UpdatePrinterImageData(printerId, _mapper.Map<FileResponseDbObject>(s3Response));
+            bool dbResponse = _printerDbManager.UpdatePrinterImageData(printerId, _mapper.Map<FileResponseDbObject>(aBSResponse));
             if (!dbResponse)
             {
                 response.Error = new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al actualizar la imagen en la base de datos.");

@@ -295,7 +295,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         public IActionResult GetGroupDashboardData()
         {
             _logger.LogInformation($"Llamada a la funcion GetGroupDashboardData en el controlador GroupController");
-            if (GroupId == null)
+            if (GroupId == null || GroupId == 0)
                 return Unauthorized(new Models.CommonResponse<GroupDashboardData>(new ErrorProperties(401, UnauthorizedMsg)));
             var response = _groupManager.GetGroupDashboardData(GroupId.Value, out BaseError? error);
             if (error != null)
