@@ -24,7 +24,7 @@ services:
     ports: 
       - "443:8080"
     healthcheck:
-      test: ["CMD", "curl", "-k", "https://localhost/health"]
+      test: ["CMD", "curl", "-k", "http://localhost/health"]
       interval: 10s
       timeout: 3s
       retries: 5
