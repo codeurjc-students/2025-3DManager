@@ -64,7 +64,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("https://localhost:3000", "http://localhost:3000", "http://localhost:3001")
+        policy.WithOrigins("https://localhost:3000", "http://localhost:3000", "http://localhost:3001",
+            "https://portal-3dmanager-app.agreeablebay-71400cf1.spaincentral.azurecontainerapps.io")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
