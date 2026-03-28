@@ -119,9 +119,9 @@ The project is developed in phases, structured as follows:
 
 - **Phase 3 - Basic functionality and Docker:** Functionality will be extended to the basic features (with corresponding automated tests) and the application will be packaged in Docker. Continuous delivery will be added. Version 0.1 of the application will be released.
 
-- **Phase 4 - Intermediate functionality:** Functionality will be extended to the intermediate features (with corresponding automated tests) and version 0.2 will be released. The application will also be deployed in this phase.
+- **Phase 4 - Intermediate functionality:** Functionality will be extended to the intermediate features (with corresponding automated tests) and version 0.2 will be released. 
 
-- **Phase 5 - Advanced functionality:** The application will be finalized and version 1.0 released.
+- **Phase 5 - Advanced functionality:** The application will be finalized and version 1.0 released. The application will also be deployed in this phase on Azure.
 
 - **Phase 6 - Report:** The first draft of the final report will be prepared.
 
