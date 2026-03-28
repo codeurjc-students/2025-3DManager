@@ -9,7 +9,7 @@ import type { PrinterDetailRequest } from '../models/printer/PrinterDetailReques
 export const getPrinterList = async (): Promise<CommonResponse<PrinterObject[]>> => {
     
     try {
-        const response = await apiClient.get<CommonResponse<PrinterObject[]>>('/api/v1/printers/GetPrinterList')
+        const response = await apiClient.get<CommonResponse<PrinterObject[]>>('/v1/printers/GetPrinterList')
         return response.data
     } catch (error: any) {
         const status = error?.response?.status;
@@ -40,7 +40,7 @@ export const postPrinter = async (data: PrinterRequest): Promise<CommonResponse<
     }
     
     try {
-        const response = await apiClient.post<CommonResponse<boolean>>('/api/v1/printers/PostPrinter', formData,
+        const response = await apiClient.post<CommonResponse<boolean>>('/v1/printers/PostPrinter', formData,
             { headers: { "Content-Type": "multipart/form-data" } })
         return response.data
     } catch (error: any) {
@@ -61,7 +61,7 @@ export const postPrinter = async (data: PrinterRequest): Promise<CommonResponse<
 
 export const getPrinterDashboardList = async (): Promise<CommonResponse<PrinterDashboardObject[]>> => {
     try {
-        const response = await apiClient.get<CommonResponse<PrinterDashboardObject[]>>("/api/v1/printers/GetPrinterDashboardList");
+        const response = await apiClient.get<CommonResponse<PrinterDashboardObject[]>>("/v1/printers/GetPrinterDashboardList");
         return response.data;
     } catch (error: any) {
         const status = error?.response?.status;
@@ -81,7 +81,7 @@ export const getPrinterDashboardList = async (): Promise<CommonResponse<PrinterD
 
 export const updatePrinter = async (data: PrinterDetailRequest): Promise<CommonResponse<boolean>> => {  
     try {
-        const response = await apiClient.put<CommonResponse<boolean>>(`/api/v1/printers/UpdatePrinter`, data);
+        const response = await apiClient.put<CommonResponse<boolean>>(`/v1/printers/UpdatePrinter`, data);
         return response.data;
     } catch (error: any) {
         const status = error?.response?.status;
@@ -101,7 +101,7 @@ export const updatePrinter = async (data: PrinterDetailRequest): Promise<CommonR
 
 export const getPrinterDetail = async (printerId: number): Promise<CommonResponse<PrinterDetailObject>> => { 
     try {
-        const response = await apiClient.get<CommonResponse<PrinterDetailObject>>(`/api/v1/printers/GetPrinterDetail?printerId=${printerId}`);
+        const response = await apiClient.get<CommonResponse<PrinterDetailObject>>(`/v1/printers/GetPrinterDetail?printerId=${printerId}`);
         return response.data;
     } catch (error: any) {
         const status = error?.response?.status;
@@ -121,7 +121,7 @@ export const getPrinterDetail = async (printerId: number): Promise<CommonRespons
 
 export const deletePrinter = async (printerId: number): Promise<CommonResponse<boolean>> => {
     try {
-        const response = await apiClient.delete<CommonResponse<boolean>>(`/api/v1/printers/DeletePrinter?printerId=${printerId}`);
+        const response = await apiClient.delete<CommonResponse<boolean>>(`/v1/printers/DeletePrinter?printerId=${printerId}`);
         return response.data;
     } catch (error: any) {
         const status = error?.response?.status;
@@ -144,7 +144,7 @@ export const updatePrinterImage = async (printerId: number,file: File): Promise<
     formData.append("imageFile", file);
 
     try {
-        const response = await apiClient.put<CommonResponse<boolean>>(`/api/v1/printers/UpdatePrinterImage?printerId=${printerId}`,
+        const response = await apiClient.put<CommonResponse<boolean>>(`/v1/printers/UpdatePrinterImage?printerId=${printerId}`,
             formData, { headers: { "Content-Type": "multipart/form-data" }});
         return response.data;
     } catch (error: any) {
@@ -165,7 +165,7 @@ export const updatePrinterImage = async (printerId: number,file: File): Promise<
 
 export const deletePrinterImage = async (printerId: number): Promise<CommonResponse<boolean>> => {
     try {
-        const response = await apiClient.delete<CommonResponse<boolean>>(`/api/v1/printers/DeletePrinterImage?printerId=${printerId}`);
+        const response = await apiClient.delete<CommonResponse<boolean>>(`/v1/printers/DeletePrinterImage?printerId=${printerId}`);
         return response.data;
     } catch (error: any) {
         const status = error?.response?.status;

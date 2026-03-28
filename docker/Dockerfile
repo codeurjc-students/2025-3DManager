@@ -6,6 +6,8 @@ COPY Code/3DMANAGER-APP/3dmanager-app.client/package*.json ./
 RUN npm install 
 
 COPY Code/3DMANAGER-APP/3dmanager-app.client/ ./ 
+COPY Code/3DMANAGER-APP/3dmanager-app.client/.env.production ./
+
 RUN npm run build
 
 # Backend build
