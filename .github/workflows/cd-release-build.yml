@@ -27,3 +27,8 @@ jobs:
       tag: ${{ github.event.release.tag_name }}
       isLatest: true
       composeTag: ${{ needs.prepare.outputs.compose_tag }}
+
+  deploy:
+    needs: call-reusable
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
