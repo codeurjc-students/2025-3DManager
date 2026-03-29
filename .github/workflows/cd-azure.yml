@@ -2,7 +2,8 @@ name: CD Deploy to Azure
 
 on:
   workflow_call:
-
+  workflow_dispatch:
+   
 permissions:
   id-token: write
   contents: read
