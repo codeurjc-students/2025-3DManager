@@ -31,15 +31,12 @@ export const STLViewer = ({ fileUrl }: STLViewerProps) => {
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
 
-        // 🌟 Luz ambiental suave
         const ambient = new THREE.AmbientLight(0xffffff, 0.6);
         scene.add(ambient);
 
-        // 🌟 Luz hemisférica (cielo + suelo)
         const hemi = new THREE.HemisphereLight(0xffffff, 0xdddddd, 0.6);
         scene.add(hemi);
 
-        // 🌟 Luz direccional suave con sombra suave
         const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
         dirLight.position.set(100, 200, 150);
         dirLight.castShadow = true;
@@ -59,7 +56,7 @@ export const STLViewer = ({ fileUrl }: STLViewerProps) => {
                 const geometry = loader.parse(buffer);
 
                 const material = new THREE.MeshStandardMaterial({
-                    color: 0xffd54a, // tu color exacto
+                    color: 0xffd54a, 
                     metalness: 0.1,
                     roughness: 0.4,
                 });
