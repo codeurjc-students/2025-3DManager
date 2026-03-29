@@ -160,7 +160,7 @@ namespace _3DMANAGER_APP.BLL.Managers
                     response.PrintImageData.FileUrl = _absService.GetPresignedUrl(response.PrintImageData.FileKey, 1);
                 else
                     response.PrintImageData!.FileUrl = _absService.GetPresignedUrl("default/3dmanager-default-3dprint.png", 1);
-
+                response.PrintImageData!.FileUrl = _absService.GetPresignedUrl("default/3dbenchy.stl", 1);
             }
             return response!;
         }

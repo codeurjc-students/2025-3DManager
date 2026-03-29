@@ -8,6 +8,7 @@ import type { PrintDetailObject } from "../models/print/PrintDetailObject";
 import type { PrintDetailRequest } from "../models/print/PrintDetailRequest";
 import PrintComments from "../components/PrintComments";
 import ConfirmPopup from "../components/popupComponent/ConfirmPopup";
+import { STLViewer } from "../components/STLViewer";
 
 const PrintDetailPage: React.FC = () => {
     const navigate = useNavigate();
@@ -155,8 +156,8 @@ const PrintDetailPage: React.FC = () => {
                                 </div>
                             ) : ""}
                         </div>
-                        <div className="col-6 ms-5 h-75">
-                            <img src={data?.printImageData?.fileUrl} alt={name} className="image-container-3" />
+                        <div className="col-6 ms-5 h-75 image-container-3">
+                            <STLViewer fileUrl={data?.printImageData?.fileUrl!} />
                         </div>
                     </div>
                     <div className="h-40 ms-3 mt-1">
@@ -169,7 +170,7 @@ const PrintDetailPage: React.FC = () => {
                                 </div>
                                 <div className="col-6 mb-1">
                                     <label htmlFor="printUser" className="form-label">Usuario</label>
-                                    <input id="printUser" type="text" className="input-value-2 w-100" value={data?.printUserName}
+                                    <input id="printUser" type="text" className="input-value-2 w-100" value={data?.printUserName ?? ""}
                                         onClick={() => navigate(`/dashboard/user/detail/${data?.printUserId}`)} disabled />
                                 </div>
                             </div>
@@ -178,12 +179,12 @@ const PrintDetailPage: React.FC = () => {
                             <div className="d-flex flex row">
                                 <div className="col-6 mb-1">
                                     <label htmlFor="printPrinter" className="form-label">Impresora</label>
-                                    <input id="printPrinter" type="text" className="input-value-2 w-100" value={data?.printPrinterName}
+                                    <input id="printPrinter" type="text" className="input-value-2 w-100" value={data?.printPrinterName ?? ""}
                                         onClick={() => navigate(`/dashboard/print/detail/${data?.printPrinterId}`)} disabled />
                                 </div>
                                 <div className="col-6 mb-1">
                                     <label htmlFor="printFilament" className="form-label">Filamento</label>
-                                    <input id="printFilament" type="text" className="input-value-2 w-100" value={data?.printFilamentName}
+                                    <input id="printFilament" type="text" className="input-value-2 w-100" value={data?.printFilamentName ?? ""}
                                         onClick={() => navigate(`/dashboard/filament/detail/${data?.printFilamentName}`)} disabled />
                                 </div>
                             </div>
