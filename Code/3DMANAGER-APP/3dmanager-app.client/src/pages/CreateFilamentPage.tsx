@@ -19,7 +19,6 @@ const CreateFilamentPage: React.FC = () => {
     const [filamentDescription, setFilamentDescription] = useState("");
     const [catalogTypes, setCatalogTypes] = useState<CatalogResponse[]>([]);
     const [imageFile, setImageFile] = useState<File | null>(null);
-
     const { showPopup } = usePopupContext();
     const navigate = useNavigate();
 

@@ -2,10 +2,12 @@
 using _3DMANAGER_APP.BLL.Models.Base;
 using _3DMANAGER_APP.BLL.Models.Printer;
 using Microsoft.AspNetCore.Http;
+
 namespace _3DMANAGER_APP.BLL.Interfaces
 {
     public interface IPrinterManager
     {
+
         List<PrinterObject> GetPrinterList(out BaseError? error);
         public Task<CommonResponse<int>> PostPrinter(PrinterRequest printer);
         List<PrinterListObject> GetPrinterDashboardList(int groupId, out BaseError? error);
@@ -14,5 +16,6 @@ namespace _3DMANAGER_APP.BLL.Interfaces
         public Task<CommonResponse<bool>> DeletePrinter(int printerId, int groupId);
         public Task<CommonResponse<bool>> DeletePrinterImage(int printerId, int groupId);
         public Task<CommonResponse<bool>> UpdatePrinterImage(int printerId, int groupId, IFormFile imageFile);
+
     }
 }

@@ -30,7 +30,6 @@ namespace _3DMANAGER_APP.BLL.Managers
 
         public async Task<CommonResponse<int>> PostNewUser(UserCreateRequest user)
         {
-
             CommonResponse<int> response = new CommonResponse<int>();
             var passwordHasher = new PasswordHasher<UserCreateRequest>();
             string hashedPassword = passwordHasher.HashPassword(user, user.UserPassword);
@@ -112,6 +111,7 @@ namespace _3DMANAGER_APP.BLL.Managers
                 };
                 return new UserObject();
             }
+
 
             var passwordHasher = new PasswordHasher<UserDbObject>();
             var result = passwordHasher.VerifyHashedPassword(userDb, userDb.UserPassword, userPassword);

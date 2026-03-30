@@ -10,13 +10,14 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Catalogs
 {
     public class CatalogTests
     {
+        private readonly Mock<ILogger<CatalogManager>> _loggerMock;
         private readonly Mock<IMapper> _mapperMock;
         private readonly Mock<ICatalogDbManager> _catalogDbManagerMock;
         private readonly CatalogManager _manager;
         private readonly Mock<IPrinterDbManager> _printerDbManagerMock;
-        private readonly Mock<ILogger<CatalogManager>> _loggerMock;
         public CatalogTests()
         {
+            _loggerMock = new Mock<ILogger<CatalogManager>>();
             _mapperMock = new Mock<IMapper>();
             _catalogDbManagerMock = new Mock<ICatalogDbManager>();
             _printerDbManagerMock = new Mock<IPrinterDbManager>();
@@ -112,6 +113,7 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Catalogs
         [Trait("Category", "Unitary")]
         public void GetPrinterCatalog_WhenDbReturnsData_ShouldReturnMappedCatalogResponse()
         {
+
             int groupId = 2;
 
             var dbResponse = new List<CatalogResponseDbObject>
@@ -132,7 +134,9 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Catalogs
                 .Setup(m => m.Map<List<CatalogPrinterResponse>>(dbResponse))
                 .Returns(mappedResponse);
 
+
             var result = _manager.GetPrinterCatalog(groupId);
+
 
             Assert.Single(result);
 

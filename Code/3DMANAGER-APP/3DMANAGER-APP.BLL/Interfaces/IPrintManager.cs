@@ -13,5 +13,6 @@ namespace _3DMANAGER_APP.BLL.Interfaces
         List<PrintCommentObject> GetPrintComments(int groupId, int printId, out BaseError? error);
         int PostPrintComment(PrintCommentRequest request);
         public Task<CommonResponse<bool>> DeletePrint(int printId, int groupId);
+
     }
 }

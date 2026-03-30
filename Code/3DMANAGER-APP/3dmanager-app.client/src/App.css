@@ -1,4 +1,5 @@
-﻿:root {
+﻿/*CSS form general layout*/
+:root {
     --colorWhite: #ffffff;
     --colorLowGrey: #f5f6f7;
     --colorText: #1c1c1c;
@@ -52,6 +53,7 @@ th, td {
 }
 .pages-container {
     flex : 1;
+    overflow: auto;
 }
 
 .image-container{

@@ -10,5 +10,6 @@ namespace _3DMANAGER_APP.BLL.Interfaces
         public List<CatalogResponse> GetPrintState();
         public List<CatalogResponse> GetPrinterState();
         public List<CatalogResponse> GetFilamentState();
+
     }
 }

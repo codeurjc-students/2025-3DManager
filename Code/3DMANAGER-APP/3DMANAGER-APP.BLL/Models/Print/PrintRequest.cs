@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 
 namespace _3DMANAGER_APP.BLL.Models.Print
+
 {
     public class PrintRequest
     {
@@ -16,5 +17,6 @@ namespace _3DMANAGER_APP.BLL.Models.Print
         public int PrintRealTime { get; set; }
         public int? PrintProgress { get; set; }
         public IFormFile? ImageFile { get; set; }
+
     }
 }
