@@ -15,6 +15,7 @@ apiClient.interceptors.request.use(config => {
     return config;
 });
 
+
 apiClient.interceptors.response.use(response => response, error => {
     const rawStatus = error?.response?.status;
     const status = Number(rawStatus);
@@ -32,4 +33,5 @@ apiClient.interceptors.response.use(response => response, error => {
     }
     return Promise.reject(error);
 });
+
 export default apiClient

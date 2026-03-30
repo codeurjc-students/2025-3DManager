@@ -35,6 +35,7 @@ namespace _3DMANAGER_APP.BLL.Mapper
                 .ForMember(dest => dest.UserHours,
                            opt => opt.MapFrom(src => $"{(int)TimeSpan.FromSeconds((double)src.UserHours).TotalHours}h " +
                            $"{TimeSpan.FromSeconds((double)src.UserHours).Minutes}min"));
+
             CreateMap<UserDetailDbObject, UserDetailObject>()
                 .ForMember(dest => dest.UserTotalHours,
                     opt => opt.MapFrom(src => ConvertHours(src.UserTotalHours)))
@@ -42,6 +43,7 @@ namespace _3DMANAGER_APP.BLL.Mapper
                     opt => opt.MapFrom(src => ConvertHours(src.UserPrintHours)));
 
             CreateMap<UserUpdateRequest, UserUpdateRequestDbObject>().ReverseMap();
+
             #endregion
 
             #region Group
@@ -59,6 +61,7 @@ namespace _3DMANAGER_APP.BLL.Mapper
             CreateMap<FilamentRequest, FilamentRequestDbObject>().ReverseMap();
             CreateMap<FilamentDetailObject, FilamentDetailDbObject>().ReverseMap();
             CreateMap<FilamentUpdateRequest, FilamentUpdateRequestDbObject>().ReverseMap();
+
             #endregion
 
             #region Print
@@ -79,12 +82,14 @@ namespace _3DMANAGER_APP.BLL.Mapper
             CreateMap<PrintDetailRequest, PrintDetailRequestDbObject>().ReverseMap();
             CreateMap<PrintCommentRequest, PrintCommentRequestDbObject>().ReverseMap();
             CreateMap<PrintCommentObject, PrintCommentDbObject>().ReverseMap();
+
             #endregion
 
             #region Catalog
 
             CreateMap<CatalogResponse, CatalogResponseDbObject>().ReverseMap();
             CreateMap<CatalogPrinterResponse, CatalogResponseDbObject>().ReverseMap();
+
             #endregion
 
             #region Printer
@@ -104,6 +109,7 @@ namespace _3DMANAGER_APP.BLL.Mapper
             ));
 
             CreateMap<PrinterDetailRequest, PrinterDetailRequestDbObject>();
+
             #endregion
 
             #region File
@@ -118,5 +124,6 @@ namespace _3DMANAGER_APP.BLL.Mapper
 
             return $"{horas} h {minutos} minutos";
         }
+
     }
 }

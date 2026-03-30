@@ -1,4 +1,4 @@
-﻿using _3DMANAGER_APP.DAL.Models.File;
+using _3DMANAGER_APP.DAL.Models.File;
 using _3DMANAGER_APP.DAL.Models.Print;
 
 namespace _3DMANAGER_APP.DAL.Interfaces

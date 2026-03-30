@@ -1,11 +1,9 @@
 import './App.css'
 import React  from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-
 import { AuthProvider } from "./context/AuthContext";
 import { PopupProvider } from "./context/PopupContext";
 import { ProtectedRoute } from './context/ProtectedRoute';
-
 import Header from "./components/Header";
 import LoginPage from "./pages/LoginPage";
 import CreateUserPage from "./pages/CreateUserPage"

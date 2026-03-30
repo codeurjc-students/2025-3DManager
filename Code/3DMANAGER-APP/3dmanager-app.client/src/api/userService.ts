@@ -34,7 +34,7 @@ export const LoginGuest = async (): Promise<CommonResponse<LoginResponse>> => {
 }
 
 export const getUserList = async (): Promise<CommonResponse<UserListResponse[]>> => {
-    
+
     try {
         const response = await apiClient.get<CommonResponse<UserListResponse[]>>("/v1/users/GetUserList");
         return response.data;

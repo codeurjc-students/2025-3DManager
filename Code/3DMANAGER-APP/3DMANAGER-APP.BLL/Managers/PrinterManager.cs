@@ -33,6 +33,7 @@ namespace _3DMANAGER_APP.BLL.Managers
         public List<PrinterObject> GetPrinterList(out BaseError? error)
         {
             error = null;
+            List<PrinterObject> response = null;
             var responseDb = _printerDbManager.GetPrinterList(out ErrorDbObject errorDb);
             if (errorDb != null)
             {
@@ -43,7 +44,7 @@ namespace _3DMANAGER_APP.BLL.Managers
                     message = errorDb.message
                 };
             }
-            var response = _mapper.Map<List<PrinterObject>>(responseDb);
+            response = _mapper.Map<List<PrinterObject>>(responseDb);
             return response;
         }
 

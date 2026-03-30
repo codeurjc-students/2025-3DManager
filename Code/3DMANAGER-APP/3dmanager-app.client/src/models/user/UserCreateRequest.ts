@@ -3,5 +3,5 @@ export interface UserCreateRequest {
     userEmail: string;
     userPassword: string;
     imageFile?: File | null;
-    
+ 
 }

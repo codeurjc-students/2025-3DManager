@@ -266,7 +266,12 @@ const CreatePrint3DPage: React.FC = () => {
                                         <label htmlFor="printName" className="form-label">Nombre</label>
                                         <input id="printName" className="input-value w-100" value={printName} placeholder="Nombre" onChange={(e) => setPrintName(e.target.value)}/>
                                     </div>
-
+                                    <div className="col-6 p-2">
+                                        <label htmlFor="printState" className="form-label">Estado</label>
+                                        <select id="printState" className="input-value w-100 " value={printState}
+                                            onChange={(e) => setPrintState(Number(e.target.value))}>
+                                            <option value="">Seleccione un tipo</option>
+                                        </select>
                                     <div className={printState === 2 ? "col-4 p-2" : "col-6 p-2"}>
                                         <label htmlFor="printState" className="form-label">Estado</label>
                                         <select id="printState" className="input-value w-100" value={printState} onChange={(e) => setPrintState(Number(e.target.value))}>
@@ -334,6 +339,7 @@ const CreatePrint3DPage: React.FC = () => {
                                     </div>
                                 </div>
                             </div>
+
                             <div className="ms-3 me-3 p-2">
                                 <label htmlFor="gcodeFile" className="form-label">Archivo GCODE</label>
                                 <input
@@ -344,24 +350,25 @@ const CreatePrint3DPage: React.FC = () => {
                                     onChange={handleFileUpload}
                                 />
                             </div>
-                            <div className="ms-3 me-3 p-2">
-                                <label htmlFor="PrintImage" className="form-label">Imagen de la impresión</label>
-                                <input
-                                    id="PrintImage"
-                                    type="file"
-                                    className="form-control input-value w-100"
-                                    accept="image/*"
-                                    onChange={(e) => {
-                                        if (e.target.files && e.target.files.length > 0) {
-                                            setImageFile(e.target.files[0]);
-                                        }
-                                    }}
-                                />
+                                <div className="ms-3 me-3 p-2">
+                                    <label htmlFor="PrintImage" className="form-label">Imagen de la impresión</label>
+                                    <input
+                                        id="PrintImage"
+                                        type="file"
+                                        className="form-control input-value w-100"
+                                        accept="image/*"
+                                        onChange={(e) => {
+                                            if (e.target.files && e.target.files.length > 0) {
+                                                setImageFile(e.target.files[0]);
+                                            }
+                                        }}
+                                    />
+                                </div>
                             </div>
-                        </div>
-                        <div className="col-4 d-flex justify-content-between mt-3 p-2">
-                            <button type="submit" className="button-yellow createUser h-70">Subir Pieza</button>
-                            <button type="button" className="button-darkGrey" onClick={() => navigate("/dashboard")}>Cancelar</button>
+                            <div className="col-4 d-flex justify-content-between mt-3 p-2">
+                                <button type="submit" className="button-yellow createUser h-70">Subir Pieza</button>
+                                <button type="button" className="button-darkGrey" onClick={() => navigate("/dashboard")}>Cancelar</button>
+                            </div>
                         </div>
                     </form>
                 </div>
