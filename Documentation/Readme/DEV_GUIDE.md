@@ -628,3 +628,40 @@ Since the project follows the **GitFlow branching model**, releases will be gene
    In future iterations, this process will be automated through **GitHub Actions** workflows that handle version tagging, image building, and deployment.
    > This step is planned but not implemented until phase 5
 
+### Deploy
+
+#### Federated identities
+
+The deployment uses an Azure **Managed Identity**.  
+From this identity we obtain the `clientId`, `tenantId`, and `subscriptionId`, which GitHub uses to authenticate with Azure.
+
+The **Federated Credential** does not create new IDs.  
+It simply tells Azure:
+
+ “Allow GitHub to use this Managed Identity through OIDC tokens.”
+
+This enables secure authentication without passwords or secrets.  
+The Managed Identity is the actual identity; the federated credential is the trust link.
+
+---
+
+#### Relationship between the Release, Build and Deploy workflows
+
+The deployment pipeline works as a chain:
+
+1. **Release Build**  
+   - Runs basic backend and frontend tests.  
+   - Extracts the version.  
+   - Calls the reusable build workflow.
+
+2. **cd-build-and-push(reusable workflow)**  
+   - Builds the Docker image.  
+   - Tags it with the version and `latest`.  
+   - Pushes it to Docker Hub.
+
+3. **deploy**  
+   - GitHub authenticates to Azure using OIDC + Managed Identity.  
+   - Runs `az containerapp update` with the `latest` image.  
+   - Azure creates a new revision and updates the application.
+
+This ensures a fully automated, secure, password‑free deployment process.

@@ -20,7 +20,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
     {
         private readonly DatabaseFixture _fixture;
         private readonly IMapper _mapper;
-        private readonly IAwsS3Service _fakeS3Service;
+        private readonly IAzureBlobStorageService _fakeService;
         public UserIntegrationTests(DatabaseFixture fixture)
         {
             _fixture = fixture;
@@ -31,10 +31,10 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
             }, NullLoggerFactory.Instance);
 
             _mapper = config.CreateMapper();
-            _fakeS3Service = new FakeAwsS3Service();
-            var s3Mock = new Mock<IAwsS3Service>();
+            _fakeService = new FakeAzureBlobStorageService();
+            var absMock = new Mock<IAzureBlobStorageService>();
 
-            s3Mock.Setup(x => x.UploadImageAsync(
+            absMock.Setup(x => x.UploadImageAsync(
                     It.IsAny<Stream>(),
                     It.IsAny<string>(),
                     It.IsAny<string>(),
@@ -47,13 +47,13 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 FileUrl = "https://fake-url.com/printers/test.jpg"
             });
 
-            s3Mock.Setup(x => x.DeleteImageAsync(It.IsAny<string>()))
+            absMock.Setup(x => x.DeleteImageAsync(It.IsAny<string>()))
                   .Returns(Task.CompletedTask);
 
-            s3Mock.Setup(x => x.GetPresignedUrl(It.IsAny<string>(), It.IsAny<int>()))
+            absMock.Setup(x => x.GetPresignedUrl(It.IsAny<string>(), It.IsAny<int>()))
                   .Returns("https://fake-url.com/presigned/test.jpg");
 
-            _fakeS3Service = s3Mock.Object;
+            _fakeService = absMock.Object;
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 userDbManager,
                 _mapper,
                 NullLogger<UserManager>.Instance,
-                _fakeS3Service
+                _fakeService
             );
 
             BaseError? error;
@@ -98,7 +98,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
             var manager = new UserManager(userDbManager,
                 _mapper,
                 NullLogger<UserManager>.Instance,
-                _fakeS3Service);
+                _fakeService);
 
             BaseError? error;
 

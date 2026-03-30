@@ -17,7 +17,7 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.User
         private readonly Mock<IMapper> _mapperMock;
         private readonly Mock<IUserDbManager> _userDbManagerMock;
         private readonly UserManager _manager;
-        private readonly Mock<IAwsS3Service> _awsS3Service;
+        private readonly Mock<IAzureBlobStorageService> _aBSService;
 
 
         public PostNewUserTests()
@@ -25,13 +25,13 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.User
             _loggerMock = new Mock<ILogger<UserManager>>();
             _mapperMock = new Mock<IMapper>();
             _userDbManagerMock = new Mock<IUserDbManager>();
-            _awsS3Service = new Mock<IAwsS3Service>();
+            _aBSService = new Mock<IAzureBlobStorageService>();
 
             _manager = new UserManager(
                  _userDbManagerMock.Object,
                 _mapperMock.Object,
                 _loggerMock.Object,
-                 _awsS3Service.Object
+                 _aBSService.Object
             );
         }
 

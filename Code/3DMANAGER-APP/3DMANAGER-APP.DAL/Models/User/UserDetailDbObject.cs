@@ -7,13 +7,13 @@ namespace _3DMANAGER_APP.DAL.Models.User
     {
         public int UserId { get; set; }
 
-        private const string UserIdColumnName = "USER_ID";
+        private const string UserIdColumnName = "3DMANAGER_USER_ID";
         public string UserName { get; set; }
-        private const string UserNameColumnName = "USER_NAME";
+        private const string UserNameColumnName = "3DMANAGER_USER_NAME";
         public string UserRole { get; set; }
         private const string UserRoleColumnName = "USER_ROLE";
         public string UserEmail { get; set; }
-        private const string UserEmailColumnName = "USER_EMAIL";
+        private const string UserEmailColumnName = "3DMANAGER_USER_EMAIL";
         public DateTime UserCreateDate { get; set; }
         private const string UserCreateDateColumnName = "USER_CREATE_DATE";
         public int UserTotalPrints { get; set; }

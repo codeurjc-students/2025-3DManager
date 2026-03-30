@@ -16,7 +16,7 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Print
         private readonly Mock<ILogger<PrintManager>> _loggerMock;
         private readonly Mock<IMapper> _mapperMock;
         private readonly Mock<IPrintDbManager> _printDbManagerMock;
-        private readonly Mock<IAwsS3Service> _awsS3Service;
+        private readonly Mock<IAzureBlobStorageService> _aBSService;
         private readonly PrintManager _manager;
 
         public PrintListTest()
@@ -24,13 +24,13 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Print
             _loggerMock = new Mock<ILogger<PrintManager>>();
             _mapperMock = new Mock<IMapper>();
             _printDbManagerMock = new Mock<IPrintDbManager>();
-            _awsS3Service = new Mock<IAwsS3Service>();
+            _aBSService = new Mock<IAzureBlobStorageService>();
 
             _manager = new PrintManager(
                  _printDbManagerMock.Object,
                 _mapperMock.Object,
                 _loggerMock.Object,
-                _awsS3Service.Object
+                _aBSService.Object
             );
         }
 
@@ -85,7 +85,7 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Print
                 _printDbManagerMock.Object,
                 realMapper,
                 _loggerMock.Object,
-                _awsS3Service.Object
+                _aBSService.Object
             );
 
             PagedRequest pagedRequest = new PagedRequest { PageNumber = 1, PageSize = 10 };

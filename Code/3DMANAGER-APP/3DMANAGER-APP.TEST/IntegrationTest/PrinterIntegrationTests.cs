@@ -18,7 +18,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
     {
         private readonly DatabaseFixture _fixture;
         private readonly IMapper _mapper;
-        private readonly IAwsS3Service _s3;
+        private readonly IAzureBlobStorageService _aBSService;
 
 
         public PrinterIntegrationTests(DatabaseFixture fixture)
@@ -33,9 +33,9 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
             _mapper = config.CreateMapper();
 
             //Mocking a AWS service. Test does not use AWS service
-            var s3Mock = new Mock<IAwsS3Service>();
+            var absMock = new Mock<IAzureBlobStorageService>();
 
-            s3Mock.Setup(x => x.UploadImageAsync(
+            absMock.Setup(x => x.UploadImageAsync(
                     It.IsAny<Stream>(),
                     It.IsAny<string>(),
                     It.IsAny<string>(),
@@ -48,13 +48,13 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                     FileUrl = "https://fake-url.com/printers/test.jpg"
                 });
 
-            s3Mock.Setup(x => x.DeleteImageAsync(It.IsAny<string>()))
+            absMock.Setup(x => x.DeleteImageAsync(It.IsAny<string>()))
                   .Returns(Task.CompletedTask);
 
-            s3Mock.Setup(x => x.GetPresignedUrl(It.IsAny<string>(), It.IsAny<int>()))
+            absMock.Setup(x => x.GetPresignedUrl(It.IsAny<string>(), It.IsAny<int>()))
                   .Returns("https://fake-url.com/presigned/test.jpg");
 
-            _s3 = s3Mock.Object;
+            _aBSService = absMock.Object;
 
         }
 
@@ -75,7 +75,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 printerDbManager,
                 _mapper,
                 NullLogger<PrinterManager>.Instance,
-                _s3
+                _aBSService
             );
 
             BaseError? error;
@@ -121,7 +121,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 printerDbManager,
                 _mapper,
                 NullLogger<PrinterManager>.Instance,
-                _s3
+                _aBSService
             );
 
             BaseError? error;
@@ -167,7 +167,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 printerDbManager,
                 _mapper,
                 NullLogger<PrinterManager>.Instance,
-                _s3
+                _aBSService
             );
 
             var newPrinter = new PrinterRequest

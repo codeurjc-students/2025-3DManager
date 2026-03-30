@@ -40,9 +40,9 @@ namespace _3DMANAGER_APP.TEST
             });
             builder.ConfigureServices(services =>
             {
-                var s3Mock = new Mock<IAwsS3Service>();
-                s3Mock.Setup(x => x.GetPresignedUrl(It.IsAny<string>(), It.IsAny<int>())).Returns("https://fake-url.com/presigned/test.jpg");
-                services.AddSingleton<IAwsS3Service>(s3Mock.Object);
+                var absMock = new Mock<IAzureBlobStorageService>();
+                absMock.Setup(x => x.GetPresignedUrl(It.IsAny<string>(), It.IsAny<int>())).Returns("https://fake-url.com/presigned/test.jpg");
+                services.AddSingleton<IAzureBlobStorageService>(absMock.Object);
             });
         }
     }

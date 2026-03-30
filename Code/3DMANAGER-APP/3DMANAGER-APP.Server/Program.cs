@@ -6,9 +6,7 @@ using _3DMANAGER_APP.DAL.Interfaces;
 using _3DMANAGER_APP.DAL.Managers;
 using _3DMANAGER_APP.Server.Controllers;
 using _3DMANAGER_APP.TestingSupport.Database;
-using Amazon;
-using Amazon.Runtime;
-using Amazon.S3;
+using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -66,7 +64,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("https://localhost:3000", "http://localhost:3000", "http://localhost:3001")
+        policy.WithOrigins("https://localhost:3000", "http://localhost:3000", "http://localhost:3001",
+            "https://portal-3dmanager-app.agreeablebay-71400cf1.spaincentral.azurecontainerapps.io")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -107,27 +106,25 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-//Amazon S3 service
-builder.Services.AddSingleton<IAmazonS3>(sp =>
+
+// Azure Blob Storage
+builder.Services.AddSingleton<BlobServiceClient>(sp =>
 {
     var config = sp.GetRequiredService<IConfiguration>();
-    var awsAccessKey = config["AWS:AccessKey"];
-    var awsSecretKey = config["AWS:SecretKey"];
-    var awsRegion = config["AWS:Region"];
-
-    var credentials = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
-    var region = RegionEndpoint.GetBySystemName(awsRegion);
-
-    return new AmazonS3Client(credentials, region);
+    var connectionString = config["AzureStorage:ConnectionString"];
+    return new BlobServiceClient(connectionString);
 });
-builder.Services.AddScoped<IAwsS3Service>(sp =>
+
+builder.Services.AddScoped<IAzureBlobStorageService>(sp =>
 {
     var config = sp.GetRequiredService<IConfiguration>();
-    var bucketName = config["AWS:BucketName"];
-    var s3 = sp.GetRequiredService<IAmazonS3>();
-    var logger = sp.GetRequiredService<ILogger<AwsS3Service>>();
-    return new AwsS3Service(s3, bucketName, logger);
+    var containerName = config["AzureStorage:ContainerName"];
+    var blobService = sp.GetRequiredService<BlobServiceClient>();
+    var logger = sp.GetRequiredService<ILogger<AzureBlobStorageService>>();
+
+    return new AzureBlobStorageService(blobService, containerName, logger);
 });
+
 
 builder.Services.AddAuthorization();
 
@@ -158,10 +155,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "3DManager API v1"));
 }
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseHttpsRedirection();
-}
 
 app.UseStaticFiles();
 app.UseRouting();

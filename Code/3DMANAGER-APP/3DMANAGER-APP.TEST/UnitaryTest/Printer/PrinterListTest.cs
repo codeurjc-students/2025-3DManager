@@ -20,7 +20,7 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest
             var mockDb = new Mock<IPrinterDbManager>();
             var mockLogger = new Mock<ILogger<PrinterManager>>();
             var mockMapper = new Mock<IMapper>();
-            var mockS3Service = new Mock<IAwsS3Service>();
+            var mockABSService = new Mock<IAzureBlobStorageService>();
 
             var dbPrinters = new List<PrinterDbObject>
         {
@@ -42,7 +42,7 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest
                       new PrinterObject { PrinterName = "Impresora 2" }
                       });
 
-            var manager = new PrinterManager(mockDb.Object, mockMapper.Object, mockLogger.Object, mockS3Service.Object);
+            var manager = new PrinterManager(mockDb.Object, mockMapper.Object, mockLogger.Object, mockABSService.Object);
 
             var result = manager.GetPrinterList(out BaseError error);
 
@@ -59,7 +59,7 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest
             var mockDb = new Mock<IPrinterDbManager>();
             var mockLogger = new Mock<ILogger<PrinterManager>>();
             var mockMapper = new Mock<IMapper>();
-            var mockS3Service = new Mock<IAwsS3Service>();
+            var mockABSService = new Mock<IAzureBlobStorageService>();
 
             var dbError = new ErrorDbObject { code = 500, message = "DB Error" };
 
@@ -70,7 +70,7 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest
                   return null!;
               }));
 
-            var manager = new PrinterManager(mockDb.Object, mockMapper.Object, mockLogger.Object, mockS3Service.Object);
+            var manager = new PrinterManager(mockDb.Object, mockMapper.Object, mockLogger.Object, mockABSService.Object);
 
             var result = manager.GetPrinterList(out BaseError error);
 
