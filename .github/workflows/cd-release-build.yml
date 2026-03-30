@@ -18,9 +18,44 @@ jobs:
           TAG="${{ github.event.release.tag_name }}" 
           COMPOSE_TAG=$(echo "$TAG" | cut -d'.' -f1,2) 
           echo "compose_tag=$COMPOSE_TAG" >> $GITHUB_OUTPUT
+  test:
+    needs: prepare
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Backend tests
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore backend
+        run: dotnet restore Code/3DMANAGER-APP/3DMANAGER-APP.Server/3DMANAGER-APP.Server.csproj
+
+      - name: Build backend
+        run: dotnet build Code/3DMANAGER-APP/3DMANAGER-APP.Server/3DMANAGER-APP.Server.csproj --configuration Release
+
+      - name: Run backend tests
+        run: dotnet test Code/3DMANAGER-APP/3DMANAGER-APP.TEST/3DMANAGER-APP.TEST.csproj --configuration Release
+
+      # Frontend tests
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install frontend deps
+        run: npm ci
+        working-directory: Code/3DMANAGER-APP/3dmanager-app.client
+
+      - name: Run frontend unit tests
+        run: npm run test:ci-basic
+        working-directory: Code/3DMANAGER-APP/3dmanager-app.client
 
   call-reusable:
-    needs: prepare
+    needs: test
     uses: ./.github/workflows/cd-build-and-push.yml
     secrets: inherit
     with:
