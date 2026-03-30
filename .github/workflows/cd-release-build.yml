@@ -89,5 +89,5 @@ jobs:
 
   deploy:
     needs: call-reusable
-    uses: ./.github/workflows/deploy.yml
+    uses: ./.github/workflows/cd-azure.yml
     secrets: inherit
