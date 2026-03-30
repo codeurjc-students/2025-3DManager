@@ -345,9 +345,9 @@ const CreatePrint3DPage: React.FC = () => {
                                 />
                             </div>
                             <div className="ms-3 me-3 p-2">
-                                <label htmlFor="PrintImage" className="form-label">Imagen de la impresión</label>
+                                <label htmlFor="PrintSTL" className="form-label">STL de la impresión</label>
                                 <input
-                                    id="PrintImage"
+                                    id="PrintSTL"
                                     type="file"
                                     className="form-control input-value w-100"
                                     accept="image/*"
