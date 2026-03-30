@@ -5,7 +5,6 @@ on:
     types: [published]
 jobs:
   test:
-    needs: prepare
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -65,6 +64,7 @@ jobs:
         working-directory: Code/3DMANAGER-APP/3dmanager-app.client
 
   prepare:
+    needs: test
     runs-on: ubuntu-latest
     outputs:
       compose_tag: ${{ steps.version.outputs.compose_tag }}
@@ -81,7 +81,7 @@ jobs:
   
 
   call-reusable:
-    needs: test
+    needs: prepare
     uses: ./.github/workflows/cd-build-and-push.yml
     secrets: inherit
     with:
