@@ -4,20 +4,6 @@ on:
   release:
     types: [published]
 jobs:
-  prepare:
-    runs-on: ubuntu-latest
-    outputs:
-      compose_tag: ${{ steps.version.outputs.compose_tag }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Extract compose tag (major.minor) 
-        id: version 
-        run: | 
-          TAG="${{ github.event.release.tag_name }}" 
-          COMPOSE_TAG=$(echo "$TAG" | cut -d'.' -f1,2) 
-          echo "compose_tag=$COMPOSE_TAG" >> $GITHUB_OUTPUT
   test:
     needs: prepare
     runs-on: ubuntu-latest
@@ -77,6 +63,22 @@ jobs:
       - name: Build client
         run: npm run build --if-present
         working-directory: Code/3DMANAGER-APP/3dmanager-app.client
+
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      compose_tag: ${{ steps.version.outputs.compose_tag }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract compose tag (major.minor) 
+        id: version 
+        run: | 
+          TAG="${{ github.event.release.tag_name }}" 
+          COMPOSE_TAG=$(echo "$TAG" | cut -d'.' -f1,2) 
+          echo "compose_tag=$COMPOSE_TAG" >> $GITHUB_OUTPUT
+  
 
   call-reusable:
     needs: test
