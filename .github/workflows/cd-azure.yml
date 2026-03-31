@@ -26,4 +26,4 @@ jobs:
           az containerapp update \
             --name ${{ secrets.AZURE_CONTAINERAPP_NAME }} \
             --resource-group ${{ secrets.AZURE_RG }} \
-            --image ${{ secrets.DOCKERHUB_REPOSITORY }}:latest
+            --image ${{ secrets.DOCKERHUB_REPOSITORY }}:dev
