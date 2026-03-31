@@ -5,7 +5,6 @@ on:
     types: [published]
 jobs:
   prepare:
-    needs: test
     runs-on: ubuntu-latest
     outputs:
       compose_tag: ${{ steps.version.outputs.compose_tag }}
