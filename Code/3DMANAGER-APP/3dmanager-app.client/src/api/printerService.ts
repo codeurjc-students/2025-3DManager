@@ -37,8 +37,7 @@ export const postPrinter = async (data: PrinterRequest): Promise<CommonResponse<
 
     if (data.imageFile) {
         formData.append("imageFile", data.imageFile);
-    }
-    
+    }   
     try {
         const response = await apiClient.post<CommonResponse<boolean>>('/v1/printers/PostPrinter', formData,
             { headers: { "Content-Type": "multipart/form-data" } })

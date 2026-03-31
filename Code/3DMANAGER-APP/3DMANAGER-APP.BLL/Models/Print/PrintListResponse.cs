@@ -1,4 +1,5 @@
-﻿using _3DMANAGER_APP.BLL.Models.Base;
+
+using _3DMANAGER_APP.BLL.Models.Base;
 
 namespace _3DMANAGER_APP.BLL.Models.Print
 {

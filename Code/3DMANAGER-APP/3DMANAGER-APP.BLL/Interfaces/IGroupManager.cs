@@ -15,5 +15,6 @@ namespace _3DMANAGER_APP.BLL.Interfaces
         public Task<bool> DeleteGroup(int userId, int groupId);
         public bool TrasnferOwnership(int userId, int groupId, int newOwnerUserId);
         public GroupDashboardData GetGroupDashboardData(int groupId, out BaseError? error);
+
     }
 }

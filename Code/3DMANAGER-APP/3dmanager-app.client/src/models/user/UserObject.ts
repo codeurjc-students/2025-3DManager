@@ -7,3 +7,4 @@ export interface UserObject {
     groupId: number | null;
     groupName?: string | null;
 }
+

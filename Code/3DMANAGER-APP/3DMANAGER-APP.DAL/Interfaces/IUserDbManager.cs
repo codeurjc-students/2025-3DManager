@@ -1,5 +1,6 @@
-﻿using _3DMANAGER_APP.DAL.Models.File;
+using _3DMANAGER_APP.DAL.Models.File;
 using _3DMANAGER_APP.DAL.Models.User;
+
 
 namespace _3DMANAGER_APP.DAL.Interfaces
 {
@@ -17,5 +18,6 @@ namespace _3DMANAGER_APP.DAL.Interfaces
         UserDetailDbObject GetUserDetail(int groupId, int userId);
         public FileResponseDbObject GetUserImageData(int userId, int groupId, out bool error);
         public bool DeleteUserImageData(int userId, int groupId);
+
     }
 }

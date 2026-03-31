@@ -18,6 +18,7 @@ jobs:
           TAG="${{ github.event.release.tag_name }}" 
           COMPOSE_TAG=$(echo "$TAG" | cut -d'.' -f1,2) 
           echo "compose_tag=$COMPOSE_TAG" >> $GITHUB_OUTPUT
+  
 
   call-reusable:
     needs: prepare
@@ -28,7 +29,4 @@ jobs:
       isLatest: true
       composeTag: ${{ needs.prepare.outputs.compose_tag }}
 
-  deploy:
-    needs: call-reusable
-    uses: ./.github/workflows/deploy.yml
-    secrets: inherit
+  

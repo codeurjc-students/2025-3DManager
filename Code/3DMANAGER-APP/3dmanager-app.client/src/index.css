@@ -1,3 +1,4 @@
+/*CSS form reusable components command general classes*/
 :root {
     --colorWhite: #ffffff;
     --colorLowGrey: #f5f6f7;
@@ -318,6 +319,7 @@ fs-detail{
     overflow-y: auto;
     max-height: 300px;
 }
+
 
 .table-container table thead {
     position: sticky;
