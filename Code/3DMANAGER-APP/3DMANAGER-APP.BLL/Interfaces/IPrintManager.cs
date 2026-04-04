@@ -1,5 +1,6 @@
 ﻿using _3DMANAGER_APP.BLL.Models.Base;
 using _3DMANAGER_APP.BLL.Models.Print;
+using Microsoft.AspNetCore.Http;
 
 namespace _3DMANAGER_APP.BLL.Interfaces
 {
@@ -13,6 +14,7 @@ namespace _3DMANAGER_APP.BLL.Interfaces
         List<PrintCommentObject> GetPrintComments(int groupId, int printId, out BaseError? error);
         int PostPrintComment(PrintCommentRequest request);
         public Task<CommonResponse<bool>> DeletePrint(int printId, int groupId);
-
+        public Task<CommonResponse<bool>> DeletePrintImage(int printId, int groupId);
+        public Task<CommonResponse<bool>> UpdatePrintImage(int printId, int groupId, IFormFile imageFile);
     }
 }

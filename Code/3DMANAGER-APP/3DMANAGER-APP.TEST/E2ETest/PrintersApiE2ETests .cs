@@ -53,22 +53,22 @@ namespace _3DMANAGER_APP.TEST.E2ETest
             Assert.True(content.Data);
         }
 
-        //[Fact]
-        //public async Task DeletePrinter_ShouldReturnSuccess()
-        //{
+        [Fact]
+        public async Task DeletePrinter_ShouldReturnSuccess()
+        {
 
-        //    var printerId = 1;
+            var printerId = 1;
 
-        //    var response = await _client.DeleteAsync($"/api/v1/printers/DeletePrinter?printerId={printerId}");
+            var response = await _client.DeleteAsync($"/api/v1/printers/DeletePrinter?printerId={printerId}");
 
-        //    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        //    var content = await response.Content.ReadFromJsonAsync<CommonResponse<bool>>();
+            var content = await response.Content.ReadFromJsonAsync<CommonResponse<bool>>();
 
-        //    Assert.NotNull(content);
-        //    Assert.True(content.Data);
-        //    Assert.Null(content.Error);
-        //}
+            Assert.NotNull(content);
+            Assert.True(content.Data);
+            Assert.Null(content.Error);
+        }
 
         [Fact]
         public async Task DeletePrinter_ShouldReturnServerError_WhenPrinterDoesNotExist()

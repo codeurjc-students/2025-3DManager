@@ -200,12 +200,12 @@ namespace _3DMANAGER_APP.BLL.Managers
                 response.Error = new Response.ErrorProperties() { Code = StatusCodes.Status500InternalServerError, Message = msg };
             }
             response.Data = responseDb.SuccesfullDelete;
-            if (responseDb.FileResponse != null)
+            if (responseDb.FileResponse != null && responseDb.FileResponse.FileKey != null)
             {
                 var responseImage = await DeletePrinterImage(printerId, groupId);
                 if (!responseImage.Data)
                 {
-                    string msg = $"Impresora eliminada correctamento. Pero ha ocurrido un error al eliminar la imagen en Azure Blob Storage del fichero {responseDb.FileResponse.FileKey}.";
+                    string msg = $"Impresora eliminada correctamente. Pero ha ocurrido un error al eliminar la imagen en Azure Blob Storage del fichero {responseDb.FileResponse.FileKey}.";
                     response.Error = new ErrorProperties(StatusCodes.Status500InternalServerError, msg);
                     return response;
                 }

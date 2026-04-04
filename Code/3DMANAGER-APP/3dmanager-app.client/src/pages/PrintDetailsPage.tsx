@@ -3,11 +3,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { usePopupContext } from "../context/PopupContext";
 import InfoPopup from "../components/popupComponent/InfoPopup";
-import { deletePrint, getPrintDetail, updatePrint } from "../api/printService";
+import { deletePrint, deletePrintImage, getPrintDetail, updatePrint, updatePrintImage } from "../api/printService";
 import type { PrintDetailObject } from "../models/print/PrintDetailObject";
 import type { PrintDetailRequest } from "../models/print/PrintDetailRequest";
 import PrintComments from "../components/PrintComments";
 import ConfirmPopup from "../components/popupComponent/ConfirmPopup";
+import { STLViewer } from "../components/STLViewer";
+import ImagePopup from "../components/popupComponent/ImagePopup";
 
 const PrintDetailPage: React.FC = () => {
     const navigate = useNavigate();
@@ -117,6 +119,82 @@ const PrintDetailPage: React.FC = () => {
         });
     };
 
+    const openImagePopup = () => {
+        showPopup({
+            type: "base",
+            width: "600px",
+            hideCloseButton: true,
+            content: (
+                <ImagePopup
+                    title="Actualizar STL de la pieza"
+                    isSTLFile={true}
+                    onUpload={async (file) => {
+                        const response = await updatePrintImage(Number(printId), file);
+
+                        if (response.error) {
+                            const { message } = response.error;
+
+                            closePopup();
+                            await Promise.resolve();
+
+                            showPopup({
+                                type: "error",
+                                content: (<InfoPopup title="Error" description={message} />),
+                                onClose: () => {
+                                    navigate(`/dashboard/print/detail/${printId}`);
+                                    closePopup();
+                                }
+                            });
+
+                            return;
+                        }
+
+                        closePopup();
+                        await Promise.resolve();
+                        showPopup({
+                            type: "info",
+                            content: (<InfoPopup title="Fcihero STL actualizado" description="El fichero STL se ha actualizado correctamente." />),
+                            onClose: () => {
+                                navigate(`/dashboard/print/detail/${printId}`);
+                                closePopup();
+                            }
+                        });
+                    }}
+                    onDelete={async () => {
+                        const response = await deletePrintImage(Number(printId));
+
+                        if (response.error) {
+                            const { message } = response.error;
+
+                            closePopup();
+                            await Promise.resolve();
+
+                            showPopup({
+                                type: "error",
+                                content: (<InfoPopup title="Error" description={message} />
+                                )
+                            });
+
+                            return;
+                        }
+
+                        closePopup();
+                        await Promise.resolve();
+                        showPopup({
+                            type: "info",
+                            content: (<InfoPopup title="Fichero STL eliminado" description="El fichero STL ha sido eliminado." />),
+                            onClose: () => {
+                                navigate(`/dashboard/print/detail/${printId}`);
+                                closePopup();
+                            }
+                        });
+                    }}
+                    onClose={closePopup}
+                />
+            )
+        });
+    };
+
     return (
         <div className="d-flex flex-column vh-100">
             <div className="row h-10 w-100">
@@ -152,11 +230,16 @@ const PrintDetailPage: React.FC = () => {
                                             <path d="M19.125 24.5V15.1667H7.875V24.5M7.875 3.5V9.33333H16.875M21.375 24.5H5.625C5.02826 24.5 4.45597 24.2542 4.03401 23.8166C3.61205 23.379 3.375 22.7855 3.375 22.1667V5.83333C3.375 5.21449 3.61205 4.621 4.03401 4.18342C4.45597 3.74583 5.02826 3.5 5.625 3.5H18L23.625 9.33333V22.1667C23.625 22.7855 23.3879 23.379 22.966 23.8166C22.544 24.2542 21.9717 24.5 21.375 24.5Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
                                         </svg>
                                     </button>
+                                    <button className="button-yellow me-2" onClick={openImagePopup}>
+                                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M6.66667 28H25.3333C26.8061 28 28 26.8061 28 25.3333V6.66667C28 5.19391 26.8061 4 25.3333 4H6.66667C5.19391 4 4 5.19391 4 6.66667V25.3333C4 26.8061 5.19391 28 6.66667 28ZM6.66667 28L21.3333 13.3333L28 20M13.3333 11.3333C13.3333 12.4379 12.4379 13.3333 11.3333 13.3333C10.2288 13.3333 9.33333 12.4379 9.33333 11.3333C9.33333 10.2288 10.2288 9.33333 11.3333 9.33333C12.4379 9.33333 13.3333 10.2288 13.3333 11.3333Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </button>
                                 </div>
                             ) : ""}
                         </div>
-                        <div className="col-6 ms-5 h-75">
-                            <img src={data?.printImageData?.fileUrl} alt={name} className="image-container-3" />
+                        <div className="col-6 ms-5 h-75 image-container-3">
+                            <STLViewer fileUrl={data?.printImageData?.fileUrl!} />
                         </div>
                     </div>
                     <div className="h-40 ms-3 mt-1">
@@ -169,7 +252,7 @@ const PrintDetailPage: React.FC = () => {
                                 </div>
                                 <div className="col-6 mb-1">
                                     <label htmlFor="printUser" className="form-label">Usuario</label>
-                                    <input id="printUser" type="text" className="input-value-2 w-100" value={data?.printUserName}
+                                    <input id="printUser" type="text" className="input-value-2 w-100" value={data?.printUserName ?? ""}
                                         onClick={() => navigate(`/dashboard/user/detail/${data?.printUserId}`)} disabled />
                                 </div>
                             </div>
@@ -178,12 +261,12 @@ const PrintDetailPage: React.FC = () => {
                             <div className="d-flex flex row">
                                 <div className="col-6 mb-1">
                                     <label htmlFor="printPrinter" className="form-label">Impresora</label>
-                                    <input id="printPrinter" type="text" className="input-value-2 w-100" value={data?.printPrinterName}
+                                    <input id="printPrinter" type="text" className="input-value-2 w-100" value={data?.printPrinterName ?? ""}
                                         onClick={() => navigate(`/dashboard/print/detail/${data?.printPrinterId}`)} disabled />
                                 </div>
                                 <div className="col-6 mb-1">
                                     <label htmlFor="printFilament" className="form-label">Filamento</label>
-                                    <input id="printFilament" type="text" className="input-value-2 w-100" value={data?.printFilamentName}
+                                    <input id="printFilament" type="text" className="input-value-2 w-100" value={data?.printFilamentName ?? ""}
                                         onClick={() => navigate(`/dashboard/filament/detail/${data?.printFilamentName}`)} disabled />
                                 </div>
                             </div>

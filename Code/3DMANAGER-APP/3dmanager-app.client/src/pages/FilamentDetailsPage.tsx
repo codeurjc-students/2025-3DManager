@@ -144,6 +144,7 @@ const FilamentDetailPage: React.FC = () => {
             content: (
                 <ImagePopup
                     title="Actualizar imagen de filamento"
+                    isSTLFile={false}
                     onUpload={async (file) => {
                         const response = await updateFilamentImage(Number(filamentId), file);
 

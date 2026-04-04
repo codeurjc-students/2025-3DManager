@@ -81,21 +81,21 @@ namespace _3DMANAGER_APP.TEST.E2ETest
             Assert.True(updateContent.Data);
         }
 
-        //[Fact]
-        //public async Task DeleteFilament_ShouldReturnSuccess()
-        //{
+        [Fact]
+        public async Task DeleteFilament_ShouldReturnSuccess()
+        {
 
-        //    var filamentId = 1;
+            var filamentId = 1;
 
-        //    var response = await _client.DeleteAsync($"/api/v1/filaments/DeleteFilament?filamentId={filamentId}");
+            var response = await _client.DeleteAsync($"/api/v1/filaments/DeleteFilament?filamentId={filamentId}");
 
-        //    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        //    var content = await response.Content.ReadFromJsonAsync<CommonResponse<bool>>();
+            var content = await response.Content.ReadFromJsonAsync<CommonResponse<bool>>();
 
-        //    Assert.NotNull(content);
-        //    Assert.True(content.Data);
-        //}
+            Assert.NotNull(content);
+            Assert.True(content.Data);
+        }
 
         [Fact]
         public async Task DeleteFilament_ShouldReturnServerError_WhenFilamentDoesNotExist()
