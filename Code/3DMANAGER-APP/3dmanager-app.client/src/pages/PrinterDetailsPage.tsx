@@ -163,6 +163,7 @@ const PrinterDetailPage: React.FC = () => {
             content: (
                 <ImagePopup
                     title="Actualizar imagen de impresora"
+                    isSTLFile={false}
                     onUpload={async (file) => {
                         const response = await updatePrinterImage(Number(printerId), file);
 

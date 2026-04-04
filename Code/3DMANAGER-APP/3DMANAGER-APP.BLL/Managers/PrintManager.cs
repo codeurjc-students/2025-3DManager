@@ -9,6 +9,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Net;
+using static _3DMANAGER_APP.BLL.Models.Base.Response;
 
 namespace _3DMANAGER_APP.BLL.Managers
 {
@@ -159,8 +160,8 @@ namespace _3DMANAGER_APP.BLL.Managers
                 if (response.PrintImageData != null && response.PrintImageData.FileUrl != null && response.PrintImageData.FileKey != null)
                     response.PrintImageData.FileUrl = _absService.GetPresignedUrl(response.PrintImageData.FileKey, 1);
                 else
-                    response.PrintImageData!.FileUrl = _absService.GetPresignedUrl("default/3dmanager-default-3dprint.png", 1);
-                response.PrintImageData!.FileUrl = _absService.GetPresignedUrl("default/3dbenchy.stl", 1);
+                    response.PrintImageData!.FileUrl = _absService.GetPresignedUrl("default/3dbenchy.stl", 1);
+
             }
             return response!;
         }
@@ -206,10 +207,81 @@ namespace _3DMANAGER_APP.BLL.Managers
                 response.Error = new Response.ErrorProperties() { Code = StatusCodes.Status500InternalServerError, Message = msg };
             }
             response.Data = responseDb.SuccesfullDelete;
-            if (responseDb.FileResponse != null)
+            if (responseDb.FileResponse != null && responseDb.FileResponse.FileKey != null)
             {
-                //Aun no implementado
+                var responseImage = await DeletePrintImage(printId, groupId);
+                if (!responseImage.Data)
+                {
+                    string msg = $"Impresión eliminada correctamente. Pero ha ocurrido un error al eliminar el ficher STL en Azure Blob Storage del fichero {responseDb.FileResponse.FileKey}.";
+                    response.Error = new ErrorProperties(StatusCodes.Status500InternalServerError, msg);
+                    return response;
+                }
             }
+            return response;
+        }
+
+        public async Task<CommonResponse<bool>> DeletePrintImage(int printId, int groupId)
+        {
+            CommonResponse<bool> response = new CommonResponse<bool>();
+
+            FileResponseDbObject imageData = _printDbManager.GetPrintImageData(printId, groupId, out bool error);
+
+            if (error)
+            {
+                response.Error = new ErrorProperties(StatusCodes.Status404NotFound, "Ha ocurrido un error al buscar en la impresión el fichero STL asociado.");
+                return response;
+            }
+            else if (imageData.FileKey == null && !error)
+            {
+                response.Data = true;
+                return response;
+            }
+
+            await _absService.DeleteImageAsync(imageData!.FileKey!);
+            bool dbResponse = _printDbManager.DeletePrintImageData(printId, groupId);
+
+            if (!dbResponse)
+            {
+                response.Error = new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al eliminar referencia del fichero STL en la base de datos.");
+                return response;
+            }
+
+            response.Data = true;
+            return response;
+        }
+
+        public async Task<CommonResponse<bool>> UpdatePrintImage(int printId, int groupId, IFormFile imageFile)
+        {
+            CommonResponse<bool> response = new CommonResponse<bool>();
+            response.Data = false;
+            if (imageFile == null)
+            {
+                response.Error = new ErrorProperties(StatusCodes.Status400BadRequest, "Error, no se ha recibido una imagen para actualizar");
+                return response;
+            }
+
+            var aBSResponse = await _absService.UploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName, imageFile.ContentType, "prints", groupId);
+            if (aBSResponse == null)
+            {
+                response.Error = new ErrorProperties(StatusCodes.Status409Conflict, "Error al subir fichero STL a Azure Blob Storage.");
+                return response;
+            }
+            var deletedImage = await DeletePrintImage(printId, groupId);
+            if (!deletedImage.Data)
+            {
+                var fileData = _printDbManager.GetPrintImageData(printId, groupId, out bool errorDbImage);
+                string? keyValue = errorDbImage ? "FileKey Desconocido" : fileData.FileKey;
+                string msg = $"Se ha intentado eliminar un fichero STL de la impresión {printId} del grupo {groupId} con el fileKey {keyValue}";
+                _logger.LogError(msg);
+            }
+            bool dbResponse = _printDbManager.UpdatePrintImageData(printId, _mapper.Map<FileResponseDbObject>(aBSResponse));
+            if (!dbResponse)
+            {
+                response.Error = new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al actualizar la referencia del fichero STL en la base de datos.");
+                return response;
+            }
+
+            response.Data = true;
             return response;
         }
     }

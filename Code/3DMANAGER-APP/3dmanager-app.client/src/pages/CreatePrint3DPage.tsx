@@ -266,12 +266,6 @@ const CreatePrint3DPage: React.FC = () => {
                                         <label htmlFor="printName" className="form-label">Nombre</label>
                                         <input id="printName" className="input-value w-100" value={printName} placeholder="Nombre" onChange={(e) => setPrintName(e.target.value)}/>
                                     </div>
-                                    <div className="col-6 p-2">
-                                        <label htmlFor="printState" className="form-label">Estado</label>
-                                        <select id="printState" className="input-value w-100 " value={printState}
-                                            onChange={(e) => setPrintState(Number(e.target.value))}>
-                                            <option value="">Seleccione un tipo</option>
-                                        </select>
                                     <div className={printState === 2 ? "col-4 p-2" : "col-6 p-2"}>
                                         <label htmlFor="printState" className="form-label">Estado</label>
                                         <select id="printState" className="input-value w-100" value={printState} onChange={(e) => setPrintState(Number(e.target.value))}>
@@ -356,7 +350,7 @@ const CreatePrint3DPage: React.FC = () => {
                                     id="PrintSTL"
                                     type="file"
                                     className="form-control input-value w-100"
-                                    accept="image/*"
+                                    accept=".stl"
                                     onChange={(e) => {
                                         if (e.target.files && e.target.files.length > 0) {
                                             setImageFile(e.target.files[0]);

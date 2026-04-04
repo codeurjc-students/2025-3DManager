@@ -144,12 +144,12 @@ namespace _3DMANAGER_APP.BLL.Managers
                 response.Error = new Response.ErrorProperties() { Code = StatusCodes.Status500InternalServerError, Message = msg };
             }
             response.Data = responseDb.SuccesfullDelete;
-            if (responseDb.FileResponse != null)
+            if (responseDb.FileResponse != null && responseDb.FileResponse.FileKey != null)
             {
                 var responseImage = await DeleteFilamentImage(filamentId, groupId);
                 if (!responseImage.Data)
                 {
-                    string msg = $"Filamento eliminado correctamento. Pero ha ocurrido un error al eliminar la imagen en Azure Blob Storage del fichero {responseDb.FileResponse.FileKey}.";
+                    string msg = $"Filamento eliminado correctamente. Pero ha ocurrido un error al eliminar la imagen en Azure Blob Storage del fichero {responseDb.FileResponse.FileKey}.";
                     response.Error = new ErrorProperties(StatusCodes.Status500InternalServerError, msg);
                     return response;
                 }

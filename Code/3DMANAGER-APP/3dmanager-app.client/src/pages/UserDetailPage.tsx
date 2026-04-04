@@ -77,6 +77,7 @@ const UserDetailPage: React.FC = () => {
             content: (
                 <ImagePopup
                     title="Actualizar imagen de usuario"
+                    isSTLFile={false}
                     onUpload={async (file) => {
                         const response = await updateUserImage(Number(userId), file);
 

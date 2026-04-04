@@ -201,6 +201,5 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
             Assert.Null(error);
             Assert.DoesNotContain(prints.prints, p => p.PrintId == printId);
         }
-
     }
 }
