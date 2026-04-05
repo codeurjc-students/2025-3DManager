@@ -20,14 +20,12 @@ namespace _3DMANAGER_APP.BLL.Managers
         private readonly IMapper _mapper;
         private readonly ILogger<UserManager> _logger;
         private readonly IAzureBlobStorageService _absService;
-        private readonly IEmailService _email;
-        public UserManager(IUserDbManager userDbManager, IMapper mapper, ILogger<UserManager> logger, IAzureBlobStorageService absService, IEmailService email)
+        public UserManager(IUserDbManager userDbManager, IMapper mapper, ILogger<UserManager> logger, IAzureBlobStorageService absService)
         {
             _userDbManager = userDbManager;
             _mapper = mapper;
             _logger = logger;
             _absService = absService;
-            _email = email;
         }
 
         public async Task<CommonResponse<int>> PostNewUser(UserCreateRequest user)
@@ -67,7 +65,6 @@ namespace _3DMANAGER_APP.BLL.Managers
                 return response;
             }
             response.Data = responseDb;
-            SendTest();
             if (user.ImageFile != null)
             {
                 bool responseImage = await UpdateABSUserImage(responseDb, user.ImageFile);
@@ -297,9 +294,5 @@ namespace _3DMANAGER_APP.BLL.Managers
             return response;
         }
 
-        public async void SendTest()
-        {
-            await _email.SendEmailAsync("3dmanagerapp@gmail.com", "Prueba", "<h1>Funciona!</h1>");
-        }
     }
 }

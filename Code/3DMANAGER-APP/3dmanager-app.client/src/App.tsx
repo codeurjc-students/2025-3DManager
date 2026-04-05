@@ -21,6 +21,7 @@ import UserDetailPage from './pages/UserDetailPage';
 import FilamentDetailPage from './pages/FilamentDetailsPage';
 import PrintDetailPage from './pages/PrintDetailsPage';
 import ErrorPage from './pages/ErrorPage';
+import { NotificationProvider } from './context/NotificationContext';
 
 
 
@@ -29,31 +30,33 @@ const App: React.FC = () => {
         <AuthProvider>
             <PopupProvider>
                 <BrowserRouter>
-                    <AuthWatcher />
-                    <div className="main-container">
-                        <Header />
-                        <main className="pages-container">
-                            <Routes>
-                                <Route path="/login" element={<LoginPage />} />
-                                <Route path="/user-create" element={<CreateUserPage />} />
-                                <Route path="/group" element={<ProtectedRoute><GroupPage /></ProtectedRoute>} />
-                                <Route path="/group-create" element={<ProtectedRoute><CreateGroupPage /></ProtectedRoute>} />
-                                <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-                                <Route path="dashboard/lists/:type" element={<ProtectedRoute><ListPage /></ProtectedRoute>} />
-                                <Route path="/dashboard/add" element={<ProtectedRoute><InsertInventoryPage /></ProtectedRoute>} />
-                                <Route path="/dashboard/printer-create" element={<ProtectedRoute><CreatePrinterPage /></ProtectedRoute>} />
-                                <Route path="/dashboard/filament-create" element={<ProtectedRoute><CreateFilamentPage /></ProtectedRoute>} />
-                                <Route path="/dashboard/print-create" element={<ProtectedRoute><CreatePrint3DPage /></ProtectedRoute>} />
-                                <Route path="/dashboard/user-invitation/:type" element={<ProtectedRoute><ListPage /></ProtectedRoute>} />
-                                <Route path="/dashboard/printer/detail/:printerId" element={<ProtectedRoute><PrinterDetailPage /></ProtectedRoute>} />
-                                <Route path="/dashboard/user/detail/:userId" element={<ProtectedRoute><UserDetailPage /></ProtectedRoute>} />
-                                <Route path="/dashboard/filament/detail/:filamentId" element={<ProtectedRoute><FilamentDetailPage /></ProtectedRoute>} />
-                                <Route path="/dashboard/print/detail/:printId" element={<ProtectedRoute><PrintDetailPage /></ProtectedRoute>} />
-                                <Route path="/error" element={<ErrorPage />} />
-                                <Route path="*" element={<Navigate to="/login" replace />} />
-                            </Routes>
-                        </main>
-                    </div>
+                    <NotificationProvider>
+                        <AuthWatcher />
+                        <div className="main-container">
+                            <Header />
+                            <main className="pages-container">
+                                <Routes>
+                                    <Route path="/login" element={<LoginPage />} />
+                                    <Route path="/user-create" element={<CreateUserPage />} />
+                                    <Route path="/group" element={<ProtectedRoute><GroupPage /></ProtectedRoute>} />
+                                    <Route path="/group-create" element={<ProtectedRoute><CreateGroupPage /></ProtectedRoute>} />
+                                    <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+                                    <Route path="dashboard/lists/:type" element={<ProtectedRoute><ListPage /></ProtectedRoute>} />
+                                    <Route path="/dashboard/add" element={<ProtectedRoute><InsertInventoryPage /></ProtectedRoute>} />
+                                    <Route path="/dashboard/printer-create" element={<ProtectedRoute><CreatePrinterPage /></ProtectedRoute>} />
+                                    <Route path="/dashboard/filament-create" element={<ProtectedRoute><CreateFilamentPage /></ProtectedRoute>} />
+                                    <Route path="/dashboard/print-create" element={<ProtectedRoute><CreatePrint3DPage /></ProtectedRoute>} />
+                                    <Route path="/dashboard/user-invitation/:type" element={<ProtectedRoute><ListPage /></ProtectedRoute>} />
+                                    <Route path="/dashboard/printer/detail/:printerId" element={<ProtectedRoute><PrinterDetailPage /></ProtectedRoute>} />
+                                    <Route path="/dashboard/user/detail/:userId" element={<ProtectedRoute><UserDetailPage /></ProtectedRoute>} />
+                                    <Route path="/dashboard/filament/detail/:filamentId" element={<ProtectedRoute><FilamentDetailPage /></ProtectedRoute>} />
+                                    <Route path="/dashboard/print/detail/:printId" element={<ProtectedRoute><PrintDetailPage /></ProtectedRoute>} />
+                                    <Route path="/error" element={<ErrorPage />} />
+                                    <Route path="*" element={<Navigate to="/login" replace />} />
+                                </Routes>
+                            </main>
+                        </div>
+                    </NotificationProvider>
                 </BrowserRouter>
             </PopupProvider>
         </AuthProvider>
