@@ -1,3 +1,4 @@
+using _3DMANAGER_APP.BLL;
 using _3DMANAGER_APP.BLL.Interfaces;
 using _3DMANAGER_APP.BLL.Managers;
 using _3DMANAGER_APP.BLL.Mapper;
@@ -127,6 +128,13 @@ builder.Services.AddScoped<IAzureBlobStorageService>(sp =>
 
 
 builder.Services.AddAuthorization();
+
+//SMTP EMAIL SETTINGS
+builder.Services.Configure<EmailSettings>(
+    builder.Configuration.GetSection("Email"));
+
+builder.Services.AddScoped<IEmailService, EmailService>();
+
 
 //Culture
 CultureInfo customCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
