@@ -6,14 +6,16 @@ import type { PrinterDashboardObject } from "../models/printer/PrinterDashboardO
 import { DashboardBarChart } from "../components/charts/dashboardChart";
 import type { GroupDashboardData } from "../models/group/GroupDashboardData";
 import { getGroupDashboardData } from "../api/groupService";
+import { useNotifications } from "../context/NotificationContext";
 
 const DashboardPage: React.FC = () => {
     const [printers, setPrinters] = useState<PrinterDashboardObject[]>([]);
     const [data, setData] = useState<GroupDashboardData | null>(null);
-
+    const { refresh } = useNotifications();
     const navigate = useNavigate();
 
     useEffect(() => {
+        refresh();
         getPrinterDashboardList().then(response => {
             setPrinters(response.data ?? []);
         });

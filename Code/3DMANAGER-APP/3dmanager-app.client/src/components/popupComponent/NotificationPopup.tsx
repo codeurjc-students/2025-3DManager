@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import { getUnreadNotifications, markNotificationAsRead } from "../../api/notificationService";
 import type { NotificationObject } from "../../models/notifications/NotificationObject";
-import { useNotifications } from "../../context/NotificationContext";
-import { usePopupContext } from "../../context/PopupContext";
 
 interface NotificationPopupProps {
     onClose: () => void;
@@ -11,8 +9,6 @@ interface NotificationPopupProps {
 const NotificationPopup: React.FC<NotificationPopupProps> = ({ onClose }) => {
     const [notifications, setNotifications] = useState<NotificationObject[]>([]);
     const [loading, setLoading] = useState(false);
-    const { closePopup } = usePopupContext();
-    const { refresh } = useNotifications();
 
     const load = async () => {
         const response = await getUnreadNotifications();
@@ -35,11 +31,6 @@ const NotificationPopup: React.FC<NotificationPopupProps> = ({ onClose }) => {
         }
     };
 
-    const handleClose = () => {
-        refresh(); 
-        onClose();
-        closePopup();
-    };
 
     return (
         <div className="notification-popup-content">
@@ -57,20 +48,13 @@ const NotificationPopup: React.FC<NotificationPopupProps> = ({ onClose }) => {
                             {new Date(n.notificationRegisterDate).toLocaleString()}
                         </div>
 
-                        <button
-                            className="button-yellow mt-2"
-                            disabled={loading}
-                            onClick={() => handleMarkAsRead(n.notificationId)}
-                        >
-                            Marcar como le�da
+                        <button className="button-yellow mt-2" disabled={loading} onClick={() => handleMarkAsRead(n.notificationId)}>
+                            Marcar como leída
                         </button>
                     </li>
                 ))}
             </ul>
 
-            <button className="popup-button mt-3" onClick={handleClose}>
-                Cerrar
-            </button>
         </div>
     );
 };

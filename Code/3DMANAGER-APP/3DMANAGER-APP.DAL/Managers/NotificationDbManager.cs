@@ -123,7 +123,9 @@ namespace _3DMANAGER_APP.DAL.Managers
                 var errorParam = CreateReturnValueParameter(ErrorConstant, MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
 
-                cmd.ExecuteNonQuery();
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
 
                 return Convert.ToInt32(errorParam.Value) == 0;
             }
@@ -138,6 +140,7 @@ namespace _3DMANAGER_APP.DAL.Managers
                 return false;
             }
         }
+
     }
 
 }

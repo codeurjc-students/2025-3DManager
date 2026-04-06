@@ -13,14 +13,16 @@ const Header: React.FC = () => {
     const { count, refresh } = useNotifications();
 
     const handleNotifications = () => {
+        refresh();
         showPopup({
             type: "base",
             width: "500px",
             content: (
-                <NotificationPopup
-                    onClose={() => {}}
-                />
-            )
+                <NotificationPopup onClose={() => {
+                    refresh();
+                }}/>
+            ),
+            onClose: () => refresh()
         });
     };
 
