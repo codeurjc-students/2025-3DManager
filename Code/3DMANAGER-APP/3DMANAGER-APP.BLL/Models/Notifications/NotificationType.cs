@@ -4,6 +4,7 @@
     {
         FilamentWarning = 1,
         GroupInvitation = 2,
-        PrintComment = 3
+        GroupExpulsion = 3,
+        PrintComment = 4
     }
 }

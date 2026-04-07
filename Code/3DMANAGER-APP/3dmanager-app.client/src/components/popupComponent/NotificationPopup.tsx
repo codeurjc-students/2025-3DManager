@@ -6,7 +6,7 @@ interface NotificationPopupProps {
     onClose: () => void;
 }
 
-const NotificationPopup: React.FC<NotificationPopupProps> = ({ onClose }) => {
+const NotificationPopup: React.FC<NotificationPopupProps> = () => {
     const [notifications, setNotifications] = useState<NotificationObject[]>([]);
     const [loading, setLoading] = useState(false);
 

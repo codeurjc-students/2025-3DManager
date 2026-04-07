@@ -208,7 +208,7 @@ namespace _3DMANAGER_APP.Server.Controllers
             if (UserId == null || UserRole != "Usuario-Manager")
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, UnauthorizedMsg)));
             _logger.LogInformation($"Llamada a la funcion UpdateMembership en el controlador GroupController");
-            var response = _groupManager.UpdateMembership(userKickedId);
+            var response = _groupManager.UpdateMembership(userKickedId, UserId.Value);
             if (!response)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,

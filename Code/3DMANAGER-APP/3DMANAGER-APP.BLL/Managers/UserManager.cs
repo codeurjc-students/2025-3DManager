@@ -20,12 +20,14 @@ namespace _3DMANAGER_APP.BLL.Managers
         private readonly IMapper _mapper;
         private readonly ILogger<UserManager> _logger;
         private readonly IAzureBlobStorageService _absService;
-        public UserManager(IUserDbManager userDbManager, IMapper mapper, ILogger<UserManager> logger, IAzureBlobStorageService absService)
+        private readonly INotificationManager _notificationManager;
+        public UserManager(IUserDbManager userDbManager, IMapper mapper, ILogger<UserManager> logger, IAzureBlobStorageService absService, INotificationManager notificationManager)
         {
             _userDbManager = userDbManager;
             _mapper = mapper;
             _logger = logger;
             _absService = absService;
+            _notificationManager = notificationManager;
         }
 
         public async Task<CommonResponse<int>> PostNewUser(UserCreateRequest user)
@@ -159,7 +161,7 @@ namespace _3DMANAGER_APP.BLL.Managers
             return _mapper.Map<List<UserListResponse>>(list);
         }
 
-        public bool PostUserInvitation(int groupId, int userId, out BaseError? error)
+        public bool PostUserInvitation(int groupId, int userId, int userOwner, out BaseError? error)
         {
             bool responseDb = _userDbManager.PostUserInvitation(groupId, userId, out int? errorDb);
             error = null;
@@ -183,7 +185,27 @@ namespace _3DMANAGER_APP.BLL.Managers
                 }
                 return false;
             }
+
+            bool responseNotification = SendNotification(userId, userOwner);
+            if (!responseNotification)
+            {
+                string msg = $"Se ha invitado al usuario {userId} al grupo {groupId} , pero no se le ha podido notificar.";
+                _logger.LogError(msg);
+                error = new BaseError { code = StatusCodes.Status500InternalServerError, message = msg };
+            }
+
             return true;
+        }
+
+        private bool SendNotification(int userId, int userOwnerId)
+        {
+            UserObject user = GetUserById(userId);
+            UserObject userOwner = GetUserById(userOwnerId);
+            string msg = $"Se te ha invitado a participar al grupo {userOwner.GroupName} por su administrador {userOwner.UserName}.";
+            bool response = _notificationManager.CreateNotification(userId, userOwnerId, Models.Notifications.NotificationType.GroupInvitation, msg, out BaseError? error);
+            if (error != null)
+                return false;
+            return response;
         }
 
         public UserObject GetUserById(int userId)

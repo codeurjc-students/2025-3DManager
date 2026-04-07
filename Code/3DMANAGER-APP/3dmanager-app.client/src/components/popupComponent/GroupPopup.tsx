@@ -81,7 +81,7 @@ const GroupPopup: React.FC = () => {
 
     const handleUserExpulsion = (userId: number, userName : string) => {
         confirmAction({
-            action: "Expulsar usuario" + userName,
+            action: "Expulsar usuario " + userName,
             service: async () => {
                 const res = await kickUserFromGroup(userId);
                 if (res.data) {
