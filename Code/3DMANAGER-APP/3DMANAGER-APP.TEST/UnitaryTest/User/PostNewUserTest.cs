@@ -1,6 +1,5 @@
 ﻿using _3DMANAGER_APP.BLL.Interfaces;
 using _3DMANAGER_APP.BLL.Managers;
-using _3DMANAGER_APP.BLL.Models.Base;
 using _3DMANAGER_APP.BLL.Models.User;
 using _3DMANAGER_APP.DAL.Interfaces;
 using _3DMANAGER_APP.DAL.Models.User;
@@ -18,7 +17,7 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.User
         private readonly Mock<IUserDbManager> _userDbManagerMock;
         private readonly UserManager _manager;
         private readonly Mock<IAzureBlobStorageService> _aBSService;
-
+        private readonly INotificationManager _notificationManager;
 
         public PostNewUserTests()
         {
@@ -31,7 +30,8 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.User
                  _userDbManagerMock.Object,
                 _mapperMock.Object,
                 _loggerMock.Object,
-                 _aBSService.Object
+                 _aBSService.Object,
+                 _notificationManager
             );
         }
 

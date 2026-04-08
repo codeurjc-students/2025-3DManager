@@ -20,7 +20,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
         private readonly DatabaseFixture _fixture;
         private readonly IMapper _mapper;
         private readonly IAzureBlobStorageService _fakeService;
-
+        private readonly INotificationManager _notificationManager;
         public PrintIntegrationTests(DatabaseFixture fixture)
         {
             _fixture = fixture;
@@ -73,7 +73,8 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 printDbManager,
                 _mapper,
                 NullLogger<PrintManager>.Instance,
-                _fakeService
+                _fakeService,
+                _notificationManager
             );
 
             BaseError? error;
@@ -125,7 +126,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 printDbManager,
                 _mapper,
                 NullLogger<PrintManager>.Instance,
-                _fakeService);
+                _fakeService, _notificationManager);
 
             BaseError? error;
 
@@ -168,7 +169,8 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 printDbManager,
                 _mapper,
                 NullLogger<PrintManager>.Instance,
-                _fakeService
+                _fakeService,
+                _notificationManager
             );
 
             var newPrint = new PrintRequest

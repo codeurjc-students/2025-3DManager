@@ -12,7 +12,7 @@ namespace _3DMANAGER_APP.BLL.Interfaces
         bool UpdatePrint(PrintDetailRequest request);
         PrintDetailObject GetPrintDetail(int groupId, int printId, out BaseError? error);
         List<PrintCommentObject> GetPrintComments(int groupId, int printId, out BaseError? error);
-        int PostPrintComment(PrintCommentRequest request);
+        int PostPrintComment(PrintCommentRequest request, int groupId);
         public Task<CommonResponse<bool>> DeletePrint(int printId, int groupId);
         public Task<CommonResponse<bool>> DeletePrintImage(int printId, int groupId);
         public Task<CommonResponse<bool>> UpdatePrintImage(int printId, int groupId, IFormFile imageFile);
