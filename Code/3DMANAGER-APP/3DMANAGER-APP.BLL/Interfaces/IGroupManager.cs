@@ -11,7 +11,7 @@ namespace _3DMANAGER_APP.BLL.Interfaces
         public GroupBasicDataResponse GetGroupBasicData(int groupId, out BaseError? error);
         public bool UpdateGroupData(GroupRequest request, int groupId);
         public bool UpdateLeaveGroup(int userId);
-        public bool UpdateMembership(int userKickedId);
+        public bool UpdateMembership(int userKickedId, int userId);
         public Task<bool> DeleteGroup(int userId, int groupId);
         public bool TrasnferOwnership(int userId, int groupId, int newOwnerUserId);
         public GroupDashboardData GetGroupDashboardData(int groupId, out BaseError? error);

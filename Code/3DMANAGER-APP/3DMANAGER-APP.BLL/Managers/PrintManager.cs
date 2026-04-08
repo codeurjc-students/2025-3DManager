@@ -19,12 +19,14 @@ namespace _3DMANAGER_APP.BLL.Managers
         private readonly IMapper _mapper;
         private readonly ILogger<PrintManager> _logger;
         private readonly IAzureBlobStorageService _absService;
-        public PrintManager(IPrintDbManager printDbManager, IMapper mapper, ILogger<PrintManager> logger, IAzureBlobStorageService absService)
+        private readonly INotificationManager _notificationManager;
+        public PrintManager(IPrintDbManager printDbManager, IMapper mapper, ILogger<PrintManager> logger, IAzureBlobStorageService absService, INotificationManager notificationManager)
         {
             _printDbManager = printDbManager;
             _mapper = mapper;
             _logger = logger;
             _absService = absService;
+            _notificationManager = notificationManager;
         }
 
         public PrintListResponse GetPrintList(int group, PagedRequest pagination, out BaseError? error)
@@ -188,10 +190,29 @@ namespace _3DMANAGER_APP.BLL.Managers
         }
 
 
-        public int PostPrintComment(PrintCommentRequest request)
+        public int PostPrintComment(PrintCommentRequest request, int groupId)
         {
             PrintCommentRequestDbObject requestDb = _mapper.Map<PrintCommentRequestDbObject>(request);
-            return _printDbManager.PostPrintComment(requestDb);
+            int response = _printDbManager.PostPrintComment(requestDb);
+            if (response == 0)
+            {
+                string msgLog = $"Error haciendo comentarios de la impresión {request.PrintId}";
+                _logger.LogError(msgLog);
+                return 0;
+            }
+
+            var responseDb = _printDbManager.GetPrintDetail(groupId, request.PrintId);
+            if (responseDb.PrintId == 0)
+            {
+                _logger.LogError("Error al obtener el datos para generar notificacion del comentario de impresión");
+                return 0;
+            }
+            string msg = $"Alguien ha realizado un comentario sobre tu impresión {responseDb.PrintName}";
+            _notificationManager.CreateNotification(responseDb.PrintUserId, request.UserId, Models.Notifications.NotificationType.PrintComment, msg, out BaseError? error);
+            if (error != null)
+                return 0;
+
+            return response;
         }
 
         public async Task<CommonResponse<bool>> DeletePrint(int printId, int groupId)

@@ -243,7 +243,7 @@ namespace _3DMANAGER_APP.Server.Controllers
 
             request.UserId = UserId!.Value;
 
-            int newId = _printManager.PostPrintComment(request);
+            int newId = _printManager.PostPrintComment(request, GroupId!.Value);
 
             if (newId == 0)
             {

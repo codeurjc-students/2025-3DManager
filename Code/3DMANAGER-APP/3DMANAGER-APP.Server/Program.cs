@@ -1,3 +1,4 @@
+using _3DMANAGER_APP.BLL;
 using _3DMANAGER_APP.BLL.Interfaces;
 using _3DMANAGER_APP.BLL.Managers;
 using _3DMANAGER_APP.BLL.Mapper;
@@ -52,12 +53,14 @@ builder.Services.AddScoped<IGroupManager, GroupManager>();
 builder.Services.AddScoped<IPrintManager, PrintManager>();
 builder.Services.AddScoped<IFilamentManager, FilamentManager>();
 builder.Services.AddScoped<ICatalogManager, CatalogManager>();
+builder.Services.AddScoped<INotificationManager, NotificationManager>();
 builder.Services.AddScoped<IPrinterDbManager, PrinterDbManager>();
 builder.Services.AddScoped<IUserDbManager, UserDbManager>();
 builder.Services.AddScoped<IGroupDbManager, GroupDbManager>();
 builder.Services.AddScoped<IFilamentDbManager, FilamentDbManager>();
 builder.Services.AddScoped<IPrintDbManager, PrintDbManager>();
 builder.Services.AddScoped<ICatalogDbManager, CatalogDbManager>();
+builder.Services.AddScoped<INotificationDbManager, NotificationDbManager>();
 
 
 builder.Services.AddCors(options =>
@@ -127,6 +130,13 @@ builder.Services.AddScoped<IAzureBlobStorageService>(sp =>
 
 
 builder.Services.AddAuthorization();
+
+//SMTP EMAIL SETTINGS
+builder.Services.Configure<EmailSettings>(
+    builder.Configuration.GetSection("Email"));
+
+builder.Services.AddScoped<IEmailService, EmailService>();
+
 
 //Culture
 CultureInfo customCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();

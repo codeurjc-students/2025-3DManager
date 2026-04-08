@@ -15,12 +15,14 @@ namespace _3DMANAGER_APP.BLL.Managers
         private readonly IMapper _mapper;
         private readonly ILogger<GroupManager> _logger;
         private readonly IAzureBlobStorageService _absService;
-        public GroupManager(IGroupDbManager groupDbManager, IMapper mapper, ILogger<GroupManager> logger, IAzureBlobStorageService absService)
+        private readonly INotificationManager _notificationManager;
+        public GroupManager(IGroupDbManager groupDbManager, IMapper mapper, ILogger<GroupManager> logger, IAzureBlobStorageService absService, INotificationManager notificationManager)
         {
             _groupDbManager = groupDbManager;
             _mapper = mapper;
             _logger = logger;
             _absService = absService;
+            _notificationManager = notificationManager;
         }
 
         public List<GroupInvitation> GetGroupInvitations(int userId, out bool error)
@@ -78,10 +80,18 @@ namespace _3DMANAGER_APP.BLL.Managers
 
         }
 
-        public bool UpdateMembership(int userKickedId)
+        public bool UpdateMembership(int userKickedId, int userId)
         {
-            return _groupDbManager.UpdateMembership(userKickedId);
 
+            bool response = _groupDbManager.UpdateMembership(userKickedId);
+            if (!response)
+                return false;
+
+            string msg = $"Has sido expulsado del grupo al que pertenecías";
+            bool responseNotification = _notificationManager.CreateNotification(userKickedId, userId, Models.Notifications.NotificationType.GroupExpulsion, msg, out BaseError? error);
+            if (error != null)
+                return false;
+            return responseNotification;
         }
 
         public async Task<bool> DeleteGroup(int userId, int groupId)

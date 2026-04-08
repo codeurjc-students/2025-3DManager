@@ -18,6 +18,7 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Print
         private readonly Mock<IPrintDbManager> _printDbManagerMock;
         private readonly Mock<IAzureBlobStorageService> _aBSService;
         private readonly PrintManager _manager;
+        private readonly INotificationManager _notificationManager;
 
         public PrintListTest()
         {
@@ -30,7 +31,8 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Print
                  _printDbManagerMock.Object,
                 _mapperMock.Object,
                 _loggerMock.Object,
-                _aBSService.Object
+                _aBSService.Object,
+                _notificationManager
             );
         }
 
@@ -85,7 +87,8 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Print
                 _printDbManagerMock.Object,
                 realMapper,
                 _loggerMock.Object,
-                _aBSService.Object
+                _aBSService.Object,
+                _notificationManager
             );
 
             PagedRequest pagedRequest = new PagedRequest { PageNumber = 1, PageSize = 10 };

@@ -104,6 +104,11 @@ th, td {
     cursor: pointer;
 }
 
+.header-notification {
+    cursor: pointer;
+    background: none;
+    border: none;
+}
 .logout-icon {
     cursor: pointer;
     transition: opacity 0.2s ease;
@@ -202,4 +207,15 @@ th, td {
         background-color: #1a1a1a;
     }
 
-    
+
+.notif-badge {
+    position: absolute;
+    background: var(--colorYellow);
+    color: var(--colorBlack); 
+    font-weight: bold;
+    border-radius: 50%;
+    padding: 2px 7px ;
+    font-size: 10px;
+    min-width: 20px;
+    text-align: center;
+}

@@ -190,9 +190,9 @@ namespace _3DMANAGER_APP.Server.Controllers
         public IActionResult PostUserInvitation([FromQuery] int userId)
         {
             _logger.LogInformation($"Llamada a la funcion PostUserInvitation en el controlador UserController");
-            if (GroupId == null)
+            if (GroupId == null || UserId == null)
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, NoAuthConstant)));
-            bool response = _userManager.PostUserInvitation(GroupId.Value, userId, out BaseError? error);
+            bool response = _userManager.PostUserInvitation(GroupId.Value, userId, UserId.Value, out BaseError? error);
             if (error != null)
                 return StatusCode(error.code, new Models.CommonResponse<bool>(new ErrorProperties(error.code, error.message)));
             else

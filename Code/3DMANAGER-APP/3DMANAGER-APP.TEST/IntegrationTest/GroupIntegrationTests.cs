@@ -20,6 +20,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
         private readonly DatabaseFixture _fixture;
         private readonly IMapper _mapper;
         private readonly IAzureBlobStorageService _fakeABSService;
+        private readonly INotificationManager _notificationManager;
 
         public GroupIntegrationTests(DatabaseFixture fixture)
         {
@@ -74,7 +75,8 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 groupDbManager,
                 _mapper,
                 NullLogger<GroupManager>.Instance,
-                _fakeABSService
+                _fakeABSService,
+                _notificationManager
             );
 
             var result = manager.GetGroupDashboardData(1, out BaseError? error);

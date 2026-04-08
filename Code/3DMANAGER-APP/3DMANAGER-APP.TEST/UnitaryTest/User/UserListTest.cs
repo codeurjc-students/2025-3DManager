@@ -19,7 +19,7 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.User
         private readonly Mock<IUserDbManager> _userDbManagerMock;
         private readonly UserManager _manager;
         private readonly Mock<IAzureBlobStorageService> _aBSService;
-
+        private readonly INotificationManager _notificationManager;
         public UserListTest()
         {
             _loggerMock = new Mock<ILogger<UserManager>>();
@@ -31,7 +31,8 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.User
                  _userDbManagerMock.Object,
                 _mapperMock.Object,
                 _loggerMock.Object,
-                _aBSService.Object
+                _aBSService.Object,
+                _notificationManager
             );
         }
 
@@ -81,7 +82,8 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.User
                 _userDbManagerMock.Object,
                 realMapper,
                 _loggerMock.Object,
-                _aBSService.Object
+                _aBSService.Object,
+                _notificationManager
             );
 
 

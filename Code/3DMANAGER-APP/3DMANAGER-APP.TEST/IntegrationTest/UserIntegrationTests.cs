@@ -21,6 +21,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
         private readonly DatabaseFixture _fixture;
         private readonly IMapper _mapper;
         private readonly IAzureBlobStorageService _fakeService;
+        private readonly INotificationManager _notificationManager;
         public UserIntegrationTests(DatabaseFixture fixture)
         {
             _fixture = fixture;
@@ -73,7 +74,8 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 userDbManager,
                 _mapper,
                 NullLogger<UserManager>.Instance,
-                _fakeService
+                _fakeService,
+                _notificationManager
             );
 
             BaseError? error;
@@ -98,7 +100,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
             var manager = new UserManager(userDbManager,
                 _mapper,
                 NullLogger<UserManager>.Instance,
-                _fakeService);
+                _fakeService, _notificationManager);
 
             BaseError? error;
 
