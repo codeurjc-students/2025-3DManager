@@ -207,10 +207,14 @@ namespace _3DMANAGER_APP.BLL.Managers
                 _logger.LogError("Error al obtener el datos para generar notificacion del comentario de impresión");
                 return 0;
             }
-            string msg = $"Alguien ha realizado un comentario sobre tu impresión {responseDb.PrintName}";
-            _notificationManager.CreateNotification(responseDb.PrintUserId, request.UserId, Models.Notifications.NotificationType.PrintComment, msg, out BaseError? error);
-            if (error != null)
-                return 0;
+            if (responseDb.PrintUserId != request.UserId)
+            {
+                string msg = $"Alguien ha realizado un comentario sobre tu impresión {responseDb.PrintName}";
+                _notificationManager.CreateNotification(responseDb.PrintUserId, request.UserId, Models.Notifications.NotificationType.PrintComment, msg, out BaseError? error);
+                if (error != null)
+                    return 0;
+            }
+
 
             return response;
         }

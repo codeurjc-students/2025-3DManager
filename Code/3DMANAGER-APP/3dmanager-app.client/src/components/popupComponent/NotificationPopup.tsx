@@ -31,6 +31,20 @@ const NotificationPopup: React.FC<NotificationPopupProps> = () => {
         }
     };
 
+    const getColorClass = (id: number) => {
+        switch (id) {
+            case 1:
+                return "popup-warning";
+            case 2:
+                return "popup-warning";
+            case 3:
+                return "popup-error";
+            case 4:
+                return "popup-base";
+            default:
+                return "";
+        }
+    };
 
     return (
         <div className="notification-popup-content">
@@ -39,22 +53,22 @@ const NotificationPopup: React.FC<NotificationPopupProps> = () => {
             {notifications.length === 0 && (
                 <p className="no-notifications">No tienes notificaciones pendientes.</p>
             )}
+            <div className="comments-scroll">
+                <ul className="notification-list">
+                    {notifications.map((n) => (
+                        <li key={n.notificationId} className={`notification-item ${getColorClass(n.notificationType)}`}>
+                            <div className="notification-message">{n.notificationMessage}</div>
+                            <div className="notification-date">
+                                {new Date(n.notificationRegisterDate).toLocaleString()}
+                            </div>
 
-            <ul className="notification-list">
-                {notifications.map((n) => (
-                    <li key={n.notificationId} className="notification-item">
-                        <div className="notification-message">{n.notificationMessage}</div>
-                        <div className="notification-date">
-                            {new Date(n.notificationRegisterDate).toLocaleString()}
-                        </div>
-
-                        <button className="button-yellow mt-2" disabled={loading} onClick={() => handleMarkAsRead(n.notificationId)}>
-                            Marcar como leída
-                        </button>
-                    </li>
-                ))}
-            </ul>
-
+                            <button className="button-yellow mt-2" disabled={loading} onClick={() => handleMarkAsRead(n.notificationId)}>
+                                Marcar como leída
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
     );
 };
