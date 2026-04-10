@@ -60,7 +60,6 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
         [Fact]
         public void GetGroupDashboardData_ShouldReturnSuccess()
         {
-            // Arrange
             var dataSource = new MySQLDataSource(
                 _fixture.ConnectionString,
                 "3DMANAGER"

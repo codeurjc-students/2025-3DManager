@@ -32,6 +32,7 @@
             await CreatePrinterTableAsync();
             await CreateFilamentTableAsync();
             await Create3DPrintTableAsync();
+            await CreateNotificationTableAsync();
         }
         private async Task CreateStoredProceduresAsync()
         {
@@ -62,6 +63,8 @@
             await CreateProcDeletePrintAsync();
             await CreateProcDeletePrinterAsync();
             await CreateProcDeleteFilamentAsync();
+            await CreateGetNotificationListPostAsync();
+            await CreateMarkReadedPostAsync();
         }
 
         private async Task LoadDataAsync()
@@ -142,6 +145,17 @@
             ('Pieza Test 2 CI',1,120,130,15.75,1,2,2,1,'Impresión de prueba 2'),
             ('Pieza Test 3 CI',1,120,130,15.75,1,2,2,2,'Impresión de prueba 3');
 
+
+            INSERT INTO `3DMANAGER_NOTIFICATION`
+            (`3DMANAGER_NOTIFICATION_IT_READ`,
+            `3DMANAGER_NOTIFICATION_MESSAGE`,
+            `3DMANAGER_NOTIFICATION_REGISTER_DATE`,
+            `3DMANAGER_NOTIFICATION_USER_ID`,
+            `3DMANAGER_NOTIFICATION_TYPE`)
+            VALUES
+            (0,'Prueba',NOW(),1,1),
+            (0,'Prueba',NOW(),1,2);
+
             """;
 
 
@@ -163,6 +177,7 @@
                 DROP TABLE IF EXISTS `3DMANAGER_C_STATE_FILAMENT`;
                 DROP TABLE IF EXISTS `3DMANAGER_C_STATE_PRINTER`;
                 DROP TABLE IF EXISTS `3DMANAGER_GROUP`;
+                DROP TABLE IF EXISTS `3DMANAGER_NOTIFICATION`;
                 """;
             await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
         }
@@ -217,7 +232,22 @@
 
             await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
         }
+        private async Task CreateNotificationTableAsync()
+        {
+            var sql = """
+            CREATE TABLE IF NOT EXISTS `3DMANAGER_NOTIFICATION` (
+              `3DMANAGER_NOTIFICATION_ID` int NOT NULL AUTO_INCREMENT,
+              `3DMANAGER_NOTIFICATION_IT_READ` tinyint(1) NOT NULL DEFAULT '0',
+              `3DMANAGER_NOTIFICATION_MESSAGE` varchar(500) NOT NULL,
+              `3DMANAGER_NOTIFICATION_REGISTER_DATE` datetime DEFAULT CURRENT_TIMESTAMP,
+              `3DMANAGER_NOTIFICATION_USER_ID` int NOT NULL,
+              `3DMANAGER_NOTIFICATION_TYPE` int NOT NULL,
+              PRIMARY KEY (`3DMANAGER_NOTIFICATION_ID`)
+            );
+            """;
 
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
         private async Task CreateUserTableAsync()
         {
             var sql = """
@@ -1385,5 +1415,75 @@
 
             await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
         }
+
+        private async Task CreateMarkReadedPostAsync()
+        {
+            var sql = """
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_NOTIFICATION_MARK_READ`;
+
+            CREATE PROCEDURE `3DMANAGER_pr_NOTIFICATION_MARK_READ`(
+                IN P_NOTIFICATION_ID INT,
+                OUT CodigoError INT
+            )
+            BEGIN
+
+                DECLARE v_err_msg TEXT;
+                DECLARE EXIT HANDLER FOR SQLEXCEPTION
+                BEGIN
+                    GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
+
+                    -- Forzar un commit independiente
+                    START TRANSACTION;
+                    INSERT INTO `3DMANAGER_SYSTEM_LOGS`(PROCEDURE_NAME, ERROR_MESSAGE)
+                    VALUES('3DMANAGER_pr_NOTIFICATION_MARK_READ', v_err_msg);
+                    COMMIT;
+
+                    SET CodigoError = -1;
+                    ROLLBACK;
+                END;
+
+                SET CodigoError = 0;
+
+                START TRANSACTION;
+                    UPDATE `3DMANAGER_NOTIFICATION`
+                    SET `3DMANAGER_NOTIFICATION_IT_READ` = 1
+                    WHERE `3DMANAGER_NOTIFICATION_ID` = P_NOTIFICATION_ID;
+                COMMIT;
+            END;
+            
+            """;
+
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
+        private async Task CreateGetNotificationListPostAsync()
+        {
+            var sql = """
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_NOTIFICATION_GET_UNREAD`;
+
+            CREATE PROCEDURE `3DMANAGER_pr_NOTIFICATION_GET_UNREAD`(
+                IN P_USER_ID INT,
+                OUT CodigoError INT
+            )
+            BEGIN
+                SET CodigoError = 0;
+
+                SELECT 
+                    `3DMANAGER_NOTIFICATION_ID` AS NOTIFICATION_ID,
+                    `3DMANAGER_NOTIFICATION_MESSAGE` AS NOTIFICATION_MESSAGE,
+                    `3DMANAGER_NOTIFICATION_TYPE` AS NOTIFICATION_TYPE,
+                    `3DMANAGER_NOTIFICATION_REGISTER_DATE` AS NOTIFICATION_DATE,
+                    `3DMANAGER_NOTIFICATION_IT_READ` as NOTIFICATION_IS_READ,
+                    `3DMANAGER_NOTIFICATION_USER_ID` as NOTIFICATION_USER_ID
+                FROM `3DMANAGER_NOTIFICATION` 
+                WHERE `3DMANAGER_NOTIFICATION_USER_ID` = P_USER_ID
+                  AND `3DMANAGER_NOTIFICATION_IT_READ` = 0;
+            END;
+            
+            """;
+
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
+
+
     }
 }
