@@ -137,6 +137,9 @@ builder.Services.Configure<EmailSettings>(
 
 builder.Services.AddScoped<IEmailService, EmailService>();
 
+//BackgroundService 
+builder.Services.AddHostedService<DailyTaskService>();
+builder.Services.AddScoped<IDailyTaskDbManager, DailyTaskDbManager>();
 
 //Culture
 CultureInfo customCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();

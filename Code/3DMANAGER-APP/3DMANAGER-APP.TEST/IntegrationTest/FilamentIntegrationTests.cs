@@ -20,6 +20,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
         private readonly DatabaseFixture _fixture;
         private readonly IMapper _mapper;
         private readonly IAzureBlobStorageService _fakeService;
+        private readonly INotificationManager _notificationManager;
         public FilamentIntegrationTests(DatabaseFixture fixture)
         {
             _fixture = fixture;
@@ -72,7 +73,8 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 filamentDbManager,
                 _mapper,
                 NullLogger<FilamentManager>.Instance,
-                _fakeService
+                _fakeService,
+                _notificationManager
             );
 
             BaseError? error;
@@ -125,7 +127,8 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 filamentDbManager,
                 _mapper,
                 NullLogger<FilamentManager>.Instance,
-                _fakeService);
+                _fakeService,
+                _notificationManager);
 
             BaseError? error;
 
@@ -177,7 +180,8 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 filamentDbManager,
                 _mapper,
                 NullLogger<FilamentManager>.Instance,
-                _fakeService
+                _fakeService,
+                _notificationManager
             );
 
             // Creamos un filamento de prueba

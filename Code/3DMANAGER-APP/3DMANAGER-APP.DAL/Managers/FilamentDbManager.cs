@@ -399,6 +399,41 @@ namespace _3DMANAGER_APP.DAL.Managers
                 return false;
             }
         }
+
+        public List<FilamentNotificationDbObject> GetAllFilaments()
+        {
+            try
+            {
+                List<FilamentNotificationDbObject> response = new List<FilamentNotificationDbObject>();
+                string procName = $"{ProcedurePrefix}_pr_FILAMENT_GET_LOW_MATERIAL";
+
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                if (ds.Tables.Count > 0)
+                {
+                    foreach (DataRow row in ds.Tables[0].Rows)
+                    {
+                        var filament = new FilamentNotificationDbObject().Create(row);
+                        response.Add(filament);
+                    }
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "Error al obtener todos los filamentos con poco material restante");
+                return new List<FilamentNotificationDbObject>();
+            }
+        }
+
     }
 
 }

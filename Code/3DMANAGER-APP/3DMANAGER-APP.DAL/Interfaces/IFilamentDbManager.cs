@@ -14,5 +14,6 @@ namespace _3DMANAGER_APP.DAL.Interfaces
         DeletedDbObject DeleteFilament(int filamentId, int groupId, out int? error);
         public FileResponseDbObject GetFilamentImageData(int filamentId, int groupId, out bool error);
         public bool DeleteFilamentImageData(int filamentId, int groupId);
+        List<FilamentNotificationDbObject> GetAllFilaments();
     }
 }

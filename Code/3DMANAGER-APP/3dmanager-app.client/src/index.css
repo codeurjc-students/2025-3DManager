@@ -559,8 +559,16 @@ fs-detail{
 
 .notification-popup-content {
     padding: 20px;
+    height: 450px; 
+    display: flex;
+    flex-direction: column;
 }
 
+.notification-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
 .notification-list {
     list-style: none;
     padding: 0;
@@ -572,10 +580,12 @@ fs-detail{
     padding: 12px;
     border-radius: 6px;
     margin-bottom: 12px;
+    
 }
 
 .notification-message {
     font-weight: bold;
+    text-align: left;
 }
 
 .notification-date {
