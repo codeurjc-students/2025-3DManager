@@ -110,7 +110,7 @@ namespace _3DMANAGER_APP.BLL.Managers
             {
                 case NotificationType.FilamentWarning:
                     subject = "Aviso: Filamento bajo";
-                    message = $"Hola {userName},<br><br>Uno de tus filamentos está por debajo del nivel recomendado. Te sugerimos revisarlo para evitar interrupciones en tus impresiones.";
+                    message = $"Hola {userName},<br><br>Uno de tus filamentos está por debajo del nivel recomendado. Te sugerimos revisarlo para evitar interrupciones en tus impresiones. Revisa la aplicación para encontrar los detalles del filamento.";
                     break;
 
                 case NotificationType.GroupInvitation:

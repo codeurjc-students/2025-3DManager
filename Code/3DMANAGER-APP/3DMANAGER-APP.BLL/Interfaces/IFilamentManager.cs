@@ -13,5 +13,6 @@ namespace _3DMANAGER_APP.BLL.Interfaces
         public Task<CommonResponse<bool>> DeleteFilament(int filamentId, int groupId);
         public Task<CommonResponse<bool>> DeleteFilamentImage(int filamentId, int groupId);
         public Task<CommonResponse<bool>> UpdateFilamentImage(int filamentId, int groupId, IFormFile imageFile);
+        Task CheckFilamentLevelsAsync();
     }
 }

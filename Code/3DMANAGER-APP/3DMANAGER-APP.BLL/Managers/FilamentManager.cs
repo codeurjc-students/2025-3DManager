@@ -20,12 +20,14 @@ namespace _3DMANAGER_APP.BLL.Managers
         private readonly IMapper _mapper;
         private readonly ILogger<FilamentManager> _logger;
         private readonly IAzureBlobStorageService _absService;
-        public FilamentManager(IFilamentDbManager filamentDbManager, IMapper mapper, ILogger<FilamentManager> logger, IAzureBlobStorageService absService)
+        private readonly INotificationManager _notificationManager;
+        public FilamentManager(IFilamentDbManager filamentDbManager, IMapper mapper, ILogger<FilamentManager> logger, IAzureBlobStorageService absService, INotificationManager notificationManager)
         {
             _filamentDbManager = filamentDbManager;
             _mapper = mapper;
             _logger = logger;
             _absService = absService;
+            _notificationManager = notificationManager;
         }
 
         public List<FilamentListResponse> GetFilamentList(int group, out BaseError? error)
@@ -221,5 +223,31 @@ namespace _3DMANAGER_APP.BLL.Managers
             response.Data = true;
             return response;
         }
+
+        public async Task CheckFilamentLevelsAsync()
+        {
+            try
+            {
+                List<FilamentNotificationDbObject> filaments = _filamentDbManager.GetAllFilaments();
+
+                foreach (var filament in filaments)
+                {
+
+                    string msg = $"El filamento {filament.FilamentName} se encuentra por debajo del umbral del 25% de material restante, con  {filament.FilamentLength} de material restante.";
+
+                    bool responseNotification = _notificationManager.CreateNotification(filament.OwnerGroupId, 0, Models.Notifications.NotificationType.FilamentWarning, msg, out BaseError? error);
+                    if (error != null || !responseNotification)
+                    {
+                        string msgError = $"Error: Error al generar notificación de filamento {filament.FilamentId} bajo de material :{error}";
+                        _logger.LogError(msgError);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en CheckFilamentLevelsAsync al generar las notificaciones de filamento con bajo nivel de material");
+            }
+        }
+
     }
 }
