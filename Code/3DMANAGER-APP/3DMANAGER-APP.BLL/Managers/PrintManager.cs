@@ -309,5 +309,10 @@ namespace _3DMANAGER_APP.BLL.Managers
             response.Data = true;
             return response;
         }
+
+        public bool DeletePrintComment(int commentId)
+        {
+            return _printDbManager.DeletePrintComment(commentId);
+        }
     }
 }

@@ -16,5 +16,6 @@ namespace _3DMANAGER_APP.BLL.Interfaces
         public Task<CommonResponse<bool>> DeletePrint(int printId, int groupId);
         public Task<CommonResponse<bool>> DeletePrintImage(int printId, int groupId);
         public Task<CommonResponse<bool>> UpdatePrintImage(int printId, int groupId, IFormFile imageFile);
+        public bool DeletePrintComment(int commentId);
     }
 }

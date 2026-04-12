@@ -19,8 +19,7 @@ const PrintDetailPage: React.FC = () => {
     const [data, setData] = useState<PrintDetailObject>(); 
     const [name, setName] = useState<string>("");
     const [description, setDescription] = useState<string>("");
-    const isManagerOrOwner = user?.rolId === "Usuario-Manager" || data?.printUserId === user?.userId;
-
+    const isManagerOrOwner = (user?.rolId === "Usuario-Manager" || data?.printUserId === user?.userId) && (user?.rolId !== "Usuario-Invitado");
 
     useEffect(() => {
 
@@ -275,7 +274,7 @@ const PrintDetailPage: React.FC = () => {
                             <div className="d-flex flex row">
                                 <div className="col-6 mb-1">
                                     <label htmlFor="printMaterial" className="form-label">Material</label>
-                                    <input id="printMaterial" type="text" className="input-value-2 w-100" value={data?.printMaterial} disabled />
+                                    <input id="printMaterial" type="text" className="input-value-2 w-100" value={data?.printMaterial ?? ""} disabled />
                                 </div>
                                 <div className="col-6 mb-1 ">
                                     <label htmlFor="CreateDatePrint" className="form-label">Fecha de alta de impresión</label>
@@ -298,19 +297,19 @@ const PrintDetailPage: React.FC = () => {
                             <div className="d-flex flex row">
                                 <div className="col-3 ">
                                     <label htmlFor="printTime" className="form-label">Tiempo impresión</label>
-                                    <input id="printTime" type="text" className="input-value-2 w-100" value={data?.printTimeImpression} disabled />
+                                    <input id="printTime" type="text" className="input-value-2 w-100" value={data?.printTimeImpression ?? 0} disabled />
                                 </div>
                                 <div className="col-3 ">
                                     <label htmlFor="printRealTime" className="form-label">Tiempo real impresión</label>
-                                    <input id="printRealTime" type="text" className="input-value-2 w-100" value={data?.printRealTimeImpression} disabled />
+                                    <input id="printRealTime" type="text" className="input-value-2 w-100" value={data?.printRealTimeImpression ?? 0} disabled />
                                 </div>
                                 <div className="col-3">
                                     <label htmlFor="printMaterialConsumed" className="form-label">Material usado</label>
-                                    <input id="printMaterialConsumed" type="text" className="input-value-2 w-100" value={data?.printMaterialConsumed} disabled />
+                                    <input id="printMaterialConsumed" type="text" className="input-value-2 w-100" value={data?.printMaterialConsumed ?? 0} disabled />
                                 </div>
                                 <div className="col-3">
                                     <label htmlFor="printEstimatedCost" className="form-label">Estimación de coste</label>
-                                    <input id="printEstimatedCost" type="text" className="input-value-2 w-100" value={data?.printEstimedCost} disabled />
+                                    <input id="printEstimatedCost" type="text" className="input-value-2 w-100" value={data?.printEstimedCost ?? 0} disabled />
                                 </div>
                             </div>
                         </div>
@@ -318,7 +317,7 @@ const PrintDetailPage: React.FC = () => {
                             <div className="d-flex flex-rows ">
                                 <div className="col-10 w-100">
                                     <label htmlFor="printDescription" className="form-label">Descripcion</label>
-                                    <textarea id="printDescription" className="input-value-5 table-scroll w-100" value={description}
+                                    <textarea id="printDescription" className="input-value-5 table-scroll w-100" value={description ?? ""}
                                         onChange={(e) => setDescription(e.target.value)} disabled={!isManagerOrOwner} />
                                 </div>
                             </div>

@@ -25,7 +25,7 @@ export const STLViewer = ({ fileUrl }: STLViewerProps) => {
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(width, height);
         renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.shadowMap.type = THREE.PCFShadowMap;
         mountRef.current.appendChild(renderer.domElement);
 
         const controls = new OrbitControls(camera, renderer.domElement);
@@ -42,7 +42,6 @@ export const STLViewer = ({ fileUrl }: STLViewerProps) => {
         dirLight.castShadow = true;
         dirLight.shadow.mapSize.width = 1024;
         dirLight.shadow.mapSize.height = 1024;
-        dirLight.shadow.radius = 4;
         scene.add(dirLight);
 
         const loader = new STLLoader();
@@ -90,10 +89,22 @@ export const STLViewer = ({ fileUrl }: STLViewerProps) => {
             renderer.render(scene, camera);
         };
         animate();
-
         return () => {
+            controls.dispose();
+            scene.traverse((obj) => {
+                if (obj instanceof THREE.Mesh) {
+                    obj.geometry?.dispose();
+                    if (Array.isArray(obj.material)) {
+                        obj.material.forEach((m) => m.dispose());
+                    } else {
+                        obj.material?.dispose();
+                    }
+                }
+            });
             renderer.dispose();
-            renderer.domElement?.remove();
+            renderer.forceContextLoss();
+            renderer.domElement = null as any;
+            mountRef.current?.replaceChildren();
         };
     }, [fileUrl]);
 

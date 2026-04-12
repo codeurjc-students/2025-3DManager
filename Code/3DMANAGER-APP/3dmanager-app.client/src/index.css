@@ -445,12 +445,21 @@ fs-detail{
 }
 
 .comment-item {
+    width: 100%;
     background: #ffffff;
     border-radius: 8px;
+    word-wrap: break-word;
+    overflow-wrap: break-word; 
+    white-space: normal;
 }
+    .comment-item .small {
+        overflow-wrap: break-word;
+        word-break: break-word;
+    }
 
 .comments-scroll {
     overflow-y: auto;
+    overflow-x: hidden;
     padding-right: 5px;
 }
 
@@ -593,3 +602,8 @@ fs-detail{
     color: #666;
 }
 
+.delete-comment {
+    cursor: pointer;
+    background: none;
+    border: none;
+}

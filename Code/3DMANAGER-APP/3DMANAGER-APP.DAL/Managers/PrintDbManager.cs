@@ -567,5 +567,40 @@ namespace _3DMANAGER_APP.DAL.Managers
                 return false;
             }
         }
+
+        public bool DeletePrintComment(int commentId)
+        {
+            try
+            {
+                string procName = $"{ProcedurePrefix}_pr_COMMENT_DELETE";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_COMMENT", MySqlDbType.Int32) { Value = commentId });
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = $"Error al borrar el comentario {commentId} en BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                string msg = $"Error al borrar el comentario {commentId} en BBDD";
+                Logger.LogError(ex, msg);
+                return false;
+            }
+        }
     }
 }
