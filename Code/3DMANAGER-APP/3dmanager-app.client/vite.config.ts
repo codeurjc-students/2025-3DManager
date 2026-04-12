@@ -76,6 +76,7 @@ export default defineConfig(({ command }) => {
                 }
             }
             : {
+                historyApiFallback: true,
                 proxy: {
                     '^/api': {
                         target,

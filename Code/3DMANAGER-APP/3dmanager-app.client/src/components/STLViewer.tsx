@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
@@ -9,9 +9,11 @@ interface STLViewerProps {
 
 export const STLViewer = ({ fileUrl }: STLViewerProps) => {
     const mountRef = useRef<HTMLDivElement | null>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (!mountRef.current || !fileUrl) return;
+        setLoading(true);
 
         const width = mountRef.current.clientWidth;
         const height = mountRef.current.clientHeight;
@@ -80,6 +82,8 @@ export const STLViewer = ({ fileUrl }: STLViewerProps) => {
                 mesh.rotation.x = -Math.PI / 2;
 
                 scene.add(mesh);
+                setLoading(false);
+
             })
             .catch((err) => console.error("Error cargando STL:", err));
 
@@ -109,9 +113,15 @@ export const STLViewer = ({ fileUrl }: STLViewerProps) => {
     }, [fileUrl]);
 
     return (
-        <div
-            ref={mountRef}
-            style={{ width: "100%", height: "100%", border: "1px solid #ccc" }}
-        />
+        <div className="stl-viewer-container">
+            <div ref={mountRef} className="stl-canvas" />
+
+            {loading && (
+                <div className="stl-loader">
+                    <div className="spinner"></div>
+                    <span>Cargando modelo 3D...</span>
+                </div>
+            )}
+        </div>
     );
 };

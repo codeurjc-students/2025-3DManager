@@ -52,7 +52,7 @@ const App: React.FC = () => {
                                     <Route path="/dashboard/filament/detail/:filamentId" element={<ProtectedRoute><FilamentDetailPage /></ProtectedRoute>} />
                                     <Route path="/dashboard/print/detail/:printId" element={<ProtectedRoute><PrintDetailPage /></ProtectedRoute>} />
                                     <Route path="/error" element={<ErrorPage />} />
-                                    <Route path="*" element={<Navigate to="/login" replace />} />
+                                    <Route path="*" element={<Navigate to="/login" replace />} /> 
                                 </Routes>
                             </main>
                         </div>
