@@ -4,6 +4,7 @@ using _3DMANAGER_APP.BLL.Models.File;
 using _3DMANAGER_APP.BLL.Models.User;
 using _3DMANAGER_APP.DAL.Interfaces;
 using _3DMANAGER_APP.DAL.Models.File;
+using _3DMANAGER_APP.DAL.Models.Print;
 using _3DMANAGER_APP.DAL.Models.User;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -217,17 +218,38 @@ namespace _3DMANAGER_APP.BLL.Managers
             return _userDbManager.GetGroupIdByUserId(userId);
         }
 
-        public bool UpdateUser(UserUpdateRequest request)
+        public bool UpdateUser(UserUpdateRequest request, out BaseError? error)
         {
+            error = null;
             UserUpdateRequestDbObject requestDb = _mapper.Map<UserUpdateRequestDbObject>(request);
-            return _userDbManager.UpdateUser(requestDb);
+            bool response = _userDbManager.UpdateUser(requestDb, out int? errorDb);
+            if (errorDb != null)
+            {
+                string msg = "";
+                switch (errorDb)
+                {
+                    case 4091:
+                        msg = $"El nombre {request.UserName} ya está en uso.";
+                        break;
+                    case 4092:
+                        msg = $"El email {request.UserEmail} ya está en uso.";
+                        break;
+                    default:
+                        msg = "Error actualizando el usuario.";
+                        break;
+                }
+
+                error = new BaseError(StatusCodes.Status409Conflict, msg);
+                return response;
+            }
+            return response;
         }
 
-        public UserDetailObject GetUserDetail(int groupId, int userId, out BaseError? error)
+        public UserDetailObject GetUserDetail(int userId, out BaseError? error)
         {
             error = null;
             UserDetailObject response;
-            var responseDb = _userDbManager.GetUserDetail(groupId, userId);
+            var responseDb = _userDbManager.GetUserDetail(userId);
             if (responseDb.UserId == 0)
             {
                 string msg = $"Error al obtener el detalle de usuario {userId}";
@@ -251,11 +273,11 @@ namespace _3DMANAGER_APP.BLL.Managers
             return response!;
         }
 
-        public async Task<CommonResponse<bool>> DeleteUserImage(int userId, int groupId)
+        public async Task<CommonResponse<bool>> DeleteUserImage(int userId)
         {
             CommonResponse<bool> response = new CommonResponse<bool>();
 
-            FileResponseDbObject imageData = _userDbManager.GetUserImageData(userId, groupId, out bool error);
+            FileResponseDbObject imageData = _userDbManager.GetUserImageData(userId, out bool error);
 
             if (error)
             {
@@ -269,7 +291,7 @@ namespace _3DMANAGER_APP.BLL.Managers
             }
 
             await _absService.DeleteImageAsync(imageData!.FileKey!);
-            bool dbResponse = _userDbManager.DeleteUserImageData(userId, groupId);
+            bool dbResponse = _userDbManager.DeleteUserImageData(userId);
 
             if (!dbResponse)
             {
@@ -281,7 +303,7 @@ namespace _3DMANAGER_APP.BLL.Managers
             return response;
         }
 
-        public async Task<CommonResponse<bool>> UpdateUserImage(int userId, int groupId, IFormFile imageFile)
+        public async Task<CommonResponse<bool>> UpdateUserImage(int userId, IFormFile imageFile)
         {
             CommonResponse<bool> response = new CommonResponse<bool>();
             response.Data = false;
@@ -297,12 +319,12 @@ namespace _3DMANAGER_APP.BLL.Managers
                 response.Error = new ErrorProperties(StatusCodes.Status409Conflict, "Error al subir la imagen a Azure Blob Storage.");
                 return response;
             }
-            var deletedImage = await DeleteUserImage(userId, groupId);
+            var deletedImage = await DeleteUserImage(userId);
             if (!deletedImage.Data)
             {
-                var fileData = _userDbManager.GetUserImageData(userId, groupId, out bool errorDbImage);
+                var fileData = _userDbManager.GetUserImageData(userId, out bool errorDbImage);
                 string? keyValue = errorDbImage ? "FileKey Desconocido" : fileData.FileKey;
-                string msg = $"Se ha intentado eliminar una foto del usuario {userId} del grupo {groupId} con el fileKey {keyValue}";
+                string msg = $"Se ha intentado eliminar una foto del usuario {userId} con el fileKey {keyValue}";
                 _logger.LogError(msg);
             }
             bool dbResponse = _userDbManager.UpdateUserImageData(userId, _mapper.Map<FileResponseDbObject>(aBSResponse));
@@ -316,5 +338,30 @@ namespace _3DMANAGER_APP.BLL.Managers
             return response;
         }
 
+        public async Task<CommonResponse<bool>> DeleteUser(int userId)
+        {
+            CommonResponse<bool> response = new CommonResponse<bool>();
+
+            DeletedDbObject responseDb = _userDbManager.DeleteUser(userId, out int? errorDb);
+
+            if (errorDb != null)
+            {
+                string msg = $"Error al eliminar usuario con id: {userId}";
+                _logger.LogError(msg);
+                response.Error = new Response.ErrorProperties() { Code = StatusCodes.Status500InternalServerError, Message = msg };
+            }
+            response.Data = responseDb.SuccesfullDelete;
+            if (responseDb.FileResponse != null && responseDb.FileResponse.FileKey != null)
+            {
+                var responseImage = await DeleteUserImage(userId);
+                if (!responseImage.Data)
+                {
+                    string msg = $"Impresión eliminada correctamente. Pero ha ocurrido un error al eliminar el ficher STL en Azure Blob Storage del fichero {responseDb.FileResponse.FileKey}.";
+                    response.Error = new ErrorProperties(StatusCodes.Status500InternalServerError, msg);
+                    return response;
+                }
+            }
+            return response;
+        }
     }
 }

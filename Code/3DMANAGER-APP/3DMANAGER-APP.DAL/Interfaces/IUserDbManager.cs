@@ -1,4 +1,5 @@
 using _3DMANAGER_APP.DAL.Models.File;
+using _3DMANAGER_APP.DAL.Models.Print;
 using _3DMANAGER_APP.DAL.Models.User;
 
 
@@ -14,10 +15,11 @@ namespace _3DMANAGER_APP.DAL.Interfaces
         public bool UpdateUserImageData(int userId, FileResponseDbObject image);
         public UserDbObject GetUserById(int userId);
         public int GetGroupIdByUserId(int userId);
-        bool UpdateUser(UserUpdateRequestDbObject requestDb);
-        UserDetailDbObject GetUserDetail(int groupId, int userId);
-        public FileResponseDbObject GetUserImageData(int userId, int groupId, out bool error);
-        public bool DeleteUserImageData(int userId, int groupId);
+        bool UpdateUser(UserUpdateRequestDbObject requestDb, out int? error);
+        UserDetailDbObject GetUserDetail(int userId);
+        public FileResponseDbObject GetUserImageData(int userId, out bool error);
+        public bool DeleteUserImageData(int userId);
+        DeletedDbObject DeleteUser(int userId, out int? error);
 
     }
 }

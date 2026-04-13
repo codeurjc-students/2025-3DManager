@@ -1,6 +1,7 @@
 ﻿using _3DMANAGER_APP.DAL.Base;
 using _3DMANAGER_APP.DAL.Interfaces;
 using _3DMANAGER_APP.DAL.Models.File;
+using _3DMANAGER_APP.DAL.Models.Print;
 using _3DMANAGER_APP.DAL.Models.User;
 using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
@@ -14,6 +15,7 @@ namespace _3DMANAGER_APP.DAL.Managers
             : base(dataSourceFactory, logger)
         {
         }
+        private const string ErrorConstant = "CodigoError";
 
         public int PostNewUser(UserCreateRequestDbObject user, out int? error)
         {
@@ -365,8 +367,9 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
         }
 
-        public bool UpdateUser(UserUpdateRequestDbObject requestDb)
+        public bool UpdateUser(UserUpdateRequestDbObject requestDb, out int? error)
         {
+            error = null;
             try
             {
                 string procName = $"{ProcedurePrefix}_pr_USER_UPDATE";
@@ -387,9 +390,10 @@ namespace _3DMANAGER_APP.DAL.Managers
                 var ds = new DataSet();
                 adapter.Fill(ds);
 
-                var error = Convert.ToInt32(errorParam.Value);
-                if (error != 0)
+                int errorDb = Convert.ToInt32(errorParam.Value);
+                if (errorDb != 0)
                 {
+                    error = errorDb;
                     return false;
                 }
                 if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
@@ -401,19 +405,21 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
+                error = 500;
                 string msg = $"Error al actualizar el perfil del usuario {requestDb.UserId} en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
             catch (Exception ex)
             {
+                error = 500;
                 string msg = $"Error al actualizar el perfil del usuario {requestDb.UserId} en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
         }
 
-        public UserDetailDbObject GetUserDetail(int groupId, int userId)
+        public UserDetailDbObject GetUserDetail(int userId)
         {
             try
             {
@@ -424,7 +430,6 @@ namespace _3DMANAGER_APP.DAL.Managers
                     CommandType = CommandType.StoredProcedure
                 };
 
-                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.VarChar) { Value = groupId });
                 cmd.Parameters.Add(new MySqlParameter("P_CD_USER", MySqlDbType.VarChar) { Value = userId });
 
                 using var adapter = new MySqlDataAdapter(cmd);
@@ -453,7 +458,7 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
         }
 
-        public FileResponseDbObject GetUserImageData(int userId, int groupId, out bool error)
+        public FileResponseDbObject GetUserImageData(int userId, out bool error)
         {
             error = false;
             FileResponseDbObject responseDb = new FileResponseDbObject();
@@ -465,7 +470,6 @@ namespace _3DMANAGER_APP.DAL.Managers
                     CommandType = CommandType.StoredProcedure
                 };
 
-                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
                 cmd.Parameters.Add(new MySqlParameter("P_CD_USER", MySqlDbType.Int32) { Value = userId });
                 var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
@@ -498,7 +502,7 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
         }
 
-        public bool DeleteUserImageData(int userId, int groupId)
+        public bool DeleteUserImageData(int userId)
         {
             try
             {
@@ -508,7 +512,6 @@ namespace _3DMANAGER_APP.DAL.Managers
                     CommandType = CommandType.StoredProcedure
                 };
 
-                cmd.Parameters.Add(new MySqlParameter("P_CD_GROUP", MySqlDbType.Int32) { Value = groupId });
                 cmd.Parameters.Add(new MySqlParameter("P_CD_USER", MySqlDbType.Int32) { Value = userId });
                 var errorParam = CreateReturnValueParameter("CodigoError", MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);
@@ -535,6 +538,60 @@ namespace _3DMANAGER_APP.DAL.Managers
                 string msg = $"Error al borrar los datos de la imagen en la usuario {userId} BBDD";
                 Logger.LogError(ex, msg);
                 return false;
+            }
+        }
+
+        public DeletedDbObject DeleteUser(int userId, out int? error)
+        {
+            error = null;
+            try
+            {
+                DeletedDbObject response = new DeletedDbObject { SuccesfullDelete = false };
+
+                string procName = $"{ProcedurePrefix}_pr_USER_DELETE";
+                using var cmd = new MySqlCommand(procName, Connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                cmd.Parameters.Add(new MySqlParameter("P_CD_USER", MySqlDbType.Int32) { Value = userId });
+
+                var errorParam = CreateReturnValueParameter(ErrorConstant, MySqlDbType.Int32);
+                cmd.Parameters.Add(errorParam);
+
+                using var adapter = new MySqlDataAdapter(cmd);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                var errorDb = Convert.ToInt32(errorParam.Value);
+                if (errorDb != 0)
+                {
+                    error = errorDb;
+                    response.Id = userId;
+                    return response;
+                }
+                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    response = response.Create(ds.Tables[0].Rows[0]);
+                    response.SuccesfullDelete = true;
+                    return response;
+                }
+
+                return response;
+            }
+            catch (MySqlException ex)
+            {
+                string msg = $"Error al eliminar el usuario {userId} en BBDD";
+                Logger.LogError(ex, msg);
+                error = 500;
+                return new DeletedDbObject { SuccesfullDelete = false };
+            }
+            catch (Exception ex)
+            {
+                string msg = $"Error al eliminar el usuario {userId} en BBDD";
+                Logger.LogError(ex, msg);
+                error = 500;
+                return new DeletedDbObject { SuccesfullDelete = false };
             }
         }
     }

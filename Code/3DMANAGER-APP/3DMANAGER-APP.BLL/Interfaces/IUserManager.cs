@@ -13,9 +13,10 @@ namespace _3DMANAGER_APP.BLL.Interfaces
         public bool PostUserInvitation(int groupId, int userId, int userOwner, out BaseError? error);
         public UserObject GetUserById(int userId);
         public int GetGroupIdByUserId(int userId);
-        bool UpdateUser(UserUpdateRequest request);
-        UserDetailObject GetUserDetail(int groupId, int userId, out BaseError? error);
-        public Task<CommonResponse<bool>> DeleteUserImage(int userId, int groupId);
-        public Task<CommonResponse<bool>> UpdateUserImage(int userId, int groupId, IFormFile imageFile);
+        bool UpdateUser(UserUpdateRequest request, out BaseError? error);
+        UserDetailObject GetUserDetail(int userId, out BaseError? error);
+        public Task<CommonResponse<bool>> DeleteUserImage(int userId);
+        public Task<CommonResponse<bool>> UpdateUserImage(int userId, IFormFile imageFile);
+        public Task<CommonResponse<bool>> DeleteUser(int userId);
     }
 }

@@ -104,7 +104,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
 
             BaseError? error;
 
-            var user = manager.GetUserDetail(1, 1, out error);
+            var user = manager.GetUserDetail(1, out error);
             Assert.Null(error);
             Assert.NotNull(user);
             var request = new UserUpdateRequest
@@ -114,10 +114,10 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 UserName = "Integration User Updated",
                 UserEmail = "integration@test.com"
             };
-            var result = manager.UpdateUser(request);
+            var result = manager.UpdateUser(request, out BaseError? errorR);
             Assert.True(result);
-
-            var updated = manager.GetUserDetail(1, user.userId, out error);
+            Assert.Null(errorR);
+            var updated = manager.GetUserDetail(user.userId, out error);
             Assert.Null(error);
             Assert.NotNull(updated);
             Assert.Equal("Integration User Updated", updated.userName);

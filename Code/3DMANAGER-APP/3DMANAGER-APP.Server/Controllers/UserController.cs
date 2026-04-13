@@ -248,14 +248,14 @@ namespace _3DMANAGER_APP.Server.Controllers
         public IActionResult UpdateUser([FromBody] UserUpdateRequest request)
         {
             _logger.LogInformation($"Llamada a la funcion UpdateUser en el controlador UserController");
-            if (GroupId == null)
+            if (GroupId == null || UserId == null)
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, NoAuthConstant)));
 
             request.GroupId = GroupId.Value;
-            bool response = _userManager.UpdateUser(request);
+            bool response = _userManager.UpdateUser(request, out BaseError? error);
 
-            if (!response)
-                return StatusCode(500, new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error actualizando el usuario")));
+            if (error != null)
+                return StatusCode(error.code, new Models.CommonResponse<bool>(new ErrorProperties(error.code, error.message)));
 
             return Ok(new Models.CommonResponse<bool>(response));
         }
@@ -278,10 +278,10 @@ namespace _3DMANAGER_APP.Server.Controllers
         public IActionResult GetUserDetail([FromQuery] int userId)
         {
             _logger.LogInformation($"Llamada a la funcion GetUserDetail en el controlador UserController");
-            if (GroupId == null)
+            if (UserId == null)
                 return Unauthorized(new Models.CommonResponse<UserDetailObject>(new ErrorProperties(401, NoAuthConstant)));
 
-            UserDetailObject userResponse = _userManager.GetUserDetail(GroupId.Value, userId, out BaseError? error);
+            UserDetailObject userResponse = _userManager.GetUserDetail(userId, out BaseError? error);
 
             if (userResponse == null || error != null)
             {
@@ -313,10 +313,10 @@ namespace _3DMANAGER_APP.Server.Controllers
         public async Task<IActionResult> UpdateUserImage(int userId, IFormFile imageFile)
         {
             _logger.LogInformation($"Llamada a UpdateUserImage en el controlador UserController");
-            if (GroupId == null && UserId == null && UserRole == "Usuario-Manager")
+            if (UserId == null)
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, NoAuthConstant)));
 
-            var result = await _userManager.UpdateUserImage(userId, GroupId!.Value, imageFile);
+            var result = await _userManager.UpdateUserImage(userId, imageFile);
 
             if (result.Error != null)
                 return StatusCode(StatusCodes.Status500InternalServerError, new CommonResponse<bool>(result.Error));
@@ -342,10 +342,10 @@ namespace _3DMANAGER_APP.Server.Controllers
         public async Task<IActionResult> DeleteUserImage(int userId)
         {
             _logger.LogInformation($"Llamada a la funcion DeleteUserImage en el controlador UserController");
-            if (GroupId == null && UserId == null && UserRole == "Usuario-Manager")
+            if (UserId == null)
                 return Unauthorized(new Models.CommonResponse<GroupBasicDataResponse>(new ErrorProperties(401, NoAuthConstant)));
 
-            var result = await _userManager.DeleteUserImage(userId, GroupId!.Value);
+            var result = await _userManager.DeleteUserImage(userId);
 
             if (result.Error != null)
                 return StatusCode(result.Error.Code, new CommonResponse<bool>(result.Error));
@@ -353,5 +353,33 @@ namespace _3DMANAGER_APP.Server.Controllers
             return Ok(new CommonResponse<bool>(true));
         }
 
+
+        /// <summary>
+        /// Delete a user 
+        /// </summary>
+        /// <returns>Boolean that indicates if operation was succesfull</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="401">No autorizado</response>
+        /// <response code="409">Conflicto en servidor</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Tags("Users")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteUser()
+        {
+            _logger.LogInformation($"Llamada a la funcion DeleteUser en el controlador UserController");
+            if (UserId == null)
+                return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, NoAuthConstant)));
+
+            BLL.Models.Base.CommonResponse<bool> response = await _userManager.DeleteUser(UserId.Value);
+            if (response.Error != null || !response.Data)
+                return StatusCode(500, new Models.CommonResponse<bool>(new ErrorProperties(response.Error?.Code ?? StatusCodes.Status500InternalServerError, response.Error?.Message ?? "Error al eliminar la impresión")));
+
+            return Ok(new Models.CommonResponse<bool>(response.Data));
+        }
     }
 }

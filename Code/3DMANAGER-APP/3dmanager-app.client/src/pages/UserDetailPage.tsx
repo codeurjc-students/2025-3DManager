@@ -6,13 +6,14 @@ import { usePopupContext } from "../context/PopupContext";
 import InfoPopup from "../components/popupComponent/InfoPopup";
 import type { UserDetailObject } from "../models/user/UserDetailObject";
 import type { UserUpdateRequest } from "../models/user/UserUpdateRequest";
-import { deleteUserImage, getUserDetail, updateUser, updateUserImage } from "../api/userService";
+import { deleteUser, deleteUserImage, getUserDetail, updateUser, updateUserImage } from "../api/userService";
 import ImagePopup from "../components/popupComponent/ImagePopup";
+import ConfirmPopup from "../components/popupComponent/ConfirmPopup";
 
 
 const UserDetailPage: React.FC = () => {
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { user,logout } = useAuth();
     const { userId } = useParams<{ userId: string }>();
     const [data, setData] = useState<UserDetailObject>();
     const [name, setName] = useState<string>("");
@@ -142,6 +143,52 @@ const UserDetailPage: React.FC = () => {
         });
     };
 
+    const handleBack = () => {
+        if (user!.groupId) {
+            navigate("/dashboard");
+        } else {
+            navigate("/group");
+        }
+    }
+     
+    const handleDelete = () => {
+        showPopup({
+            type: "error",
+            hideCloseButton: true,
+            content: (
+                <ConfirmPopup
+                    action="Eliminar tu usuario"
+                    onCancel={() => closePopup()}
+                    onConfirm={async () => {
+                        const response = await deleteUser();
+
+                        if (response.data) {
+                            showPopup({
+                                type: "info",
+                                content: (
+                                    <InfoPopup title="Operación realizada" description="Tu usuario ha sido eliminado correctamente." />
+                                ),
+                                onClose: () => {
+                                    closePopup();
+                                    logout();
+                                    navigate("/login");
+                                }
+                            });
+                        } else {
+                            showPopup({
+                                type: "error",
+                                content: (
+                                    <InfoPopup title="Error" description={response.error?.message || "No se pudo eliminar tu usuario."} />
+                                ),
+                                onClose: () => closePopup()
+                            });
+                        }
+                    }}
+                />
+            )
+        });
+    };
+
     return (
         <div className="d-flex flex-column vh-100">
             <div className="row h-10 w-100">
@@ -149,7 +196,7 @@ const UserDetailPage: React.FC = () => {
                     <h2 className="title-impact-2 mt-3 ms-2 mb-1">Detalle de usuario</h2>
                 </div>
                 <div className="col-2 mt-1 ps-5">
-                    <button type="button" className="white-container-button d-flex align-items-center" onClick={() => navigate("/dashboard")}>
+                    <button type="button" className="white-container-button d-flex align-items-center" onClick={handleBack}>
                         <span className="dashboard-title pe-5">Volver</span>
                         <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M18 44V24H30V44M6 18L24 4L42 18V40C42 41.0609 41.5786 42.0783 40.8284 42.8284C40.0783 43.5786 39.0609 44 38 44H10C8.93913 44 7.92172 43.5786 7.17157 42.8284C6.42143 42.0783 6 41.0609 6 40V18Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
@@ -162,7 +209,7 @@ const UserDetailPage: React.FC = () => {
                 <div className="col-4 grey-container">
                     <div className="h-40">
                         <div className="title-impact-3 col-1 mt-2 ms-2 mb-1 w-100 d-flex flex-row justify-content-between">
-                            <input type="text" className="input-value-3 me-5 w-75" value={name} disabled={!isMyUser}
+                            <input type="text" className="input-value-3 me-5 w-75 input-editable" value={name ?? ""} disabled={!isMyUser}
                                 onChange={(e) => setName(e.target.value)}
                             />
                             {isMyUser ? (
@@ -177,8 +224,14 @@ const UserDetailPage: React.FC = () => {
                                             <path d="M6.66667 28H25.3333C26.8061 28 28 26.8061 28 25.3333V6.66667C28 5.19391 26.8061 4 25.3333 4H6.66667C5.19391 4 4 5.19391 4 6.66667V25.3333C4 26.8061 5.19391 28 6.66667 28ZM6.66667 28L21.3333 13.3333L28 20M13.3333 11.3333C13.3333 12.4379 12.4379 13.3333 11.3333 13.3333C10.2288 13.3333 9.33333 12.4379 9.33333 11.3333C9.33333 10.2288 10.2288 9.33333 11.3333 9.33333C12.4379 9.33333 13.3333 10.2288 13.3333 11.3333Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
                                         </svg>
                                     </button>
+                                    <button className="button-red me-2" onClick={handleDelete} title="Eliminar mi usuario">
+                                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M4 7.99996H6.66667M6.66667 7.99996H28M6.66667 7.99996L6.66667 26.6666C6.66667 27.3739 6.94762 28.0521 7.44772 28.5522C7.94781 29.0523 8.62609 29.3333 9.33333 29.3333H22.6667C23.3739 29.3333 24.0522 29.0523 24.5523 28.5522C25.0524 28.0521 25.3333 27.3739 25.3333 26.6666V7.99996M10.6667 7.99996V5.33329C10.6667 4.62605 10.9476 3.94777 11.4477 3.44767C11.9478 2.94758 12.6261 2.66663 13.3333 2.66663H18.6667C19.3739 2.66663 20.0522 2.94758 20.5523 3.44767C21.0524 3.94777 21.3333 4.62605 21.3333 5.33329V7.99996M13.3333 14.6666V22.6666M18.6667 14.6666V22.6666" stroke="#1E1E1E" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </button>
                                 </div>
                             ) : ""}
+                            
                         </div>
                         <div className="title-impact-3 col-2 mt-2 ms-2 mb-1 w-100 d-flex flex-row justify-content-between">
                             <p className="input-value-4">{data?.userRole}</p>
@@ -205,7 +258,7 @@ const UserDetailPage: React.FC = () => {
                             <div className="d-flex flex row">
                                 <div className="col-12 mb-1 ">
                                     <label htmlFor="Email" className="form-label">Email</label>
-                                    <input id="Email" type="text" className="input-value-5 me-5 w-100" value={email} disabled={!isMyUser}
+                                    <input id="Email" type="text" className="input-value-5 me-5 w-100 input-editable" value={email ?? ""} disabled={!isMyUser}
                                         onChange={(e) => setEmail(e.target.value)}
                                     />
                                 </div>
