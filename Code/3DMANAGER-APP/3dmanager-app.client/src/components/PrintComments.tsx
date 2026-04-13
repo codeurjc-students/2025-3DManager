@@ -6,7 +6,7 @@ import type { PrintCommentRequest } from "../models/print/PrintCommentRequest";
 import { usePopupContext } from "../context/PopupContext";
 import ConfirmPopup from "../components/popupComponent/ConfirmPopup";
 import InfoPopup from "../components/popupComponent/InfoPopup";
-import { useNavigate } from "react-router-dom";
+
 interface PrintCommentsProps {
     id: number;
 }
@@ -133,7 +133,7 @@ const PrintComments: React.FC<PrintCommentsProps> = ({ id }) => {
                     className="input-value-5 col-9 me-5"
                     rows={1}
                     placeholder="Escribe un comentario..."
-                    value={newComment}
+                    value={newComment ?? ""}
                     maxLength={500}
                     onChange={(e) => setNewComment(e.target.value)}
                     disabled={!isLogged}

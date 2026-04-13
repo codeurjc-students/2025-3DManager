@@ -648,3 +648,28 @@ fs-detail{
     }
 }
 
+.input-editable {
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    color: #212529;
+}
+    .input-editable:not(:disabled):hover {
+        border-color: #4a90e2;
+    }
+
+    .input-editable:not(:disabled):focus {
+        border-color: #4a90e2;
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.25);
+        outline: none;
+    }
+
+    .input-editable:disabled {
+        background-color: #ffffff;
+        border: 1px solid #ced4da;
+        color: #212529;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
+

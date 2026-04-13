@@ -215,7 +215,7 @@ const PrintDetailPage: React.FC = () => {
                 <div className="col-4 grey-container">
                     <div className="h-50">
                         <div className="title-impact-3 col-1 mt-2 ms-2 mb-1 w-100 d-flex flex-row justify-content-between">
-                            <input type="text" className="input-value-3 me-5 w-75" value={name} disabled={!isManagerOrOwner}
+                            <input type="text" className="input-value-3 me-5 w-75 input-editable" value={name ?? 0} disabled={!isManagerOrOwner}
                                 onChange={(e) => setName(e.target.value)}
                             />
                             {isManagerOrOwner ? (
@@ -240,7 +240,7 @@ const PrintDetailPage: React.FC = () => {
                         </div>
                         
                         <div className="d-flex flex-row h-75 justify-content-between" >
-                            <div className="col-6 ms-3 image-container-3">
+                            <div className="h-30 col-6 ms-5 image-container-3">
                                 <STLViewer fileUrl={data?.printImageData?.fileUrl!} />
                             </div>
                             <button className="button-yellow h-05" onClick={() => downloadSTL(data?.printImageData?.fileUrl!)}
@@ -327,7 +327,7 @@ const PrintDetailPage: React.FC = () => {
                             <div className="d-flex flex-rows ">
                                 <div className="col-10 w-100">
                                     <label htmlFor="printDescription" className="form-label">Descripcion</label>
-                                    <textarea id="printDescription" className="input-value-5 table-scroll w-100" value={description ?? ""}
+                                    <textarea id="printDescription" className="input-value-5 table-scroll w-100 input-editable" value={description ?? ""}
                                         onChange={(e) => setDescription(e.target.value)} disabled={!isManagerOrOwner} />
                                 </div>
                             </div>
