@@ -237,10 +237,10 @@ const PrinterDetailPage: React.FC = () => {
                 <hr></hr>
             </div>
             <div className="row h-100">
-                <div className="col-4 grey-container">
+                <div className="col-4 grey-container  pe-4">
                     <div className="h-50">
                         <div className="title-impact-3 col-1 mt-2 ms-2 mb-1 w-100 d-flex flex-row justify-content-between">
-                            <input type="text" className="input-value-3 me-5 w-75" value={name} disabled={!isManager}
+                            <input type="text" className="input-value-3 me-5 w-75 input-editable" value={name ?? 0} disabled={!isManager}
                                 onChange={(e) => setName(e.target.value)}
                             />
                             {isManager ? (
@@ -263,13 +263,13 @@ const PrinterDetailPage: React.FC = () => {
                                 </div>
                             ) : ""}
                         </div>
-                        <div className="col-6 ms-5">
+                        <div className="h-30 col-6 ms-5">
                             <img src={data?.printerImageData?.fileUrl} alt={name} className="image-container" />
                         </div>
                         <div className="col-4 mt-2 ms-3 mb-5 w-100">
-                            <input type="text" className="input-value-4 me-5 mb-1 w-100" value={model} disabled={!isManager}
+                            <input type="text" className="input-value-4 me-5 mb-1 w-100 input-editable" value={model ?? 0} disabled={!isManager}
                                 onChange={(e) => setModel(e.target.value)}/>
-                            <textarea className="input-value-4 me-5 mb-1 w-100 h-08" value={description} disabled={!isManager} onChange={(e) => setDescription(e.target.value)}/>
+                            <textarea className="input-value-4 me-5 mb-1 w-100 h-08 input-editable" value={description ?? 0} disabled={!isManager} onChange={(e) => setDescription(e.target.value)}/>
                         </div>
                     </div>
                     <div className="h-40 ms-3 mt-3">
@@ -289,7 +289,7 @@ const PrinterDetailPage: React.FC = () => {
                                 <div className="col-6 mb-1 ">
                                     <label htmlFor="printerState" className="form-label">Estado</label>
                                     <div className="d-flex flex-row">
-                                        <select id="printerState" className="input-value-5 w-100" value={state} disabled={!isManager} onChange={(e) => { setState(Number(e.target.value)) }}>
+                                        <select id="printerState" className="input-value-5 w-100" value={state ?? 0} disabled={!isManager} onChange={(e) => { setState(Number(e.target.value)) }}>
                                             {stateData.map(s => (
                                                 <option key={s.id} value={s.id}>
                                                     {s.description}

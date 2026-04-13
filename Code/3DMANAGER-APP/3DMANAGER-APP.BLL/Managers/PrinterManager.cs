@@ -129,10 +129,27 @@ namespace _3DMANAGER_APP.BLL.Managers
             return response!;
         }
 
-        public bool UpdatePrinter(PrinterDetailRequest request)
+        public bool UpdatePrinter(PrinterDetailRequest request, out BaseError? error)
         {
+            error = null;
             PrinterDetailRequestDbObject requestDb = _mapper.Map<PrinterDetailRequestDbObject>(request);
-            return _printerDbManager.UpdatePrinter(requestDb);
+            bool response = _printerDbManager.UpdatePrinter(requestDb, out int? errorDb);
+            if (errorDb != null)
+            {
+                string msg = "";
+                switch (errorDb)
+                {
+                    case 4091:
+                        msg = $"Ya existe una impresora con el nombre {request.PrinterName} en este grupo.";
+                        break;
+                    default:
+                        msg = "Error actualizando la impresora.";
+                        break;
+                }
+                error = new BaseError(StatusCodes.Status409Conflict, msg);
+                return response;
+            }
+            return response;
         }
 
         public PrinterDetailObject GetPrinterDetail(int groupId, int printerId, out BaseError? error)

@@ -141,10 +141,10 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 PrinterStateId = 2
             };
 
-            var result = manager.UpdatePrinter(request);
+            var result = manager.UpdatePrinter(request, out BaseError? errorR);
 
             Assert.True(result);
-
+            Assert.Null(errorR);
             var updatedPrinters = manager.GetPrinterDashboardList(1, out error);
             Assert.Null(error);
 

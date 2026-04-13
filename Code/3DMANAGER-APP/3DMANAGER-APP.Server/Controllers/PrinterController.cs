@@ -135,10 +135,10 @@ namespace _3DMANAGER_APP.Server.Controllers
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, NoAuthConstant)));
 
             request.GroupId = GroupId.Value;
-            bool response = _printerManager.UpdatePrinter(request);
+            bool response = _printerManager.UpdatePrinter(request, out BaseError? error);
 
-            if (!response)
-                return StatusCode(500, new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error actualizando la impresora")));
+            if (error != null)
+                return StatusCode(error.code, new Models.CommonResponse<bool>(new ErrorProperties(error.code, error.message)));
 
             return Ok(new Models.CommonResponse<bool>(response));
         }

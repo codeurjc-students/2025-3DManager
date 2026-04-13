@@ -11,7 +11,7 @@ namespace _3DMANAGER_APP.BLL.Interfaces
         List<PrinterObject> GetPrinterList(out BaseError? error);
         public Task<CommonResponse<int>> PostPrinter(PrinterRequest printer);
         List<PrinterListObject> GetPrinterDashboardList(int groupId, out BaseError? error);
-        bool UpdatePrinter(PrinterDetailRequest request);
+        bool UpdatePrinter(PrinterDetailRequest request, out BaseError? error);
         PrinterDetailObject GetPrinterDetail(int groupId, int printerId, out BaseError? error);
         public Task<CommonResponse<bool>> DeletePrinter(int printerId, int groupId);
         public Task<CommonResponse<bool>> DeletePrinterImage(int printerId, int groupId);

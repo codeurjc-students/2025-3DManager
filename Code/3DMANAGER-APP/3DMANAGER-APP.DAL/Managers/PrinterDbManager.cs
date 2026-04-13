@@ -216,8 +216,9 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
         }
 
-        public bool UpdatePrinter(PrinterDetailRequestDbObject requestDb)
+        public bool UpdatePrinter(PrinterDetailRequestDbObject requestDb, out int? error)
         {
+            error = null;
             try
             {
                 string procName = $"{ProcedurePrefix}_pr_PRINTER_UPDATE";
@@ -240,9 +241,10 @@ namespace _3DMANAGER_APP.DAL.Managers
                 var ds = new DataSet();
                 adapter.Fill(ds);
 
-                var error = Convert.ToInt32(errorParam.Value);
-                if (error != 0)
+                int errorDb = Convert.ToInt32(errorParam.Value);
+                if (errorDb != 0)
                 {
+                    error = errorDb;
                     return false;
                 }
                 if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
@@ -254,12 +256,14 @@ namespace _3DMANAGER_APP.DAL.Managers
             }
             catch (MySqlException ex)
             {
+                error = 500;
                 string msg = $"Error al actualizar de la impresora {requestDb.PrinterId} en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
             catch (Exception ex)
             {
+                error = 500;
                 string msg = $"Error al actualizar de la impresora {requestDb.PrinterId} en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
