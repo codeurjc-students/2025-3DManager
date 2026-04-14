@@ -11,11 +11,11 @@ namespace _3DMANAGER_APP.Server.Controllers
     [Route("api/v1/notifications/[action]")]
     public class NotificationController : BaseController
     {
-        private readonly INotificationManager _notificationManager;
+        private readonly INotificationService _notificationService;
         private const string NoAuthConstant = "No autenticado";
-        public NotificationController(INotificationManager notificationManager, ILogger<NotificationController> logger) : base(logger)
+        public NotificationController(INotificationService notificationService, ILogger<NotificationController> logger) : base(logger)
         {
-            _notificationManager = notificationManager;
+            _notificationService = notificationService;
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace _3DMANAGER_APP.Server.Controllers
             if (UserId == null)
                 return Unauthorized(new Models.CommonResponse<List<NotificationObject>>(new ErrorProperties(401, NoAuthConstant)));
 
-            var result = _notificationManager.GetUnreadNotifications(UserId.Value, out BaseError? error);
+            var result = _notificationService.GetUnreadNotifications(UserId.Value, out BaseError? error);
 
             if (error != null)
             {
@@ -74,7 +74,7 @@ namespace _3DMANAGER_APP.Server.Controllers
             if (UserId == null)
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, NoAuthConstant)));
 
-            bool response = _notificationManager.NotificationMarkAsRead(notificationId, out BaseError? error);
+            bool response = _notificationService.NotificationMarkAsRead(notificationId, out BaseError? error);
 
             if (!response)
             {

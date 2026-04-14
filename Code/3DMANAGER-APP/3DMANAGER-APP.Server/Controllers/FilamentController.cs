@@ -13,11 +13,11 @@ namespace _3DMANAGER_APP.Server.Controllers
     [Route("api/v1/filaments/[action]")]
     public class FilamentController : BaseController
     {
-        private readonly IFilamentManager _filamentManager;
+        private readonly IFilamentService _filamentService;
         private const string NoAuthConstant = "No autenticado";
-        public FilamentController(IFilamentManager filamentManager, ILogger<FilamentController> logger) : base(logger)
+        public FilamentController(IFilamentService filamentService, ILogger<FilamentController> logger) : base(logger)
         {
-            _filamentManager = filamentManager;
+            _filamentService = filamentService;
         }
 
 
@@ -43,7 +43,7 @@ namespace _3DMANAGER_APP.Server.Controllers
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<List<FilamentListResponse>>(new ErrorProperties(401, NoAuthConstant)));
 
-            List<FilamentListResponse> userList = _filamentManager.GetFilamentList(GroupId.Value, out BaseError? error);
+            List<FilamentListResponse> userList = _filamentService.GetFilamentList(GroupId.Value, out BaseError? error);
 
             if (error != null)
             {
@@ -77,7 +77,7 @@ namespace _3DMANAGER_APP.Server.Controllers
 
             filament.GroupId = GroupId.Value;
 
-            BLL.Models.Base.CommonResponse<int> response = await _filamentManager.PostFilament(filament);
+            BLL.Models.Base.CommonResponse<int> response = await _filamentService.PostFilament(filament);
             if (response.Error != null)
             {
                 if (response.Error.Code == StatusCodes.Status409Conflict)
@@ -110,7 +110,7 @@ namespace _3DMANAGER_APP.Server.Controllers
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, NoAuthConstant)));
 
             request.GroupId = GroupId.Value;
-            bool response = _filamentManager.UpdateFilament(request);
+            bool response = _filamentService.UpdateFilament(request);
 
             if (!response)
                 return StatusCode(500, new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error actualizando el filamento")));
@@ -139,7 +139,7 @@ namespace _3DMANAGER_APP.Server.Controllers
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<FilamentDetailObject>(new ErrorProperties(401, NoAuthConstant)));
 
-            FilamentDetailObject filamentResponse = _filamentManager.GetFilamentDetail(GroupId.Value, filamentId, out BaseError? error);
+            FilamentDetailObject filamentResponse = _filamentService.GetFilamentDetail(GroupId.Value, filamentId, out BaseError? error);
 
             if (error != null)
                 return StatusCode(500, new Models.CommonResponse<FilamentDetailObject>(new ErrorProperties(error!.code, error.message)));
@@ -168,7 +168,7 @@ namespace _3DMANAGER_APP.Server.Controllers
             if (GroupId == null && UserId == null && UserRole == "Usuario-Manager")
                 return Unauthorized(new Models.CommonResponse<GroupBasicDataResponse>(new ErrorProperties(401, NoAuthConstant)));
 
-            BLL.Models.Base.CommonResponse<bool> response = await _filamentManager.DeleteFilament(filamentId, GroupId!.Value);
+            BLL.Models.Base.CommonResponse<bool> response = await _filamentService.DeleteFilament(filamentId, GroupId!.Value);
             if (response.Error != null || !response.Data)
                 return StatusCode(500, new Models.CommonResponse<bool>(new ErrorProperties(response.Error?.Code ?? StatusCodes.Status500InternalServerError, response.Error?.Message ?? "Error al eliminar el filamento")));
 
@@ -196,7 +196,7 @@ namespace _3DMANAGER_APP.Server.Controllers
             if (GroupId == null && UserId == null && UserRole == "Usuario-Manager")
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, NoAuthConstant)));
 
-            var result = await _filamentManager.UpdateFilamentImage(filamentId, GroupId!.Value, imageFile);
+            var result = await _filamentService.UpdateFilamentImage(filamentId, GroupId!.Value, imageFile);
 
             if (result.Error != null)
                 return StatusCode(StatusCodes.Status500InternalServerError, new CommonResponse<bool>(result.Error));
@@ -225,7 +225,7 @@ namespace _3DMANAGER_APP.Server.Controllers
             if (GroupId == null && UserId == null && UserRole == "Usuario-Manager")
                 return Unauthorized(new Models.CommonResponse<GroupBasicDataResponse>(new ErrorProperties(401, NoAuthConstant)));
 
-            var result = await _filamentManager.DeleteFilamentImage(filamentId, GroupId!.Value);
+            var result = await _filamentService.DeleteFilamentImage(filamentId, GroupId!.Value);
 
             if (result.Error != null)
                 return StatusCode(result.Error.Code, new CommonResponse<bool>(result.Error));

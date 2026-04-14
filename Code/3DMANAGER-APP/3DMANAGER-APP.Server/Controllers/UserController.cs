@@ -12,12 +12,12 @@ namespace _3DMANAGER_APP.Server.Controllers
     [Route("api/v1/users/[action]")]
     public class UserController : BaseController
     {
-        private readonly IUserManager _userManager;
+        private readonly IUserService _userService;
         private readonly JwtService _jwtService;
         private const string NoAuthConstant = "No autenticado";
-        public UserController(IUserManager userManager, ILogger<UserController> logger, JwtService jwtService) : base(logger)
+        public UserController(IUserService userService, ILogger<UserController> logger, JwtService jwtService) : base(logger)
         {
-            _userManager = userManager;
+            _userService = userService;
             _jwtService = jwtService;
         }
 
@@ -38,7 +38,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         public async Task<Models.CommonResponse<int>> PostNewUser([FromForm] UserCreateRequest user)
         {
             _logger.LogInformation($"Llamada a la funcion PostNewUser en el controlador UserController");
-            BLL.Models.Base.CommonResponse<int> response = await _userManager.PostNewUser(user);
+            BLL.Models.Base.CommonResponse<int> response = await _userService.PostNewUser(user);
             if (response.Error != null)
             {
                 return new Models.CommonResponse<int>(new ErrorProperties(response.Error.Code, response.Error.Message));
@@ -65,7 +65,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         public Models.CommonResponse<LoginResponse> Login(BLL.Models.User.LoginRequest request)
         {
             _logger.LogInformation($"Llamada a la funcion Login en el controlador UserController");
-            UserObject user = _userManager.Login(request.UserName, request.UserPassword, out BaseError? error);
+            UserObject user = _userService.Login(request.UserName, request.UserPassword, out BaseError? error);
 
             if (user == null || error != null)
             {
@@ -102,7 +102,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         {
             _logger.LogInformation($"Llamada a la funcion LoginGuest en el controlador UserController");
             string userName = "Invitado";
-            UserObject user = _userManager.Login(userName, "invitado3dmanager", out BaseError? error);
+            UserObject user = _userService.Login(userName, "invitado3dmanager", out BaseError? error);
 
             if (user == null || error != null)
             {
@@ -140,7 +140,7 @@ namespace _3DMANAGER_APP.Server.Controllers
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<UserListResponse>(new ErrorProperties(401, NoAuthConstant)));
 
-            List<UserListResponse> userList = _userManager.GetUserList(GroupId.Value, out BaseError? error);
+            List<UserListResponse> userList = _userService.GetUserList(GroupId.Value, out BaseError? error);
 
             if (error != null)
                 return StatusCode(error.code, new Models.CommonResponse<List<UserListResponse>>(new ErrorProperties(error.code, error.message)));
@@ -164,7 +164,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         public Models.CommonResponse<List<UserListResponse>> GetUserInvitationList([FromQuery] string? filter)
         {
             _logger.LogInformation($"Llamada a la funcion GetUserInvitationList en el controlador UserController");
-            List<UserListResponse> userList = _userManager.GetUserInvitationList(filter, out BaseError? error);
+            List<UserListResponse> userList = _userService.GetUserInvitationList(filter, out BaseError? error);
 
             if (error != null)
                 return new Models.CommonResponse<List<UserListResponse>>(new ErrorProperties(error.code, error.message));
@@ -192,7 +192,7 @@ namespace _3DMANAGER_APP.Server.Controllers
             _logger.LogInformation($"Llamada a la funcion PostUserInvitation en el controlador UserController");
             if (GroupId == null || UserId == null)
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, NoAuthConstant)));
-            bool response = _userManager.PostUserInvitation(GroupId.Value, userId, UserId.Value, out BaseError? error);
+            bool response = _userService.PostUserInvitation(GroupId.Value, userId, UserId.Value, out BaseError? error);
             if (error != null)
                 return StatusCode(error.code, new Models.CommonResponse<bool>(new ErrorProperties(error.code, error.message)));
             else
@@ -217,7 +217,7 @@ namespace _3DMANAGER_APP.Server.Controllers
             if (UserId == null)
                 return Unauthorized();
 
-            var user = _userManager.GetUserById(UserId.Value);
+            var user = _userService.GetUserById(UserId.Value);
 
             if (user == null || user.UserId == 0)
                 return Unauthorized();
@@ -252,7 +252,7 @@ namespace _3DMANAGER_APP.Server.Controllers
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, NoAuthConstant)));
 
             request.GroupId = GroupId.Value;
-            bool response = _userManager.UpdateUser(request, out BaseError? error);
+            bool response = _userService.UpdateUser(request, out BaseError? error);
 
             if (error != null)
                 return StatusCode(error.code, new Models.CommonResponse<bool>(new ErrorProperties(error.code, error.message)));
@@ -281,7 +281,7 @@ namespace _3DMANAGER_APP.Server.Controllers
             if (UserId == null)
                 return Unauthorized(new Models.CommonResponse<UserDetailObject>(new ErrorProperties(401, NoAuthConstant)));
 
-            UserDetailObject userResponse = _userManager.GetUserDetail(userId, out BaseError? error);
+            UserDetailObject userResponse = _userService.GetUserDetail(userId, out BaseError? error);
 
             if (userResponse == null || error != null)
             {
@@ -316,7 +316,7 @@ namespace _3DMANAGER_APP.Server.Controllers
             if (UserId == null)
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, NoAuthConstant)));
 
-            var result = await _userManager.UpdateUserImage(userId, imageFile);
+            var result = await _userService.UpdateUserImage(userId, imageFile);
 
             if (result.Error != null)
                 return StatusCode(StatusCodes.Status500InternalServerError, new CommonResponse<bool>(result.Error));
@@ -345,7 +345,7 @@ namespace _3DMANAGER_APP.Server.Controllers
             if (UserId == null)
                 return Unauthorized(new Models.CommonResponse<GroupBasicDataResponse>(new ErrorProperties(401, NoAuthConstant)));
 
-            var result = await _userManager.DeleteUserImage(userId);
+            var result = await _userService.DeleteUserImage(userId);
 
             if (result.Error != null)
                 return StatusCode(result.Error.Code, new CommonResponse<bool>(result.Error));
@@ -375,7 +375,7 @@ namespace _3DMANAGER_APP.Server.Controllers
             if (UserId == null)
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, NoAuthConstant)));
 
-            BLL.Models.Base.CommonResponse<bool> response = await _userManager.DeleteUser(UserId.Value);
+            BLL.Models.Base.CommonResponse<bool> response = await _userService.DeleteUser(UserId.Value);
             if (response.Error != null || !response.Data)
                 return StatusCode(500, new Models.CommonResponse<bool>(new ErrorProperties(response.Error?.Code ?? StatusCodes.Status500InternalServerError, response.Error?.Message ?? "Error al eliminar la impresión")));
 

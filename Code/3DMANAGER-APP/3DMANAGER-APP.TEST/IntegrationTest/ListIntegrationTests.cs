@@ -1,7 +1,7 @@
-﻿using _3DMANAGER_APP.BLL.Managers;
-using _3DMANAGER_APP.BLL.Mapper;
+﻿using _3DMANAGER_APP.BLL.Mapper;
+using _3DMANAGER_APP.BLL.Services;
 using _3DMANAGER_APP.DAL.Base;
-using _3DMANAGER_APP.DAL.Managers;
+using _3DMANAGER_APP.DAL.Repositories;
 using _3DMANAGER_APP.TEST.Fixture;
 using AutoMapper;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -34,34 +34,34 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 "3DMANAGER"
             );
 
-            var catalogDbManager = new CatalogDbManager(
+            var catalogRepository = new CatalogRepository(
                 dataSource,
-                NullLogger<CatalogDbManager>.Instance
+                NullLogger<CatalogRepository>.Instance
             );
-            var printerDbManager = new PrinterDbManager(
+            var printerRepository = new PrinterRepository(
                dataSource,
-               NullLogger<PrinterDbManager>.Instance
+               NullLogger<PrinterRepository>.Instance
            );
-            var manager = new CatalogManager(
-                catalogDbManager,
-                printerDbManager,
+            var service = new CatalogService(
+                catalogRepository,
+                printerRepository,
                 _mapper,
-                NullLogger<CatalogManager>.Instance
+                NullLogger<CatalogService>.Instance
             );
 
-            var states = manager.GetPrintState();
+            var states = service.GetPrintState();
             Assert.NotNull(states);
             Assert.NotEmpty(states);
 
-            var filamentTypes = manager.GetFilamentType();
+            var filamentTypes = service.GetFilamentType();
             Assert.NotNull(filamentTypes);
             Assert.NotEmpty(filamentTypes);
 
-            var filaments = manager.GetFilamentCatalog(1);
+            var filaments = service.GetFilamentCatalog(1);
             Assert.NotNull(filaments);
             Assert.NotEmpty(filaments);
 
-            var printers = manager.GetPrinterCatalog(1);
+            var printers = service.GetPrinterCatalog(1);
             Assert.NotNull(printers);
             Assert.NotEmpty(printers);
 

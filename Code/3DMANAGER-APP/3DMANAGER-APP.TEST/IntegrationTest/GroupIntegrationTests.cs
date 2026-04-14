@@ -1,11 +1,11 @@
 ﻿using _3DMANAGER_APP.BLL.Interfaces;
-using _3DMANAGER_APP.BLL.Managers;
 using _3DMANAGER_APP.BLL.Mapper;
 using _3DMANAGER_APP.BLL.Models.Base;
 using _3DMANAGER_APP.BLL.Models.File;
 using _3DMANAGER_APP.BLL.Models.Group;
+using _3DMANAGER_APP.BLL.Services;
 using _3DMANAGER_APP.DAL.Base;
-using _3DMANAGER_APP.DAL.Managers;
+using _3DMANAGER_APP.DAL.Repositories;
 using _3DMANAGER_APP.TEST.E2ETest;
 using _3DMANAGER_APP.TEST.Fixture;
 using AutoMapper;
@@ -20,7 +20,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
         private readonly DatabaseFixture _fixture;
         private readonly IMapper _mapper;
         private readonly IAzureBlobStorageService _fakeABSService;
-        private readonly INotificationManager _notificationManager;
+        private readonly INotificationService _notificationService;
 
         public GroupIntegrationTests(DatabaseFixture fixture)
         {
@@ -65,20 +65,20 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 "3DMANAGER"
             );
 
-            var groupDbManager = new GroupDbManager(
+            var groupRepository = new GroupRepository(
                 dataSource,
-                NullLogger<GroupDbManager>.Instance
+                NullLogger<GroupRepository>.Instance
             );
 
-            var manager = new GroupManager(
-                groupDbManager,
+            var service = new GroupService(
+                groupRepository,
                 _mapper,
-                NullLogger<GroupManager>.Instance,
+                NullLogger<GroupService>.Instance,
                 _fakeABSService,
-                _notificationManager
+                _notificationService
             );
 
-            var result = manager.GetGroupDashboardData(1, out BaseError? error);
+            var result = service.GetGroupDashboardData(1, out BaseError? error);
 
             Assert.Null(error);
             Assert.NotNull(result);

@@ -1,11 +1,11 @@
 ﻿using _3DMANAGER_APP.BLL.Interfaces;
-using _3DMANAGER_APP.BLL.Managers;
 using _3DMANAGER_APP.BLL.Mapper;
 using _3DMANAGER_APP.BLL.Models.Base;
 using _3DMANAGER_APP.BLL.Models.File;
 using _3DMANAGER_APP.BLL.Models.Printer;
+using _3DMANAGER_APP.BLL.Services;
 using _3DMANAGER_APP.DAL.Base;
-using _3DMANAGER_APP.DAL.Managers;
+using _3DMANAGER_APP.DAL.Repositories;
 using _3DMANAGER_APP.TEST.Fixture;
 using AutoMapper;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -66,20 +66,20 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 "3DMANAGER"
             );
 
-            var printerDbManager = new PrinterDbManager(
+            var printerRepository = new PrinterRepository(
                 dataSource,
-                NullLogger<PrinterDbManager>.Instance
+                NullLogger<PrinterRepository>.Instance
             );
 
-            var manager = new PrinterManager(
-                printerDbManager,
+            var service = new PrinterService(
+                printerRepository,
                 _mapper,
-                NullLogger<PrinterManager>.Instance,
+                NullLogger<PrinterService>.Instance,
                 _aBSService
             );
 
             BaseError? error;
-            var printers = manager.GetPrinterDashboardList(1, out error);
+            var printers = service.GetPrinterDashboardList(1, out error);
 
             Assert.Null(error);
             Assert.NotNull(printers);
@@ -92,10 +92,10 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 PrinterModel = "Model test",
                 PrinterDescription = "NewDescription"
             };
-            var printersPost = manager.PostPrinter(newPrinter);
+            var printersPost = service.PostPrinter(newPrinter);
             Assert.Null(error);
 
-            var printersAfterPost = manager.GetPrinterDashboardList(1, out error);
+            var printersAfterPost = service.GetPrinterDashboardList(1, out error);
             Assert.Null(error);
             Assert.Equal(printers.Count + 1, printersAfterPost.Count);
             Assert.NotNull(printersAfterPost);
@@ -112,21 +112,21 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 "3DMANAGER"
             );
 
-            var printerDbManager = new PrinterDbManager(
+            var printerRepository = new PrinterRepository(
                 dataSource,
-                NullLogger<PrinterDbManager>.Instance
+                NullLogger<PrinterRepository>.Instance
             );
 
-            var manager = new PrinterManager(
-                printerDbManager,
+            var service = new PrinterService(
+                printerRepository,
                 _mapper,
-                NullLogger<PrinterManager>.Instance,
+                NullLogger<PrinterService>.Instance,
                 _aBSService
             );
 
             BaseError? error;
 
-            var printers = manager.GetPrinterDashboardList(1, out error);
+            var printers = service.GetPrinterDashboardList(1, out error);
             Assert.Null(error);
             Assert.NotEmpty(printers);
 
@@ -141,11 +141,11 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 PrinterStateId = 2
             };
 
-            var result = manager.UpdatePrinter(request, out BaseError? errorR);
+            var result = service.UpdatePrinter(request, out BaseError? errorR);
 
             Assert.True(result);
             Assert.Null(errorR);
-            var updatedPrinters = manager.GetPrinterDashboardList(1, out error);
+            var updatedPrinters = service.GetPrinterDashboardList(1, out error);
             Assert.Null(error);
 
         }
@@ -158,15 +158,15 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 "3DMANAGER"
             );
 
-            var printerDbManager = new PrinterDbManager(
+            var printerRepository = new PrinterRepository(
                 dataSource,
-                NullLogger<PrinterDbManager>.Instance
+                NullLogger<PrinterRepository>.Instance
             );
 
-            var manager = new PrinterManager(
-                printerDbManager,
+            var service = new PrinterService(
+                printerRepository,
                 _mapper,
-                NullLogger<PrinterManager>.Instance,
+                NullLogger<PrinterService>.Instance,
                 _aBSService
             );
 
@@ -178,18 +178,18 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 PrinterModel = "Modelo prueba"
             };
 
-            var created = await manager.PostPrinter(newPrinter);
+            var created = await service.PostPrinter(newPrinter);
             Assert.NotNull(created);
             Assert.True(created.Data > 0);
 
             int printerId = created.Data;
 
-            var deleteResponse = await manager.DeletePrinter(printerId, 1);
+            var deleteResponse = await service.DeletePrinter(printerId, 1);
 
             Assert.NotNull(deleteResponse);
             Assert.True(deleteResponse.Data);
 
-            var printers = manager.GetPrinterDashboardList(1, out BaseError? error);
+            var printers = service.GetPrinterDashboardList(1, out BaseError? error);
             Assert.Null(error);
             Assert.DoesNotContain(printers, p => p.PrinterId == printerId);
         }
