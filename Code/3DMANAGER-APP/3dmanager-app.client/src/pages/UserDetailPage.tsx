@@ -152,41 +152,54 @@ const UserDetailPage: React.FC = () => {
     }
      
     const handleDelete = () => {
-        showPopup({
-            type: "error",
-            hideCloseButton: true,
-            content: (
-                <ConfirmPopup
-                    action="Eliminar tu usuario"
-                    onCancel={() => closePopup()}
-                    onConfirm={async () => {
-                        const response = await deleteUser();
+        if (user?.rolId == "Usuario-Manager") {
+            showPopup({
+                type: "info",
+                content: (
+                    <InfoPopup title="Operación no compatible" description="Para que puedas eliminar tu usuario no pueder ser el dueño de un grupo." />
+                ),
+                onClose: () => {
+                    closePopup();
+                }
+            });
+        } else {
+            showPopup({
+                type: "base",
+                hideCloseButton: true,
+                content: (
+                    <ConfirmPopup
+                        action="Eliminar tu usuario"
+                        onCancel={() => closePopup()}
+                        onConfirm={async () => {
+                            const response = await deleteUser();
 
-                        if (response.data) {
-                            showPopup({
-                                type: "info",
-                                content: (
-                                    <InfoPopup title="Operación realizada" description="Tu usuario ha sido eliminado correctamente." />
-                                ),
-                                onClose: () => {
-                                    closePopup();
-                                    logout();
-                                    navigate("/login");
-                                }
-                            });
-                        } else {
-                            showPopup({
-                                type: "error",
-                                content: (
-                                    <InfoPopup title="Error" description={response.error?.message || "No se pudo eliminar tu usuario."} />
-                                ),
-                                onClose: () => closePopup()
-                            });
-                        }
-                    }}
-                />
-            )
-        });
+                            if (response.data) {
+                                showPopup({
+                                    type: "info",
+                                    content: (
+                                        <InfoPopup title="Operación realizada" description="Tu usuario ha sido eliminado correctamente." />
+                                    ),
+                                    onClose: () => {
+                                        closePopup();
+                                        logout();
+                                        navigate("/login");
+                                    }
+                                });
+                            } else {
+                                showPopup({
+                                    type: "error",
+                                    content: (
+                                        <InfoPopup title="Error" description={response.error?.message || "No se pudo eliminar tu usuario."} />
+                                    ),
+                                    onClose: () => closePopup()
+                                });
+                            }
+                        }}
+                    />
+                )
+            });
+        }
+        
     };
 
     return (
