@@ -128,9 +128,6 @@ const GroupPopup: React.FC = () => {
             onSuccess: async () => {
                 await refreshUser();
                 closePopup();
-                showPopup({
-                    type: "base", width: "80vh", content: (<GroupPopup />)
-                });
             }
         });
     };
