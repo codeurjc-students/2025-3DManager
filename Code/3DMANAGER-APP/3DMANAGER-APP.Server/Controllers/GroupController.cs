@@ -24,10 +24,12 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <returns>A boolean that indicates if the creation has been successful</returns>
         /// <response code="200">Respuesta correcta</response>
         /// <response code="401">No autorizado</response>
+        /// <response code="409">Conflicto</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Groups")]
@@ -39,10 +41,10 @@ namespace _3DMANAGER_APP.Server.Controllers
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, UnauthorizedMsg)));
 
             request.UserId = UserId.Value;
-            var response = _groupService.PostNewGroup(request);
-            if (!response)
+            var response = _groupService.PostNewGroup(request, out BaseError? error);
+            if (error != null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Ha ocurrido un error al intentar crear el grupo")));
+                return StatusCode(error.code, new Models.CommonResponse<bool>(new ErrorProperties(error.code, error.message)));
             }
             return Ok(new Models.CommonResponse<bool>(response));
         }

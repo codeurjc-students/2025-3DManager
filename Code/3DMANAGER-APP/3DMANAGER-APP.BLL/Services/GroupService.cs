@@ -37,10 +37,22 @@ namespace _3DMANAGER_APP.BLL.Services
             return _mapper.Map<List<GroupInvitation>>(list);
         }
 
-        public bool PostNewGroup(GroupRequest request)
+        public bool PostNewGroup(GroupRequest request, out BaseError? error)
         {
+
+            error = null;
             GroupRequestDbObject groupDbObject = _mapper.Map<GroupRequestDbObject>(request);
-            return _groupDbManager.PostNewGroup(groupDbObject);
+            bool response = _groupDbManager.PostNewGroup(groupDbObject, out int? errorDb);
+            if (errorDb != null || errorDb > 0)
+            {
+                error = new BaseError()
+                {
+                    code = errorDb == 4091 ? (int)HttpStatusCode.Conflict : (int)HttpStatusCode.InternalServerError,
+                    message = errorDb == 4091 ? $"Error al tratar de crear el grupo. El nombre de grupo ya existe" : "Error al intentar crear un grupo en el servidor"
+                };
+                return false;
+            }
+            return response;
         }
 
         public bool PostAcceptInvitation(int groupId, bool isAccepted, int userId, out BaseError? error)

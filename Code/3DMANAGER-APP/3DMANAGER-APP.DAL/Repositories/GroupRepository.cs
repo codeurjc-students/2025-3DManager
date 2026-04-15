@@ -17,8 +17,9 @@ namespace _3DMANAGER_APP.DAL.Repositories
         {
         }
 
-        public bool PostNewGroup(GroupRequestDbObject request)
+        public bool PostNewGroup(GroupRequestDbObject request, out int? errorDb)
         {
+            errorDb = null;
             try
             {
                 string procName = $"{ProcedurePrefix}_pr_GROUP_POST";
@@ -41,6 +42,7 @@ namespace _3DMANAGER_APP.DAL.Repositories
                 var error = Convert.ToInt32(errorParam.Value);
                 if (error != 0)
                 {
+                    errorDb = error;
                     return false;
                 }
                 if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
@@ -52,12 +54,14 @@ namespace _3DMANAGER_APP.DAL.Repositories
             }
             catch (MySqlException ex)
             {
+                errorDb = 500;
                 string msg = "Error al crear un grupo en BBDD";
                 Logger.LogError(ex, msg);
                 return false;
             }
             catch (Exception ex)
             {
+                errorDb = 500;
                 string msg = "Error al crear un grupo en BBDD";
                 Logger.LogError(ex, msg);
                 return false;

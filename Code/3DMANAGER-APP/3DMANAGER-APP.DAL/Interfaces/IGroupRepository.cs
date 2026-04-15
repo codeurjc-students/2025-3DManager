@@ -4,7 +4,7 @@ namespace _3DMANAGER_APP.DAL.Interfaces
 {
     public interface IGroupRepository
     {
-        public bool PostNewGroup(GroupRequestDbObject request);
+        public bool PostNewGroup(GroupRequestDbObject request, out int? errorDb);
         public List<GroupInvitationDbObject> GetGroupInvitations(int userId, out int? errorDb);
         public bool PostAcceptInvitation(int groupId, bool isAccepted, int userId, out int? errorDb);
         public GroupBasicDataResponseDbObject GetGroupBasicData(int groupId);

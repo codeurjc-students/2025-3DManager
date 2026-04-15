@@ -102,8 +102,10 @@ const GroupPopup: React.FC = () => {
         if (!newOwner) {
             showPopup({
                 type: "warning",
-                content: "Debes seleccionar un usuario para transferir el control."
+                content: "Debes seleccionar un usuario para transferir el control.",
+                onClose: reopenGroupPopup
             });
+
             return;
         }
 
@@ -126,6 +128,9 @@ const GroupPopup: React.FC = () => {
             onSuccess: async () => {
                 await refreshUser();
                 closePopup();
+                showPopup({
+                    type: "base", width: "80vh", content: (<GroupPopup />)
+                });
             }
         });
     };
@@ -216,6 +221,7 @@ const GroupPopup: React.FC = () => {
                                 </button>
 
                                 <select id="newOwner" className="input-value w-75 ms-2" value={newOwner ?? ""} onChange={(e) => setNewOwner(Number(e.target.value))}>
+                                    <option value={0}>Seleccione usuario del grupo</option>
                                     {data.groupMembers
                                         .filter(member => member.userId !== user!.userId)
                                         .map(member => (

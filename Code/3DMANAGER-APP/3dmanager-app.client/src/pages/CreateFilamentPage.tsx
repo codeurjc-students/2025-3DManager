@@ -114,7 +114,7 @@ const CreateFilamentPage: React.FC = () => {
                                         </select>
                                     </div>
                                     <div className="col-4">
-                                        <label htmlFor="filamentWeight" className="form-label">Peso Bobina</label>
+                                        <label htmlFor="filamentWeight" className="form-label">Peso Bobina (g)</label>
                                         <input type="number" id="filamentWeight" className="input-value w-75" value={filamentWeight ?? 0} 
                                             onChange={(e) => setFilamentWeight(Number(e.target.value))} />
                                     </div>
@@ -131,7 +131,7 @@ const CreateFilamentPage: React.FC = () => {
                                             onChange={(e) => setFilamentTemperature(Number(e.target.value))} />
                                     </div>
                                     <div className="col-4">
-                                        <label htmlFor="filamentLenght" className="form-label">Logitud de bobina</label>
+                                        <label htmlFor="filamentLenght" className="form-label">Logitud de bobina (m)</label>
                                         <input type="number" id="filamentLenght" className="input-value w-75" value={filamentLenght ?? 0} 
                                             onChange={(e) => setFilamentLenght(Number(e.target.value))} />
                                     </div>

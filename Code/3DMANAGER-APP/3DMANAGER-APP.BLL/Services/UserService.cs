@@ -172,7 +172,7 @@ namespace _3DMANAGER_APP.BLL.Services
                 switch (errorDb)
                 {
                     case 409:
-                        msg = $"Ya existe una invitacion del grupo {groupId} al usuario {userId}.";
+                        msg = $"Ya existe una invitacion del grupo para este usuario.";
                         _logger.LogInformation(msg);
                         error = new BaseError { code = StatusCodes.Status409Conflict, message = msg };
                         break;

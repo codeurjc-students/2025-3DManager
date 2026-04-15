@@ -57,7 +57,7 @@ const CreatePrint3DPage: React.FC = () => {
                     content: (
                         <InfoPopup
                             title="Sin impresoras"
-                            description="No hay impresoras registradas. Debe añadir una antes de crear una impresión."
+                            description="No hay impresoras registradas o en activo. Debe añadir una antes de crear una impresión."
                         />
                     )
                 });
@@ -173,7 +173,7 @@ const CreatePrint3DPage: React.FC = () => {
         if (!printName || !printState || !printFilament || !printPrinter || !printDescription || !printTime || !printRealTimeM) {
             showPopup({
                 type: "warning", content: (
-                    <InfoPopup title="Completar formulario" description="Debe rellenar todos los campos salvo la imagen de impresión. Asegúrese de que todos los selectores tienen un campo selccionado y 
+                    <InfoPopup title="Completar formulario" description="Debe rellenar todos los campos salvo el ficheo STL de impresión, que es opcional. Asegúrese de que todos los selectores tienen un campo seleccionado y 
 que el tiempo real de impresión tiene al menos minutos agregados" />
                 )
             });

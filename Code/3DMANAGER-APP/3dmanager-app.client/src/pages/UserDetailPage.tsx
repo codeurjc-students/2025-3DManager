@@ -156,7 +156,7 @@ const UserDetailPage: React.FC = () => {
             showPopup({
                 type: "info",
                 content: (
-                    <InfoPopup title="Operación no compatible" description="Para que puedas eliminar tu usuario no pueder ser el dueño de un grupo." />
+                    <InfoPopup title="Operación no compatible" description="Para que puedas eliminar tu usuario no puedes ser el dueño de un grupo." />
                 ),
                 onClose: () => {
                     closePopup();
