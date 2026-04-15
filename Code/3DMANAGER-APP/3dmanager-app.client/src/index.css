@@ -445,12 +445,21 @@ fs-detail{
 }
 
 .comment-item {
+    width: 100%;
     background: #ffffff;
     border-radius: 8px;
+    word-wrap: break-word;
+    overflow-wrap: break-word; 
+    white-space: normal;
 }
+    .comment-item .small {
+        overflow-wrap: break-word;
+        word-break: break-word;
+    }
 
 .comments-scroll {
     overflow-y: auto;
+    overflow-x: hidden;
     padding-right: 5px;
 }
 
@@ -592,4 +601,75 @@ fs-detail{
     font-size: 12px;
     color: #666;
 }
+
+.delete-comment {
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+.stl-viewer-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.stl-canvas {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #ccc;
+}
+.stl-loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.85);
+    padding: 20px 30px;
+    border-radius: 10px;
+    z-index: 10;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #ccc;
+    border-top-color: #ffb300;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.input-editable {
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    color: #212529;
+}
+    .input-editable:not(:disabled):hover {
+        border-color: #4a90e2;
+    }
+
+    .input-editable:not(:disabled):focus {
+        border-color: #4a90e2;
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.25);
+        outline: none;
+    }
+
+    .input-editable:disabled {
+        background-color: #ffffff;
+        border: 1px solid #ced4da;
+        color: #212529;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
 

@@ -1,11 +1,11 @@
 ﻿using _3DMANAGER_APP.BLL.Interfaces;
-using _3DMANAGER_APP.BLL.Managers;
 using _3DMANAGER_APP.BLL.Mapper;
 using _3DMANAGER_APP.BLL.Models.Base;
 using _3DMANAGER_APP.BLL.Models.File;
 using _3DMANAGER_APP.BLL.Models.User;
+using _3DMANAGER_APP.BLL.Services;
 using _3DMANAGER_APP.DAL.Base;
-using _3DMANAGER_APP.DAL.Managers;
+using _3DMANAGER_APP.DAL.Repositories;
 using _3DMANAGER_APP.TEST.E2ETest;
 using _3DMANAGER_APP.TEST.Fixture;
 using AutoMapper;
@@ -21,7 +21,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
         private readonly DatabaseFixture _fixture;
         private readonly IMapper _mapper;
         private readonly IAzureBlobStorageService _fakeService;
-        private readonly INotificationManager _notificationManager;
+        private readonly INotificationService _notificationService;
         public UserIntegrationTests(DatabaseFixture fixture)
         {
             _fixture = fixture;
@@ -65,21 +65,21 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 "3DMANAGER"
             );
 
-            var userDbManager = new UserDbManager(
+            var userRepository = new UserRepository(
                 dataSource,
-                NullLogger<UserDbManager>.Instance
+                NullLogger<UserRepository>.Instance
             );
 
-            var manager = new UserManager(
-                userDbManager,
+            var service = new UserService(
+                userRepository,
                 _mapper,
-                NullLogger<UserManager>.Instance,
+                NullLogger<UserService>.Instance,
                 _fakeService,
-                _notificationManager
+                _notificationService
             );
 
             BaseError? error;
-            var users = manager.GetUserList(1, out error);
+            var users = service.GetUserList(1, out error);
 
             Assert.Null(error);
             Assert.NotNull(users);
@@ -93,18 +93,18 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 _fixture.ConnectionString,
                 "3DMANAGER");
 
-            var userDbManager = new UserDbManager(
+            var userRepository = new UserRepository(
                 dataSource,
-                NullLogger<UserDbManager>.Instance);
+                NullLogger<UserRepository>.Instance);
 
-            var manager = new UserManager(userDbManager,
+            var service = new UserService(userRepository,
                 _mapper,
-                NullLogger<UserManager>.Instance,
-                _fakeService, _notificationManager);
+                NullLogger<UserService>.Instance,
+                _fakeService, _notificationService);
 
             BaseError? error;
 
-            var user = manager.GetUserDetail(1, 1, out error);
+            var user = service.GetUserDetail(1, out error);
             Assert.Null(error);
             Assert.NotNull(user);
             var request = new UserUpdateRequest
@@ -114,10 +114,10 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 UserName = "Integration User Updated",
                 UserEmail = "integration@test.com"
             };
-            var result = manager.UpdateUser(request);
+            var result = service.UpdateUser(request, out BaseError? errorR);
             Assert.True(result);
-
-            var updated = manager.GetUserDetail(1, user.userId, out error);
+            Assert.Null(errorR);
+            var updated = service.GetUserDetail(user.userId, out error);
             Assert.Null(error);
             Assert.NotNull(updated);
             Assert.Equal("Integration User Updated", updated.userName);

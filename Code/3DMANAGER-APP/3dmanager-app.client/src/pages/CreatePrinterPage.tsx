@@ -70,17 +70,17 @@ const CreatePrinterPage: React.FC = () => {
                             <div className="p-3">
                                 <div className="mb-3">
                                     <label htmlFor="printerName" className="form-label">Nombre de impresora</label>
-                                    <input id="printerName" type="text" className="input-value w-75" value={printerName} placeholder="Nombre impresora"
+                                    <input id="printerName" type="text" className="input-value w-75" value={printerName ?? ""} placeholder="Nombre impresora"
                                         onChange={(e) => setPrinterName(e.target.value)} />
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="printerModel" className="form-label">Modelo de la impresora</label>
-                                    <input id="printerModel" className="input-value w-75" value={printerModel} placeholder="Modelo impresora"
+                                    <input id="printerModel" className="input-value w-75" value={printerModel ?? ""} placeholder="Modelo impresora"
                                         onChange={(e) => setPrinterModel(e.target.value)} />
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="printerDescription" className="form-label">Descripción</label>
-                                    <textarea id="printerDescription" className="input-value w-75" value={printerDescription} placeholder="Descripción"
+                                    <textarea id="printerDescription" className="input-value w-75" value={printerDescription ?? ""} placeholder="Descripción"
                                         onChange={(e) => setPrinterDescription(e.target.value)} />
                                 </div>
                                 <div className="mb-3">

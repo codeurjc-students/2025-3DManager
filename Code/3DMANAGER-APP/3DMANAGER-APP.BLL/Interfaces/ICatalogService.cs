@@ -1,0 +1,15 @@
+﻿using _3DMANAGER_APP.BLL.Models.Catalog;
+
+namespace _3DMANAGER_APP.BLL.Interfaces
+{
+    public interface ICatalogService
+    {
+        public List<CatalogResponse> GetFilamentType();
+        public List<CatalogPrinterResponse> GetPrinterCatalog(int groupId);
+        public List<CatalogResponse> GetFilamentCatalog(int groupId);
+        public List<CatalogResponse> GetPrintState();
+        public List<CatalogResponse> GetPrinterState();
+        public List<CatalogResponse> GetFilamentState();
+
+    }
+}

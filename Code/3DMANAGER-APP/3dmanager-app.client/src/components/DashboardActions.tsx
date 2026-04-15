@@ -47,7 +47,7 @@ const DashboardActions: React.FC = () => {
                 {user!.rolId == "Usuario-Manager" ? (
                     <div className="d-flex align-items-center mt-1 justify-content-between">
                         <button type="button" className="button-yellow dashboard-icon-btn col-5 ms-5" onClick={() => navigate("/dashboard/print-create")}>
-                                <span className="dashboard-title pe-5">Subir archivo G-Code</span>
+                                <span className="dashboard-title pe-5">Subir impresión</span>
                                 <svg width="45" height="42" viewBox="0 0 45 42" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M5.625 26.25V33.25C5.625 34.1783 6.02009 35.0685 6.72335 35.7249C7.42661 36.3813 8.38044 36.75 9.375 36.75L35.625 36.75C36.6196 36.75 37.5734 36.3813 38.2767 35.7249C38.9799 35.0685 39.375 34.1783 39.375 33.25V26.25M13.125 14L22.5 5.25M22.5 5.25L31.875 14M22.5 5.25L22.5 26.25" stroke="#2C2C2C" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
@@ -63,7 +63,7 @@ const DashboardActions: React.FC = () => {
                         <div className="d-flex align-items-center justify-content-center mt-1">
                             <button disabled={!permission} type="button" className={`col-11 mt-4 justify-content-center ${!permission ? ".button-darkGrey" : "button-yellow"
                                 }`} onClick={() => navigate("/dashboard/print-create")}>
-                                <span className="dashboard-title pe-5">Subir archivo G-Code</span>
+                                <span className="dashboard-title pe-5">Subir impresión</span>
                                 <svg width="45" height="42" viewBox="0 0 45 42" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M5.625 26.25V33.25C5.625 34.1783 6.02009 35.0685 6.72335 35.7249C7.42661 36.3813 8.38044 36.75 9.375 36.75L35.625 36.75C36.6196 36.75 37.5734 36.3813 38.2767 35.7249C38.9799 35.0685 39.375 34.1783 39.375 33.25V26.25M13.125 14L22.5 5.25M22.5 5.25L31.875 14M22.5 5.25L22.5 26.25" stroke="#2C2C2C" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>

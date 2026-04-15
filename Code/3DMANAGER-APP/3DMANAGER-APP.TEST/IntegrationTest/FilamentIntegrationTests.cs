@@ -1,11 +1,11 @@
 ﻿using _3DMANAGER_APP.BLL.Interfaces;
-using _3DMANAGER_APP.BLL.Managers;
 using _3DMANAGER_APP.BLL.Mapper;
 using _3DMANAGER_APP.BLL.Models.Base;
 using _3DMANAGER_APP.BLL.Models.Filament;
 using _3DMANAGER_APP.BLL.Models.File;
+using _3DMANAGER_APP.BLL.Services;
 using _3DMANAGER_APP.DAL.Base;
-using _3DMANAGER_APP.DAL.Managers;
+using _3DMANAGER_APP.DAL.Repositories;
 using _3DMANAGER_APP.TEST.E2ETest;
 using _3DMANAGER_APP.TEST.Fixture;
 using AutoMapper;
@@ -20,7 +20,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
         private readonly DatabaseFixture _fixture;
         private readonly IMapper _mapper;
         private readonly IAzureBlobStorageService _fakeService;
-        private readonly INotificationManager _notificationManager;
+        private readonly INotificationService _notificationService;
         public FilamentIntegrationTests(DatabaseFixture fixture)
         {
             _fixture = fixture;
@@ -64,21 +64,21 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 "3DMANAGER"
             );
 
-            var filamentDbManager = new FilamentDbManager(
+            var filamentRepository = new FilamentRepository(
                 dataSource,
-                NullLogger<FilamentDbManager>.Instance
+                NullLogger<FilamentRepository>.Instance
             );
 
-            var manager = new FilamentManager(
-                filamentDbManager,
+            var service = new FilamentService(
+                filamentRepository,
                 _mapper,
-                NullLogger<FilamentManager>.Instance,
+                NullLogger<FilamentService>.Instance,
                 _fakeService,
-                _notificationManager
+                _notificationService
             );
 
             BaseError? error;
-            var filaments = manager.GetFilamentList(1, out error);
+            var filaments = service.GetFilamentList(1, out error);
 
             Assert.Null(error);
             Assert.NotNull(filaments);
@@ -99,12 +99,12 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
 
 
             };
-            var filamentPost = await manager.PostFilament(newFilament);
+            var filamentPost = await service.PostFilament(newFilament);
             Assert.Null(error);
             Assert.NotNull(filamentPost);
             Assert.NotEqual(0, filamentPost.Data);
 
-            var filamentsAfterPost = manager.GetFilamentList(1, out error);
+            var filamentsAfterPost = service.GetFilamentList(1, out error);
             Assert.Null(error);
             Assert.Equal(filaments.Count + 1, filamentsAfterPost.Count);
             Assert.NotNull(filamentsAfterPost);
@@ -119,20 +119,20 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 _fixture.ConnectionString,
                 "3DMANAGER");
 
-            var filamentDbManager = new FilamentDbManager(
+            var filamentRepository = new FilamentRepository(
                 dataSource,
-                NullLogger<FilamentDbManager>.Instance);
+                NullLogger<FilamentRepository>.Instance);
 
-            var manager = new FilamentManager(
-                filamentDbManager,
+            var service = new FilamentService(
+                filamentRepository,
                 _mapper,
-                NullLogger<FilamentManager>.Instance,
+                NullLogger<FilamentService>.Instance,
                 _fakeService,
-                _notificationManager);
+                _notificationService);
 
             BaseError? error;
 
-            var filament = manager.GetFilamentDetail(1, 1, out error);
+            var filament = service.GetFilamentDetail(1, 1, out error);
             Assert.Null(error);
             Assert.NotNull(filament);
 
@@ -150,10 +150,10 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
 
             };
 
-            var result = manager.UpdateFilament(request);
+            var result = service.UpdateFilament(request);
             Assert.True(result);
 
-            var updated = manager.GetFilamentDetail(1, filament.FilamentId, out error);
+            var updated = service.GetFilamentDetail(1, filament.FilamentId, out error);
             Assert.Null(error);
             Assert.NotNull(updated);
             Assert.Equal("E2E Filament Updated", updated.FilamentName);
@@ -171,17 +171,17 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 "3DMANAGER"
             );
 
-            var filamentDbManager = new FilamentDbManager(
+            var filamentRepository = new FilamentRepository(
                 dataSource,
-                NullLogger<FilamentDbManager>.Instance
+                NullLogger<FilamentRepository>.Instance
             );
 
-            var manager = new FilamentManager(
-                filamentDbManager,
+            var service = new FilamentService(
+                filamentRepository,
                 _mapper,
-                NullLogger<FilamentManager>.Instance,
+                NullLogger<FilamentService>.Instance,
                 _fakeService,
-                _notificationManager
+                _notificationService
             );
 
             // Creamos un filamento de prueba
@@ -200,18 +200,18 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
 
             };
 
-            var created = await manager.PostFilament(newFilament);
+            var created = await service.PostFilament(newFilament);
             Assert.NotNull(created);
             Assert.True(created.Data > 0);
 
             int filamentId = created.Data;
 
-            var deleteResponse = await manager.DeleteFilament(filamentId, 1);
+            var deleteResponse = await service.DeleteFilament(filamentId, 1);
 
             Assert.NotNull(deleteResponse);
             Assert.True(deleteResponse.Data);
 
-            var filaments = manager.GetFilamentList(1, out BaseError? error);
+            var filaments = service.GetFilamentList(1, out BaseError? error);
             Assert.Null(error);
             Assert.DoesNotContain(filaments, f => f.FilamentId == filamentId);
         }

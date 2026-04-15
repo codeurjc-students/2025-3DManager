@@ -1,5 +1,5 @@
-﻿using _3DMANAGER_APP.BLL.Managers;
-using _3DMANAGER_APP.BLL.Models.Catalog;
+﻿using _3DMANAGER_APP.BLL.Models.Catalog;
+using _3DMANAGER_APP.BLL.Services;
 using _3DMANAGER_APP.DAL.Interfaces;
 using _3DMANAGER_APP.DAL.Models.Filament;
 using AutoMapper;
@@ -10,22 +10,22 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Catalogs
 {
     public class CatalogTests
     {
-        private readonly Mock<ILogger<CatalogManager>> _loggerMock;
+        private readonly Mock<ILogger<CatalogService>> _loggerMock;
         private readonly Mock<IMapper> _mapperMock;
-        private readonly Mock<ICatalogDbManager> _catalogDbManagerMock;
-        private readonly CatalogManager _manager;
-        private readonly Mock<IPrinterDbManager> _printerDbManagerMock;
+        private readonly Mock<ICatalogRepository> _catalogRepositoryMock;
+        private readonly CatalogService _service;
+        private readonly Mock<IPrinterRepository> _printerRepositoryMock;
         public CatalogTests()
         {
-            _loggerMock = new Mock<ILogger<CatalogManager>>();
+            _loggerMock = new Mock<ILogger<CatalogService>>();
             _mapperMock = new Mock<IMapper>();
-            _catalogDbManagerMock = new Mock<ICatalogDbManager>();
-            _printerDbManagerMock = new Mock<IPrinterDbManager>();
-            _loggerMock = new Mock<ILogger<CatalogManager>>();
+            _catalogRepositoryMock = new Mock<ICatalogRepository>();
+            _printerRepositoryMock = new Mock<IPrinterRepository>();
+            _loggerMock = new Mock<ILogger<CatalogService>>();
 
-            _manager = new CatalogManager(
-                _catalogDbManagerMock.Object,
-                _printerDbManagerMock.Object,
+            _service = new CatalogService(
+                _catalogRepositoryMock.Object,
+                _printerRepositoryMock.Object,
                 _mapperMock.Object,
                 _loggerMock.Object
 
@@ -49,7 +49,7 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Catalogs
             new CatalogResponse { Id = 2, Description = "ABS" }
         };
 
-            _catalogDbManagerMock
+            _catalogRepositoryMock
                 .Setup(db => db.GetFilamentType())
                 .Returns(dbResponse);
 
@@ -58,7 +58,7 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Catalogs
                 .Returns(mappedResponse);
 
 
-            var result = _manager.GetFilamentType();
+            var result = _service.GetFilamentType();
 
 
             Assert.NotNull(result);
@@ -66,7 +66,7 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Catalogs
             Assert.Equal("PLA", result[0].Description);
             Assert.Equal("ABS", result[1].Description);
 
-            _catalogDbManagerMock.Verify(db => db.GetFilamentType(), Times.Once);
+            _catalogRepositoryMock.Verify(db => db.GetFilamentType(), Times.Once);
             _mapperMock.Verify(m => m.Map<List<CatalogResponse>>(dbResponse), Times.Once);
         }
 
@@ -90,7 +90,7 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Catalogs
         new CatalogResponse { Id = 2, Description = "Filamento 2" }
     };
 
-            _catalogDbManagerMock
+            _catalogRepositoryMock
                 .Setup(db => db.GetFilamentCatalog(groupId))
                 .Returns(dbResponse);
 
@@ -99,13 +99,13 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Catalogs
                 .Returns(mappedResponse);
 
 
-            var result = _manager.GetFilamentCatalog(groupId);
+            var result = _service.GetFilamentCatalog(groupId);
 
 
             Assert.NotNull(result);
             Assert.Equal(2, result.Count);
 
-            _catalogDbManagerMock.Verify(db => db.GetFilamentCatalog(groupId), Times.Once);
+            _catalogRepositoryMock.Verify(db => db.GetFilamentCatalog(groupId), Times.Once);
             _mapperMock.Verify(m => m.Map<List<CatalogResponse>>(dbResponse), Times.Once);
         }
 
@@ -126,7 +126,7 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Catalogs
                 new CatalogPrinterResponse { Id = 1, Description = "Ender 3 VE" , TimeVariation = 0}
             };
 
-            _catalogDbManagerMock
+            _catalogRepositoryMock
                 .Setup(db => db.GetPrinterCatalog(groupId))
                 .Returns(dbResponse);
 
@@ -135,12 +135,12 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Catalogs
                 .Returns(mappedResponse);
 
 
-            var result = _manager.GetPrinterCatalog(groupId);
+            var result = _service.GetPrinterCatalog(groupId);
 
 
             Assert.Single(result);
 
-            _catalogDbManagerMock.Verify(db => db.GetPrinterCatalog(groupId), Times.Once);
+            _catalogRepositoryMock.Verify(db => db.GetPrinterCatalog(groupId), Times.Once);
             _mapperMock.Verify(m => m.Map<List<CatalogPrinterResponse>>(dbResponse), Times.Once);
         }
 
@@ -162,7 +162,7 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Catalogs
         new CatalogResponse { Id = 2, Description = "No Completado" }
     };
 
-            _catalogDbManagerMock
+            _catalogRepositoryMock
                 .Setup(db => db.GetPrintState())
                 .Returns(dbResponse);
 
@@ -171,12 +171,12 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Catalogs
                 .Returns(mappedResponse);
 
 
-            var result = _manager.GetPrintState();
+            var result = _service.GetPrintState();
 
 
             Assert.Equal(2, result.Count);
 
-            _catalogDbManagerMock.Verify(db => db.GetPrintState(), Times.Once);
+            _catalogRepositoryMock.Verify(db => db.GetPrintState(), Times.Once);
             _mapperMock.Verify(m => m.Map<List<CatalogResponse>>(dbResponse), Times.Once);
         }
     }

@@ -1,7 +1,7 @@
 ﻿using _3DMANAGER_APP.BLL.Interfaces;
-using _3DMANAGER_APP.BLL.Managers;
 using _3DMANAGER_APP.BLL.Models;
 using _3DMANAGER_APP.BLL.Models.Base;
+using _3DMANAGER_APP.BLL.Services;
 using _3DMANAGER_APP.DAL.Base;
 using _3DMANAGER_APP.DAL.Interfaces;
 using _3DMANAGER_APP.DAL.Models;
@@ -17,8 +17,8 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest
         [Trait("Category", "Unitary")]
         public void GetPrinterList_WhenDbReturnsData_ShouldReturnMappedPrinters()
         {
-            var mockDb = new Mock<IPrinterDbManager>();
-            var mockLogger = new Mock<ILogger<PrinterManager>>();
+            var mockDb = new Mock<IPrinterRepository>();
+            var mockLogger = new Mock<ILogger<PrinterService>>();
             var mockMapper = new Mock<IMapper>();
             var mockABSService = new Mock<IAzureBlobStorageService>();
 
@@ -42,9 +42,9 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest
                       new PrinterObject { PrinterName = "Impresora 2" }
                       });
 
-            var manager = new PrinterManager(mockDb.Object, mockMapper.Object, mockLogger.Object, mockABSService.Object);
+            var service = new PrinterService(mockDb.Object, mockMapper.Object, mockLogger.Object, mockABSService.Object);
 
-            var result = manager.GetPrinterList(out BaseError error);
+            var result = service.GetPrinterList(out BaseError error);
 
             Assert.NotNull(result);
             Assert.Equal(2, result.Count);
@@ -56,8 +56,8 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest
         [Trait("Category", "Unitary")]
         public void GetPrinterList_WhenDbReturnsError_ShouldSetBaseError()
         {
-            var mockDb = new Mock<IPrinterDbManager>();
-            var mockLogger = new Mock<ILogger<PrinterManager>>();
+            var mockDb = new Mock<IPrinterRepository>();
+            var mockLogger = new Mock<ILogger<PrinterService>>();
             var mockMapper = new Mock<IMapper>();
             var mockABSService = new Mock<IAzureBlobStorageService>();
 
@@ -70,9 +70,9 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest
                   return null!;
               }));
 
-            var manager = new PrinterManager(mockDb.Object, mockMapper.Object, mockLogger.Object, mockABSService.Object);
+            var service = new PrinterService(mockDb.Object, mockMapper.Object, mockLogger.Object, mockABSService.Object);
 
-            var result = manager.GetPrinterList(out BaseError error);
+            var result = service.GetPrinterList(out BaseError error);
 
             Assert.Null(result);
             Assert.NotNull(error);

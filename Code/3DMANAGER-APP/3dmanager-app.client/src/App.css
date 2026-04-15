@@ -52,8 +52,9 @@ th, td {
 
 }
 .pages-container {
-    flex : 1;
-    overflow: auto;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
 }
 
 .image-container{

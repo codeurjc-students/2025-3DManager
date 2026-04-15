@@ -21,10 +21,13 @@ apiClient.interceptors.response.use(response => response, error => {
     const status = Number(rawStatus);
 
     if (error.response?.status === 401) {
-        localStorage.removeItem("user");
-        localStorage.removeItem("token");
-        globalThis.location.href = "/login";
+        if (localStorage.getItem("token")) {
+            localStorage.removeItem("user");
+            localStorage.removeItem("token");
+            globalThis.location.href = "/login";
+        }
     }
+
     if (!status || status >= 500) {
         const errorId = crypto.randomUUID();
         sessionStorage.setItem("lastErrorId", errorId);

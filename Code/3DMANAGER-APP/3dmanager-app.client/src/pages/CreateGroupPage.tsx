@@ -70,13 +70,13 @@ const CreateGroupPage: React.FC = () => {
                             <div className="p-3">
                                 <div className="mb-3">
                                     <label htmlFor="groupName" className="form-label">Nombre de grupo</label>
-                                    <input id="groupName" type="text" className="input-value w-75" value={groupName} placeholder="Nombre grupo"
+                                    <input id="groupName" type="text" className="input-value w-75" value={groupName ?? ""} placeholder="Nombre grupo"
                                         onChange={(e) => setGroupName(e.target.value)} />
                                 </div>
 
                                 <div className="mb-3">
                                     <label htmlFor="groupDescription" className="form-label">Descripción del grupo</label>
-                                    <textarea id="groupDescription" className="input-value w-75" value={groupDescription} placeholder="Descripción del grupo"
+                                    <textarea id="groupDescription" className="input-value w-75" value={groupDescription ?? ""} placeholder="Descripción del grupo"
                                         onChange={(e) => setGroupDescription(e.target.value)} />
                                 </div>
                             </div>                           

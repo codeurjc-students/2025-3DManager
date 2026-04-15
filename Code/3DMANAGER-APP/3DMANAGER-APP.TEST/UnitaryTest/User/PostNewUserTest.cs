@@ -1,6 +1,6 @@
 ﻿using _3DMANAGER_APP.BLL.Interfaces;
-using _3DMANAGER_APP.BLL.Managers;
 using _3DMANAGER_APP.BLL.Models.User;
+using _3DMANAGER_APP.BLL.Services;
 using _3DMANAGER_APP.DAL.Interfaces;
 using _3DMANAGER_APP.DAL.Models.User;
 using AutoMapper;
@@ -12,26 +12,26 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.User
 {
     public class PostNewUserTests
     {
-        private readonly Mock<ILogger<UserManager>> _loggerMock;
+        private readonly Mock<ILogger<UserService>> _loggerMock;
         private readonly Mock<IMapper> _mapperMock;
-        private readonly Mock<IUserDbManager> _userDbManagerMock;
-        private readonly UserManager _manager;
+        private readonly Mock<IUserRepository> _userRepositoryMock;
+        private readonly UserService _userService;
         private readonly Mock<IAzureBlobStorageService> _aBSService;
-        private readonly INotificationManager _notificationManager;
+        private readonly INotificationService _notificationService;
 
         public PostNewUserTests()
         {
-            _loggerMock = new Mock<ILogger<UserManager>>();
+            _loggerMock = new Mock<ILogger<UserService>>();
             _mapperMock = new Mock<IMapper>();
-            _userDbManagerMock = new Mock<IUserDbManager>();
+            _userRepositoryMock = new Mock<IUserRepository>();
             _aBSService = new Mock<IAzureBlobStorageService>();
 
-            _manager = new UserManager(
-                 _userDbManagerMock.Object,
+            _userService = new UserService(
+                 _userRepositoryMock.Object,
                 _mapperMock.Object,
                 _loggerMock.Object,
                  _aBSService.Object,
-                 _notificationManager
+                 _notificationService
             );
         }
 
@@ -53,16 +53,16 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.User
                 .Returns(userDbObject);
 
             int? errorDb = null;
-            _userDbManagerMock
+            _userRepositoryMock
                 .Setup(db => db.PostNewUser(It.IsAny<UserCreateRequestDbObject>(), out errorDb))
                 .Returns(1);
 
-            var result = _manager.PostNewUser(user);
+            var result = _userService.PostNewUser(user);
 
             Assert.NotEqual(0, result.Result.Data);
             Assert.Null(result.Result.Error);
             _mapperMock.Verify(m => m.Map<UserCreateRequestDbObject>(It.IsAny<UserCreateRequest>()), Times.Once);
-            _userDbManagerMock.Verify(db => db.PostNewUser(It.IsAny<UserCreateRequestDbObject>(), out errorDb), Times.Once);
+            _userRepositoryMock.Verify(db => db.PostNewUser(It.IsAny<UserCreateRequestDbObject>(), out errorDb), Times.Once);
         }
 
         [Fact]
@@ -83,11 +83,11 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.User
                 .Returns(userDbObject);
 
             int? errorDb = 4091;
-            _userDbManagerMock
+            _userRepositoryMock
                 .Setup(db => db.PostNewUser(It.IsAny<UserCreateRequestDbObject>(), out errorDb))
                 .Returns(0);
 
-            var result = _manager.PostNewUser(user);
+            var result = _userService.PostNewUser(user);
 
             Assert.NotNull(result.Result.Error);
             Assert.Equal(0, result.Result.Data);

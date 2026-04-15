@@ -168,3 +168,24 @@ export const deleteUserImage = async (userId: number): Promise<CommonResponse<bo
         };
     }
 };
+
+export const deleteUser = async (): Promise<CommonResponse<boolean>> => {
+
+    try {
+        const response = await apiClient.delete<CommonResponse<boolean>>(`/v1/users/DeleteUser`);
+        return response.data;
+    } catch (error: any) {
+        const status = error?.response?.status;
+        const backendResponse = error?.response?.data;
+        if (backendResponse?.error) {
+            return backendResponse;
+        }
+        return {
+            data: false,
+            error: {
+                code: status ?? 500,
+                message: backendResponse?.message ?? "Error desconocido en el servidor al tratar de eliminar el usuario"
+            }
+        };
+    }
+}

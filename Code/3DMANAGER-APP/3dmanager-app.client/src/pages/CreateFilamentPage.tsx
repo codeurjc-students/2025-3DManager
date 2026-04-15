@@ -98,12 +98,12 @@ const CreateFilamentPage: React.FC = () => {
                                 <div className="row-3 d-flex flex-row">
                                     <div className="col-4">
                                         <label htmlFor="filamentName" className="form-label">Nombre</label>
-                                        <input id="filamentName" className="input-value w-75" value={filamentName} placeholder="Nombre"
+                                        <input id="filamentName" className="input-value w-75" value={filamentName ?? ""} placeholder="Nombre"
                                             onChange={(e) => setFilamentName(e.target.value)} />
                                     </div>
                                     <div className="col-4">
                                         <label htmlFor="filamentType" className="form-label">Tipo Filamento</label>
-                                        <select id="filamentType" className="input-value w-75" value={filamentType}
+                                        <select id="filamentType" className="input-value w-75" value={filamentType ?? 0}
                                             onChange={(e) => setFilamentType(Number(e.target.value))}>
                                             <option value={0}>Seleccione un material</option>
                                             {catalogTypes.map(t => (
@@ -114,37 +114,37 @@ const CreateFilamentPage: React.FC = () => {
                                         </select>
                                     </div>
                                     <div className="col-4">
-                                        <label htmlFor="filamentWeight" className="form-label">Peso Bobina</label>
-                                        <input type="number" id="filamentWeight" className="input-value w-75" value={filamentWeight} 
+                                        <label htmlFor="filamentWeight" className="form-label">Peso Bobina (g)</label>
+                                        <input type="number" id="filamentWeight" className="input-value w-75" value={filamentWeight ?? 0} 
                                             onChange={(e) => setFilamentWeight(Number(e.target.value))} />
                                     </div>
                                 </div>
                                 <div className="row-3 d-flex flex-row">
                                     <div className="col-4">
                                         <label htmlFor="filamentColor" className="form-label">Color</label>
-                                        <input type="color" id="filamentColor" className="input-value w-75" value={filamentColor}
+                                        <input type="color" id="filamentColor" className="input-value w-75" value={filamentColor ?? ""}
                                             onChange={(e) => setFilamentColor(e.target.value)} />
                                     </div>
                                     <div className="col-4">
                                         <label htmlFor="filamentTemperature" className="form-label">Temperatura ideal</label>
-                                        <input type="number" id="filamentTemperature" className="input-value w-75" value={filamentTemperature} 
+                                        <input type="number" id="filamentTemperature" className="input-value w-75" value={filamentTemperature ?? 0} 
                                             onChange={(e) => setFilamentTemperature(Number(e.target.value))} />
                                     </div>
                                     <div className="col-4">
-                                        <label htmlFor="filamentLenght" className="form-label">Logitud de bobina</label>
-                                        <input type="number" id="filamentLenght" className="input-value w-75" value={filamentLenght} 
+                                        <label htmlFor="filamentLenght" className="form-label">Logitud de bobina (m)</label>
+                                        <input type="number" id="filamentLenght" className="input-value w-75" value={filamentLenght ?? 0} 
                                             onChange={(e) => setFilamentLenght(Number(e.target.value))} />
                                     </div>
                                 </div>
                                 <div className="row-3 d-flex flex-row">
                                     <div className="col-4">
                                         <label htmlFor="filamentThickness" className="form-label">Grosor del filamento</label>
-                                        <input type="number" id="filamentThickness" className="input-value w-75" value={filamentThickness} 
+                                        <input type="number" id="filamentThickness" className="input-value w-75" value={filamentThickness ?? 0} 
                                             onChange={(e) => setFilamentThickness(Number(e.target.value))} />
                                     </div>
                                     <div className="col-4">
                                         <label htmlFor="filamentCost" className="form-label">Coste Bobina</label>
-                                        <input type="number" id="filamentCost" className="input-value w-75" value={filamentCost} placeholder="€"
+                                        <input type="number" id="filamentCost" className="input-value w-75" value={filamentCost ?? 0} placeholder="€"
                                             onChange={(e) => setFilamentCost(Number(e.target.value))} />
                                     </div>
                                     <div className="col-4">
@@ -153,7 +153,7 @@ const CreateFilamentPage: React.FC = () => {
                                 <div className="row-3">
                                     <div className="mt-2">
                                         <label htmlFor="filamentDescription" className="form-label">Descripción</label>
-                                        <textarea id="filamentDescription" className="input-value w-75" value={filamentDescription} placeholder="Descripción"
+                                        <textarea id="filamentDescription" className="input-value w-75" value={filamentDescription ?? ""} placeholder="Descripción"
                                             onChange={(e) => setFilamentDescription(e.target.value)} />
                                     </div>
                                     <div className="mb-3">

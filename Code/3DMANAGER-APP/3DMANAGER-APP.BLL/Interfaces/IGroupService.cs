@@ -1,0 +1,20 @@
+﻿using _3DMANAGER_APP.BLL.Models.Base;
+using _3DMANAGER_APP.BLL.Models.Group;
+
+namespace _3DMANAGER_APP.BLL.Interfaces
+{
+    public interface IGroupService
+    {
+        public bool PostNewGroup(GroupRequest request, out BaseError? error);
+        public List<GroupInvitation> GetGroupInvitations(int userId, out bool error);
+        public bool PostAcceptInvitation(int groupId, bool isAccepted, int userId, out BaseError? error);
+        public GroupBasicDataResponse GetGroupBasicData(int groupId, out BaseError? error);
+        public bool UpdateGroupData(GroupRequest request, int groupId);
+        public bool UpdateLeaveGroup(int userId);
+        public bool UpdateMembership(int userKickedId, int userId);
+        public Task<bool> DeleteGroup(int userId, int groupId);
+        public bool TrasnferOwnership(int userId, int groupId, int newOwnerUserId);
+        public GroupDashboardData GetGroupDashboardData(int groupId, out BaseError? error);
+
+    }
+}

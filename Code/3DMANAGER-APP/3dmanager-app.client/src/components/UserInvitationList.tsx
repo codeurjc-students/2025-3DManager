@@ -60,7 +60,7 @@ const UserInvitationList: React.FC = () => {
         <div className="table-container">
             <div className="table-scroll">
                 <div className="mb-1 mt-1 d-flex flex-row">
-                    <input type="text" className="form-control" placeholder="Buscar usuario..." value={search}
+                    <input type="text" className="form-control" placeholder="Buscar usuario..."  value={search ?? ""}
                         onChange={(e) => setSearch(e.target.value)} />
                     {search.length > 0 && (
                         <button className="button-yellow  ms-2" onClick={clearSearch} >

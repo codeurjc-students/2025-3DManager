@@ -230,4 +230,24 @@ export const deletePrintImage = async (printId: number): Promise<CommonResponse<
     }
 };
 
+export const deletePrintComment = async (commentId: number): Promise<CommonResponse<boolean>> => {
+    try {
+        const response = await apiClient.delete(`/v1/prints/DeletePrintComment?commentId=${commentId}`);
+        return response.data;
+    } catch (error: any) {
+        const status = error?.response?.status;
+        const backendResponse = error?.response?.data;
+        if (backendResponse?.error) {
+            return backendResponse;
+        }
+        return {
+            data: undefined,
+            error: {
+                code: status ?? 500,
+                message: backendResponse?.message ?? "Error desconocido en el servidor al eliminar un comentario sobre una impresion"
+            }
+        };
+    }
+};
+
 

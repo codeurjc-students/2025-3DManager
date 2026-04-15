@@ -1,11 +1,11 @@
 ﻿using _3DMANAGER_APP.BLL.Interfaces;
-using _3DMANAGER_APP.BLL.Managers;
 using _3DMANAGER_APP.BLL.Mapper;
 using _3DMANAGER_APP.BLL.Models.Base;
 using _3DMANAGER_APP.BLL.Models.File;
 using _3DMANAGER_APP.BLL.Models.Print;
+using _3DMANAGER_APP.BLL.Services;
 using _3DMANAGER_APP.DAL.Base;
-using _3DMANAGER_APP.DAL.Managers;
+using _3DMANAGER_APP.DAL.Repositories;
 using _3DMANAGER_APP.TEST.E2ETest;
 using _3DMANAGER_APP.TEST.Fixture;
 using AutoMapper;
@@ -20,7 +20,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
         private readonly DatabaseFixture _fixture;
         private readonly IMapper _mapper;
         private readonly IAzureBlobStorageService _fakeService;
-        private readonly INotificationManager _notificationManager;
+        private readonly INotificationService _notificationService;
         public PrintIntegrationTests(DatabaseFixture fixture)
         {
             _fixture = fixture;
@@ -64,22 +64,22 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 "3DMANAGER"
             );
 
-            var printDbManager = new PrintDbManager(
+            var printRepository = new PrintRepository(
                 dataSource,
-                NullLogger<PrintDbManager>.Instance
+                NullLogger<PrintRepository>.Instance
             );
 
-            var manager = new PrintManager(
-                printDbManager,
+            var service = new PrintService(
+                printRepository,
                 _mapper,
-                NullLogger<PrintManager>.Instance,
+                NullLogger<PrintService>.Instance,
                 _fakeService,
-                _notificationManager
+                _notificationService
             );
 
             BaseError? error;
             PagedRequest pagedRequest = new PagedRequest { PageNumber = 1, PageSize = 10 };
-            var prints = manager.GetPrintList(1, pagedRequest, out error);
+            var prints = service.GetPrintList(1, pagedRequest, out error);
 
             Assert.Null(error);
             Assert.NotNull(prints.prints);
@@ -98,12 +98,12 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 PrintState = 1,
                 UserId = 1
             };
-            var printPost = await manager.PostPrint(newPrint);
+            var printPost = await service.PostPrint(newPrint);
             Assert.Null(error);
             Assert.NotNull(printPost);
             Assert.NotEqual(0, printPost.Data);
 
-            var printsAfterPost = manager.GetPrintList(1, pagedRequest, out error);
+            var printsAfterPost = service.GetPrintList(1, pagedRequest, out error);
             Assert.Null(error);
             Assert.Equal(prints.prints.Count + 1, printsAfterPost.prints.Count);
             Assert.NotNull(printsAfterPost);
@@ -118,19 +118,19 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 _fixture.ConnectionString,
                 "3DMANAGER");
 
-            var printDbManager = new PrintDbManager(
+            var printRepository = new PrintRepository(
                 dataSource,
-                NullLogger<PrintDbManager>.Instance);
+                NullLogger<PrintRepository>.Instance);
 
-            var manager = new PrintManager(
-                printDbManager,
+            var service = new PrintService(
+                printRepository,
                 _mapper,
-                NullLogger<PrintManager>.Instance,
-                _fakeService, _notificationManager);
+                NullLogger<PrintService>.Instance,
+                _fakeService, _notificationService);
 
             BaseError? error;
 
-            var print = manager.GetPrintDetail(1, 1, out error);
+            var print = service.GetPrintDetail(1, 1, out error);
             Assert.Null(error);
             Assert.NotNull(print);
 
@@ -143,10 +143,10 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
             };
 
 
-            var result = manager.UpdatePrint(request);
+            var result = service.UpdatePrint(request);
             Assert.True(result);
 
-            var updated = manager.GetPrintDetail(1, print.PrintId, out error);
+            var updated = service.GetPrintDetail(1, print.PrintId, out error);
             Assert.Null(error);
             Assert.NotNull(updated);
             Assert.Equal("Updated print", updated.PrintName);
@@ -160,17 +160,17 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 "3DMANAGER"
             );
 
-            var printDbManager = new PrintDbManager(
+            var printRepository = new PrintRepository(
                 dataSource,
-                NullLogger<PrintDbManager>.Instance
+                NullLogger<PrintRepository>.Instance
             );
 
-            var manager = new PrintManager(
-                printDbManager,
+            var service = new PrintService(
+                printRepository,
                 _mapper,
-                NullLogger<PrintManager>.Instance,
+                NullLogger<PrintService>.Instance,
                 _fakeService,
-                _notificationManager
+                _notificationService
             );
 
             var newPrint = new PrintRequest
@@ -187,19 +187,19 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 UserId = 1
             };
 
-            var created = await manager.PostPrint(newPrint);
+            var created = await service.PostPrint(newPrint);
             Assert.NotNull(created);
             Assert.True(created.Data > 0);
 
             int printId = created.Data;
 
-            var deleteResponse = await manager.DeletePrint(printId, 1);
+            var deleteResponse = await service.DeletePrint(printId, 1);
 
             Assert.NotNull(deleteResponse);
             Assert.True(deleteResponse.Data);
             Assert.Null(deleteResponse.Error);
 
-            var prints = manager.GetPrintList(1, new PagedRequest { PageNumber = 1, PageSize = 50 }, out BaseError? error);
+            var prints = service.GetPrintList(1, new PagedRequest { PageNumber = 1, PageSize = 50 }, out BaseError? error);
             Assert.Null(error);
             Assert.DoesNotContain(prints.prints, p => p.PrintId == printId);
         }

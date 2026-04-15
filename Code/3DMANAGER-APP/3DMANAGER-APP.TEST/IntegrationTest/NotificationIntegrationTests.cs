@@ -1,10 +1,10 @@
 ﻿using _3DMANAGER_APP.BLL.Interfaces;
-using _3DMANAGER_APP.BLL.Managers;
 using _3DMANAGER_APP.BLL.Mapper;
 using _3DMANAGER_APP.BLL.Models.Base;
+using _3DMANAGER_APP.BLL.Services;
 using _3DMANAGER_APP.DAL.Base;
 using _3DMANAGER_APP.DAL.Interfaces;
-using _3DMANAGER_APP.DAL.Managers;
+using _3DMANAGER_APP.DAL.Repositories;
 using _3DMANAGER_APP.TEST.E2ETest;
 using _3DMANAGER_APP.TEST.Fixture;
 using AutoMapper;
@@ -20,8 +20,8 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
         private readonly DatabaseFixture _fixture;
         private readonly IMapper _mapper;
         private readonly IEmailService _emailService;
-        private readonly Mock<IUserDbManager> _userDbManagerMock;
-        private readonly IUserDbManager _userDbManager;
+        private readonly Mock<IUserRepository> _userRepositoryMock;
+        private readonly IUserRepository _userRepository;
 
         public NotificationIntegrationTests(DatabaseFixture fixture)
         {
@@ -46,9 +46,9 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
 
             _emailService = emailMock.Object;
 
-            _userDbManagerMock = new Mock<IUserDbManager>();
+            _userRepositoryMock = new Mock<IUserRepository>();
 
-            _userDbManager = _userDbManagerMock.Object;
+            _userRepository = _userRepositoryMock.Object;
         }
 
 
@@ -61,23 +61,23 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 "3DMANAGER"
             );
 
-            var dbManager = new NotificationDbManager(
+            var repository = new NotificationRepository(
                 dataSource,
-                NullLogger<NotificationDbManager>.Instance
+                NullLogger<NotificationRepository>.Instance
             );
 
 
 
-            var manager = new NotificationManager(
-                dbManager,
+            var service = new NotificationService(
+                repository,
                 _mapper,
-                NullLogger<NotificationManager>.Instance,
+                NullLogger<NotificationService>.Instance,
                 _emailService,
-                _userDbManager
+                _userRepository
             );
 
             BaseError? error;
-            var result = manager.GetUnreadNotifications(1, out error);
+            var result = service.GetUnreadNotifications(1, out error);
 
             Assert.Null(error);
             Assert.NotNull(result);
@@ -92,30 +92,30 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 "3DMANAGER"
             );
 
-            var dbManager = new NotificationDbManager(
+            var repository = new NotificationRepository(
                 dataSource,
-                NullLogger<NotificationDbManager>.Instance
+                NullLogger<NotificationRepository>.Instance
             );
 
             var fakeEmail = new FakeEmailService();
 
-            var manager = new NotificationManager(
-                dbManager,
+            var service = new NotificationService(
+                repository,
                 _mapper,
-                NullLogger<NotificationManager>.Instance,
+                NullLogger<NotificationService>.Instance,
                 _emailService,
-                _userDbManager
+                _userRepository
             );
 
             BaseError? error;
-            var notifications = manager.GetUnreadNotifications(1, out error);
+            var notifications = service.GetUnreadNotifications(1, out error);
 
             if (notifications.Count == 0)
                 return;
 
             var id = notifications.First().NotificationId;
 
-            var result = manager.NotificationMarkAsRead(id, out error);
+            var result = service.NotificationMarkAsRead(id, out error);
 
             Assert.True(result);
             Assert.Null(error);
