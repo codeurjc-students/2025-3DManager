@@ -246,6 +246,22 @@ fs-detail{
     height: 100%;
 }
 
+.button-darkGrey-low {
+    background-color: var(--colorLowGrey);
+    color: var(--colorWhite);
+    border: 1px solid var(--colorBlack);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    width: 50%;
+    height: 100%;
+}
+
+    .button-darkGrey-low:disabled {
+        cursor: not-allowed;
+    }
+
 .button-red {
     background-color: var(--colorRed);
     color: var(--colorText);
@@ -256,8 +272,8 @@ fs-detail{
 }
 
 .dashboard-icon-btn {
-    width : 250px;
-    height: 150px;
+    width : 400px;
+    height: 75px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -270,9 +286,31 @@ fs-detail{
     letter-spacing: 1px;
     font-family: Impact, sans-serif;
 }
+
+.dashboard-title-w {
+    color: var(--colorWhite);
+    font-weight: bold;
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+    font-family: Impact, sans-serif;
+    text-align: left;
+}
+
+.dashboard-title-b {
+    color: var(--colorBlack);
+    font-weight: bold;
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+    font-family: Impact, sans-serif;
+    text-align: left;
+}
+
 .white-container-button {
     background-color: var(--colorWhite);
-    border: none;
+    border: 1px solid var(--colorBlack);
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
 }
 
 .table-container {
