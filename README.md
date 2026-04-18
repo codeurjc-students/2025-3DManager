@@ -84,15 +84,50 @@ Below is a set of images showcasing the visual layout of some pages of the appli
 
 Description of functionality shown: ## [Funcionalities v.02](Documentation/Readme/FUNCTIONALITIES.md#functionality-v-02)
 
+---
+### Version 1.0
+
+Version 1.0 marks a key milestone in the evolution of the project, introducing continuous cloud deployment and a fully migrated infrastructure running on Azure. The application is now deployed through Azure Container Apps using Docker images generated automatically on each update, and it connects to a MySQL database hosted in Azure. This setup enables a more stable, reproducible, and scalable development cycle.
+
+As part of this transition, the file‑storage system, previously based on Amazon Web Services (AWS S3), has been migrated to **Azure Blob Storage**, consolidating all cloud services under a single provider. This migration affects both the images associated with system entities and the `.STL` files used for 3D printing.
+
+Additionally, this version introduces a **notification system** integrated with an email‑delivery engine. This module generates automatic alerts related to important events within the application, sending emails to users when actions such as invitations, group changes, or status updates occur.
+
+Finally, version 1.0 incorporates a **Three.js  STL viewer**, allowing users to visualize 3D models directly within the web application. This feature enhances the user experience by enabling model inspection before printing or managing them.
+
+#### Dashboard
+
+The dashboard view has been updated to reduce the size of the buttons.  
+![](Documentation/Screensv1/Dashboard.png)
+
+#### Dashboard Actions
+
+The add‑item page has been redesigned to display a popup with the available options, avoiding the need for a full page dedicated to just three buttons.  
+![](Documentation/Screensv1/DashboardActionsPopup.png)
+
+#### 3dPrint detail page
+
+3D models can now be visualized using an integrated STL viewer.
+![](Documentation/Screensv1/PrintDetails.png)
+
+#### Notifications popup
+
+ Notification popup. 
+![](Documentation/Screensv1/Notifications.png)
+
+#### Receive Email
+
+Email send by app.  
+![](Documentation/Screensv1/Email.png)
 
 > [!IMPORTANT]  
-> The application is currently under development in phase 5.
+> The application is in phase 6.  
+> The application is no longer in an active development phase. However, it may still receive fixes, improvements, or adjustments in future versions if bugs are discovered or opportunities for optimization arise.
 
-> [!NOTE]  
->  For version 1.0, the goal is to deliver a complete feature set, enabling emails on relevant events, generate a 3d image using the gcode file and a complete release functionality on Azure.
+
 
 ## Progress
-**Current Phase** : 5
+**Current Phase** : 6
 ### Grant Diagram
 
 (This picture has been taken on phase 1)
@@ -107,7 +142,7 @@ The project is developed in phases, structured as follows:
 | Phase 2 | Repository, testing, and CI |September 16 | October 28 | October 15 |
 | Phase 3 | Version 0.1 - Basic functionality and Docker | October 29| January 28 | December 15 | 
 | Phase 4 | Version 0.2 - Intermediate functionality | January 28 | March 22 | March 15 |
-| Phase 5 | Version 1.0 - Advanced functionality | March 23 | | April 15 |
+| Phase 5 | Version 1.0 - Advanced functionality | March 23 | April 18 | April 15 |
 | Phase 6 | Report | | | May 15 |
 | Phase 7 | Defense | | | June 15 |
 
