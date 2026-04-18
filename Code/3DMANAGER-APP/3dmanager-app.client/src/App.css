@@ -62,8 +62,8 @@ th, td {
     height : 100%;
 }
 .image-container-2 {
-    width: 60%;
-    height: 80%;
+    width: 70%;
+    height: 90%;
 }
 .image-container-3 {
     width: 100%;
@@ -202,6 +202,7 @@ th, td {
     cursor: pointer;
     font-weight: bold;
     transition: background-color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
     .popup-button:hover {

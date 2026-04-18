@@ -257,6 +257,7 @@ namespace _3DMANAGER_APP.DAL.Repositories
                 cmd.Parameters.Add(new MySqlParameter("P_CD_PRINT", MySqlDbType.Int32) { Value = request.PrintId });
                 cmd.Parameters.Add(new MySqlParameter("P_DS_NAME", MySqlDbType.VarChar) { Value = request.PrintName });
                 cmd.Parameters.Add(new MySqlParameter("P_DS_DESCRIPTION", MySqlDbType.VarChar) { Value = request.PrintDescription });
+                cmd.Parameters.Add(new MySqlParameter("P_NM_REAL_TIME", MySqlDbType.Int32) { Value = request.PrintRealTime });
 
                 var errorParam = CreateReturnValueParameter(ErrorConstant, MySqlDbType.Int32);
                 cmd.Parameters.Add(errorParam);

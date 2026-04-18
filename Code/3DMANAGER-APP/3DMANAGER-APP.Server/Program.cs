@@ -83,6 +83,29 @@ builder.Services.AddSwaggerGen(c =>
         Title = "3DManager API",
         Version = "v1"
     });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
 });
 
 //JWT configuration
@@ -178,7 +201,16 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapGet("/health", () => Results.Ok("OK"));
-app.MapFallbackToFile("index.html");
+
+app.MapWhen(ctx => !ctx.Request.Path.StartsWithSegments("/api"), builder =>
+{
+    builder.UseRouting();
+    builder.UseEndpoints(endpoints =>
+    {
+        endpoints.MapFallbackToFile("index.html");
+    });
+});
+
 
 app.Run();
 

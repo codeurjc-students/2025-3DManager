@@ -67,6 +67,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Manager")]
         [Tags("Filaments")]
         [HttpPost]
         public async Task<IActionResult> PostFilament([FromForm] FilamentRequest filament)
@@ -101,6 +102,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Manager")]
         [Tags("Filaments")]
         [HttpPut]
         public IActionResult UpdateFilament([FromBody] FilamentUpdateRequest request)
@@ -131,6 +133,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<FilamentDetailObject>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<FilamentDetailObject>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize]
         [Tags("Filaments")]
         [HttpGet]
         public IActionResult GetFilamentDetail([FromQuery] int filamentId)
@@ -160,6 +163,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Manager")]
         [Tags("Filaments")]
         [HttpDelete]
         public async Task<IActionResult> DeleteFilament([FromQuery] int filamentId)
@@ -188,6 +192,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Manager")]
         [Tags("Filaments")]
         [HttpPut]
         public async Task<IActionResult> UpdateFilamentImage(int filamentId, IFormFile imageFile)
@@ -217,6 +222,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Manager")]
         [Tags("Filaments")]
         [HttpDelete]
         public async Task<IActionResult> DeleteFilamentImage(int filamentId)

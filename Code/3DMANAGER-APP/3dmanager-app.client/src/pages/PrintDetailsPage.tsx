@@ -18,8 +18,10 @@ const PrintDetailPage: React.FC = () => {
     const { printId } = useParams<{ printId: string }>();
     const [data, setData] = useState<PrintDetailObject>(); 
     const [name, setName] = useState<string>("");
+    const [realTime, setRealTime] = useState<string>("");
     const [description, setDescription] = useState<string>("");
     const isManagerOrOwner = (user?.rolId === "Usuario-Manager" || data?.printUserId === user?.userId) && (user?.rolId !== "Usuario-Invitado");
+    const timeRegex = /^(\d+)h\s+(\d+)min$/;
 
     useEffect(() => {
         refreshPrint();
@@ -34,48 +36,82 @@ const PrintDetailPage: React.FC = () => {
             setData(print);
             setDescription(print.printDescription || "");
             setName(print.printName || "");
+            setRealTime(print.printRealTimeImpression || "0h 1min")
         }
     };
 
+    const parseTimeToSeconds = (value: string): number | null => {
+        const match = value.match(/^(\d+)h\s+(\d+)min$/);
+        if (!match) return null;
+
+        const hours = parseInt(match[1], 10);
+        const minutes = parseInt(match[2], 10);
+
+        return hours * 3600 + minutes * 60;
+    };
 
     const handleUpdate = async () => {
-        
-        try {
+    try {
+        const seconds = parseTimeToSeconds(realTime);
 
-            const groupId = -1;
-            const request: PrintDetailRequest = {
-                groupId,
-                printId: Number(printId),
-                printName: name,
-                printDescription: description,
-
-            };
-
-            const response = await updatePrint(request);
-
-            if (response.data) {
-                showPopup({
-                    type: "info", content: (
-                        <InfoPopup title="Operacion realizada" description="La impresión ha sido guardado correctamente" />
-                    )
-                });
-            } else {
-                showPopup({
-                    type: "error", content: (
-                        <InfoPopup title="Operacion cancelada" description={response.error?.message || "No se pudo actualizar de la impresión."} />
-                    )
-                });
-                
-            }
-        } catch (error) {
-            console.error("Error al actualizar la impresión", error);
+        if (seconds === null) {
             showPopup({
-                type: "error", content: (
-                    <InfoPopup title="Operacion cancelada" description="Ha ocurrido un error al actualizar la impresión" />
+                type: "error",
+                content: (
+                    <InfoPopup
+                        title="Formato incorrecto"
+                        description="El tiempo debe tener el formato: Xh XXmin"
+                    />
+                )
+            });
+            return;
+        }
+
+        const request: PrintDetailRequest = {
+            groupId: -1,
+            printId: Number(printId),
+            printName: name,
+            printDescription: description,
+            printRealTime: seconds
+        };
+
+        const response = await updatePrint(request);
+
+        if (response.data) {
+            showPopup({
+                type: "info",
+                content: (
+                    <InfoPopup
+                        title="Operación realizada"
+                        description="La impresión ha sido guardada correctamente"
+                    />
+                )
+            });
+        } else {
+            showPopup({
+                type: "error",
+                content: (
+                    <InfoPopup
+                        title="Operación cancelada"
+                        description={response.error?.message || "No se pudo actualizar la impresión."}
+                    />
                 )
             });
         }
-    };
+    } catch (error) {
+        console.error("Error al actualizar la impresión", error);
+        showPopup({
+            type: "error",
+            content: (
+                <InfoPopup
+                    title="Operación cancelada"
+                    description="Ha ocurrido un error al actualizar la impresión"
+                />
+            )
+        });
+    }
+};
+
 
     const handleDelete = () => {
         showPopup({
@@ -309,10 +345,15 @@ const PrintDetailPage: React.FC = () => {
                                     <label htmlFor="printTime" className="form-label">Tiempo impresión</label>
                                     <input id="printTime" type="text" className="input-value-2 w-100" value={data?.printTimeImpression ?? 0} disabled />
                                 </div>
-                                <div className="col-3 ">
+                                <div className="col-3">
                                     <label htmlFor="printRealTime" className="form-label">Tiempo real impresión</label>
-                                    <input id="printRealTime" type="text" className="input-value-2 w-100" value={data?.printRealTimeImpression ?? 0} disabled />
+                                    <input id="printRealTime" type="text" className="input-value-5 input-editable w-100" value={realTime}
+                                        disabled={!isManagerOrOwner} placeholder="Ej: 1h 20min" onChange={(e) => setRealTime(e.target.value)}/>
+                                    {!timeRegex.test(realTime) && isManagerOrOwner && (
+                                        <small className="text-danger">Formato inválido. Usa: 1h 20min</small>
+                                    )}
                                 </div>
+
                                 <div className="col-3">
                                     <label htmlFor="printMaterialConsumed" className="form-label">Material usado</label>
                                     <input id="printMaterialConsumed" type="text" className="input-value-2 w-100" value={data?.printMaterialConsumed ?? 0} disabled />

@@ -6,6 +6,7 @@
         public int PrintId { get; set; }
         public required string PrintName { get; set; }
         public required string PrintDescription { get; set; }
+        public int PrintRealTime { get; set; }
 
     }
 }

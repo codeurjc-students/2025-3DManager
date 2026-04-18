@@ -11,7 +11,6 @@ import GroupPage from "./pages/GroupPage";
 import CreateGroupPage from "./pages/CreateGroupPage";  
 import DashboardPage from './pages/DashboardPage';
 import ListPage from './pages/ListPage';
-import InsertInventoryPage from './pages/InsertInventoryPage';
 import CreatePrinterPage from './pages/CreatePrinterPage';
 import CreateFilamentPage from './pages/CreateFilamentPage';
 import CreatePrint3DPage from './pages/CreatePrint3DPage';
@@ -28,8 +27,8 @@ import { NotificationProvider } from './context/NotificationContext';
 const App: React.FC = () => {
     return (
         <AuthProvider>
-            <PopupProvider>
-                <BrowserRouter>
+            <BrowserRouter>
+                <PopupProvider>
                     <NotificationProvider>
                         <AuthWatcher />
                         <div className="main-container">
@@ -42,7 +41,6 @@ const App: React.FC = () => {
                                     <Route path="/group-create" element={<ProtectedRoute><CreateGroupPage /></ProtectedRoute>} />
                                     <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
                                     <Route path="dashboard/lists/:type" element={<ProtectedRoute><ListPage /></ProtectedRoute>} />
-                                    <Route path="/dashboard/add" element={<ProtectedRoute><InsertInventoryPage /></ProtectedRoute>} />
                                     <Route path="/dashboard/printer-create" element={<ProtectedRoute><CreatePrinterPage /></ProtectedRoute>} />
                                     <Route path="/dashboard/filament-create" element={<ProtectedRoute><CreateFilamentPage /></ProtectedRoute>} />
                                     <Route path="/dashboard/print-create" element={<ProtectedRoute><CreatePrint3DPage /></ProtectedRoute>} />
@@ -57,8 +55,8 @@ const App: React.FC = () => {
                             </main>
                         </div>
                     </NotificationProvider>
-                </BrowserRouter>
-            </PopupProvider>
+                </PopupProvider>
+            </BrowserRouter>
         </AuthProvider>
     );
 };
