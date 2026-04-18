@@ -3,6 +3,7 @@ using _3DMANAGER_APP.BLL.Models.Base;
 using _3DMANAGER_APP.BLL.Models.Group;
 using _3DMANAGER_APP.BLL.Models.User;
 using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static _3DMANAGER_APP.Server.Models.Response;
 
@@ -132,6 +133,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<List<UserListResponse>>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<List<UserListResponse>>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize]
         [Tags("Users")]
         [HttpGet]
         public IActionResult GetUserList()
@@ -159,6 +161,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<List<UserListResponse>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Models.CommonResponse<List<UserListResponse>>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize]
         [Tags("Users")]
         [HttpGet]
         public Models.CommonResponse<List<UserListResponse>> GetUserInvitationList([FromQuery] string? filter)
@@ -185,6 +188,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Manager")]
         [Tags("Users")]
         [HttpPost]
         public IActionResult PostUserInvitation([FromQuery] int userId)
@@ -243,6 +247,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Base,Usuario-Manager")]
         [Tags("Users")]
         [HttpPut]
         public IActionResult UpdateUser([FromBody] UserUpdateRequest request)
@@ -273,6 +278,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<UserDetailObject>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<UserDetailObject>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize]
         [Tags("Users")]
         [HttpGet]
         public IActionResult GetUserDetail([FromQuery] int userId)
@@ -308,6 +314,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Base,Usuario-Manager")]
         [Tags("Users")]
         [HttpPut]
         public async Task<IActionResult> UpdateUserImage(int userId, IFormFile imageFile)
@@ -337,6 +344,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Base,Usuario-Manager")]
         [Tags("Users")]
         [HttpDelete]
         public async Task<IActionResult> DeleteUserImage(int userId)
@@ -367,6 +375,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Base")]
         [Tags("Users")]
         [HttpDelete]
         public async Task<IActionResult> DeleteUser()

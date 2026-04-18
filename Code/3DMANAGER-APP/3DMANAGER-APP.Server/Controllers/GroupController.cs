@@ -1,6 +1,7 @@
 ﻿using _3DMANAGER_APP.BLL.Models.Base;
 using _3DMANAGER_APP.BLL.Models.Group;
 using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static _3DMANAGER_APP.Server.Models.Response;
 
@@ -32,6 +33,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Base")]
         [Tags("Groups")]
         [HttpPost]
         public IActionResult PostNewGroup(GroupRequest request)
@@ -61,6 +63,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<List<GroupInvitation>>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<List<GroupInvitation>>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize]
         [Tags("Groups")]
         [HttpPost]
         public IActionResult GetGroupInvitations()
@@ -89,6 +92,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Base")]
         [Tags("Groups")]
         [HttpPost]
         public IActionResult PostAcceptInvitation(int groupId, bool isAccepted)
@@ -118,6 +122,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<GroupBasicDataResponse>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<GroupBasicDataResponse>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize]
         [Tags("Groups")]
         [HttpGet]
         public IActionResult GetGroupBasicData()
@@ -145,6 +150,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Manager")]
         [Tags("Groups")]
         [HttpPut]
         public IActionResult UpdateGroupData(GroupRequest request)
@@ -175,6 +181,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Base,Usuario-Manager")]
         [Tags("Groups")]
         [HttpPut]
         public IActionResult UpdateLeaveGroup()
@@ -203,6 +210,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Manager")]
         [Tags("Groups")]
         [HttpPut]
         public IActionResult UpdateMembership(int userKickedId)
@@ -231,6 +239,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Manager")]
         [Tags("Groups")]
         [HttpDelete]
         public async Task<IActionResult> DeleteGroup()
@@ -261,6 +270,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Manager")]
         [Tags("Groups")]
         [HttpPut]
         public IActionResult TrasnferOwnership(int newOwnerUserId)
@@ -292,6 +302,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<GroupDashboardData>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<GroupDashboardData>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize]
         [Tags("Groups")]
         [HttpGet]
         public IActionResult GetGroupDashboardData()

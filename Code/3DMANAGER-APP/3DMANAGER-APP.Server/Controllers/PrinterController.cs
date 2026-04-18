@@ -4,6 +4,7 @@ using _3DMANAGER_APP.BLL.Models.Base;
 using _3DMANAGER_APP.BLL.Models.Group;
 using _3DMANAGER_APP.BLL.Models.Printer;
 using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static _3DMANAGER_APP.Server.Models.Response;
 
@@ -59,6 +60,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Manager")]
         [Tags("Printers")]
         [HttpPost]
         public async Task<IActionResult> PostPrinter([FromForm] PrinterRequest printer)
@@ -93,6 +95,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<List<PrinterListObject>>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<List<PrinterListObject>>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize]
         [Tags("Printers")]
         [HttpGet]
         public IActionResult GetPrinterDashboardList()
@@ -126,6 +129,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Manager")]
         [Tags("Printers")]
         [HttpPut]
         public IActionResult UpdatePrinter([FromBody] PrinterDetailRequest request)
@@ -156,6 +160,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<PrinterDetailObject>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<PrinterDetailObject>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize]
         [Tags("Printers")]
         [HttpGet]
         public IActionResult GetPrinterDetail([FromQuery] int printerId)
@@ -191,6 +196,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Manager")]
         [Tags("Printers")]
         [HttpDelete]
         public async Task<IActionResult> DeletePrinter([FromQuery] int printerId)
@@ -220,6 +226,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Manager")]
         [Tags("Printers")]
         [HttpPut]
         public async Task<IActionResult> UpdatePrinterImage(int printerId, IFormFile imageFile)
@@ -249,6 +256,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Manager")]
         [Tags("Printers")]
         [HttpDelete]
         public async Task<IActionResult> DeletePrinterImage(int printerId)
