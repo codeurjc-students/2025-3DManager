@@ -17,7 +17,7 @@ const Pagination: React.FC<PaginationProps> = ({
 }) => {
 
     return (
-        <div className="pagination-container d-flex justify-content-between align-items-center mt-3">
+        <div className="pagination-container d-flex justify-content-between align-items-center mt-3 p-1">
 
             <div className="d-flex align-items-center">
                 <label className="me-2">Elementos por página:</label>

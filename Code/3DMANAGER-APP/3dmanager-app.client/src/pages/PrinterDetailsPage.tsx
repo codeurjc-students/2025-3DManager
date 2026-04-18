@@ -358,9 +358,11 @@ const PrinterDetailPage: React.FC = () => {
                         </div>
                         
                     </div>
-                    <div className="grey-container-detail mt-2 h-60">
-                        <h3 className="title-impact-3 ms-2 mt-2">Piezas impresas</h3>
-                        <PrintListDetail id={Number(printerId)} typeList={1}/>
+                    <div className="grey-container-detail mt-2 h-45">
+                        <div className="h-100">
+                            <h3 className="title-impact-3 ms-2 mt-2">Piezas impresas</h3>
+                            <PrintListDetail id={Number(printerId)} typeList={1} />
+                        </div>
                     </div>
                 </div>
             </div>

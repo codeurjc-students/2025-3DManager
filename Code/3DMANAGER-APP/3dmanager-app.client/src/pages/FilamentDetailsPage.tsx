@@ -247,15 +247,15 @@ const FilamentDetailPage: React.FC = () => {
                                 </div>
                             ) : ""}
                         </div>
-                        <div className="col-6 ms-5">
+                        <div className="col-6 ms-5 mb-3">
                             <img src={data?.filamentImageFile?.fileUrl} alt={name} className="image-container-2" />
                         </div>
                         <div className="col-4 mt-2 ms-3 w-100">
                             <textarea className="input-value-4 me-5 mb-1 w-100 h-08 input-editable" value={description ?? ""} disabled={!isManager} onChange={(e) => setDescription(e.target.value)} />
                         </div>
                     </div>
-                    <div className="h-60 ms-3 mt-1">
-                        <div className="h-10 mt-2">
+                    <div className="h-60 ms-3 mt-5">
+                        <div className="h-08 mt-2">
                             <div className="d-flex flex row">
                                 <div className="col-6 ">
                                     <label htmlFor="filamentCreateDatePrinter" className="form-label">Fecha de alta de filamento</label>
@@ -337,9 +337,12 @@ const FilamentDetailPage: React.FC = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="grey-container-detail mt-2 h-70">
-                        <h3 className="title-impact-3 ms-2 mt-2">Piezas impresas</h3>
-                        <PrintListDetail id={Number(filamentId)} typeList={2}/>
+                    <div className="grey-container-detail mt-2 h-55">
+                        <div className="h-100">
+                            <h3 className="title-impact-3 ms-2 mt-2">Piezas impresas</h3>
+                            <PrintListDetail id={Number(filamentId)} typeList={2} />
+                        </div>
+                        
                     </div>
                 </div>
             </div>

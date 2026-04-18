@@ -1,17 +1,30 @@
 ﻿import React, { useEffect, useState } from "react";
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from "react-router-dom";
+import InsertInventoryPopup from "./popupComponent/InsertInventoryPopup";
+import { usePopupContext } from "../context/PopupContext";
 
 const DashboardActions: React.FC = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
     const [ permission, setPermission ] = useState<boolean>(true);
+    const { showPopup, closePopup } = usePopupContext();
 
     useEffect(() => {
         if (user!.rolId == "Usuario-Base" || user!.rolId == "Usuario-Manager")
             setPermission(true);
         else setPermission(false);
     }, []);
+
+    const handleAddInventory = async () => {
+        showPopup({
+            type: "base",
+            width: "600px",
+            content: (
+                <InsertInventoryPopup onClose={closePopup} />
+            )
+        });
+    };
 
     return (
         <div>
@@ -47,7 +60,7 @@ const DashboardActions: React.FC = () => {
                                 </svg>
                                 <span className="col-8 dashboard-title-b pe-5">Subir impresión</span>
                             </button>
-                            <button type="button" className="button-yellow dashboard-icon-btn mt-3" onClick={() => navigate("/dashboard/add")}>                              
+                            <button type="button" className="button-yellow dashboard-icon-btn mt-3" onClick={() => handleAddInventory()}>                              
                                 <svg className="col-4" width="60" height="60" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M24 10V38M10 24H38" stroke="#000000" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>

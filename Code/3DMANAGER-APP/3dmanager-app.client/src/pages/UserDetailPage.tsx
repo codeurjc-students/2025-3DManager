@@ -304,7 +304,7 @@ const UserDetailPage: React.FC = () => {
                     </div>
                 </div>
                 <div className="col-7 d-flex flex-column ms-auto">
-                    <div className="grey-container-detail mt-2 h-100">
+                    <div className="grey-container-detail mt-2 h-80 ">
                         <h3 className="title-impact-3 ms-2 mt-2">Piezas impresas</h3>
                         <PrintListDetail id={Number(userId)} typeList={3} />
                     </div>
