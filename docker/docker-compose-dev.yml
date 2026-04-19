@@ -22,14 +22,11 @@ services:
       AUTOMAPPER__LICENSE: "${AUTOMAPPER__LICENSE}"
       AzureStorage__ConnectionString: ${AZURE_STORAGE_CONNECTION_STRING}
       AzureStorage__ContainerName: ${AZURE_STORAGE_CONTAINER}
-<<<<<<< HEAD
-=======
       Email__From: ${EMAIL_FROM}
       Email__Smtp: ${EMAIL_SMTP}
       Email__Port: ${EMAIL_PORT}
       Email__User: ${EMAIL_USER}
       Email__Password: ${EMAIL_PASSWORD}
->>>>>>> release/0.3.0
 
     ports: 
       - "443:8080"
