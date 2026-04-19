@@ -38,7 +38,7 @@ Development follows an iterative and incremental approach, based on agile princi
 - **Technologies:**  
   - **Languages:** TypeScript, HTML, CSS, C#, SQL.  
   - **Frontend:** React, React DOM, Axios, Vite, @vitejs/plugin-react ,Bootstrap 
-  - **Backend:** ASP.NET Core, ADO.NET AutoMapper, Newtonsoft.Json, Swashbuckle.AspNetCore (Swagger/OpenAPI), Microsoft.Extensions.Logging, Microsoft.AspNetCore.Identity.  
+  - **Backend:** ASP.NET Core, ADO.NET AutoMapper, Newtonsoft.Json, Swashbuckle.AspNetCore (Swagger/OpenAPI), Microsoft.Extensions.Logging, Microsoft.AspNetCore.Identity , MailKit + SMTP (email delivery system).  
   - **Database:** MySQL.  
   - **Testing (Frontend):** Vitest, @vitest/ui, @testing-library/react, @testing-library/jest-dom, @testing-library/user-event, jsdom, @playwright/test.  
   - **Testing (Backend):** xUnit, Moq, Microsoft.AspNetCore.Mvc.Testing, Microsoft.AspNetCore.TestHost, CoverletCollector, Microsoft.NET.Test.Sdk.
@@ -56,9 +56,11 @@ Development follows an iterative and incremental approach, based on agile princi
   - Static analysis with SonarQube and code reviews in pull requests.
 
 - **Deployment:**  
-  - Current stage: local execution and docker deploy.
-  - Planned deployment: cloud environment **Microsoft Azure**.
-  - Packing via Docker (containers for frontend, backend and database).
+  - Continuous deployment through CI/CD using GitHub Actions, automatically generating Docker images.  
+  - Cloud execution via **Azure Container Apps**.  
+  - Storage of images and `.STL` files using **Azure Blob Storage**.  
+  - **MySQL database hosted on Azure**.  
+  - Packaging via Docker (containers for frontend, backend and database).
 
 - **Development Process:**  
   - Iterative and incremental approach.  
@@ -92,6 +94,9 @@ These technologies enable a dynamic, modular, and efficient user interface.
 
 - **Bootstrap**: A library for building responsive and mobile-first websites using pre-designed components and utility classes.
   - [https://getbootstrap.com/](https://getbootstrap.com/)
+
+- **Three.js (STL Viewer)**: A WebGL‑based JavaScript library used to implement the integrated STL model viewer.  
+  - https://threejs.org/
 
 **Frontend Testing**
 
@@ -139,6 +144,9 @@ The server is developed with **ASP.NET Core 8.0** using **C#**, following a laye
 
 - **SonarQube (NuGet integration)** : Static code analysis is performed using SonarQube through its .NET NuGet package, ensuring code quality, detecting vulnerabilities, and enforcing clean‑code practices during development.
    - https://www.sonarsource.com/products/sonarqube/
+
+- **MailKit (SMTP Email Service)**: A modern and secure library used for sending emails via SMTP, powering the application email alert system.  
+  - https://github.com/jstedfast/MailKit
      
 **Backend Testing**
 
@@ -291,11 +299,14 @@ Scheme on v 0.1
 Scheme on v 0.2
 ![](../Screensv02/ERR_3DMANAGER_BBDD_v02.png)
 
+Scheme on v 1.0
+![](../Screensv1/ERR_3DMANAGER_BBDD_v1.png)
+
 Summary:
   - Tables : 15
-  - Stored Procedures/ Rountines : 57
+  - Stored Procedures/ Rountines : 65
 
-![](../Screensv02/BBDDSummary.png)
+![](../Screensv1/BBDDSummary.png)
 
 ### Communication and Protocols
 
@@ -414,13 +425,16 @@ During development, each new feature or bug fix is implemented in its own branch
 |Commits|	Approximately 12 commits across all branches.| Phase 2 |
 |Commits|	Approximately 120-125 commits across all branches.| Phase 3 |
 |Commits|	Approximately 100 commits across all branches.| Phase 4 |
+|Commits|	Approximately 80-85 commits across all branches.| Phase 5 |
 |Branches|	Around 4 active branches during development.| Phase 2 |
 |Branches|	Around 14 branches created during development.| Phase 3 |
 |Branches|	Around 19 branches created during development.| Phase 4 |
+|Branches|	Around 13 branches created during development.| Phase 5 |
 |Pull Requests|	Around 1 pull request .| Phase 2 |
 |Pull Requests|	Around 23 pull request .| Phase 3 |
 |Pull Requests|	Around 24 pull request .| Phase 4 |
-|Contributors|	1 developer and 1 Supervisor .| Phase 2, 3 and 4 |
+|Pull Requests|	Around 25 pull request .| Phase 5 |
+|Contributors|	1 developer and 1 Supervisor .| Phase 2, 3, 4, 5 |
 
 Phase 2 metrics:
 ![](../DocsImages/GitHubMetrics.png)
@@ -430,6 +444,9 @@ Phase 3 metrics (Last month of the phase)
 
 Phase 4 metrics (Last month of the phase)
 ![](../Screensv02/GitHubMetricsP4.png)
+
+Phase 5 metrics (Last month of the phase)
+![](../Screensv1/GitHubMetricsP5.png)
 
 ### Continuous Integration (CI)
 
@@ -495,7 +512,16 @@ The project repository is publicly hosted under the URJC (Universidad Rey Juan C
 - The connection is configured in the backend via the connection string inside the application settings file (appsettings.json).
 - **For security**, the connection string is stored in user secrets rather than in plain text, preventing sensitive data from being exposed in the repository.
   
-> In future versions, the database may be migrated to a cloud environment.
+### Database Management
+
+- **Database management** is based on two distinct environments:  
+  - A **local database** used for development and testing.  
+  - A **MySQL database deployed on Azure**, which serves as the primary and reference environment.
+
+- To ensure consistency between both environments, **schema comparisons** are performed between the local database and the Azure‑hosted one.  
+  - These comparisons help identify structural differences (tables, columns, indexes, keys, etc.).  
+  - When changes are required, they are applied through **forward engineering**, generating update scripts that synchronize the local environment with the remote one.
+
 
 ### Application Execution
 
