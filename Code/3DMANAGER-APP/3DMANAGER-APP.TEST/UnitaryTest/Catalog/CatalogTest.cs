@@ -134,9 +134,7 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Catalogs
                 .Setup(m => m.Map<List<CatalogPrinterResponse>>(dbResponse))
                 .Returns(mappedResponse);
 
-
             var result = _service.GetPrinterCatalog(groupId);
-
 
             Assert.Single(result);
 
