@@ -402,6 +402,8 @@ Version 0.2 expands the application with advanced group management capabilities,
 - Image Processing
    - Extended image support for all entities (3D prints, filaments, users, and printers).This expands the functionality introduced in Version 0.1, where images were supported only for printers.
 - General update and cleanup of warnings to make the code more reliable and aligned with good practices through static code analysis. This could not be applied in the same way as in other areas due to the initial development requirements, which were later adapted.
+<<<<<<< HEAD
+=======
 
 Version 1.0 introduces key improvements in infrastructure, storage, and user experience, establishing the application as a more stable, scalable, and feature‑rich platform. This update incorporates continuous deployment on Azure, a full migration to Azure Blob Storage, an email‑based notification system, and a 3D STL viewer. The full scope of this release includes:
 
@@ -410,4 +412,5 @@ Version 1.0 introduces key improvements in infrastructure, storage, and user exp
 - Notification system integrated with automatic email delivery.
 - 3D model visualization through a Three.js‑based STL viewer.
 
+>>>>>>> release/0.3.0
 ---

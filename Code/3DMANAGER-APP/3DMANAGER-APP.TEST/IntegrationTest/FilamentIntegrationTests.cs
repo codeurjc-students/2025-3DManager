@@ -21,6 +21,7 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
         private readonly IMapper _mapper;
         private readonly IAzureBlobStorageService _fakeService;
         private readonly INotificationService _notificationService;
+
         public FilamentIntegrationTests(DatabaseFixture fixture)
         {
             _fixture = fixture;

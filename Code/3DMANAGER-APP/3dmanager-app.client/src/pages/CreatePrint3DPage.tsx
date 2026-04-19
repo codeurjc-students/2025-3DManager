@@ -267,6 +267,7 @@ que el tiempo real de impresión tiene al menos minutos agregados" />
                                         <label htmlFor="printName" className="form-label">Nombre</label>
                                         <input id="printName" className="input-value w-100" value={printName ?? ""} placeholder="Nombre" onChange={(e) => setPrintName(e.target.value)}/>
                                     </div>
+
                                     <div className={printState === 2 ? "col-4 p-2" : "col-6 p-2"}>
                                         <label htmlFor="printState" className="form-label">Estado</label>
                                         <select id="printState" className="input-value w-100" value={printState ?? 0} onChange={(e) => setPrintState(Number(e.target.value))}>
