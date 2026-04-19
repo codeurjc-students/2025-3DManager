@@ -33,7 +33,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
-        [Authorize(Roles = "Usuario-Base")]
+        [Authorize]
         [Tags("Groups")]
         [HttpPost]
         public IActionResult PostNewGroup(GroupRequest request)
@@ -92,7 +92,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
-        [Authorize(Roles = "Usuario-Base")]
+        [Authorize]
         [Tags("Groups")]
         [HttpPost]
         public IActionResult PostAcceptInvitation(int groupId, bool isAccepted)
