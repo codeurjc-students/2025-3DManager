@@ -1,4 +1,12 @@
-﻿using _3DMANAGER_APP.TEST.Fixture;
+﻿using _3DMANAGER_APP.BLL.Interfaces;
+using _3DMANAGER_APP.BLL.Mapper;
+using _3DMANAGER_APP.BLL.Models.Base;
+using _3DMANAGER_APP.BLL.Models.File;
+using _3DMANAGER_APP.BLL.Models.Printer;
+using _3DMANAGER_APP.BLL.Services;
+using _3DMANAGER_APP.DAL.Base;
+using _3DMANAGER_APP.DAL.Repositories;
+using _3DMANAGER_APP.TEST.Fixture;
 using AutoMapper;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;

@@ -1,4 +1,8 @@
-﻿using AutoMapper;
+﻿using _3DMANAGER_APP.BLL.Models.Catalog;
+using _3DMANAGER_APP.BLL.Services;
+using _3DMANAGER_APP.DAL.Interfaces;
+using _3DMANAGER_APP.DAL.Models.Filament;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Moq;
 

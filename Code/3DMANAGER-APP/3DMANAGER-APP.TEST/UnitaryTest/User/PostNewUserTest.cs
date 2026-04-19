@@ -1,4 +1,9 @@
-﻿using AutoMapper;
+﻿using _3DMANAGER_APP.BLL.Interfaces;
+using _3DMANAGER_APP.BLL.Models.User;
+using _3DMANAGER_APP.BLL.Services;
+using _3DMANAGER_APP.DAL.Interfaces;
+using _3DMANAGER_APP.DAL.Models.User;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Moq;
