@@ -18,13 +18,13 @@ namespace _3DMANAGER_APP.BLL.Services
 {
     public class PrinterService : IPrinterService
     {
-        private readonly IPrinterRepository _printerDbManager;
+        private readonly IPrinterRepository _printerRepository;
         private readonly IMapper _mapper;
         private readonly ILogger<PrinterService> _logger;
         private readonly IAzureBlobStorageService _absService;
-        public PrinterService(IPrinterRepository printerDbManager, IMapper mapper, ILogger<PrinterService> logger, IAzureBlobStorageService absService)
+        public PrinterService(IPrinterRepository printerRepository, IMapper mapper, ILogger<PrinterService> logger, IAzureBlobStorageService absService)
         {
-            _printerDbManager = printerDbManager;
+            _printerRepository = printerRepository;
             _mapper = mapper;
             _logger = logger;
             _absService = absService;
@@ -34,7 +34,7 @@ namespace _3DMANAGER_APP.BLL.Services
         {
             error = null;
             List<PrinterObject> response = null;
-            var responseDb = _printerDbManager.GetPrinterList(out ErrorDbObject errorDb);
+            var responseDb = _printerRepository.GetPrinterList(out ErrorDbObject errorDb);
             if (errorDb != null)
             {
                 _logger.LogError("Error al obtener el listado de impresoras");
@@ -53,7 +53,7 @@ namespace _3DMANAGER_APP.BLL.Services
 
             CommonResponse<int> response = new CommonResponse<int>();
             PrinterRequestDbObject printerDbObject = _mapper.Map<PrinterRequestDbObject>(printer);
-            var responseDb = _printerDbManager.PostPrinter(printerDbObject, out int? errorDb);
+            var responseDb = _printerRepository.PostPrinter(printerDbObject, out int? errorDb);
 
             if (errorDb != null && errorDb > 0)
             {
@@ -98,7 +98,7 @@ namespace _3DMANAGER_APP.BLL.Services
                 image = await _absService.UploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName,
                     imageFile.ContentType, "printers", groupId);
                 if (image != null)
-                    return _printerDbManager.UpdatePrinterImageData(printerId, _mapper.Map<FileResponseDbObject>(image));
+                    return _printerRepository.UpdatePrinterImageData(printerId, _mapper.Map<FileResponseDbObject>(image));
                 else return false;
             }
             else
@@ -110,7 +110,7 @@ namespace _3DMANAGER_APP.BLL.Services
         public List<PrinterListObject> GetPrinterDashboardList(int groupId, out BaseError? error)
         {
             error = null;
-            List<PrinterListDbObject> list = _printerDbManager.GetPrinterDashboardList(groupId, out bool errorDb);
+            List<PrinterListDbObject> list = _printerRepository.GetPrinterDashboardList(groupId, out bool errorDb);
             if (errorDb)
                 error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = "Error al obtener listado de impresoras" };
 
@@ -133,7 +133,7 @@ namespace _3DMANAGER_APP.BLL.Services
         {
             error = null;
             PrinterDetailRequestDbObject requestDb = _mapper.Map<PrinterDetailRequestDbObject>(request);
-            bool response = _printerDbManager.UpdatePrinter(requestDb, out int? errorDb);
+            bool response = _printerRepository.UpdatePrinter(requestDb, out int? errorDb);
             if (errorDb != null)
             {
                 string msg = "";
@@ -156,7 +156,7 @@ namespace _3DMANAGER_APP.BLL.Services
         {
             error = null;
             PrinterDetailObject response;
-            var responseDb = _printerDbManager.GetPrinterDetail(groupId, printerId);
+            var responseDb = _printerRepository.GetPrinterDetail(groupId, printerId);
             if (responseDb.PrinterId == 0)
             {
                 string msg = $"Error al obtener el detalle de impresora {printerId}";
@@ -185,7 +185,7 @@ namespace _3DMANAGER_APP.BLL.Services
         public float GetPrinterTimeVariation(int groupId, int printerId, out BaseError? error)
         {
             error = null;
-            var responseDb = _printerDbManager.GetTimeVariation(groupId, printerId, out bool errorDb);
+            var responseDb = _printerRepository.GetTimeVariation(groupId, printerId, out bool errorDb);
             if (errorDb)
             {
                 string msg = $"Error al obtener el listado de tiempos de impresión de la impresora {printerId}";
@@ -208,7 +208,7 @@ namespace _3DMANAGER_APP.BLL.Services
         {
             CommonResponse<bool> response = new CommonResponse<bool>();
 
-            DeletedDbObject responseDb = _printerDbManager.DeletePrinter(printerId, groupId, out int? errorDb);
+            DeletedDbObject responseDb = _printerRepository.DeletePrinter(printerId, groupId, out int? errorDb);
 
             if (errorDb != null)
             {
@@ -234,7 +234,7 @@ namespace _3DMANAGER_APP.BLL.Services
         {
             CommonResponse<bool> response = new CommonResponse<bool>();
 
-            FileResponseDbObject imageData = _printerDbManager.GetPrinterImageData(printerId, groupId, out bool error);
+            FileResponseDbObject imageData = _printerRepository.GetPrinterImageData(printerId, groupId, out bool error);
 
             if (error)
             {
@@ -248,7 +248,7 @@ namespace _3DMANAGER_APP.BLL.Services
             }
 
             await _absService.DeleteImageAsync(imageData!.FileKey!);
-            bool dbResponse = _printerDbManager.DeletePrinterImageData(printerId, groupId);
+            bool dbResponse = _printerRepository.DeletePrinterImageData(printerId, groupId);
 
             if (!dbResponse)
             {
@@ -279,12 +279,12 @@ namespace _3DMANAGER_APP.BLL.Services
             var deletedImage = await DeletePrinterImage(printerId, groupId);
             if (!deletedImage.Data)
             {
-                var fileData = _printerDbManager.GetPrinterImageData(printerId, groupId, out bool errorDbImage);
+                var fileData = _printerRepository.GetPrinterImageData(printerId, groupId, out bool errorDbImage);
                 string? keyValue = errorDbImage ? "FileKey Desconocido" : fileData.FileKey;
                 string msg = $"Se ha intentado eliminar una foto de la impresora {printerId} del grupo {groupId} con el fileKey {keyValue}";
                 _logger.LogError(msg);
             }
-            bool dbResponse = _printerDbManager.UpdatePrinterImageData(printerId, _mapper.Map<FileResponseDbObject>(aBSResponse));
+            bool dbResponse = _printerRepository.UpdatePrinterImageData(printerId, _mapper.Map<FileResponseDbObject>(aBSResponse));
             if (!dbResponse)
             {
                 response.Error = new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al actualizar la imagen en la base de datos.");

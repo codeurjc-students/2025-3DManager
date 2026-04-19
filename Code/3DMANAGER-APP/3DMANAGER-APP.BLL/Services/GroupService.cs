@@ -11,24 +11,24 @@ namespace _3DMANAGER_APP.BLL.Services
 {
     public class GroupService : IGroupService
     {
-        private readonly IGroupRepository _groupDbManager;
+        private readonly IGroupRepository _groupRepository;
         private readonly IMapper _mapper;
         private readonly ILogger<GroupService> _logger;
         private readonly IAzureBlobStorageService _absService;
-        private readonly INotificationService _notificationManager;
-        public GroupService(IGroupRepository groupDbManager, IMapper mapper, ILogger<GroupService> logger, IAzureBlobStorageService absService, INotificationService notificationManager)
+        private readonly INotificationService _notificationService;
+        public GroupService(IGroupRepository groupRepository, IMapper mapper, ILogger<GroupService> logger, IAzureBlobStorageService absService, INotificationService notificationService)
         {
-            _groupDbManager = groupDbManager;
+            _groupRepository = groupRepository;
             _mapper = mapper;
             _logger = logger;
             _absService = absService;
-            _notificationManager = notificationManager;
+            _notificationService = notificationService;
         }
 
         public List<GroupInvitation> GetGroupInvitations(int userId, out bool error)
         {
             error = false;
-            var list = _groupDbManager.GetGroupInvitations(userId, out int? errorDb);
+            var list = _groupRepository.GetGroupInvitations(userId, out int? errorDb);
             if (errorDb != 0)
             {
                 error = true;
@@ -42,7 +42,7 @@ namespace _3DMANAGER_APP.BLL.Services
 
             error = null;
             GroupRequestDbObject groupDbObject = _mapper.Map<GroupRequestDbObject>(request);
-            bool response = _groupDbManager.PostNewGroup(groupDbObject, out int? errorDb);
+            bool response = _groupRepository.PostNewGroup(groupDbObject, out int? errorDb);
             if (errorDb != null || errorDb > 0)
             {
                 error = new BaseError()
@@ -58,7 +58,7 @@ namespace _3DMANAGER_APP.BLL.Services
         public bool PostAcceptInvitation(int groupId, bool isAccepted, int userId, out BaseError? error)
         {
             error = null;
-            bool response = _groupDbManager.PostAcceptInvitation(groupId, isAccepted, userId, out int? errorDb);
+            bool response = _groupRepository.PostAcceptInvitation(groupId, isAccepted, userId, out int? errorDb);
             if (errorDb != null || errorDb > 0)
             {
                 error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = $"Error al tratar de aceptar la invitacion del grupo {groupId}" };
@@ -70,7 +70,7 @@ namespace _3DMANAGER_APP.BLL.Services
         public GroupBasicDataResponse GetGroupBasicData(int groupId, out BaseError? error)
         {
             error = null;
-            GroupBasicDataResponseDbObject response = _groupDbManager.GetGroupBasicData(groupId);
+            GroupBasicDataResponseDbObject response = _groupRepository.GetGroupBasicData(groupId);
             if (response.GroupId == 0)
             {
                 error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = $"Error al tratar de recoger la información básica del grupo {groupId}" };
@@ -82,25 +82,25 @@ namespace _3DMANAGER_APP.BLL.Services
         public bool UpdateGroupData(GroupRequest request, int groupId)
         {
             GroupRequestDbObject groupDbObject = _mapper.Map<GroupRequestDbObject>(request);
-            return _groupDbManager.UpdateGroupData(groupDbObject, groupId);
+            return _groupRepository.UpdateGroupData(groupDbObject, groupId);
 
         }
 
         public bool UpdateLeaveGroup(int userId)
         {
-            return _groupDbManager.UpdateLeaveGroup(userId);
+            return _groupRepository.UpdateLeaveGroup(userId);
 
         }
 
         public bool UpdateMembership(int userKickedId, int userId)
         {
 
-            bool response = _groupDbManager.UpdateMembership(userKickedId);
+            bool response = _groupRepository.UpdateMembership(userKickedId);
             if (!response)
                 return false;
 
             string msg = $"Has sido expulsado del grupo al que pertenecías";
-            bool responseNotification = _notificationManager.CreateNotification(userKickedId, userId, Models.Notifications.NotificationType.GroupExpulsion, msg, out BaseError? error);
+            bool responseNotification = _notificationService.CreateNotification(userKickedId, userId, Models.Notifications.NotificationType.GroupExpulsion, msg, out BaseError? error);
             if (error != null)
                 return false;
             return responseNotification;
@@ -108,7 +108,7 @@ namespace _3DMANAGER_APP.BLL.Services
 
         public async Task<bool> DeleteGroup(int userId, int groupId)
         {
-            var dbResponse = _groupDbManager.DeleteGroup(userId, groupId);
+            var dbResponse = _groupRepository.DeleteGroup(userId, groupId);
 
             if (!dbResponse)
             {
@@ -132,13 +132,13 @@ namespace _3DMANAGER_APP.BLL.Services
 
         public bool TrasnferOwnership(int userId, int groupId, int newOwnerUserId)
         {
-            return _groupDbManager.TrasnferOwnership(userId, groupId, newOwnerUserId);
+            return _groupRepository.TrasnferOwnership(userId, groupId, newOwnerUserId);
         }
 
         public GroupDashboardData GetGroupDashboardData(int groupId, out BaseError? error)
         {
             error = null;
-            GroupDashboardDataDbObject response = _groupDbManager.GetGroupDashboardData(groupId);
+            GroupDashboardDataDbObject response = _groupRepository.GetGroupDashboardData(groupId);
             if (response.GroupId == 0)
             {
                 error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = "Error al tratar de recoger la información del dashboard del grupo" };
