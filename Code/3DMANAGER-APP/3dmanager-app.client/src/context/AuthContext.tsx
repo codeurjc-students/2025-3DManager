@@ -39,11 +39,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     ...JSON.parse(storedUser),
                     userId: response.userId,
                     groupId: response.groupId,
-                    rolId: response.rolId
+                    rolId: response.rolId,
+                    token: response.token
                 };
 
                 setUser(updatedUser);
                 localStorage.setItem("user", JSON.stringify(updatedUser));
+
+                if (response.token) {
+                    setToken(response.token);
+                    localStorage.setItem("token", response.token);
+                }
             })
             .catch(() => {
                 setUser(null);
@@ -84,6 +90,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
             setUser(updatedUser);
             localStorage.setItem("user", JSON.stringify(updatedUser));
+
+            if (res.token) {
+                setToken(res.token);
+                localStorage.setItem("token", res.token);
+            }
 
         } catch (err) {
             console.error(err)

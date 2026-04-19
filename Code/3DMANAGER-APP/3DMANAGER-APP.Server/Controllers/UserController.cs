@@ -222,6 +222,7 @@ namespace _3DMANAGER_APP.Server.Controllers
                 return Unauthorized();
 
             var user = _userService.GetUserById(UserId.Value);
+            var newToken = _jwtService.GenerateToken(user);
 
             if (user == null || user.UserId == 0)
                 return Unauthorized();
@@ -231,7 +232,8 @@ namespace _3DMANAGER_APP.Server.Controllers
                 userId = user.UserId,
                 groupId = user.GroupId,
                 rolId = user.RolId,
-                groupName = user.GroupName
+                groupName = user.GroupName,
+                token = newToken
             });
         }
 
