@@ -16,24 +16,24 @@ namespace _3DMANAGER_APP.BLL.Services
 {
     public class FilamentService : IFilamentService
     {
-        private readonly IFilamentRepository _filamentDbManager;
+        private readonly IFilamentRepository _filamentRepository;
         private readonly IMapper _mapper;
         private readonly ILogger<FilamentService> _logger;
         private readonly IAzureBlobStorageService _absService;
-        private readonly INotificationService _notificationManager;
-        public FilamentService(IFilamentRepository filamentDbManager, IMapper mapper, ILogger<FilamentService> logger, IAzureBlobStorageService absService, INotificationService notificationManager)
+        private readonly INotificationService _notificationService;
+        public FilamentService(IFilamentRepository filamentRepository, IMapper mapper, ILogger<FilamentService> logger, IAzureBlobStorageService absService, INotificationService notificationService)
         {
-            _filamentDbManager = filamentDbManager;
+            _filamentRepository = filamentRepository;
             _mapper = mapper;
             _logger = logger;
             _absService = absService;
-            _notificationManager = notificationManager;
+            _notificationService = notificationService;
         }
 
         public List<FilamentListResponse> GetFilamentList(int group, out BaseError? error)
         {
             error = null;
-            List<FilamentListResponseDbObject> list = _filamentDbManager.GetFilamentList(group, out bool errordb);
+            List<FilamentListResponseDbObject> list = _filamentRepository.GetFilamentList(group, out bool errordb);
             if (errordb)
                 error = new BaseError() { code = (int)HttpStatusCode.InternalServerError, message = "Error al obtener listado de filamentos" };
 
@@ -45,7 +45,7 @@ namespace _3DMANAGER_APP.BLL.Services
             CommonResponse<int> response = new CommonResponse<int>();
 
             FilamentRequestDbObject filamentDbObject = _mapper.Map<FilamentRequestDbObject>(filament);
-            var responseDb = _filamentDbManager.PostFilament(filamentDbObject, out int? errorDb);
+            var responseDb = _filamentRepository.PostFilament(filamentDbObject, out int? errorDb);
 
             if (errorDb != null)
             {
@@ -89,7 +89,7 @@ namespace _3DMANAGER_APP.BLL.Services
                 image = await _absService.UploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName,
                     imageFile.ContentType, "filaments", groupId);
                 if (image != null)
-                    return _filamentDbManager.UpdateFilamentImageData(filamentId, _mapper.Map<FileResponseDbObject>(image));
+                    return _filamentRepository.UpdateFilamentImageData(filamentId, _mapper.Map<FileResponseDbObject>(image));
                 else return false;
             }
             else
@@ -102,13 +102,13 @@ namespace _3DMANAGER_APP.BLL.Services
         public bool UpdateFilament(FilamentUpdateRequest request)
         {
             FilamentUpdateRequestDbObject requestDb = _mapper.Map<FilamentUpdateRequestDbObject>(request);
-            return _filamentDbManager.UpdateFilament(requestDb);
+            return _filamentRepository.UpdateFilament(requestDb);
         }
 
         public FilamentDetailObject GetFilamentDetail(int groupId, int filamentId, out BaseError? error)
         {
             error = null;
-            var responseDb = _filamentDbManager.GetFilamentDetail(groupId, filamentId);
+            var responseDb = _filamentRepository.GetFilamentDetail(groupId, filamentId);
             if (responseDb.FilamentId == 0)
             {
                 string msg = $"Error al obtener el detalle de filamento {filamentId}.";
@@ -137,7 +137,7 @@ namespace _3DMANAGER_APP.BLL.Services
         {
             CommonResponse<bool> response = new CommonResponse<bool>();
 
-            DeletedDbObject responseDb = _filamentDbManager.DeleteFilament(filamentId, groupId, out int? errorDb);
+            DeletedDbObject responseDb = _filamentRepository.DeleteFilament(filamentId, groupId, out int? errorDb);
 
             if (errorDb != null)
             {
@@ -163,7 +163,7 @@ namespace _3DMANAGER_APP.BLL.Services
         {
             CommonResponse<bool> response = new CommonResponse<bool>();
 
-            FileResponseDbObject imageData = _filamentDbManager.GetFilamentImageData(filamentId, groupId, out bool error);
+            FileResponseDbObject imageData = _filamentRepository.GetFilamentImageData(filamentId, groupId, out bool error);
 
             if (error)
             {
@@ -177,7 +177,7 @@ namespace _3DMANAGER_APP.BLL.Services
             }
 
             await _absService.DeleteImageAsync(imageData!.FileKey!);
-            bool dbResponse = _filamentDbManager.DeleteFilamentImageData(filamentId, groupId);
+            bool dbResponse = _filamentRepository.DeleteFilamentImageData(filamentId, groupId);
 
             if (!dbResponse)
             {
@@ -208,12 +208,12 @@ namespace _3DMANAGER_APP.BLL.Services
             var deletedImage = await DeleteFilamentImage(filamentId, groupId);
             if (!deletedImage.Data)
             {
-                var fileData = _filamentDbManager.GetFilamentImageData(filamentId, groupId, out bool errorDbImage);
+                var fileData = _filamentRepository.GetFilamentImageData(filamentId, groupId, out bool errorDbImage);
                 string? keyValue = errorDbImage ? "FileKey Desconocido" : fileData.FileKey;
                 string msg = $"Se ha intentado eliminar una foto del filamento {filamentId} del grupo {groupId} con el fileKey {keyValue}";
                 _logger.LogError(msg);
             }
-            bool dbResponse = _filamentDbManager.UpdateFilamentImageData(filamentId, _mapper.Map<FileResponseDbObject>(aBSResponse));
+            bool dbResponse = _filamentRepository.UpdateFilamentImageData(filamentId, _mapper.Map<FileResponseDbObject>(aBSResponse));
             if (!dbResponse)
             {
                 response.Error = new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al actualizar la imagen en la base de datos.");
@@ -228,14 +228,14 @@ namespace _3DMANAGER_APP.BLL.Services
         {
             try
             {
-                List<FilamentNotificationDbObject> filaments = _filamentDbManager.GetAllFilaments();
+                List<FilamentNotificationDbObject> filaments = _filamentRepository.GetAllFilaments();
 
                 foreach (var filament in filaments)
                 {
 
                     string msg = $"El filamento {filament.FilamentName} se encuentra por debajo del umbral del 25% de material restante, con  {filament.FilamentLength} de material restante.";
 
-                    bool responseNotification = _notificationManager.CreateNotification(filament.OwnerGroupId, 0, Models.Notifications.NotificationType.FilamentWarning, msg, out BaseError? error);
+                    bool responseNotification = _notificationService.CreateNotification(filament.OwnerGroupId, 0, Models.Notifications.NotificationType.FilamentWarning, msg, out BaseError? error);
                     if (error != null || !responseNotification)
                     {
                         string msgError = $"Error: Error al generar notificación de filamento {filament.FilamentId} bajo de material :{error}";

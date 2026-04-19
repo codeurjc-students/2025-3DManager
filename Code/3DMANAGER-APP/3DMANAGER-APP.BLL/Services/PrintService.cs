@@ -15,14 +15,14 @@ namespace _3DMANAGER_APP.BLL.Services
 {
     public class PrintService : IPrintService
     {
-        private readonly IPrintRepository _printDbManager;
+        private readonly IPrintRepository _printRepository;
         private readonly IMapper _mapper;
         private readonly ILogger<PrintService> _logger;
         private readonly IAzureBlobStorageService _absService;
         private readonly INotificationService _notificationManager;
-        public PrintService(IPrintRepository printDbManager, IMapper mapper, ILogger<PrintService> logger, IAzureBlobStorageService absService, INotificationService notificationManager)
+        public PrintService(IPrintRepository printRepository, IMapper mapper, ILogger<PrintService> logger, IAzureBlobStorageService absService, INotificationService notificationManager)
         {
-            _printDbManager = printDbManager;
+            _printRepository = printRepository;
             _mapper = mapper;
             _logger = logger;
             _absService = absService;
@@ -32,7 +32,7 @@ namespace _3DMANAGER_APP.BLL.Services
         public PrintListResponse GetPrintList(int group, PagedRequest pagination, out BaseError? error)
         {
             error = null;
-            var result = _printDbManager.GetPrintList(group, pagination.PageNumber, pagination.PageSize, out int totalItems, out bool errorDb);
+            var result = _printRepository.GetPrintList(group, pagination.PageNumber, pagination.PageSize, out int totalItems, out bool errorDb);
             if (errorDb)
             {
                 error = new BaseError()
@@ -56,7 +56,7 @@ namespace _3DMANAGER_APP.BLL.Services
             CommonResponse<int> response = new CommonResponse<int>();
 
             PrintRequestDbObject printDbObject = _mapper.Map<PrintRequestDbObject>(print);
-            int responseDb = _printDbManager.PostPrint(printDbObject, out int? errorDb);
+            int responseDb = _printRepository.PostPrint(printDbObject, out int? errorDb);
 
             if (errorDb != null)
             {
@@ -101,7 +101,7 @@ namespace _3DMANAGER_APP.BLL.Services
                 image = await _absService.UploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName,
                     imageFile.ContentType, "prints", groupId);
                 if (image != null)
-                    return _printDbManager.UpdatePrintImageData(printerId, _mapper.Map<FileResponseDbObject>(image));
+                    return _printRepository.UpdatePrintImageData(printerId, _mapper.Map<FileResponseDbObject>(image));
                 else return false;
             }
             else
@@ -115,7 +115,7 @@ namespace _3DMANAGER_APP.BLL.Services
         {
             error = null;
             List<PrintListResponseDbObject> result;
-            result = _printDbManager.GetPrintListByType(group, pagination.PageNumber, pagination.PageSize, type, id, out int totalItems, out bool errorDb);
+            result = _printRepository.GetPrintListByType(group, pagination.PageNumber, pagination.PageSize, type, id, out int totalItems, out bool errorDb);
             if (errorDb)
             {
                 error = new BaseError()
@@ -137,14 +137,14 @@ namespace _3DMANAGER_APP.BLL.Services
         public bool UpdatePrint(PrintDetailRequest request)
         {
             PrintDetailRequestDbObject requestDb = _mapper.Map<PrintDetailRequestDbObject>(request);
-            return _printDbManager.UpdatePrint(requestDb);
+            return _printRepository.UpdatePrint(requestDb);
         }
 
         public PrintDetailObject GetPrintDetail(int groupId, int printId, out BaseError? error)
         {
             error = null;
             PrintDetailObject response;
-            var responseDb = _printDbManager.GetPrintDetail(groupId, printId);
+            var responseDb = _printRepository.GetPrintDetail(groupId, printId);
             if (responseDb.PrintId == 0)
             {
                 string msg = $"Error al obtener el detalle de impresión {printId}";
@@ -172,7 +172,7 @@ namespace _3DMANAGER_APP.BLL.Services
         {
             error = null;
 
-            var dbResult = _printDbManager.GetPrintComments(groupId, printId, out bool errorDb);
+            var dbResult = _printRepository.GetPrintComments(groupId, printId, out bool errorDb);
 
             if (errorDb)
             {
@@ -193,7 +193,7 @@ namespace _3DMANAGER_APP.BLL.Services
         public int PostPrintComment(PrintCommentRequest request, int groupId)
         {
             PrintCommentRequestDbObject requestDb = _mapper.Map<PrintCommentRequestDbObject>(request);
-            int response = _printDbManager.PostPrintComment(requestDb);
+            int response = _printRepository.PostPrintComment(requestDb);
             if (response == 0)
             {
                 string msgLog = $"Error haciendo comentarios de la impresión {request.PrintId}";
@@ -201,7 +201,7 @@ namespace _3DMANAGER_APP.BLL.Services
                 return 0;
             }
 
-            var responseDb = _printDbManager.GetPrintDetail(groupId, request.PrintId);
+            var responseDb = _printRepository.GetPrintDetail(groupId, request.PrintId);
             if (responseDb.PrintId == 0)
             {
                 _logger.LogError("Error al obtener el datos para generar notificacion del comentario de impresión");
@@ -223,7 +223,7 @@ namespace _3DMANAGER_APP.BLL.Services
         {
             CommonResponse<bool> response = new CommonResponse<bool>();
 
-            DeletedDbObject responseDb = _printDbManager.DeletePrint(printId, groupId, out int? errorDb);
+            DeletedDbObject responseDb = _printRepository.DeletePrint(printId, groupId, out int? errorDb);
 
             if (errorDb != null)
             {
@@ -249,7 +249,7 @@ namespace _3DMANAGER_APP.BLL.Services
         {
             CommonResponse<bool> response = new CommonResponse<bool>();
 
-            FileResponseDbObject imageData = _printDbManager.GetPrintImageData(printId, groupId, out bool error);
+            FileResponseDbObject imageData = _printRepository.GetPrintImageData(printId, groupId, out bool error);
 
             if (error)
             {
@@ -263,7 +263,7 @@ namespace _3DMANAGER_APP.BLL.Services
             }
 
             await _absService.DeleteImageAsync(imageData!.FileKey!);
-            bool dbResponse = _printDbManager.DeletePrintImageData(printId, groupId);
+            bool dbResponse = _printRepository.DeletePrintImageData(printId, groupId);
 
             if (!dbResponse)
             {
@@ -294,12 +294,12 @@ namespace _3DMANAGER_APP.BLL.Services
             var deletedImage = await DeletePrintImage(printId, groupId);
             if (!deletedImage.Data)
             {
-                var fileData = _printDbManager.GetPrintImageData(printId, groupId, out bool errorDbImage);
+                var fileData = _printRepository.GetPrintImageData(printId, groupId, out bool errorDbImage);
                 string? keyValue = errorDbImage ? "FileKey Desconocido" : fileData.FileKey;
                 string msg = $"Se ha intentado eliminar un fichero STL de la impresión {printId} del grupo {groupId} con el fileKey {keyValue}";
                 _logger.LogError(msg);
             }
-            bool dbResponse = _printDbManager.UpdatePrintImageData(printId, _mapper.Map<FileResponseDbObject>(aBSResponse));
+            bool dbResponse = _printRepository.UpdatePrintImageData(printId, _mapper.Map<FileResponseDbObject>(aBSResponse));
             if (!dbResponse)
             {
                 response.Error = new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al actualizar la referencia del fichero STL en la base de datos.");
@@ -312,7 +312,7 @@ namespace _3DMANAGER_APP.BLL.Services
 
         public bool DeletePrintComment(int commentId)
         {
-            return _printDbManager.DeletePrintComment(commentId);
+            return _printRepository.DeletePrintComment(commentId);
         }
     }
 }
