@@ -2,6 +2,8 @@
 
 Below are the steps required to run the application using the docker‑compose file published on DockerHub as an OCI artifact. This process enables local deployment without installing any dependencies other than Docker.
 
+> [!NOTE]  
+> The application is also on Azure, so execution should be easier via the link at the bottom.
 ---
 
 ## Prerequisites
@@ -71,8 +73,14 @@ AWS_SECRET_KEY=<your AWS secret key>
 # AUTOMAPPER
 AUTOMAPPER__LICENSE=<your License of Automapper>
 # Certs
-CERT_PASSWORD=3dmanagerPASS1234
+CERT_PASSWORD=<your cert password>
 
+#Email
+EMAIL_FROM=<your mail account>
+EMAIL_SMTP=smtp.gmail.com
+EMAIL_PORT=<port>
+EMAIL_USER=<your mail account>
+EMAIL_PASSWORD=<your application password>
 ```
 
 ## Start the application 
