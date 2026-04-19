@@ -159,21 +159,6 @@ namespace _3DMANAGER_APP.BLL.Services
                         overflow: hidden;
                         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
                     }}
-                    .header-container {{
-                        background-color: #2b2b2b;
-                        padding: 1rem 2rem;
-                        text-align: center;
-                    }}
-                    .app-title {{
-                        color: white;
-                        font-weight: bold;
-                        font-size: 2rem;
-                        font-family: Impact, sans-serif;
-                        margin: 0;
-                    }}
-                    .highlight {{
-                        color: #f1c40f;
-                    }}
                     .content {{
                         padding: 20px;
                         font-size: 1rem;
@@ -189,13 +174,15 @@ namespace _3DMANAGER_APP.BLL.Services
                 </head>
                 <body>
                 <div class=""email-container"">
-                    <header class=""header-container"">
-                        <h1 class=""app-title""><span class=""highlight"">3D</span>MANAGER</h1>
-                    </header>
+                    <h1 class=""app-title"" style=""font-weight:bold;font-size:2rem;font-family:Impact,sans-serif;margin:0;"">
+                        <span style=""color:#f1c40f;"">3D</span>
+                        <span style=""color:#8A8A8A;"">MANAGER</span>
+                    </h1>
                     <div class=""content"">
                         <h2>{title}</h2>
                         <p>{message}</p>
                     </div>
+
                     <div class=""footer"">
                         Este correo ha sido generado automáticamente por 3DManager. Por favor, no responda
                     </div>
@@ -203,7 +190,6 @@ namespace _3DMANAGER_APP.BLL.Services
                 </body>
                 </html>";
         }
-
 
     }
 
