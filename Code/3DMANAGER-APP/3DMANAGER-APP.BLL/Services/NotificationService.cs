@@ -12,25 +12,25 @@ namespace _3DMANAGER_APP.BLL.Services
 {
     public class NotificationService : INotificationService
     {
-        private readonly INotificationRepository _notificationDbManager;
+        private readonly INotificationRepository _notificationRepository;
         private readonly IMapper _mapper;
         private readonly ILogger<NotificationService> _logger;
         private readonly IEmailService _emailService;
-        private readonly IUserRepository _userDbManager;
+        private readonly IUserRepository _userRepository;
 
 
         public NotificationService(
-            INotificationRepository notificationDbManager,
+            INotificationRepository notificationRepository,
             IMapper mapper,
             ILogger<NotificationService> logger,
             IEmailService emailService,
-            IUserRepository userDbManager)
+            IUserRepository userRepository)
         {
-            _notificationDbManager = notificationDbManager;
+            _notificationRepository = notificationRepository;
             _mapper = mapper;
             _logger = logger;
             _emailService = emailService;
-            _userDbManager = userDbManager;
+            _userRepository = userRepository;
         }
 
         public bool CreateNotification(int userId, int userFromId, NotificationType type, string message, out BaseError? error)
@@ -44,7 +44,7 @@ namespace _3DMANAGER_APP.BLL.Services
                 NotificationType = (int)type
             };
 
-            bool responseDb = _notificationDbManager.InsertNotification(dbObj, out int newId);
+            bool responseDb = _notificationRepository.InsertNotification(dbObj, out int newId);
 
             if (!responseDb && newId != 0)
             {
@@ -52,8 +52,8 @@ namespace _3DMANAGER_APP.BLL.Services
                 return false;
             }
 
-            UserDbObject user = _userDbManager.GetUserById(userId);
-            UserDbObject userFrom = _userDbManager.GetUserById(userFromId);
+            UserDbObject user = _userRepository.GetUserById(userId);
+            UserDbObject userFrom = _userRepository.GetUserById(userFromId);
 
             if (user.UserEmail != null)
             {
@@ -76,7 +76,7 @@ namespace _3DMANAGER_APP.BLL.Services
         {
             error = null;
 
-            List<NotificationDbObject> list = _notificationDbManager.GetUnreadNotifications(userId, out bool errorDb);
+            List<NotificationDbObject> list = _notificationRepository.GetUnreadNotifications(userId, out bool errorDb);
 
             if (errorDb)
             {
@@ -91,7 +91,7 @@ namespace _3DMANAGER_APP.BLL.Services
         {
             error = null;
 
-            bool responseDb = _notificationDbManager.NotificationMarkAsRead(notificationId);
+            bool responseDb = _notificationRepository.NotificationMarkAsRead(notificationId);
 
             if (!responseDb)
             {

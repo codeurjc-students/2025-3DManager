@@ -17,18 +17,18 @@ namespace _3DMANAGER_APP.BLL.Services
 {
     public class UserService : IUserService
     {
-        private readonly IUserRepository _userDbManager;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly ILogger<UserService> _logger;
         private readonly IAzureBlobStorageService _absService;
-        private readonly INotificationService _notificationManager;
-        public UserService(IUserRepository userDbManager, IMapper mapper, ILogger<UserService> logger, IAzureBlobStorageService absService, INotificationService notificationManager)
+        private readonly INotificationService _notificationService;
+        public UserService(IUserRepository userRepository, IMapper mapper, ILogger<UserService> logger, IAzureBlobStorageService absService, INotificationService notificationService)
         {
-            _userDbManager = userDbManager;
+            _userRepository = userRepository;
             _mapper = mapper;
             _logger = logger;
             _absService = absService;
-            _notificationManager = notificationManager;
+            _notificationService = notificationService;
         }
 
         public async Task<CommonResponse<int>> PostNewUser(UserCreateRequest user)
@@ -39,7 +39,7 @@ namespace _3DMANAGER_APP.BLL.Services
 
             user.UserPassword = hashedPassword;
             UserCreateRequestDbObject userDbObject = _mapper.Map<UserCreateRequestDbObject>(user);
-            var responseDb = _userDbManager.PostNewUser(userDbObject, out int? errorDb);
+            var responseDb = _userRepository.PostNewUser(userDbObject, out int? errorDb);
 
             if (errorDb != null)
             {
@@ -90,7 +90,7 @@ namespace _3DMANAGER_APP.BLL.Services
                 image = await _absService.UploadImageAsync(imageFile.OpenReadStream(), imageFile.FileName,
                     imageFile.ContentType, "users", null);
                 if (image != null)
-                    return _userDbManager.UpdateUserImageData(userId, _mapper.Map<FileResponseDbObject>(image));
+                    return _userRepository.UpdateUserImageData(userId, _mapper.Map<FileResponseDbObject>(image));
                 else return false;
             }
             else
@@ -103,7 +103,7 @@ namespace _3DMANAGER_APP.BLL.Services
         {
             error = null;
 
-            var userDb = _userDbManager.Login(userName);
+            var userDb = _userRepository.Login(userName);
             if (userDb.UserId == 0)
             {
                 string msg = $"El usuario {userName} no existe";
@@ -139,7 +139,7 @@ namespace _3DMANAGER_APP.BLL.Services
         public List<UserListResponse> GetUserList(int group, out BaseError? error)
         {
             error = null;
-            List<UserListResponseDbObject> list = _userDbManager.GetUserList(group, out bool errorDb);
+            List<UserListResponseDbObject> list = _userRepository.GetUserList(group, out bool errorDb);
             if (errorDb)
             {
                 string msg = $"Error al obtener listado de usuarios para el grupo {group}";
@@ -153,7 +153,7 @@ namespace _3DMANAGER_APP.BLL.Services
         public List<UserListResponse> GetUserInvitationList(string? filter, out BaseError? error)
         {
             error = null;
-            List<UserListResponseDbObject> list = _userDbManager.GetUserInvitationList(filter, out bool errorDb);
+            List<UserListResponseDbObject> list = _userRepository.GetUserInvitationList(filter, out bool errorDb);
             if (errorDb)
             {
                 _logger.LogError("Error al obtener listado de usuarios para invitar");
@@ -164,7 +164,7 @@ namespace _3DMANAGER_APP.BLL.Services
 
         public bool PostUserInvitation(int groupId, int userId, int userOwner, out BaseError? error)
         {
-            bool responseDb = _userDbManager.PostUserInvitation(groupId, userId, out int? errorDb);
+            bool responseDb = _userRepository.PostUserInvitation(groupId, userId, out int? errorDb);
             error = null;
             if (errorDb != null || !responseDb)
             {
@@ -203,7 +203,7 @@ namespace _3DMANAGER_APP.BLL.Services
             UserObject user = GetUserById(userId);
             UserObject userOwner = GetUserById(userOwnerId);
             string msg = $"Se te ha invitado a participar al grupo {userOwner.GroupName} por su administrador {userOwner.UserName}.";
-            bool response = _notificationManager.CreateNotification(userId, userOwnerId, Models.Notifications.NotificationType.GroupInvitation, msg, out BaseError? error);
+            bool response = _notificationService.CreateNotification(userId, userOwnerId, Models.Notifications.NotificationType.GroupInvitation, msg, out BaseError? error);
             if (error != null)
                 return false;
             return response;
@@ -211,18 +211,18 @@ namespace _3DMANAGER_APP.BLL.Services
 
         public UserObject GetUserById(int userId)
         {
-            return _mapper.Map<UserObject>(_userDbManager.GetUserById(userId));
+            return _mapper.Map<UserObject>(_userRepository.GetUserById(userId));
         }
         public int GetGroupIdByUserId(int userId)
         {
-            return _userDbManager.GetGroupIdByUserId(userId);
+            return _userRepository.GetGroupIdByUserId(userId);
         }
 
         public bool UpdateUser(UserUpdateRequest request, out BaseError? error)
         {
             error = null;
             UserUpdateRequestDbObject requestDb = _mapper.Map<UserUpdateRequestDbObject>(request);
-            bool response = _userDbManager.UpdateUser(requestDb, out int? errorDb);
+            bool response = _userRepository.UpdateUser(requestDb, out int? errorDb);
             if (errorDb != null)
             {
                 string msg = "";
@@ -249,7 +249,7 @@ namespace _3DMANAGER_APP.BLL.Services
         {
             error = null;
             UserDetailObject response;
-            var responseDb = _userDbManager.GetUserDetail(userId);
+            var responseDb = _userRepository.GetUserDetail(userId);
             if (responseDb.UserId == 0)
             {
                 string msg = $"Error al obtener el detalle de usuario {userId}";
@@ -277,7 +277,7 @@ namespace _3DMANAGER_APP.BLL.Services
         {
             CommonResponse<bool> response = new CommonResponse<bool>();
 
-            FileResponseDbObject imageData = _userDbManager.GetUserImageData(userId, out bool error);
+            FileResponseDbObject imageData = _userRepository.GetUserImageData(userId, out bool error);
 
             if (error)
             {
@@ -291,7 +291,7 @@ namespace _3DMANAGER_APP.BLL.Services
             }
 
             await _absService.DeleteImageAsync(imageData!.FileKey!);
-            bool dbResponse = _userDbManager.DeleteUserImageData(userId);
+            bool dbResponse = _userRepository.DeleteUserImageData(userId);
 
             if (!dbResponse)
             {
@@ -322,12 +322,12 @@ namespace _3DMANAGER_APP.BLL.Services
             var deletedImage = await DeleteUserImage(userId);
             if (!deletedImage.Data)
             {
-                var fileData = _userDbManager.GetUserImageData(userId, out bool errorDbImage);
+                var fileData = _userRepository.GetUserImageData(userId, out bool errorDbImage);
                 string? keyValue = errorDbImage ? "FileKey Desconocido" : fileData.FileKey;
                 string msg = $"Se ha intentado eliminar una foto del usuario {userId} con el fileKey {keyValue}";
                 _logger.LogError(msg);
             }
-            bool dbResponse = _userDbManager.UpdateUserImageData(userId, _mapper.Map<FileResponseDbObject>(aBSResponse));
+            bool dbResponse = _userRepository.UpdateUserImageData(userId, _mapper.Map<FileResponseDbObject>(aBSResponse));
             if (!dbResponse)
             {
                 response.Error = new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al actualizar la imagen en la base de datos.");
@@ -342,7 +342,7 @@ namespace _3DMANAGER_APP.BLL.Services
         {
             CommonResponse<bool> response = new CommonResponse<bool>();
 
-            DeletedDbObject responseDb = _userDbManager.DeleteUser(userId, out int? errorDb);
+            DeletedDbObject responseDb = _userRepository.DeleteUser(userId, out int? errorDb);
 
             if (errorDb != null)
             {
