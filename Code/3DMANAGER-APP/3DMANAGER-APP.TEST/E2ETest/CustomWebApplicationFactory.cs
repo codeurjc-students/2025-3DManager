@@ -44,6 +44,21 @@ namespace _3DMANAGER_APP.TEST
                 absMock.Setup(x => x.GetPresignedUrl(It.IsAny<string>(), It.IsAny<int>())).Returns("https://fake-url.com/presigned/test.jpg");
                 services.AddSingleton<IAzureBlobStorageService>(absMock.Object);
             });
+            builder.ConfigureServices(services =>
+            {
+                var emailMock = new Mock<IEmailService>();
+                emailMock
+                    .Setup(x => x.SendEmailAsync(
+                        It.IsAny<string>(),
+                        It.IsAny<string>(),
+                        It.IsAny<string>(),
+                        It.IsAny<bool>()
+                    ))
+                    .Returns(Task.CompletedTask);
+
+                services.AddSingleton<IEmailService>(emailMock.Object);
+            });
+
         }
     }
 }

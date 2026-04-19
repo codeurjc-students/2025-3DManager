@@ -3,4 +3,5 @@ export interface PrintDetailRequest {
     printId: number;
     printName: string;
     printDescription: string;
+    printRealTime: number;
 }

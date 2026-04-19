@@ -25,10 +25,10 @@
 | Backend (REST API) | ASP.NET Core Web API (.NET 8) | Controllers, BLL, and DAL(ADO.NET + stored procedures) organized in layers with clear separation of responsibilities |
 | Frontend (SPA) | React | Communicates with backend via fetch or Axios, interactive and dynamic UI design |
 | Database | MySQL | Stored procedures, initialization scripts, and sample data |
-| Automated Testing | XUnit (backend), Selenium (UI) | Validation of main functionalities and API endpoints |
+| Automated Testing | XUnit (backend) | Validation of main functionalities and API endpoints |
 | API Documentation | Swagger/Postman | Interactive documentation with Swagger, Postman collection for interactive and exportable testing.|
 | CI/CD | GitHub Actions | Build, test, and automatic deployment pipeline to Azure |
-| Deployment | Azure App Service / Docker Container | Deploy backend and frontend, scalable and ready for load testing |
+| Deployment | Azure Container App/ Docker Container | Deploy backend and frontend, scalable and ready for load testing |
 | Repository | GitHub |Version control |
 
 ### 3. Data Flow

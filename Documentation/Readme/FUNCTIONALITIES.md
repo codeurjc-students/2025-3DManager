@@ -18,7 +18,12 @@ A guest user is able to access the application in demo mode with mock data, allo
 - Scope: Basic  
 - Users: Guest  
 - Implemented in v 0.1
-  
+
+### Delete User
+A user is able to delete his self account.  
+- Scope: Intermediate  
+- Users: Base user, Manager  
+- Implemented in v 1.0 
 ---
 
 ## Group
@@ -125,7 +130,8 @@ A user is able to view the 3D prints associated with the group and basic metric 
 ### Notifications list (app)
 A user is able to view app notifications.  
 - Scope: Advanced  
-- Users: All  
+- Users: All 
+- Implemented in v 1.0  
 
 ### Printer list
 A user is able to view the printers associated with the groupand the basic data information of them
@@ -177,12 +183,19 @@ A user is able to view printing metrics, including estimated vs. actual time, ma
 A user is able to view and download files related to a 3D print.
 - Scope: Advanced
 - Users: Base user, Manager
+- Implemented in v 1.0 
 
 ### 3dPrint comments
 A user is able to write and view comments about a 3D print in the interaction section. 
 - Scope: Intermediate  
 - Users: Base user, Manager  
 - Implemented in v 0.2
+
+### Delete 3dPrint comments
+A user is able to delete his comments about a 3D print in the interaction section. 
+- Scope: Intermediate  
+- Users: Base user, Manager  
+- Implemented in v 1.0
 
 ---
 
@@ -226,21 +239,19 @@ A user is able to associate and view photos of 3D prints, printers or users to c
 A manager user is able to receive automatic notifications when a filament is nearly depleted.  
 - Scope: Advanced  
 - Users: Manager  
+- Implemented in v 1.0
 
 ### Email notification when receiving a comment on a 3dPrint
 A user is able to receive automatic notifications when a 3D print receives a comment.  
 - Scope: Advanced  
 - Users: Base user, Manager  
-
-### Generate PDF when decommissioning a printer or filament
-A user is able to view a document containing the historical data of a decommissioned resource. 
-- Scope: Advanced  
-- Users: Manager  
+- Implemented in v 1.0
 
 ### Generate 3D Model of a 3dPrint
 A user is able to view a 3D printed model of a 3dPrint uploaded in the group. 
 - Scope: Advanced  
 - Users: ALL
+- Implemented in v 1.0
 
 > **Note:** It will be developed according to the workload of the corresponding phase.
 
@@ -333,7 +344,24 @@ Pagination has been implemented both on the server side for entities with potent
 
 ### User search
 A user is able to search for other users within the group to improve navigation and management efficiency.
-------
+---
+
+## Functionality v 1.0
+
+### Continuous Deployment on Azure  
+The system now includes a continuous deployment workflow using Azure Container Apps. The application runs from automatically generated Docker images and connects to a MySQL database hosted in Azure.
+
+### Migration to Azure Blob Storage  
+Storage for images and `.STL` files has been migrated from Amazon Web Services (AWS S3) to Azure Blob Storage, consolidating the entire infrastructure under a single cloud provider.
+
+### Email Notification System  
+A notification system integrated with an email delivery engine has been implemented. Users receive automatic emails related to important events within the application.
+
+### STL Model Viewer  
+The application now includes a Three.js based viewer that allows users to visualize `.STL` 3D models directly within the web interface.
+
+---
+
 ### Final List of developed 
 
 Version 0.1 delivers the initial set of core functionalities for user, group, and inventory management within the application. The full scope of this release includes:
@@ -374,4 +402,15 @@ Version 0.2 expands the application with advanced group management capabilities,
 - Image Processing
    - Extended image support for all entities (3D prints, filaments, users, and printers).This expands the functionality introduced in Version 0.1, where images were supported only for printers.
 - General update and cleanup of warnings to make the code more reliable and aligned with good practices through static code analysis. This could not be applied in the same way as in other areas due to the initial development requirements, which were later adapted.
+<<<<<<< HEAD
+=======
+
+Version 1.0 introduces key improvements in infrastructure, storage, and user experience, establishing the application as a more stable, scalable, and feature‑rich platform. This update incorporates continuous deployment on Azure, a full migration to Azure Blob Storage, an email‑based notification system, and a 3D STL viewer. The full scope of this release includes:
+
+- Continuous deployment on Azure using Azure Container Apps and a MySQL database hosted in Azure.
+- Migration of image and `.STL` file storage from AWS S3 to Azure Blob Storage.
+- Notification system integrated with automatic email delivery.
+- 3D model visualization through a Three.js‑based STL viewer.
+
+>>>>>>> release/0.3.0
 ---

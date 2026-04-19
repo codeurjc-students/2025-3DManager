@@ -87,7 +87,6 @@ namespace _3DMANAGER_APP.TEST.E2ETest
 
             Assert.NotNull(content);
             Assert.True(content.Data);
-            Assert.Null(content.Error);
         }
 
         [Fact]

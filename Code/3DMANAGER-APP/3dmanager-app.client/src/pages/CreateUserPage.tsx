@@ -66,19 +66,19 @@ const CreateUserPage: React.FC = () => {
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
                             <label htmlFor="userName" className="form-label">Nombre de usuario</label>
-                            <input id="userName" type="text" className="input-value" value={userName} placeholder="Introduce tu nombre"
+                            <input id="userName" type="text" className="input-value" value={userName ?? ""} placeholder="Introduce tu nombre"
                                 onChange={(e) => setUserName(e.target.value)}/>
                         </div>
 
                         <div className="mb-3">
                             <label htmlFor="userEmail" className="form-label">Correo electrónico</label>
-                            <input id="userEmail" type="email" className="input-value" value={userEmail} placeholder="Introduce tu correo"
+                            <input id="userEmail" type="email" className="input-value" value={userEmail ?? ""} placeholder="Introduce tu correo"
                                 onChange={(e) => setUserEmail(e.target.value)}/>
                         </div>
 
                         <div className="mb-3">
                             <label htmlFor="userPassword" className="form-label">Contraseña</label>
-                            <input id="userPassword" type="password" className="input-value" value={userPassword} placeholder="Introduce tu contraseña"
+                            <input id="userPassword" type="password" className="input-value" value={userPassword ?? ""} placeholder="Introduce tu contraseña"
                                 onChange={(e) => setUserPassword(e.target.value)}/>
                         </div>
                         <div className="mb-3">

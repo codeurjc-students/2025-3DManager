@@ -29,29 +29,30 @@ const PrinterDetailPage: React.FC = () => {
 
 
     useEffect(() => {
-        getPrinterState().then(response => {
-            setStateData(response.data!);
-        });
+        refreshPrinter();
+    }, [printerId]);
 
-        getPrinterDetail(Number(printerId)).then(response => {
-            const printer = response.data;
 
-            if (printer) {
-                printer.printerCreateDate = new Date(printer.printerCreateDate);
+    const refreshPrinter = async () => {
+        const stateResponse = await getPrinterState();
+        setStateData(stateResponse.data!);
 
-                setData(printer);
-                setState(printer.printerStateId || 0);
-                setDescription(printer.printerDescription || "");
-                setModel(printer.printerModel || "");
-                setName(printer.printerName || "");
-                setChartData([
-                    { name: "Completada", value: (printer.printerPrintsComplete * 100) / printer.printerPrintsTotal },
-                    { name: "No completada", value: (printer.printerPrintsNoComplete * 100) / printer.printerPrintsTotal }
-                    ,
-                ]);
-            }
-        });
-    }, []);
+        const detailResponse = await getPrinterDetail(Number(printerId));
+        const printer = detailResponse.data;
+
+        if (printer) {
+            printer.printerCreateDate = new Date(printer.printerCreateDate);
+            setData(printer);
+            setState(printer.printerStateId || 0);
+            setDescription(printer.printerDescription || "");
+            setModel(printer.printerModel || "");
+            setName(printer.printerName || "");
+            setChartData([
+                { name: "Completada", value: (printer.printerPrintsComplete * 100) / printer.printerPrintsTotal },
+                { name: "No completada", value: (printer.printerPrintsNoComplete * 100) / printer.printerPrintsTotal }
+            ]);
+        }
+    };
 
     const formatVariationText = (variation: number): string => {
         const absValue = Math.abs(Math.round(variation));
@@ -88,6 +89,7 @@ const PrinterDetailPage: React.FC = () => {
             const response = await updatePrinter(request);
 
             if (response.data) {
+                await refreshPrinter();
                 showPopup({
                     type: "info", content: (
                         <InfoPopup title="Operacion realizada" description="La impresora ha sido guardado correctamente" />
@@ -127,10 +129,7 @@ const PrinterDetailPage: React.FC = () => {
                             showPopup({
                                 type: "info",
                                 content: (
-                                    <InfoPopup
-                                        title="Operación realizada"
-                                        description="La impresora ha sido eliminada correctamente."
-                                    />
+                                    <InfoPopup  title="Operación realizada" description="La impresora ha sido eliminada correctamente."/>
                                 ),
                                 onClose: () => {
                                     closePopup();
@@ -141,10 +140,7 @@ const PrinterDetailPage: React.FC = () => {
                             showPopup({
                                 type: "error",
                                 content: (
-                                    <InfoPopup
-                                        title="Error"
-                                        description={response.error?.message || "No se pudo eliminar la impresora."}
-                                    />
+                                    <InfoPopup title="Error" description={response.error?.message || "No se pudo eliminar la impresora."}/>
                                 ),
                                 onClose: () => closePopup()
                             });
@@ -163,6 +159,7 @@ const PrinterDetailPage: React.FC = () => {
             content: (
                 <ImagePopup
                     title="Actualizar imagen de impresora"
+                    isSTLFile={false}
                     onUpload={async (file) => {
                         const response = await updatePrinterImage(Number(printerId), file);
 
@@ -175,24 +172,19 @@ const PrinterDetailPage: React.FC = () => {
                             showPopup({
                                 type: "error",
                                 content: (<InfoPopup title="Error" description={message}/>),
-                                onClose: () => {
-                                    navigate(`/dashboard/printer/detail/${printerId}`);
-                                    closePopup();
-                                }
+                                onClose: () => closePopup() 
                             });
 
                             return;
                         }
 
                         closePopup();
-                        await Promise.resolve(); 
+                        await refreshPrinter();
                         showPopup({
                             type: "info",
                             content: (<InfoPopup title="Imagen actualizada" description="La imagen se ha actualizado correctamente."/>),
-                            onClose: () => {
-                                navigate(`/dashboard/printer/detail/${printerId}`);
-                                closePopup();
-                            }
+                            onClose: () => closePopup()
+                            
                         });
                     }}
                     onDelete={async () => {
@@ -214,14 +206,12 @@ const PrinterDetailPage: React.FC = () => {
                         }
 
                         closePopup();
-                        await Promise.resolve(); 
+                        await refreshPrinter();
                         showPopup({
                             type: "info",
                             content: (<InfoPopup title="Imagen eliminada" description="La imagen ha sido eliminada."/>),
-                            onClose: () => {
-                                navigate(`/dashboard/printer/detail/${printerId}`);
-                                closePopup();
-                            }
+                            onClose: () => closePopup()
+                            
                         });
                     }}
                     onClose={closePopup}
@@ -247,25 +237,25 @@ const PrinterDetailPage: React.FC = () => {
                 <hr></hr>
             </div>
             <div className="row h-100">
-                <div className="col-4 grey-container">
+                <div className="col-4 grey-container  pe-4">
                     <div className="h-50">
                         <div className="title-impact-3 col-1 mt-2 ms-2 mb-1 w-100 d-flex flex-row justify-content-between">
-                            <input type="text" className="input-value-3 me-5 w-75" value={name} disabled={!isManager}
+                            <input type="text" className="input-value-3 me-5 w-75 input-editable" value={name ?? 0} disabled={!isManager}
                                 onChange={(e) => setName(e.target.value)}
                             />
                             {isManager ? (
                                 <div className="d-flex flex-row" >
-                                    <button className="button-red" onClick={handleDelete}>
+                                    <button className="button-red" onClick={handleDelete} title="Eliminar impresora">
                                         <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M4 7.99996H6.66667M6.66667 7.99996H28M6.66667 7.99996L6.66667 26.6666C6.66667 27.3739 6.94762 28.0521 7.44772 28.5522C7.94781 29.0523 8.62609 29.3333 9.33333 29.3333H22.6667C23.3739 29.3333 24.0522 29.0523 24.5523 28.5522C25.0524 28.0521 25.3333 27.3739 25.3333 26.6666V7.99996M10.6667 7.99996V5.33329C10.6667 4.62605 10.9476 3.94777 11.4477 3.44767C11.9478 2.94758 12.6261 2.66663 13.3333 2.66663H18.6667C19.3739 2.66663 20.0522 2.94758 20.5523 3.44767C21.0524 3.94777 21.3333 4.62605 21.3333 5.33329V7.99996M13.3333 14.6666V22.6666M18.6667 14.6666V22.6666" stroke="#1E1E1E" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
                                         </svg>
                                     </button>
-                                    <button className="button-yellow ms-1 me-1" onClick={handleUpdate}>
+                                    <button className="button-yellow ms-1 me-1" onClick={handleUpdate} title="Guardar cambios">
                                         <svg width="32" height="32" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M19.125 24.5V15.1667H7.875V24.5M7.875 3.5V9.33333H16.875M21.375 24.5H5.625C5.02826 24.5 4.45597 24.2542 4.03401 23.8166C3.61205 23.379 3.375 22.7855 3.375 22.1667V5.83333C3.375 5.21449 3.61205 4.621 4.03401 4.18342C4.45597 3.74583 5.02826 3.5 5.625 3.5H18L23.625 9.33333V22.1667C23.625 22.7855 23.3879 23.379 22.966 23.8166C22.544 24.2542 21.9717 24.5 21.375 24.5Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
                                         </svg>
                                     </button>
-                                    <button className="button-yellow me-2" onClick={openImagePopup}>
+                                    <button className="button-yellow me-2" onClick={openImagePopup} title="Actualizar imagen">
                                         <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M6.66667 28H25.3333C26.8061 28 28 26.8061 28 25.3333V6.66667C28 5.19391 26.8061 4 25.3333 4H6.66667C5.19391 4 4 5.19391 4 6.66667V25.3333C4 26.8061 5.19391 28 6.66667 28ZM6.66667 28L21.3333 13.3333L28 20M13.3333 11.3333C13.3333 12.4379 12.4379 13.3333 11.3333 13.3333C10.2288 13.3333 9.33333 12.4379 9.33333 11.3333C9.33333 10.2288 10.2288 9.33333 11.3333 9.33333C12.4379 9.33333 13.3333 10.2288 13.3333 11.3333Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
                                         </svg>
@@ -273,13 +263,13 @@ const PrinterDetailPage: React.FC = () => {
                                 </div>
                             ) : ""}
                         </div>
-                        <div className="col-6 ms-5">
+                        <div className="h-30 col-6 ms-5">
                             <img src={data?.printerImageData?.fileUrl} alt={name} className="image-container" />
                         </div>
                         <div className="col-4 mt-2 ms-3 mb-5 w-100">
-                            <input type="text" className="input-value-4 me-5 mb-1 w-100" value={model} disabled={!isManager}
+                            <input type="text" className="input-value-4 me-5 mb-1 w-100 input-editable" value={model ?? 0} disabled={!isManager}
                                 onChange={(e) => setModel(e.target.value)}/>
-                            <textarea className="input-value-4 me-5 mb-1 w-100 h-08" value={description} disabled={!isManager} onChange={(e) => setDescription(e.target.value)}/>
+                            <textarea className="input-value-4 me-5 mb-1 w-100 h-08 input-editable" value={description ?? 0} disabled={!isManager} onChange={(e) => setDescription(e.target.value)}/>
                         </div>
                     </div>
                     <div className="h-40 ms-3 mt-3">
@@ -299,7 +289,7 @@ const PrinterDetailPage: React.FC = () => {
                                 <div className="col-6 mb-1 ">
                                     <label htmlFor="printerState" className="form-label">Estado</label>
                                     <div className="d-flex flex-row">
-                                        <select id="printerState" className="input-value-5 w-100" value={state} disabled={!isManager} onChange={(e) => { setState(Number(e.target.value)) }}>
+                                        <select id="printerState" className="input-value-5 w-100" value={state ?? 0} disabled={!isManager} onChange={(e) => { setState(Number(e.target.value)) }}>
                                             {stateData.map(s => (
                                                 <option key={s.id} value={s.id}>
                                                     {s.description}
@@ -368,9 +358,11 @@ const PrinterDetailPage: React.FC = () => {
                         </div>
                         
                     </div>
-                    <div className="grey-container-detail mt-2 h-60">
-                        <h3 className="title-impact-3 ms-2 mt-2">Piezas impresas</h3>
-                        <PrintListDetail id={Number(printerId)} typeList={1}/>
+                    <div className="grey-container-detail mt-2 h-45">
+                        <div className="h-100">
+                            <h3 className="title-impact-3 ms-2 mt-2">Piezas impresas</h3>
+                            <PrintListDetail id={Number(printerId)} typeList={1} />
+                        </div>
                     </div>
                 </div>
             </div>

@@ -120,7 +120,7 @@ const LoginPage: React.FC = () => {
                                 type="text"
                                 className="input-value"
                                 placeholder="Introduce tu usuario"
-                                value={userName}
+                                value={userName ?? 0}
                                 onChange={(e) => setUserName(e.target.value)}
                             />
                         </div>
@@ -132,7 +132,7 @@ const LoginPage: React.FC = () => {
                                 type="password"
                                 className="input-value"
                                 placeholder="Introduce tu contraseña"
-                                value={password}
+                                value={password ?? 0}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>

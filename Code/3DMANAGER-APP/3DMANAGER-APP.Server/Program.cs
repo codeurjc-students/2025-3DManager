@@ -1,9 +1,10 @@
+using _3DMANAGER_APP.BLL;
 using _3DMANAGER_APP.BLL.Interfaces;
-using _3DMANAGER_APP.BLL.Managers;
 using _3DMANAGER_APP.BLL.Mapper;
+using _3DMANAGER_APP.BLL.Services;
 using _3DMANAGER_APP.DAL.Base;
 using _3DMANAGER_APP.DAL.Interfaces;
-using _3DMANAGER_APP.DAL.Managers;
+using _3DMANAGER_APP.DAL.Repositories;
 using _3DMANAGER_APP.Server.Controllers;
 using _3DMANAGER_APP.TestingSupport.Database;
 using Azure.Storage.Blobs;
@@ -46,18 +47,20 @@ builder.Services.AddScoped<IDataSource<MySqlConnection>>(provider =>
 });
 
 builder.Services.AddScoped<JwtService>();
-builder.Services.AddScoped<IPrinterManager, PrinterManager>();
-builder.Services.AddScoped<IUserManager, UserManager>();
-builder.Services.AddScoped<IGroupManager, GroupManager>();
-builder.Services.AddScoped<IPrintManager, PrintManager>();
-builder.Services.AddScoped<IFilamentManager, FilamentManager>();
-builder.Services.AddScoped<ICatalogManager, CatalogManager>();
-builder.Services.AddScoped<IPrinterDbManager, PrinterDbManager>();
-builder.Services.AddScoped<IUserDbManager, UserDbManager>();
-builder.Services.AddScoped<IGroupDbManager, GroupDbManager>();
-builder.Services.AddScoped<IFilamentDbManager, FilamentDbManager>();
-builder.Services.AddScoped<IPrintDbManager, PrintDbManager>();
-builder.Services.AddScoped<ICatalogDbManager, CatalogDbManager>();
+builder.Services.AddScoped<IPrinterService, PrinterService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IGroupService, GroupService>();
+builder.Services.AddScoped<IPrintService, PrintService>();
+builder.Services.AddScoped<IFilamentService, FilamentService>();
+builder.Services.AddScoped<ICatalogService, CatalogService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IPrinterRepository, PrinterRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IGroupRepository, GroupRepository>();
+builder.Services.AddScoped<IFilamentRepository, FilamentRepository>();
+builder.Services.AddScoped<IPrintRepository, PrintRepository>();
+builder.Services.AddScoped<ICatalogRepository, CatalogRepository>();
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 
 
 builder.Services.AddCors(options =>
@@ -79,6 +82,29 @@ builder.Services.AddSwaggerGen(c =>
     {
         Title = "3DManager API",
         Version = "v1"
+    });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
     });
 });
 
@@ -128,6 +154,16 @@ builder.Services.AddScoped<IAzureBlobStorageService>(sp =>
 
 builder.Services.AddAuthorization();
 
+//SMTP EMAIL SETTINGS
+builder.Services.Configure<EmailSettings>(
+    builder.Configuration.GetSection("Email"));
+
+builder.Services.AddScoped<IEmailService, EmailService>();
+
+//BackgroundService 
+builder.Services.AddHostedService<DailyTaskService>();
+builder.Services.AddScoped<IDailyTaskRepository, DailyTaskRepository>();
+
 //Culture
 CultureInfo customCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
 customCulture.NumberFormat.NumberDecimalSeparator = ".";
@@ -165,7 +201,16 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapGet("/health", () => Results.Ok("OK"));
-app.MapFallbackToFile("/index.html");
+
+app.MapWhen(ctx => !ctx.Request.Path.StartsWithSegments("/api"), builder =>
+{
+    builder.UseRouting();
+    builder.UseEndpoints(endpoints =>
+    {
+        endpoints.MapFallbackToFile("index.html");
+    });
+});
+
 
 app.Run();
 

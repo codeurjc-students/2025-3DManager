@@ -5,14 +5,16 @@ import type { GroupInvitation } from "../models/group/GroupInvitation";
 import { getGroupInvitations, postAcceptInvitation } from "../api/groupService";
 import { usePopupContext } from "../context/PopupContext";
 import InfoPopup from "../components/popupComponent/InfoPopup";
+import { useNotifications } from "../context/NotificationContext";
 
 
 const GroupPage: React.FC = () => {
     const [items, setItems] = useState<GroupInvitation[]>([]);
     const { refreshUser } = useAuth();
     const { showPopup } = usePopupContext();
-
+    const { refresh } = useNotifications();
     useEffect(() => {
+        refresh();
         getGroupInvitations().then(response => {
             setItems(response.data ?? []);
         });

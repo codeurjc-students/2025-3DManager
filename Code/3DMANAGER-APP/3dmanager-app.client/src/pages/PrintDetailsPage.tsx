@@ -3,11 +3,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { usePopupContext } from "../context/PopupContext";
 import InfoPopup from "../components/popupComponent/InfoPopup";
-import { deletePrint, getPrintDetail, updatePrint } from "../api/printService";
+import { deletePrint, deletePrintImage, getPrintDetail, updatePrint, updatePrintImage } from "../api/printService";
 import type { PrintDetailObject } from "../models/print/PrintDetailObject";
 import type { PrintDetailRequest } from "../models/print/PrintDetailRequest";
 import PrintComments from "../components/PrintComments";
 import ConfirmPopup from "../components/popupComponent/ConfirmPopup";
+import { STLViewer } from "../components/STLViewer";
+import ImagePopup from "../components/popupComponent/ImagePopup";
 
 const PrintDetailPage: React.FC = () => {
     const navigate = useNavigate();
@@ -16,63 +18,100 @@ const PrintDetailPage: React.FC = () => {
     const { printId } = useParams<{ printId: string }>();
     const [data, setData] = useState<PrintDetailObject>(); 
     const [name, setName] = useState<string>("");
+    const [realTime, setRealTime] = useState<string>("");
     const [description, setDescription] = useState<string>("");
-    const isManagerOrOwner = user?.rolId === "Usuario-Manager" || data?.printUserId === user?.userId;
-
+    const isManagerOrOwner = (user?.rolId === "Usuario-Manager" || data?.printUserId === user?.userId) && (user?.rolId !== "Usuario-Invitado");
+    const timeRegex = /^(\d+)h\s+(\d+)min$/;
 
     useEffect(() => {
+        refreshPrint();
+    }, [printId]);
 
-        getPrintDetail(Number(printId)).then(response => {
-            const print = response.data;
+    const refreshPrint = async () => {
+        const response = await getPrintDetail(Number(printId));
+        const print = response.data;
 
-            if (print) {
-                print.printCreateDate = new Date(print.printCreateDate);
-                setData(print);
-                setDescription(print.printDescription || "");
-                setName(print.printName || "");
-            }
-        });
-    }, []);
+        if (print) {
+            print.printCreateDate = new Date(print.printCreateDate);
+            setData(print);
+            setDescription(print.printDescription || "");
+            setName(print.printName || "");
+            setRealTime(print.printRealTimeImpression || "0h 1min")
+        }
+    };
 
+    const parseTimeToSeconds = (value: string): number | null => {
+        const match = value.match(/^(\d+)h\s+(\d+)min$/);
+        if (!match) return null;
+
+        const hours = parseInt(match[1], 10);
+        const minutes = parseInt(match[2], 10);
+
+        return hours * 3600 + minutes * 60;
+    };
 
     const handleUpdate = async () => {
-        
-        try {
+    try {
+        const seconds = parseTimeToSeconds(realTime);
 
-            const groupId = -1;
-            const request: PrintDetailRequest = {
-                groupId,
-                printId: Number(printId),
-                printName: name,
-                printDescription: description,
-
-            };
-
-            const response = await updatePrint(request);
-
-            if (response.data) {
-                showPopup({
-                    type: "info", content: (
-                        <InfoPopup title="Operacion realizada" description="La impresión ha sido guardado correctamente" />
-                    )
-                });
-            } else {
-                showPopup({
-                    type: "error", content: (
-                        <InfoPopup title="Operacion cancelada" description={response.error?.message || "No se pudo actualizar de la impresión."} />
-                    )
-                });
-                
-            }
-        } catch (error) {
-            console.error("Error al actualizar la impresión", error);
+        if (seconds === null) {
             showPopup({
-                type: "error", content: (
-                    <InfoPopup title="Operacion cancelada" description="Ha ocurrido un error al actualizar la impresión" />
+                type: "error",
+                content: (
+                    <InfoPopup
+                        title="Formato incorrecto"
+                        description="El tiempo debe tener el formato: Xh XXmin"
+                    />
+                )
+            });
+            return;
+        }
+
+        const request: PrintDetailRequest = {
+            groupId: -1,
+            printId: Number(printId),
+            printName: name,
+            printDescription: description,
+            printRealTime: seconds
+        };
+
+        const response = await updatePrint(request);
+
+        if (response.data) {
+            showPopup({
+                type: "info",
+                content: (
+                    <InfoPopup
+                        title="Operación realizada"
+                        description="La impresión ha sido guardada correctamente"
+                    />
+                )
+            });
+        } else {
+            showPopup({
+                type: "error",
+                content: (
+                    <InfoPopup
+                        title="Operación cancelada"
+                        description={response.error?.message || "No se pudo actualizar la impresión."}
+                    />
                 )
             });
         }
-    };
+    } catch (error) {
+        console.error("Error al actualizar la impresión", error);
+        showPopup({
+            type: "error",
+            content: (
+                <InfoPopup
+                    title="Operación cancelada"
+                    description="Ha ocurrido un error al actualizar la impresión"
+                />
+            )
+        });
+    }
+};
+
 
     const handleDelete = () => {
         showPopup({
@@ -89,10 +128,7 @@ const PrintDetailPage: React.FC = () => {
                             showPopup({
                                 type: "info",
                                 content: (
-                                    <InfoPopup
-                                        title="Operación realizada"
-                                        description="La impresión 3d ha sido eliminada correctamente."
-                                    />
+                                    <InfoPopup title="Operación realizada" description="La impresión 3d ha sido eliminada correctamente."/>
                                 ),
                                 onClose: () => {
                                     closePopup();
@@ -103,10 +139,7 @@ const PrintDetailPage: React.FC = () => {
                             showPopup({
                                 type: "error",
                                 content: (
-                                    <InfoPopup
-                                        title="Error"
-                                        description={response.error?.message || "No se pudo eliminar la impresión 3d."}
-                                    />
+                                    <InfoPopup title="Error" description={response.error?.message || "No se pudo eliminar la impresión 3d."}/>
                                 ),
                                 onClose: () => closePopup()
                             });
@@ -116,6 +149,87 @@ const PrintDetailPage: React.FC = () => {
             )
         });
     };
+
+    const openImagePopup = () => {
+        showPopup({
+            type: "base",
+            width: "600px",
+            hideCloseButton: true,
+            content: (
+                <ImagePopup
+                    title="Actualizar STL de la pieza"
+                    isSTLFile={true}
+                    onUpload={async (file) => {
+                        const response = await updatePrintImage(Number(printId), file);
+
+                        if (response.error) {
+                            const { message } = response.error;
+
+                            closePopup();
+                            await Promise.resolve();
+
+                            showPopup({
+                                type: "error",
+                                content: (<InfoPopup title="Error" description={message} />),
+                                onClose: () => {
+                                    closePopup();
+                                }
+                            });
+
+                            return;
+                        }
+
+                        closePopup();
+                        await refreshPrint();
+                        showPopup({
+                            type: "info",
+                            content: (<InfoPopup title="Fcihero STL actualizado" description="El fichero STL se ha actualizado correctamente." />),
+                            onClose: () => closePopup()
+                        });
+                    }}
+                    onDelete={async () => {
+                        const response = await deletePrintImage(Number(printId));
+
+                        if (response.error) {
+                            const { message } = response.error;
+
+                            closePopup();
+                            await Promise.resolve();
+
+                            showPopup({
+                                type: "error",
+                                content: (<InfoPopup title="Error" description={message} />
+                                )
+                            });
+
+                            return;
+                        }
+
+                        closePopup();
+                        await refreshPrint();
+
+                        showPopup({
+                            type: "info",
+                            content: (<InfoPopup title="Fichero STL eliminado" description="El fichero STL ha sido eliminado." />),
+                            onClose: () => {
+                                navigate(`/dashboard/print/detail/${printId}`);
+                                closePopup();
+                            }
+                        });
+                    }}
+                    onClose={closePopup}
+                />
+            )
+        });
+    };
+
+    const downloadSTL = (url: string) => {
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "3dmanager" + name + ".stl"; 
+        link.click();
+    };
+
 
     return (
         <div className="d-flex flex-column vh-100">
@@ -137,26 +251,40 @@ const PrintDetailPage: React.FC = () => {
                 <div className="col-4 grey-container">
                     <div className="h-50">
                         <div className="title-impact-3 col-1 mt-2 ms-2 mb-1 w-100 d-flex flex-row justify-content-between">
-                            <input type="text" className="input-value-3 me-5 w-75" value={name} disabled={!isManagerOrOwner}
+                            <input type="text" className="input-value-3 me-5 w-75 input-editable" value={name ?? 0} disabled={!isManagerOrOwner}
                                 onChange={(e) => setName(e.target.value)}
                             />
                             {isManagerOrOwner ? (
                                 <div className="d-flex flex-row" >
-                                    <button className="button-red" onClick={handleDelete}>
+                                    <button className="button-red" onClick={handleDelete} title="Eliminar impresión">
                                         <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M4 7.99996H6.66667M6.66667 7.99996H28M6.66667 7.99996L6.66667 26.6666C6.66667 27.3739 6.94762 28.0521 7.44772 28.5522C7.94781 29.0523 8.62609 29.3333 9.33333 29.3333H22.6667C23.3739 29.3333 24.0522 29.0523 24.5523 28.5522C25.0524 28.0521 25.3333 27.3739 25.3333 26.6666V7.99996M10.6667 7.99996V5.33329C10.6667 4.62605 10.9476 3.94777 11.4477 3.44767C11.9478 2.94758 12.6261 2.66663 13.3333 2.66663H18.6667C19.3739 2.66663 20.0522 2.94758 20.5523 3.44767C21.0524 3.94777 21.3333 4.62605 21.3333 5.33329V7.99996M13.3333 14.6666V22.6666M18.6667 14.6666V22.6666" stroke="#1E1E1E" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
                                         </svg>
                                     </button>
-                                    <button className="button-yellow ms-1 me-2" onClick={handleUpdate}>
+                                    <button className="button-yellow ms-1 me-1" onClick={handleUpdate} title="Guardar cambios">
                                         <svg width="27" height="28" viewBox="0 0 27 28" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M19.125 24.5V15.1667H7.875V24.5M7.875 3.5V9.33333H16.875M21.375 24.5H5.625C5.02826 24.5 4.45597 24.2542 4.03401 23.8166C3.61205 23.379 3.375 22.7855 3.375 22.1667V5.83333C3.375 5.21449 3.61205 4.621 4.03401 4.18342C4.45597 3.74583 5.02826 3.5 5.625 3.5H18L23.625 9.33333V22.1667C23.625 22.7855 23.3879 23.379 22.966 23.8166C22.544 24.2542 21.9717 24.5 21.375 24.5Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </button>
+                                    <button className="button-yellow me-2" onClick={openImagePopup} title="Actualizar archivo STL">
+                                        <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M24 4L44 17M24 4L4 17M24 4V17M44 17V31M44 17L24 31M44 31L24 44M44 31L24 17M24 44L4 31M24 44V31M4 31V17M4 31L24 17M4 17L24 31" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
                                         </svg>
                                     </button>
                                 </div>
                             ) : ""}
                         </div>
-                        <div className="col-6 ms-5 h-75">
-                            <img src={data?.printImageData?.fileUrl} alt={name} className="image-container-3" />
+                        
+                        <div className="d-flex flex-row h-75 justify-content-between" >
+                            <div className="h-30 col-6 ms-5 image-container-3">
+                                <STLViewer fileUrl={data?.printImageData?.fileUrl!} />
+                            </div>
+                            <button className="button-yellow h-05" onClick={() => downloadSTL(data?.printImageData?.fileUrl!)}
+                                title="Descargar archivo STL">
+                                <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M16 24L24 32M24 32L32 24M24 32V16M44 24C44 35.0457 35.0457 44 24 44C12.9543 44 4 35.0457 4 24C4 12.9543 12.9543 4 24 4C35.0457 4 44 12.9543 44 24Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </button>
                         </div>
                     </div>
                     <div className="h-40 ms-3 mt-1">
@@ -169,7 +297,7 @@ const PrintDetailPage: React.FC = () => {
                                 </div>
                                 <div className="col-6 mb-1">
                                     <label htmlFor="printUser" className="form-label">Usuario</label>
-                                    <input id="printUser" type="text" className="input-value-2 w-100" value={data?.printUserName}
+                                    <input id="printUser" type="text" className="input-value-2 w-100" value={data?.printUserName ?? ""}
                                         onClick={() => navigate(`/dashboard/user/detail/${data?.printUserId}`)} disabled />
                                 </div>
                             </div>
@@ -178,12 +306,12 @@ const PrintDetailPage: React.FC = () => {
                             <div className="d-flex flex row">
                                 <div className="col-6 mb-1">
                                     <label htmlFor="printPrinter" className="form-label">Impresora</label>
-                                    <input id="printPrinter" type="text" className="input-value-2 w-100" value={data?.printPrinterName}
+                                    <input id="printPrinter" type="text" className="input-value-2 w-100" value={data?.printPrinterName ?? ""}
                                         onClick={() => navigate(`/dashboard/print/detail/${data?.printPrinterId}`)} disabled />
                                 </div>
                                 <div className="col-6 mb-1">
                                     <label htmlFor="printFilament" className="form-label">Filamento</label>
-                                    <input id="printFilament" type="text" className="input-value-2 w-100" value={data?.printFilamentName}
+                                    <input id="printFilament" type="text" className="input-value-2 w-100" value={data?.printFilamentName ?? ""}
                                         onClick={() => navigate(`/dashboard/filament/detail/${data?.printFilamentName}`)} disabled />
                                 </div>
                             </div>
@@ -192,7 +320,7 @@ const PrintDetailPage: React.FC = () => {
                             <div className="d-flex flex row">
                                 <div className="col-6 mb-1">
                                     <label htmlFor="printMaterial" className="form-label">Material</label>
-                                    <input id="printMaterial" type="text" className="input-value-2 w-100" value={data?.printMaterial} disabled />
+                                    <input id="printMaterial" type="text" className="input-value-2 w-100" value={data?.printMaterial ?? ""} disabled />
                                 </div>
                                 <div className="col-6 mb-1 ">
                                     <label htmlFor="CreateDatePrint" className="form-label">Fecha de alta de impresión</label>
@@ -215,19 +343,24 @@ const PrintDetailPage: React.FC = () => {
                             <div className="d-flex flex row">
                                 <div className="col-3 ">
                                     <label htmlFor="printTime" className="form-label">Tiempo impresión</label>
-                                    <input id="printTime" type="text" className="input-value-2 w-100" value={data?.printTimeImpression} disabled />
-                                </div>
-                                <div className="col-3 ">
-                                    <label htmlFor="printRealTime" className="form-label">Tiempo real impresión</label>
-                                    <input id="printRealTime" type="text" className="input-value-2 w-100" value={data?.printRealTimeImpression} disabled />
+                                    <input id="printTime" type="text" className="input-value-2 w-100" value={data?.printTimeImpression ?? 0} disabled />
                                 </div>
                                 <div className="col-3">
+                                    <label htmlFor="printRealTime" className="form-label">Tiempo real impresión</label>
+                                    <input id="printRealTime" type="text" className="input-value-5 input-editable w-100" value={realTime}
+                                        disabled={!isManagerOrOwner} placeholder="Ej: 1h 20min" onChange={(e) => setRealTime(e.target.value)}/>
+                                    {!timeRegex.test(realTime) && isManagerOrOwner && (
+                                        <small className="text-danger">Formato inválido. Usa: 1h 20min</small>
+                                    )}
+                                </div>
+
+                                <div className="col-3">
                                     <label htmlFor="printMaterialConsumed" className="form-label">Material usado</label>
-                                    <input id="printMaterialConsumed" type="text" className="input-value-2 w-100" value={data?.printMaterialConsumed} disabled />
+                                    <input id="printMaterialConsumed" type="text" className="input-value-2 w-100" value={data?.printMaterialConsumed ?? 0} disabled />
                                 </div>
                                 <div className="col-3">
                                     <label htmlFor="printEstimatedCost" className="form-label">Estimación de coste</label>
-                                    <input id="printEstimatedCost" type="text" className="input-value-2 w-100" value={data?.printEstimedCost} disabled />
+                                    <input id="printEstimatedCost" type="text" className="input-value-2 w-100" value={data?.printEstimedCost ?? 0} disabled />
                                 </div>
                             </div>
                         </div>
@@ -235,7 +368,7 @@ const PrintDetailPage: React.FC = () => {
                             <div className="d-flex flex-rows ">
                                 <div className="col-10 w-100">
                                     <label htmlFor="printDescription" className="form-label">Descripcion</label>
-                                    <textarea id="printDescription" className="input-value-5 table-scroll w-100" value={description}
+                                    <textarea id="printDescription" className="input-value-5 table-scroll w-100 input-editable" value={description ?? ""}
                                         onChange={(e) => setDescription(e.target.value)} disabled={!isManagerOrOwner} />
                                 </div>
                             </div>

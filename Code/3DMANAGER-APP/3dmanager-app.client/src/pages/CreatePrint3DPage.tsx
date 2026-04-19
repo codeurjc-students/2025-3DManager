@@ -57,7 +57,7 @@ const CreatePrint3DPage: React.FC = () => {
                     content: (
                         <InfoPopup
                             title="Sin impresoras"
-                            description="No hay impresoras registradas. Debe añadir una antes de crear una impresión."
+                            description="No hay impresoras registradas o en activo. Debe añadir una antes de crear una impresión."
                         />
                     )
                 });
@@ -173,7 +173,8 @@ const CreatePrint3DPage: React.FC = () => {
         if (!printName || !printState || !printFilament || !printPrinter || !printDescription || !printTime || !printRealTimeM) {
             showPopup({
                 type: "warning", content: (
-                    <InfoPopup title="Completar formulario" description="Debe rellenar todos los campos salvo la imagen de impresión" />
+                    <InfoPopup title="Completar formulario" description="Debe rellenar todos los campos salvo el ficheo STL de impresión, que es opcional. Asegúrese de que todos los selectores tienen un campo seleccionado y 
+que el tiempo real de impresión tiene al menos minutos agregados" />
                 )
             });
             return;
@@ -242,7 +243,7 @@ const CreatePrint3DPage: React.FC = () => {
                             />
                             <div className="mt-2">
                                 <label htmlFor="printPrinterEstimation" className="form-label">Impresora para estimar tiempo</label>
-                                <select id="printPrinterEstimation" className="input-value w-100" value={printPrinterEstimation}
+                                <select id="printPrinterEstimation" className="input-value w-100" value={printPrinterEstimation ?? 0}
                                     onChange={(e) => setPrintPrinterEstimation(Number(e.target.value))}>
                                     <option value={0}>Seleccione una impresora para la estimación</option>
                                     {catalogPrinter.map(t => (
@@ -264,17 +265,12 @@ const CreatePrint3DPage: React.FC = () => {
                                 <div className="row-3 d-flex flex-row">
                                     <div className={printState === 2 ? "col-4 p-2" : "col-6 p-2"}>
                                         <label htmlFor="printName" className="form-label">Nombre</label>
-                                        <input id="printName" className="input-value w-100" value={printName} placeholder="Nombre" onChange={(e) => setPrintName(e.target.value)}/>
+                                        <input id="printName" className="input-value w-100" value={printName ?? ""} placeholder="Nombre" onChange={(e) => setPrintName(e.target.value)}/>
                                     </div>
-                                    <div className="col-6 p-2">
-                                        <label htmlFor="printState" className="form-label">Estado</label>
-                                        <select id="printState" className="input-value w-100 " value={printState}
-                                            onChange={(e) => setPrintState(Number(e.target.value))}>
-                                            <option value="">Seleccione un tipo</option>
-                                        </select>
+
                                     <div className={printState === 2 ? "col-4 p-2" : "col-6 p-2"}>
                                         <label htmlFor="printState" className="form-label">Estado</label>
-                                        <select id="printState" className="input-value w-100" value={printState} onChange={(e) => setPrintState(Number(e.target.value))}>
+                                        <select id="printState" className="input-value w-100" value={printState ?? 0} onChange={(e) => setPrintState(Number(e.target.value))}>
                                             <option value={0}>Seleccione un estado</option>
                                             {catalogState.map(t => (
                                                 <option key={t.id} value={t.id}>{t.description}</option>
@@ -288,7 +284,7 @@ const CreatePrint3DPage: React.FC = () => {
                                                 Porcentaje completado antes del fallo
                                             </label>
                                             <input id="printProgress" type="number" className="input-value w-100" min={0} max={100}
-                                                value={printProgress} onChange={(e) => setPrintProgress(Number(e.target.value))} placeholder="0 - 100"/>
+                                                value={printProgress ?? 0} onChange={(e) => setPrintProgress(Number(e.target.value))} placeholder="0 - 100"/>
                                         </div>
                                     )}
                                 </div>
@@ -296,7 +292,7 @@ const CreatePrint3DPage: React.FC = () => {
                                 <div className="row-3 d-flex flex-row">
                                     <div className="col-6 p-2">
                                         <label htmlFor="printPrinter" className="form-label">Impresora</label>
-                                        <select id="printPrinter" className="input-value w-100" value={printPrinter}
+                                        <select id="printPrinter" className="input-value w-100" value={printPrinter ?? 0}
                                             onChange={(e) => setPrintPrinter(Number(e.target.value))}>
                                             <option value={0}>Seleccione una impresora</option>
                                             {catalogPrinter.map(t => (
@@ -308,7 +304,7 @@ const CreatePrint3DPage: React.FC = () => {
                                     </div>
                                     <div className="col-6 p-2">
                                         <label htmlFor="printFilament" className="form-label">Bobina de filamento</label>
-                                        <select id="printFilament" className="input-value w-100" value={printFilament}
+                                        <select id="printFilament" className="input-value w-100" value={printFilament ?? 0}
                                             onChange={(e) => setPrintFilament(Number(e.target.value))}>
                                             <option value={0}>Seleccione un filamento</option>
                                             {catalogFilament.map(t => (
@@ -322,19 +318,19 @@ const CreatePrint3DPage: React.FC = () => {
                                 <div className="row-3 d-flex flex-row">
                                     <div className="col-6 p-2">
                                         <label htmlFor="printRealTimeH" className="form-label">Tiempo real impresión (Horas)</label>
-                                        <input id="printRealTimeH" className="input-value w-100 " value={printRealTimeH}
+                                        <input id="printRealTimeH" className="input-value w-100 " value={printRealTimeH ?? 0}
                                             onChange={(e) => setPrintRealTimeH(Number(e.target.value))} />
                                     </div>
                                     <div className="col-6 p-2">
                                         <label htmlFor="printRealTimeM" className="form-label">Tiempo real impresión (Minutos)</label>
-                                        <input type="number" id="printRealTimeM" className="input-value w-100 " value={printRealTimeM}
+                                        <input type="number" id="printRealTimeM" className="input-value w-100 " value={printRealTimeM ?? 0}
                                             onChange={(e) => setPrintRealTimeM(Number(e.target.value))} />
                                     </div>
                                 </div>
                                 <div className="row-3">
                                     <div className="p-2">
                                         <label htmlFor="printDescription" className="form-label">Descripción</label>
-                                        <textarea id="printDescription" className="input-value w-100" value={printDescription} placeholder="Descripción"
+                                        <textarea id="printDescription" className="input-value w-100" value={printDescription ?? ""} placeholder="Descripción"
                                             onChange={(e) => setPrintDescription(e.target.value)} />
                                     </div>
                                 </div>
@@ -350,25 +346,24 @@ const CreatePrint3DPage: React.FC = () => {
                                     onChange={handleFileUpload}
                                 />
                             </div>
-                                <div className="ms-3 me-3 p-2">
-                                    <label htmlFor="PrintImage" className="form-label">Imagen de la impresión</label>
-                                    <input
-                                        id="PrintImage"
-                                        type="file"
-                                        className="form-control input-value w-100"
-                                        accept="image/*"
-                                        onChange={(e) => {
-                                            if (e.target.files && e.target.files.length > 0) {
-                                                setImageFile(e.target.files[0]);
-                                            }
-                                        }}
-                                    />
-                                </div>
+                            <div className="ms-3 me-3 p-2">
+                                <label htmlFor="PrintSTL" className="form-label">STL de la impresión</label>
+                                <input
+                                    id="PrintSTL"
+                                    type="file"
+                                    className="form-control input-value w-100"
+                                    accept=".stl"
+                                    onChange={(e) => {
+                                        if (e.target.files && e.target.files.length > 0) {
+                                            setImageFile(e.target.files[0]);
+                                        }
+                                    }}
+                                />
                             </div>
-                            <div className="col-4 d-flex justify-content-between mt-3 p-2">
-                                <button type="submit" className="button-yellow createUser h-70">Subir Pieza</button>
-                                <button type="button" className="button-darkGrey" onClick={() => navigate("/dashboard")}>Cancelar</button>
-                            </div>
+                        </div>
+                        <div className="col-4 d-flex justify-content-between mt-3 p-2">
+                            <button type="submit" className="button-yellow createUser h-70">Subir Pieza</button>
+                            <button type="button" className="button-darkGrey" onClick={() => navigate("/dashboard")}>Cancelar</button>
                         </div>
                     </form>
                 </div>

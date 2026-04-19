@@ -11,7 +11,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         public ILogger<BaseController> _logger;
 
         [FromServices]
-        public IUserManager UserManager { get; set; } = default!;
+        public IUserService UserService { get; set; } = default!;
         protected BaseController(ILogger<BaseController> logger)
         {
             _logger = logger;
@@ -24,7 +24,7 @@ namespace _3DMANAGER_APP.Server.Controllers
             get
             {
                 if (UserId == null) return null;
-                return UserManager.GetGroupIdByUserId(UserId.Value);
+                return UserService.GetGroupIdByUserId(UserId.Value);
             }
         }
 

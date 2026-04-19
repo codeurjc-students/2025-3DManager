@@ -19,7 +19,8 @@ const FilamentList: React.FC = () => {
         });
     }, []);
 
-    const totalPages = Math.ceil(items.length / pageSize);
+    let totalPages = Math.ceil(items.length / pageSize);
+    totalPages = totalPages === 0 ? 1 : totalPages;
     const paginatedItems = items.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
     return (

@@ -52,8 +52,9 @@ th, td {
 
 }
 .pages-container {
-    flex : 1;
-    overflow: auto;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
 }
 
 .image-container{
@@ -61,8 +62,8 @@ th, td {
     height : 100%;
 }
 .image-container-2 {
-    width: 60%;
-    height: 80%;
+    width: 70%;
+    height: 90%;
 }
 .image-container-3 {
     width: 100%;
@@ -104,6 +105,11 @@ th, td {
     cursor: pointer;
 }
 
+.header-notification {
+    cursor: pointer;
+    background: none;
+    border: none;
+}
 .logout-icon {
     cursor: pointer;
     transition: opacity 0.2s ease;
@@ -196,10 +202,22 @@ th, td {
     cursor: pointer;
     font-weight: bold;
     transition: background-color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
     .popup-button:hover {
         background-color: #1a1a1a;
     }
 
-    
+
+.notif-badge {
+    position: absolute;
+    background: var(--colorYellow);
+    color: var(--colorBlack); 
+    font-weight: bold;
+    border-radius: 50%;
+    padding: 2px 7px ;
+    font-size: 10px;
+    min-width: 20px;
+    text-align: center;
+}

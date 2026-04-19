@@ -26,7 +26,7 @@ test.describe('DashboardActionsE2E', () => {
         await expect(page.getByText('Piezas', { exact: true })).toBeVisible();
 
         const gcodeButton = page.getByRole('button', {
-            name: /Subir archivo G-Code/i
+            name: /Subir impresión/i
         });
 
         await expect(gcodeButton).toBeVisible();

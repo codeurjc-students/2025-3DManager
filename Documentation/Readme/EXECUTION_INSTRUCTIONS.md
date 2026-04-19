@@ -91,6 +91,17 @@ Guest mode: direct access without credentials.
 
 Also you can start with your own user creating a new one.
 
+### Application throught Azure
+
+- The application is currently **deployed on Microsoft Azure**, using Azure Container Apps as the main execution environment.  
+- Users can easily access the application through the following public link:  
+  **https://portal-3dmanager-app.agreeablebay-71400cf1.spaincentral.azurecontainerapps.io**  
+- Deployment on Azure ensures availability, scalability, and a stable environment demonstrations, and general use.  
+- The cloud infrastructure includes:  
+  - Backend running on Azure Container Apps.  
+  - MySQL database hosted on Azure.  
+  - Image and `.STL` file storage managed through Azure Blob Storage.
+
 ### Sample data included on guest version
 
 Guest mode loads a demonstration group containing:

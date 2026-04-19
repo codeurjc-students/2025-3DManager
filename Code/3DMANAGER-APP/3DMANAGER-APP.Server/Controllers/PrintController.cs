@@ -1,8 +1,8 @@
 ﻿using _3DMANAGER_APP.BLL.Interfaces;
 using _3DMANAGER_APP.BLL.Models.Base;
-using _3DMANAGER_APP.BLL.Models.Group;
 using _3DMANAGER_APP.BLL.Models.Print;
 using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static _3DMANAGER_APP.Server.Models.Response;
 
@@ -12,11 +12,11 @@ namespace _3DMANAGER_APP.Server.Controllers
     [Route("api/v1/prints/[action]")]
     public class PrintController : BaseController
     {
-        private readonly IPrintManager _printManager;
+        private readonly IPrintService _printService;
         private const string NoAuthConstant = "No autenticado";
-        public PrintController(IPrintManager printManager, ILogger<PrintController> logger) : base(logger)
+        public PrintController(IPrintService printService, ILogger<PrintController> logger) : base(logger)
         {
-            _printManager = printManager;
+            _printService = printService;
         }
 
 
@@ -32,6 +32,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<PrintListResponse>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<PrintListResponse>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize]
         [Tags("Prints")]
         [HttpGet]
         public IActionResult GetPrintList([FromQuery] PagedRequest pagination)
@@ -40,7 +41,7 @@ namespace _3DMANAGER_APP.Server.Controllers
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<PrintListResponse>(new ErrorProperties(401, NoAuthConstant)));
 
-            PrintListResponse printList = _printManager.GetPrintList(GroupId.Value, pagination, out BaseError? error);
+            PrintListResponse printList = _printService.GetPrintList(GroupId.Value, pagination, out BaseError? error);
 
             if (error != null)
             {
@@ -65,22 +66,24 @@ namespace _3DMANAGER_APP.Server.Controllers
         /// <response code="409">Conflicto en servidor</response>
         /// <responde code="500">Ocurrio un error en el servidor</responde>
         [Produces("application/json")]
+        [RequestSizeLimit(1024L * 1024L * 200L)]
         [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Base,Usuario-Manager")]
         [Tags("Prints")]
         [HttpPost]
         public async Task<IActionResult> PostPrint([FromForm] PrintRequest print)
         {
             _logger.LogInformation($"Llamada a la funcion PostPrint en el controlador PrintController");
             if (GroupId == null || UserId == null)
-                return Unauthorized(new Models.CommonResponse<GroupBasicDataResponse>(new ErrorProperties(401, NoAuthConstant)));
+                return Unauthorized(new Models.CommonResponse<int>(new ErrorProperties(401, NoAuthConstant)));
 
             print.GroupId = GroupId.Value;
             print.UserId = UserId.Value;
-            BLL.Models.Base.CommonResponse<int> response = await _printManager.PostPrint(print);
+            BLL.Models.Base.CommonResponse<int> response = await _printService.PostPrint(print);
             if (response.Error != null)
             {
                 if (response.Error.Code == StatusCodes.Status409Conflict)
@@ -104,6 +107,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<PrintListResponse>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<PrintListResponse>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize]
         [Tags("Prints")]
         [HttpGet]
         public IActionResult GetPrintListByType([FromQuery] PagedRequest pagination, [FromQuery] int type, [FromQuery] int id)
@@ -112,7 +116,7 @@ namespace _3DMANAGER_APP.Server.Controllers
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<PrintListResponse>(new ErrorProperties(401, NoAuthConstant)));
 
-            PrintListResponse printList = _printManager.GetPrintListByType(GroupId.Value, pagination, type, id, out BaseError? error);
+            PrintListResponse printList = _printService.GetPrintListByType(GroupId.Value, pagination, type, id, out BaseError? error);
 
             if (printList == null || error != null)
             {
@@ -138,6 +142,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Base,Usuario-Manager")]
         [Tags("Prints")]
         [HttpPut]
         public IActionResult UpdatePrint([FromBody] PrintDetailRequest request)
@@ -147,7 +152,7 @@ namespace _3DMANAGER_APP.Server.Controllers
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, NoAuthConstant)));
 
             request.GroupId = GroupId.Value;
-            bool response = _printManager.UpdatePrint(request);
+            bool response = _printService.UpdatePrint(request);
 
             if (!response)
                 return StatusCode(500, new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error actualizando la impresión")));
@@ -168,6 +173,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<PrintDetailObject>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<PrintDetailObject>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize]
         [Tags("Prints")]
         [HttpGet]
         public IActionResult GetPrintDetail([FromQuery] int printId)
@@ -176,7 +182,7 @@ namespace _3DMANAGER_APP.Server.Controllers
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<PrintDetailObject>(new ErrorProperties(401, NoAuthConstant)));
 
-            PrintDetailObject printerResponse = _printManager.GetPrintDetail(GroupId.Value, printId, out BaseError? error);
+            PrintDetailObject printerResponse = _printService.GetPrintDetail(GroupId.Value, printId, out BaseError? error);
 
             if (printerResponse == null || error != null)
             {
@@ -202,6 +208,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<List<PrintCommentObject>>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<List<PrintCommentObject>>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize]
         [Tags("Prints")]
         [HttpGet]
         public IActionResult GetPrintComments([FromQuery] int printId)
@@ -210,7 +217,7 @@ namespace _3DMANAGER_APP.Server.Controllers
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<List<PrintCommentObject>>(new ErrorProperties(401, NoAuthConstant)));
 
-            var comments = _printManager.GetPrintComments(GroupId.Value, printId, out BaseError? error);
+            var comments = _printService.GetPrintComments(GroupId.Value, printId, out BaseError? error);
 
             if (error != null)
             {
@@ -232,6 +239,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<int>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Base,Usuario-Manager")]
         [Tags("Prints")]
         [HttpPost]
         public IActionResult PostPrintComment([FromBody] PrintCommentRequest request)
@@ -242,7 +250,7 @@ namespace _3DMANAGER_APP.Server.Controllers
 
             request.UserId = UserId!.Value;
 
-            int newId = _printManager.PostPrintComment(request);
+            int newId = _printService.PostPrintComment(request, GroupId!.Value);
 
             if (newId == 0)
             {
@@ -265,20 +273,110 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Base,Usuario-Manager")]
         [Tags("Prints")]
         [HttpDelete]
         public async Task<IActionResult> DeletePrint([FromQuery] int printId)
         {
             _logger.LogInformation($"Llamada a la funcion DeletePrint en el controlador PrintController");
-            if (GroupId == null && UserId == null && UserRole == "Usuario-Manager")
-                return Unauthorized(new Models.CommonResponse<GroupBasicDataResponse>(new ErrorProperties(401, NoAuthConstant)));
+            if (GroupId == null && UserId == null)
+                return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, NoAuthConstant)));
 
-            BLL.Models.Base.CommonResponse<bool> response = await _printManager.DeletePrint(printId, GroupId!.Value);
+            BLL.Models.Base.CommonResponse<bool> response = await _printService.DeletePrint(printId, GroupId!.Value);
             if (response.Error != null || !response.Data)
                 return StatusCode(500, new Models.CommonResponse<bool>(new ErrorProperties(response.Error?.Code ?? StatusCodes.Status500InternalServerError, response.Error?.Message ?? "Error al eliminar la impresión")));
 
             return Ok(new Models.CommonResponse<bool>(response.Data));
         }
 
+        /// <summary>
+        /// Update a print STL
+        /// </summary>
+        /// <returns>Boolean that indicates if operation was succesfull</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="401">No autorizado</response>
+        /// <response code="409">Conflicto en servidor</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [RequestSizeLimit(1024L * 1024L * 200L)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Base,Usuario-Manager")]
+        [Tags("Prints")]
+        [HttpPut]
+        public async Task<IActionResult> UpdatePrintImage(int printId, IFormFile imageFile)
+        {
+            _logger.LogInformation($"Llamada a UpdatePrintImage en el controlador PrintController");
+            if (GroupId == null && UserId == null)
+                return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, NoAuthConstant)));
+
+            var result = await _printService.UpdatePrintImage(printId, GroupId!.Value, imageFile);
+
+            if (result.Error != null)
+                return StatusCode(StatusCodes.Status500InternalServerError, new CommonResponse<bool>(result.Error));
+
+            return Ok(new CommonResponse<bool>(true));
+        }
+
+        /// <summary>
+        /// Delete a print STL
+        /// </summary>
+        /// <returns>Boolean that indicates if operation was succesfull</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="401">No autorizado</response>
+        /// <response code="409">Conflicto en servidor</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Base,Usuario-Manager")]
+        [Tags("Printers")]
+        [HttpDelete]
+        public async Task<IActionResult> DeletePrintImage(int printId)
+        {
+            _logger.LogInformation($"Llamada a la funcion DeletePrintImage en el controlador PrintController");
+            if (GroupId == null && UserId == null)
+                return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, NoAuthConstant)));
+
+            var result = await _printService.DeletePrintImage(printId, GroupId!.Value);
+
+            if (result.Error != null)
+                return StatusCode(result.Error.Code, new CommonResponse<bool>(result.Error));
+
+            return Ok(new CommonResponse<bool>(true));
+        }
+
+        /// <summary>
+        /// Delete a comment  
+        /// </summary>
+        /// <returns>Boolean that indicates if operation was succesfull</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="401">No autorizado</response>
+        /// <response code="409">Conflicto en servidor</response>
+        /// <responde code="500">Ocurrio un error en el servidor</responde>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
+        [ApiVersionNeutral]
+        [Authorize(Roles = "Usuario-Base,Usuario-Manager")]
+        [Tags("Prints")]
+        [HttpDelete]
+        public IActionResult DeletePrintComment([FromQuery] int commentId)
+        {
+            _logger.LogInformation($"Llamada a la funcion DeletePrintComment en el controlador PrintController");
+            if (GroupId == null && UserId == null)
+                return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, NoAuthConstant)));
+
+            bool response = _printService.DeletePrintComment(commentId);
+            if (!response)
+                return StatusCode(500, new Models.CommonResponse<bool>(new ErrorProperties(StatusCodes.Status500InternalServerError, "Error al eliminar comentario de la impresión")));
+
+            return Ok(new Models.CommonResponse<bool>(response));
+        }
     }
 }

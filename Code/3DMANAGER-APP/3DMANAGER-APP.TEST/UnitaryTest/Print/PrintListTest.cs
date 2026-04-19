@@ -1,10 +1,4 @@
-﻿using _3DMANAGER_APP.BLL.Interfaces;
-using _3DMANAGER_APP.BLL.Managers;
-using _3DMANAGER_APP.BLL.Models.Base;
-using _3DMANAGER_APP.BLL.Models.Print;
-using _3DMANAGER_APP.DAL.Interfaces;
-using _3DMANAGER_APP.DAL.Models.Print;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
@@ -13,24 +7,26 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Print
 {
     public class PrintListTest
     {
-        private readonly Mock<ILogger<PrintManager>> _loggerMock;
+        private readonly Mock<ILogger<PrintService>> _loggerMock;
         private readonly Mock<IMapper> _mapperMock;
-        private readonly Mock<IPrintDbManager> _printDbManagerMock;
+        private readonly Mock<IPrintRepository> _printRepositoryMock;
         private readonly Mock<IAzureBlobStorageService> _aBSService;
-        private readonly PrintManager _manager;
+        private readonly PrintService _printService;
+        private readonly INotificationService _notificationService;
 
         public PrintListTest()
         {
-            _loggerMock = new Mock<ILogger<PrintManager>>();
+            _loggerMock = new Mock<ILogger<PrintService>>();
             _mapperMock = new Mock<IMapper>();
-            _printDbManagerMock = new Mock<IPrintDbManager>();
+            _printRepositoryMock = new Mock<IPrintRepository>();
             _aBSService = new Mock<IAzureBlobStorageService>();
 
-            _manager = new PrintManager(
-                 _printDbManagerMock.Object,
+            _printService = new PrintService(
+                 _printRepositoryMock.Object,
                 _mapperMock.Object,
                 _loggerMock.Object,
-                _aBSService.Object
+                _aBSService.Object,
+                _notificationService
             );
         }
 
@@ -65,7 +61,7 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Print
 
             int totalItems = 0;
             bool errorDb = false;
-            _printDbManagerMock
+            _printRepositoryMock
                 .Setup(db => db.GetPrintList(groupId, 1, 10, out totalItems, out errorDb))
                 .Returns(dbResponse);
 
@@ -81,15 +77,16 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Print
 
             var realMapper = mapperConfig.CreateMapper();
 
-            var manager = new PrintManager(
-                _printDbManagerMock.Object,
+            var service = new PrintService(
+                _printRepositoryMock.Object,
                 realMapper,
                 _loggerMock.Object,
-                _aBSService.Object
+                _aBSService.Object,
+                _notificationService
             );
 
             PagedRequest pagedRequest = new PagedRequest { PageNumber = 1, PageSize = 10 };
-            var result = manager.GetPrintList(groupId, pagedRequest, out BaseError? error);
+            var result = service.GetPrintList(groupId, pagedRequest, out BaseError? error);
 
 
             Assert.NotNull(result);
@@ -99,7 +96,7 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.Print
             Assert.Equal("1h 2min", result.prints[0].PrintTime);
             Assert.Equal("0h 13min", result.prints[1].PrintTime);
 
-            _printDbManagerMock.Verify(db => db.GetPrintList(groupId, 1, 10, out totalItems, out errorDb), Times.Once);
+            _printRepositoryMock.Verify(db => db.GetPrintList(groupId, 1, 10, out totalItems, out errorDb), Times.Once);
         }
     }
 }

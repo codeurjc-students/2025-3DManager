@@ -186,4 +186,68 @@ export const deletePrint = async (printId: number): Promise<CommonResponse<boole
     }
 }
 
+export const updatePrintImage = async (printId: number, file: File): Promise<CommonResponse<boolean>> => {
+    const formData = new FormData();
+    formData.append("imageFile", file);
+
+    try {
+        const response = await apiClient.put<CommonResponse<boolean>>(`/v1/prints/UpdatePrintImage?printId=${printId}`,
+            formData, { headers: { "Content-Type": "multipart/form-data" } });
+        return response.data;
+    } catch (error: any) {
+        const status = error?.response?.status;
+        const backendResponse = error?.response?.data;
+
+        if (backendResponse?.error) return backendResponse;
+
+        return {
+            data: false,
+            error: {
+                code: status ?? 500,
+                message: backendResponse?.message ?? "Error al actualizar el fichero STL de la pieza"
+            }
+        };
+    }
+};
+
+export const deletePrintImage = async (printId: number): Promise<CommonResponse<boolean>> => {
+    try {
+        const response = await apiClient.delete<CommonResponse<boolean>>(`/v1/prints/DeletePrintImage?printId=${printId}`);
+        return response.data;
+    } catch (error: any) {
+        const status = error?.response?.status;
+        const backendResponse = error?.response?.data;
+
+        if (backendResponse?.error) return backendResponse;
+
+        return {
+            data: false,
+            error: {
+                code: status ?? 500,
+                message: backendResponse?.message ?? "Error al eliminar el fichero STL de la impresora"
+            }
+        };
+    }
+};
+
+export const deletePrintComment = async (commentId: number): Promise<CommonResponse<boolean>> => {
+    try {
+        const response = await apiClient.delete(`/v1/prints/DeletePrintComment?commentId=${commentId}`);
+        return response.data;
+    } catch (error: any) {
+        const status = error?.response?.status;
+        const backendResponse = error?.response?.data;
+        if (backendResponse?.error) {
+            return backendResponse;
+        }
+        return {
+            data: undefined,
+            error: {
+                code: status ?? 500,
+                message: backendResponse?.message ?? "Error desconocido en el servidor al eliminar un comentario sobre una impresion"
+            }
+        };
+    }
+};
+
 

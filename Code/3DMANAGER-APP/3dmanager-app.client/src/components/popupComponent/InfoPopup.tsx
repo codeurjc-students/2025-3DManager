@@ -1,4 +1,3 @@
-// src/components/popupContents/BasicPopupContent.tsx
 import React from "react";
 
 interface InfoPopup {

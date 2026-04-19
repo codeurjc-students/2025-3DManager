@@ -6,14 +6,16 @@ import type { PrinterDashboardObject } from "../models/printer/PrinterDashboardO
 import { DashboardBarChart } from "../components/charts/dashboardChart";
 import type { GroupDashboardData } from "../models/group/GroupDashboardData";
 import { getGroupDashboardData } from "../api/groupService";
+import { useNotifications } from "../context/NotificationContext";
 
 const DashboardPage: React.FC = () => {
     const [printers, setPrinters] = useState<PrinterDashboardObject[]>([]);
     const [data, setData] = useState<GroupDashboardData | null>(null);
-
+    const { refresh } = useNotifications();
     const navigate = useNavigate();
 
     useEffect(() => {
+        refresh();
         getPrinterDashboardList().then(response => {
             setPrinters(response.data ?? []);
         });
@@ -46,7 +48,7 @@ const DashboardPage: React.FC = () => {
 
     return (
         <div id="dashboard" className="d-flex vh-100">
-            <div className="grey-container col-6 vh-100 scroll-container">
+            <div className="grey-container col-6 pb-5 vh-100 scroll-container">
                 <h2 className="title-impact-2 ms-3 mt-4">Impresoras</h2>
                 <hr className="m-2"></hr>
                 <div>
