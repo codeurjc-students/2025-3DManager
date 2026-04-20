@@ -18,4 +18,5 @@ export interface PrintDetailObject {
     printTimeImpression: string;
     printRealTimeImpression: string;
     printEstimedCost: number;
+    printHaveSTL: boolean;
 }
