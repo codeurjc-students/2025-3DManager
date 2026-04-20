@@ -48,7 +48,7 @@ These are several screenshots of the current version of the application, illustr
 
 [Download video](Documentation/Screensv01/3dmanager_V01.mp4)
 
-Description of functionality shown: ## [Funcionalities v.01](Documentation/Readme/FUNCTIONALITIES.md#functionality-v-01)
+Description of functionality shown: [Funcionalities v.01](Documentation/Readme/FUNCTIONALITIES.md#functionality-v-01)
 
 --- 
 ### Version 0.2
@@ -82,8 +82,10 @@ Below is a set of images showcasing the visual layout of some pages of the appli
 #### Generic error page
 ![](Documentation/Screensv02/GenericErrorPage.png)
 
-Description of functionality shown: ## [Funcionalities v.02](Documentation/Readme/FUNCTIONALITIES.md#functionality-v-02)
+Description of functionality shown: [Funcionalities v.02](Documentation/Readme/FUNCTIONALITIES.md#functionality-v-02)
 
+
+## Functionality v 1.0
 ---
 ### Version 1.0
 
@@ -119,6 +121,8 @@ The add‑item page has been redesigned to display a popup with the available op
 
 Email send by app.  
 ![](Documentation/Screensv1/Email.png)
+
+Description of functionality shown: [Funcionalities v.1](Documentation/Readme/FUNCTIONALITIES.md#functionality-v-10)
 
 > [!IMPORTANT]  
 > The application is in phase 6.  
