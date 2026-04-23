@@ -8,7 +8,7 @@ import type { FilamentDetailObject } from '../models/filament/FilamentDetailObje
 export const getFilamentList = async (): Promise<CommonResponse<FilamentListResponse[]>> => {
     
     try {
-        const response = await apiClient.get<CommonResponse<FilamentListResponse[]>>(`/v1/filaments/GetFilamentList`);
+        const response = await apiClient.get<CommonResponse<FilamentListResponse[]>>(`/v1/filaments`);
         return response.data;
     } catch (error: any) {
         const status = error?.response?.status;
@@ -45,7 +45,7 @@ export const postFilament = async (data: FilamentRequest): Promise<CommonRespons
     }
 
     try {
-        const response = await apiClient.post<CommonResponse<number>>(`/v1/filaments/PostFilament`, formData,
+        const response = await apiClient.post<CommonResponse<number>>(`/v1/filaments`, formData,
             { headers: { "Content-Type": "multipart/form-data" } })
         return response.data
     } catch (error: any) {
@@ -67,7 +67,7 @@ export const postFilament = async (data: FilamentRequest): Promise<CommonRespons
 export const updateFilament = async (data: FilamentUpdateRequest): Promise<CommonResponse<boolean>> => {
     
     try {
-        const response = await apiClient.put<CommonResponse<boolean>>(`/v1/filaments/UpdateFilament`, data);
+        const response = await apiClient.put<CommonResponse<boolean>>(`/v1/filaments/${data.filamentId}`, data);
         return response.data;
     } catch (error: any) {
         const status = error?.response?.status;
@@ -87,7 +87,7 @@ export const updateFilament = async (data: FilamentUpdateRequest): Promise<Commo
 
 export const getFilamentDetail = async (filamentId: number): Promise<CommonResponse<FilamentDetailObject>> => {
     try {
-        const response = await apiClient.get<CommonResponse<FilamentDetailObject>>(`/v1/filaments/GetFilamentDetail?filamentId=${filamentId}`);
+        const response = await apiClient.get<CommonResponse<FilamentDetailObject>>(`/v1/filaments/${filamentId}`);
         return response.data;
     } catch (error: any) {
         const status = error?.response?.status;
@@ -107,7 +107,7 @@ export const getFilamentDetail = async (filamentId: number): Promise<CommonRespo
 
 export const deleteFilament = async (filamentId: number): Promise<CommonResponse<boolean>> => {
     try {
-        const response = await apiClient.delete<CommonResponse<boolean>>(`/v1/filaments/DeleteFilament?filamentId=${filamentId}`);
+        const response = await apiClient.delete<CommonResponse<boolean>>(`/v1/filaments/${filamentId}`);
         return response.data;
     } catch (error: any) {
         const status = error?.response?.status;
@@ -130,7 +130,7 @@ export const updateFilamentImage = async (filamentId: number, file: File): Promi
     formData.append("imageFile", file);
 
     try {
-        const response = await apiClient.put<CommonResponse<boolean>>(`/v1/filaments/UpdateFilamentImage?filamentId=${filamentId}`,
+        const response = await apiClient.put<CommonResponse<boolean>>(`/v1/filaments/${filamentId}/image`,
             formData, { headers: { "Content-Type": "multipart/form-data" } });
         return response.data;
     } catch (error: any) {
@@ -151,7 +151,7 @@ export const updateFilamentImage = async (filamentId: number, file: File): Promi
 
 export const deleteFilamentImage = async (filamentId: number): Promise<CommonResponse<boolean>> => {
     try {
-        const response = await apiClient.delete<CommonResponse<boolean>>(`/v1/filaments/DeleteFilamentImage?filamentId=${filamentId}`);
+        const response = await apiClient.delete<CommonResponse<boolean>>(`/v1/filaments/${filamentId}/image`);
         return response.data;
     } catch (error: any) {
         const status = error?.response?.status;

@@ -17,26 +17,26 @@ export const postNewUser = async (data: UserCreateRequest): Promise<CommonRespon
     if (data.imageFile) {
         formData.append("imageFile", data.imageFile);
     }
-    const response = await apiClient.post<CommonResponse<number>>('/v1/users/PostNewUser', formData,
+    const response = await apiClient.post<CommonResponse<number>>('/v1/users', formData,
         { headers: { "Content-Type": "multipart/form-data" }});
     return response.data;
 }
 
 
 export const Login = async (data : LoginRequest): Promise<CommonResponse<LoginResponse>> => {
-    const response = await apiClient.post<CommonResponse<LoginResponse>>('/v1/users/Login', data);
+    const response = await apiClient.post<CommonResponse<LoginResponse>>('/v1/users/login', data);
     return response.data;
 }
 
 export const LoginGuest = async (): Promise<CommonResponse<LoginResponse>> => {
-    const response = await apiClient.post<CommonResponse<LoginResponse>>('/v1/users/LoginGuest');
+    const response = await apiClient.post<CommonResponse<LoginResponse>>('/v1/users/login/guest');
     return response.data;
 }
 
 export const getUserList = async (): Promise<CommonResponse<UserListResponse[]>> => {
 
     try {
-        const response = await apiClient.get<CommonResponse<UserListResponse[]>>("/v1/users/GetUserList");
+        const response = await apiClient.get<CommonResponse<UserListResponse[]>>("/v1/users");
         return response.data;
     } catch (error: any) {
         const status = error?.response?.status;
@@ -55,14 +55,14 @@ export const getUserList = async (): Promise<CommonResponse<UserListResponse[]>>
 }
 
 export const getUserInvitationList = async (filter?: string): Promise<CommonResponse<UserListResponse[]>> => {
-    const response = await apiClient.get<CommonResponse<UserListResponse[]>>(`/v1/users/GetUserInvitationList`,
+    const response = await apiClient.get<CommonResponse<UserListResponse[]>>(`/v1/users/invitations`,
         { params: { filter } });
     return response.data;
 }
 
 export const postUserInvitation = async (userId: number): Promise<CommonResponse<boolean>> => {
     try {
-        const response = await apiClient.post<CommonResponse<boolean>>(`/v1/users/PostUserInvitation?userId=${userId}`);
+        const response = await apiClient.post<CommonResponse<boolean>>(`/v1/users/invitations/${userId}`);
         return response.data;
     } catch (error: any) {
         const status = error?.response?.status;
@@ -81,13 +81,13 @@ export const postUserInvitation = async (userId: number): Promise<CommonResponse
 }
 
 export const GetUserAuth = async (): Promise<{ userId: number; groupId: number | null; rolId: string | null; groupName: string | null; token: string | null; }> => {
-    const response = await apiClient.get("/v1/users/GetUserAuth");
+    const response = await apiClient.get("/v1/users/auth");
     return response.data;
 };
 
 export const updateUser = async (data: UserUpdateRequest): Promise<CommonResponse<boolean>> => {
     try {
-        const response = await apiClient.put<CommonResponse<boolean>>(`/v1/users/UpdateUser`, data);
+        const response = await apiClient.put<CommonResponse<boolean>>(`/v1/users/${data.userId}`, data);
         return response.data;
     } catch (error: any) {
         const status = error?.response?.status;
@@ -108,7 +108,7 @@ export const updateUser = async (data: UserUpdateRequest): Promise<CommonRespons
 export const getUserDetail = async (userId: number): Promise<CommonResponse<UserDetailObject>> => {
     
     try {
-        const response = await apiClient.get<CommonResponse<UserDetailObject>>(`/v1/users/GetUserDetail?userId=${userId}`);
+        const response = await apiClient.get<CommonResponse<UserDetailObject>>(`/v1/users/${userId}`);
         return response.data;
     } catch (error: any) {
         const status = error?.response?.status;
@@ -131,7 +131,7 @@ export const updateUserImage = async (userId: number, file: File): Promise<Commo
     formData.append("imageFile", file);
 
     try {
-        const response = await apiClient.put<CommonResponse<boolean>>(`/v1/users/UpdateUserImage?userId=${userId}`,
+        const response = await apiClient.post<CommonResponse<boolean>>(`/v1/users/${userId}/image`,
             formData, { headers: { "Content-Type": "multipart/form-data" } });
         return response.data;
     } catch (error: any) {
@@ -152,7 +152,7 @@ export const updateUserImage = async (userId: number, file: File): Promise<Commo
 
 export const deleteUserImage = async (userId: number): Promise<CommonResponse<boolean>> => {
     try {
-        const response = await apiClient.delete<CommonResponse<boolean>>(`/v1/users/DeleteUserImage?userId=${userId}`);
+        const response = await apiClient.delete<CommonResponse<boolean>>(`/v1/users/${userId}/image`);
         return response.data;
     } catch (error: any) {
         const status = error?.response?.status;
@@ -172,7 +172,7 @@ export const deleteUserImage = async (userId: number): Promise<CommonResponse<bo
 export const deleteUser = async (): Promise<CommonResponse<boolean>> => {
 
     try {
-        const response = await apiClient.delete<CommonResponse<boolean>>(`/v1/users/DeleteUser`);
+        const response = await apiClient.delete<CommonResponse<boolean>>(`/v1/users/${userId}`);
         return response.data;
     } catch (error: any) {
         const status = error?.response?.status;

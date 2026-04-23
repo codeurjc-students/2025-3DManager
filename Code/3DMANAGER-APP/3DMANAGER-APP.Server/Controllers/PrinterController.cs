@@ -11,7 +11,7 @@ using static _3DMANAGER_APP.Server.Models.Response;
 namespace _3DMANAGER_APP.Server.Controllers
 {
     [ApiController]
-    [Route("api/v1/printers/[action]")]
+    [Route("api/v1/printers")]
     public class PrinterController : BaseController
     {
         private readonly IPrinterService _printerService;
@@ -97,7 +97,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize]
         [Tags("Printers")]
-        [HttpGet]
+        [HttpGet("dashboard")]
         public IActionResult GetPrinterDashboardList()
         {
             _logger.LogInformation($"Llamada a la funcion GetPrinterDashboardList en el controlador PrinterController");
@@ -131,8 +131,8 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize(Roles = "Usuario-Manager")]
         [Tags("Printers")]
-        [HttpPut]
-        public IActionResult UpdatePrinter([FromBody] PrinterDetailRequest request)
+        [HttpPut("{printerId:int}")]
+        public IActionResult UpdatePrinter(int printerId, [FromBody] PrinterDetailRequest request)
         {
             _logger.LogInformation($"Llamada a la funcion UpdatePrinter en el controlador PrinterController");
             if (GroupId == null)
@@ -162,8 +162,8 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize]
         [Tags("Printers")]
-        [HttpGet]
-        public IActionResult GetPrinterDetail([FromQuery] int printerId)
+        [HttpGet("{printerId:int}")]
+        public IActionResult GetPrinterDetail(int printerId)
         {
             _logger.LogInformation($"Llamada a la funcion GetPrinterDetail en el controlador PrinterController");
             if (GroupId == null)
@@ -198,8 +198,8 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize(Roles = "Usuario-Manager")]
         [Tags("Printers")]
-        [HttpDelete]
-        public async Task<IActionResult> DeletePrinter([FromQuery] int printerId)
+        [HttpDelete("{printerId:int}")]
+        public async Task<IActionResult> DeletePrinter(int printerId)
         {
             _logger.LogInformation($"Llamada a la funcion DeletePrinter en el controlador PrinterController");
             if (GroupId == null && UserId == null && UserRole == "Usuario-Manager")
@@ -228,7 +228,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize(Roles = "Usuario-Manager")]
         [Tags("Printers")]
-        [HttpPut]
+        [HttpPost("{printerId:int}/image")]
         public async Task<IActionResult> UpdatePrinterImage(int printerId, IFormFile imageFile)
         {
             _logger.LogInformation($"Llamada a UpdatePrinterImage en el controlador PrinterController");
@@ -258,7 +258,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize(Roles = "Usuario-Manager")]
         [Tags("Printers")]
-        [HttpDelete]
+        [HttpDelete("{printerId:int}/image")]
         public async Task<IActionResult> DeletePrinterImage(int printerId)
         {
             _logger.LogInformation($"Llamada a la funcion DeletePrinterImage en el controlador PrinterController");

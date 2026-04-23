@@ -9,7 +9,7 @@ using static _3DMANAGER_APP.Server.Models.Response;
 namespace _3DMANAGER_APP.Server.Controllers
 {
     [ApiController]
-    [Route("api/v1/prints/[action]")]
+    [Route("api/v1/prints")]
     public class PrintController : BaseController
     {
         private readonly IPrintService _printService;
@@ -109,8 +109,8 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize]
         [Tags("Prints")]
-        [HttpGet]
-        public IActionResult GetPrintListByType([FromQuery] PagedRequest pagination, [FromQuery] int type, [FromQuery] int id)
+        [HttpGet("type/{type:int}/{id:int}")]
+        public IActionResult GetPrintListByType([FromQuery] PagedRequest pagination, int type, int id)
         {
             _logger.LogInformation($"Llamada a la funcion GetPrintListByType en el controlador PrintController");
             if (GroupId == null)
@@ -144,8 +144,8 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize(Roles = "Usuario-Base,Usuario-Manager")]
         [Tags("Prints")]
-        [HttpPut]
-        public IActionResult UpdatePrint([FromBody] PrintDetailRequest request)
+        [HttpPut("{printId:int}")]
+        public IActionResult UpdatePrint(int printId, [FromBody] PrintDetailRequest request)
         {
             _logger.LogInformation($"Llamada a la funcion UpdatePrint en el controlador PrintController");
             if (GroupId == null)
@@ -175,8 +175,8 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize]
         [Tags("Prints")]
-        [HttpGet]
-        public IActionResult GetPrintDetail([FromQuery] int printId)
+        [HttpGet("{printId:int}")]
+        public IActionResult GetPrintDetail(int printId)
         {
             _logger.LogInformation($"Llamada a la funcion GetPrintDetail en el controlador PrintController");
             if (GroupId == null)
@@ -210,8 +210,8 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize]
         [Tags("Prints")]
-        [HttpGet]
-        public IActionResult GetPrintComments([FromQuery] int printId)
+        [HttpGet("{printId:int}/comments")]
+        public IActionResult GetPrintComments(int printId)
         {
             _logger.LogInformation($"Llamada a la funcion GetPrintComments en el controlador PrintController");
             if (GroupId == null)
@@ -241,8 +241,8 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize(Roles = "Usuario-Base,Usuario-Manager")]
         [Tags("Prints")]
-        [HttpPost]
-        public IActionResult PostPrintComment([FromBody] PrintCommentRequest request)
+        [HttpPost("{printId:int}/comments")]
+        public IActionResult PostPrintComment(int printId, [FromBody] PrintCommentRequest request)
         {
             _logger.LogInformation($"Llamada a la funcion PostPrintComment en el controlador PrintController");
             if (GroupId == null && UserId == null)
@@ -275,8 +275,8 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize(Roles = "Usuario-Base,Usuario-Manager")]
         [Tags("Prints")]
-        [HttpDelete]
-        public async Task<IActionResult> DeletePrint([FromQuery] int printId)
+        [HttpDelete("{printId:int}")]
+        public async Task<IActionResult> DeletePrint(int printId)
         {
             _logger.LogInformation($"Llamada a la funcion DeletePrint en el controlador PrintController");
             if (GroupId == null && UserId == null)
@@ -305,14 +305,14 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize(Roles = "Usuario-Base,Usuario-Manager")]
         [Tags("Prints")]
-        [HttpPut]
-        public async Task<IActionResult> UpdatePrintImage(int printId, IFormFile imageFile)
+        [HttpPost("{printId:int}/image")]
+        public async Task<IActionResult> UpdatePrintImage(int printId, PrintImageUploadRequest request)
         {
             _logger.LogInformation($"Llamada a UpdatePrintImage en el controlador PrintController");
             if (GroupId == null && UserId == null)
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, NoAuthConstant)));
 
-            var result = await _printService.UpdatePrintImage(printId, GroupId!.Value, imageFile);
+            var result = await _printService.UpdatePrintImage(printId, GroupId!.Value, request.ImageFile);
 
             if (result.Error != null)
                 return StatusCode(StatusCodes.Status500InternalServerError, new CommonResponse<bool>(result.Error));
@@ -335,7 +335,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize(Roles = "Usuario-Base,Usuario-Manager")]
         [Tags("Printers")]
-        [HttpDelete]
+        [HttpDelete("{printId:int}/image")]
         public async Task<IActionResult> DeletePrintImage(int printId)
         {
             _logger.LogInformation($"Llamada a la funcion DeletePrintImage en el controlador PrintController");
@@ -365,8 +365,8 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize(Roles = "Usuario-Base,Usuario-Manager")]
         [Tags("Prints")]
-        [HttpDelete]
-        public IActionResult DeletePrintComment([FromQuery] int commentId)
+        [HttpDelete("comments/{commentId:int}")]
+        public IActionResult DeletePrintComment(int commentId)
         {
             _logger.LogInformation($"Llamada a la funcion DeletePrintComment en el controlador PrintController");
             if (GroupId == null && UserId == null)

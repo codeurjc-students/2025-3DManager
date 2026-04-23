@@ -8,7 +8,7 @@ using static _3DMANAGER_APP.Server.Models.Response;
 namespace _3DMANAGER_APP.Server.Controllers
 {
     [ApiController]
-    [Route("api/v1/catalogs/[action]")]
+    [Route("api/v1/catalogs")]
     public class CatalogController : BaseController
     {
         private readonly ICatalogService _catalogService;
@@ -31,7 +31,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(CommonResponse<List<CatalogResponse>>), StatusCodes.Status200OK)]
         [ApiVersionNeutral]
         [Tags("Catalogs")]
-        [HttpGet]
+        [HttpGet("filament-types")]
         public CommonResponse<List<CatalogResponse>> GetFilamentType()
         {
             _logger.LogInformation($"Llamada a la funcion GetFilamentType en el controlador CatalogController");
@@ -50,7 +50,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(CommonResponse<List<CatalogResponse>>), StatusCodes.Status200OK)]
         [ApiVersionNeutral]
         [Tags("Catalogs")]
-        [HttpGet]
+        [HttpGet("print-states")]
         public CommonResponse<List<CatalogResponse>> GetPrintState()
         {
             _logger.LogInformation($"Llamada a la funcion GetPrintState en el controlador CatalogController");
@@ -70,7 +70,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(CommonResponse<List<CatalogResponse>>), StatusCodes.Status401Unauthorized)]
         [ApiVersionNeutral]
         [Tags("Catalogs")]
-        [HttpGet]
+        [HttpGet("filaments")]
         public IActionResult GetFilamentCatalog()
         {
             _logger.LogInformation($"Llamada a la funcion GetFilamentCatalog en el controlador CatalogController");
@@ -93,7 +93,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(CommonResponse<List<CatalogPrinterResponse>>), StatusCodes.Status401Unauthorized)]
         [ApiVersionNeutral]
         [Tags("Catalogs")]
-        [HttpGet]
+        [HttpGet("printers")]
         public IActionResult GetPrinterCatalog()
         {
             _logger.LogInformation($"Llamada a la funcion GetPrinterCatalog en el controlador CatalogController");
@@ -114,7 +114,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(CommonResponse<List<CatalogResponse>>), StatusCodes.Status200OK)]
         [ApiVersionNeutral]
         [Tags("Catalogs")]
-        [HttpGet]
+        [HttpGet("printer-states")]
         public CommonResponse<List<CatalogResponse>> GetPrinterState()
         {
             _logger.LogInformation($"Llamada a la funcion GetPrinterState en el controlador CatalogController");
@@ -133,7 +133,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(CommonResponse<List<CatalogResponse>>), StatusCodes.Status200OK)]
         [ApiVersionNeutral]
         [Tags("Catalogs")]
-        [HttpGet]
+        [HttpGet("filament-states")]
         public CommonResponse<List<CatalogResponse>> GetFilamentState()
         {
             _logger.LogInformation($"Llamada a la funcion GetFilamentState en el controlador CatalogController");

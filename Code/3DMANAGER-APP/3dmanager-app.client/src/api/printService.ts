@@ -9,7 +9,7 @@ import type { PrintCommentObject } from '../models/print/PrintCommentObject';
 
 export const getPrintList = async (pageNumber: number, pageSize: number): Promise<CommonResponse<PrintListResponse>> => {
     try {
-        const response = await apiClient.get<CommonResponse<PrintListResponse>>(`/v1/prints/GetPrintList?pageNumber=${pageNumber}&pageSize=${pageSize}`);
+        const response = await apiClient.get<CommonResponse<PrintListResponse>>(`/v1/prints?pageNumber=${pageNumber}&pageSize=${pageSize}`);
         return response.data;
     } catch (error: any) {
         const status = error?.response?.status;
@@ -46,7 +46,7 @@ export const postPrint = async (data: PrintRequest): Promise<CommonResponse<numb
     }
     
     try {
-        const response = await apiClient.post<CommonResponse<number>>(`/v1/prints/PostPrint`, formData,
+        const response = await apiClient.post<CommonResponse<number>>(`/v1/prints`, formData,
             { headers: { "Content-Type": "multipart/form-data" } })
         return response.data;
     } catch (error: any) {
@@ -67,7 +67,7 @@ export const postPrint = async (data: PrintRequest): Promise<CommonResponse<numb
 
 export const GetPrintListByType = async (pageNumber: number, pageSize: number , type : number ,id : number): Promise<CommonResponse<PrintListResponse>> => {
     try {
-        const response = await apiClient.get<CommonResponse<PrintListResponse>>(`/v1/prints/GetPrintListByType?pageNumber=${pageNumber}&pageSize=${pageSize}&type=${type}&id=${id}`);
+        const response = await apiClient.get<CommonResponse<PrintListResponse>>(`/v1/prints/type/${type}/${id}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
         return response.data;
     } catch (error: any) {
         const status = error?.response?.status;
@@ -87,7 +87,7 @@ export const GetPrintListByType = async (pageNumber: number, pageSize: number , 
 
 export const updatePrint = async (data: PrintDetailRequest): Promise<CommonResponse<boolean>> => {
     try {
-        const response = await apiClient.put<CommonResponse<boolean>>(`/v1/prints/UpdatePrint`, data);
+        const response = await apiClient.put<CommonResponse<boolean>>(`/v1/prints/${data.printId}`, data);
         return response.data;
     } catch (error: any) {
         const status = error?.response?.status;
@@ -107,7 +107,7 @@ export const updatePrint = async (data: PrintDetailRequest): Promise<CommonRespo
 
 export const getPrintDetail = async (printId: number): Promise<CommonResponse<PrintDetailObject>> => {
     try {
-        const response = await apiClient.get<CommonResponse<PrintDetailObject>>(`/v1/prints/GetPrintDetail?printId=${printId}`);
+        const response = await apiClient.get<CommonResponse<PrintDetailObject>>(`/v1/prints/${printId}`);
         return response.data;
     } catch (error: any) {
         const status = error?.response?.status;
@@ -127,7 +127,7 @@ export const getPrintDetail = async (printId: number): Promise<CommonResponse<Pr
 
 export const getPrintComments = async (printId: number): Promise<CommonResponse<PrintCommentObject[]>> => {
     try {
-        const response = await apiClient.get(`/v1/prints/GetPrintComments?printId=${printId}`);
+        const response = await apiClient.get(`/v1/prints/${printId}/comments`);
         return response.data;
     } catch (error: any) {
         const status = error?.response?.status;
@@ -147,7 +147,7 @@ export const getPrintComments = async (printId: number): Promise<CommonResponse<
 
 export const postPrintComment = async (data: PrintCommentRequest): Promise<CommonResponse<number>> => {
     try {
-        const response = await apiClient.post(`/v1/prints/PostPrintComment`, data);
+        const response = await apiClient.post(`/v1/prints/${data.printId}/comments`, data);
         return response.data;
     } catch (error: any) {
         const status = error?.response?.status;
@@ -168,7 +168,7 @@ export const postPrintComment = async (data: PrintCommentRequest): Promise<Commo
 export const deletePrint = async (printId: number): Promise<CommonResponse<boolean>> => {
     
     try {
-        const response = await apiClient.delete<CommonResponse<boolean>>(`/v1/prints/DeletePrint?printId=${printId}`);
+        const response = await apiClient.delete<CommonResponse<boolean>>(`/v1/prints/${printId}`);
         return response.data;
     } catch (error: any) {
         const status = error?.response?.status;
@@ -191,7 +191,7 @@ export const updatePrintImage = async (printId: number, file: File): Promise<Com
     formData.append("imageFile", file);
 
     try {
-        const response = await apiClient.put<CommonResponse<boolean>>(`/v1/prints/UpdatePrintImage?printId=${printId}`,
+        const response = await apiClient.post<CommonResponse<boolean>>(`/v1/prints/${printId}/image`,
             formData, { headers: { "Content-Type": "multipart/form-data" } });
         return response.data;
     } catch (error: any) {
@@ -212,7 +212,7 @@ export const updatePrintImage = async (printId: number, file: File): Promise<Com
 
 export const deletePrintImage = async (printId: number): Promise<CommonResponse<boolean>> => {
     try {
-        const response = await apiClient.delete<CommonResponse<boolean>>(`/v1/prints/DeletePrintImage?printId=${printId}`);
+        const response = await apiClient.delete<CommonResponse<boolean>>(`/v1/prints/${printId}/image`);
         return response.data;
     } catch (error: any) {
         const status = error?.response?.status;
@@ -232,7 +232,7 @@ export const deletePrintImage = async (printId: number): Promise<CommonResponse<
 
 export const deletePrintComment = async (commentId: number): Promise<CommonResponse<boolean>> => {
     try {
-        const response = await apiClient.delete(`/v1/prints/DeletePrintComment?commentId=${commentId}`);
+        const response = await apiClient.delete(`/v1/prints/comments/${commentId}`);
         return response.data;
     } catch (error: any) {
         const status = error?.response?.status;

@@ -23,7 +23,8 @@ const GroupPopup: React.FC = () => {
     const [description, setDescription] = useState("");
     const [creationDate, setCreationDate] = useState("");
     const isManager = user?.rolId === "Usuario-Manager";
-    
+
+    const userGroupId = user!.groupId!;
     useEffect(() => {
         getGroupBasicData().then(response => {
             const group = response.data;
@@ -37,7 +38,7 @@ const GroupPopup: React.FC = () => {
     const handleSaveGroup = () => {
         confirmAction({
             action: "Guardar cambios",
-            service: () => updateGroupData({
+            service: () => updateGroupData(userGroupId, {
                 groupName: name,
                 groupDescription: description,
                 userId: -1
@@ -52,7 +53,7 @@ const GroupPopup: React.FC = () => {
     const handleLeaveGroup = () => {
         confirmAction({
             action: "Abandonar grupo",
-            service: () => leaveGroup(),
+            service: () => leaveGroup(userGroupId),
             successMessage: "Has abandonado el grupo correctamente.",
             errorMessage: "No se pudo abandonar el grupo.",
             showPopup,
@@ -67,7 +68,7 @@ const GroupPopup: React.FC = () => {
     const handleDeleteGroup = () => {
         confirmAction({
             action: "Eliminar grupo",
-            service: () => deleteGroup(),
+            service: () => deleteGroup(userGroupId),
             successMessage: "El grupo ha sido eliminado correctamente.",
             errorMessage: "No se pudo eliminar el grupo.",
             showPopup,
@@ -83,7 +84,7 @@ const GroupPopup: React.FC = () => {
         confirmAction({
             action: "Expulsar usuario " + userName,
             service: async () => {
-                const res = await kickUserFromGroup(userId);
+                const res = await kickUserFromGroup(userGroupId,userId);
                 if (res.data) {
                     const updated = await getGroupBasicData();
                     setData(updated.data!);
@@ -114,7 +115,7 @@ const GroupPopup: React.FC = () => {
         confirmAction({
             action: "Transferir control a " + selectedUser?.userName,
             service: async () => {
-                const res = await transferOwnership(newOwner);
+                const res = await transferOwnership(userGroupId,newOwner);
                 if (res.data) {
                     const updated = await getGroupBasicData();
                     setData(updated.data!);
