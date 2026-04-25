@@ -171,7 +171,7 @@ const UserDetailPage: React.FC = () => {
                         action="Eliminar tu usuario"
                         onCancel={() => closePopup()}
                         onConfirm={async () => {
-                            const response = await deleteUser(user?.userId);
+                            const response = await deleteUser(user?.userId!);
 
                             if (response.data) {
                                 showPopup({
