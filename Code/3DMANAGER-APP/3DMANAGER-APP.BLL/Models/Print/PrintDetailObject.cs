@@ -21,5 +21,6 @@ namespace _3DMANAGER_APP.BLL.Models.Print
         public string PrintTimeImpression { get; set; }
         public string PrintRealTimeImpression { get; set; }
         public decimal PrintEstimedCost { get; set; }
+        public bool PrintHaveSTL { get; set; }
     }
 }

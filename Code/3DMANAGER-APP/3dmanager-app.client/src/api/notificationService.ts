@@ -5,7 +5,7 @@ import type { NotificationObject } from '../models/notifications/NotificationObj
 export const getUnreadNotifications = async ():
     Promise<CommonResponse<NotificationObject[]>> => {
     try {
-        const response = await apiClient.get<CommonResponse<NotificationObject[]>>('/v1/notifications/GetUnreadNotifications');
+        const response = await apiClient.get<CommonResponse<NotificationObject[]>>('/v1/notifications/unread');
         return response.data;
     } catch (error: any) {
         const status = error?.response?.status;
@@ -27,7 +27,7 @@ export const getUnreadNotifications = async ():
 export const markNotificationAsRead = async (id: number):
     Promise<CommonResponse<boolean>> => {
     try {
-        const response = await apiClient.post<CommonResponse<boolean>>(`/v1/notifications/NotificationMarkAsRead?notificationId=${id}`);
+        const response = await apiClient.put<CommonResponse<boolean>>(`/v1/notifications/${id}/read`);
         return response.data;
     } catch (error: any) {
         const status = error?.response?.status;

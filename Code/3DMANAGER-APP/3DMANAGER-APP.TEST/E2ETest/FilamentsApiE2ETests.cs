@@ -19,7 +19,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         [Fact]
         public async Task GetFilamentList_ShouldReturnFilamentsList()
         {
-            var response = await _client.GetAsync("/api/v1/filaments/GetFilamentList");
+            var response = await _client.GetAsync("/api/v1/filaments");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
@@ -32,7 +32,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         [Fact]
         public async Task GetFilamentDetail_ShouldReturnFilament()
         {
-            var response = await _client.GetAsync("/api/v1/filaments/GetFilamentDetail?filamentId=1");
+            var response = await _client.GetAsync("/api/v1/filaments/1");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
@@ -46,7 +46,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         [Fact]
         public async Task UpdateFilament_ShouldReturnSuccess()
         {
-            var detailResponse = await _client.GetAsync("/api/v1/filaments/GetFilamentDetail?filamentId=1");
+            var detailResponse = await _client.GetAsync("/api/v1/filaments/1");
 
             Assert.Equal(HttpStatusCode.OK, detailResponse.StatusCode);
 
@@ -71,7 +71,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
 
             };
 
-            var updateResponse = await _client.PutAsJsonAsync("/api/v1/filaments/UpdateFilament", request);
+            var updateResponse = await _client.PutAsJsonAsync("/api/v1/filaments/1", request);
 
             Assert.Equal(HttpStatusCode.OK, updateResponse.StatusCode);
 
@@ -87,7 +87,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
 
             var filamentId = 1;
 
-            var response = await _client.DeleteAsync($"/api/v1/filaments/DeleteFilament?filamentId={filamentId}");
+            var response = await _client.DeleteAsync($"/api/v1/filaments/1");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
@@ -100,8 +100,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         [Fact]
         public async Task DeleteFilament_ShouldReturnServerError_WhenFilamentDoesNotExist()
         {
-            var invalidfilamentId = -1;
-            var response = await _client.DeleteAsync($"/api/v1/filaments/DeleteFilament?filamentId={invalidfilamentId}");
+            var response = await _client.DeleteAsync($"/api/v1/filaments/-1");
 
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
 

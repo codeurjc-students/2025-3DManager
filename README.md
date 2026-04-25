@@ -85,7 +85,6 @@ Below is a set of images showcasing the visual layout of some pages of the appli
 Description of functionality shown: [Funcionalities v.02](Documentation/Readme/FUNCTIONALITIES.md#functionality-v-02)
 
 
-## Functionality v 1.0
 ---
 ### Version 1.0
 

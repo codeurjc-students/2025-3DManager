@@ -19,7 +19,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         [Fact]
         public async Task GetPrinters_ShouldReturnPrinterList()
         {
-            var response = await _client.GetAsync("/api/v1/printers/GetPrinterDashboardList");
+            var response = await _client.GetAsync("/api/v1/printers/dashboard");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
@@ -41,7 +41,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
                 PrinterModel = "Updated model",
                 PrinterStateId = 2
             };
-            var response = await _client.PutAsJsonAsync("/api/v1/printers/UpdatePrinter", request);
+            var response = await _client.PutAsJsonAsync("/api/v1/printers/1", request);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
@@ -59,7 +59,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
 
             var printerId = 1;
 
-            var response = await _client.DeleteAsync($"/api/v1/printers/DeletePrinter?printerId={printerId}");
+            var response = await _client.DeleteAsync($"/api/v1/printers/{printerId}");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
@@ -74,7 +74,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         public async Task DeletePrinter_ShouldReturnServerError_WhenPrinterDoesNotExist()
         {
             var invalidPrinterId = -1;
-            var response = await _client.DeleteAsync($"/api/v1/printers/DeletePrinter?printerId={invalidPrinterId}");
+            var response = await _client.DeleteAsync($"/api/v1/printers/{invalidPrinterId}");
 
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
 

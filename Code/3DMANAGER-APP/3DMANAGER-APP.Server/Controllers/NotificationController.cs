@@ -9,7 +9,7 @@ using static _3DMANAGER_APP.Server.Models.Response;
 namespace _3DMANAGER_APP.Server.Controllers
 {
     [ApiController]
-    [Route("api/v1/notifications/[action]")]
+    [Route("api/v1/notifications")]
     public class NotificationController : BaseController
     {
         private readonly INotificationService _notificationService;
@@ -33,7 +33,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize]
         [Tags("Notifications")]
-        [HttpGet]
+        [HttpGet("unread")]
         public IActionResult GetUnreadNotifications()
         {
             _logger.LogInformation("Llamada a GetUnreadNotifications en NotificationController");
@@ -69,7 +69,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize]
         [Tags("Notifications")]
-        [HttpPost]
+        [HttpPut("{notificationId:int}/read")]
         public IActionResult NotificationMarkAsRead(int notificationId)
         {
             _logger.LogInformation("Llamada a NotificationMarkAsRead en NotificationController");

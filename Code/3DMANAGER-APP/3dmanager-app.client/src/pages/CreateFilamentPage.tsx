@@ -74,7 +74,7 @@ const CreateFilamentPage: React.FC = () => {
                         <InfoPopup title="Operacion realizada" description= "Filamento creado correctamente" />
                     )
                 });
-                navigate("/dashboard");
+                navigate(`/dashboard/filament/detail/${response.data}`);
             }
         } catch (error) {
             console.log( "Error al crear el filamento:" + error)

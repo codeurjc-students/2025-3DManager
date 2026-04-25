@@ -7,9 +7,11 @@ import { DashboardBarChart } from "../components/charts/dashboardChart";
 import type { GroupDashboardData } from "../models/group/GroupDashboardData";
 import { getGroupDashboardData } from "../api/groupService";
 import { useNotifications } from "../context/NotificationContext";
+import { useAuth } from "../context/AuthContext";
 
 const DashboardPage: React.FC = () => {
     const [printers, setPrinters] = useState<PrinterDashboardObject[]>([]);
+    const { user } = useAuth();
     const [data, setData] = useState<GroupDashboardData | null>(null);
     const { refresh } = useNotifications();
     const navigate = useNavigate();
@@ -19,7 +21,7 @@ const DashboardPage: React.FC = () => {
         getPrinterDashboardList().then(response => {
             setPrinters(response.data ?? []);
         });
-        getGroupDashboardData().then(response => {
+        getGroupDashboardData(user!.groupId!).then(response => {
             setData(response.data ?? null);
         });
     }, []);

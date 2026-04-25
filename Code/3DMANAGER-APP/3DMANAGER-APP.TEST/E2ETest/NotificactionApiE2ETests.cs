@@ -18,7 +18,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         [Fact]
         public async Task GetUnreadNotifications_ShouldReturnNotificationsList()
         {
-            var response = await _client.GetAsync("/api/v1/notifications/GetUnreadNotifications");
+            var response = await _client.GetAsync("/api/v1/notifications/unread");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
@@ -32,7 +32,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         public async Task NotificationMarkAsRead_ShouldMarkNotificationSuccessfully()
         {
 
-            var getResponse = await _client.GetAsync("/api/v1/notifications/GetUnreadNotifications");
+            var getResponse = await _client.GetAsync("/api/v1/notifications/unread");
             Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
 
             var getContent = await getResponse.Content.ReadFromJsonAsync<Server.Models.CommonResponse<List<NotificationObject>>>();
@@ -47,7 +47,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
             var notificationId = getContent.Data.First().NotificationId;
 
 
-            var markResponse = await _client.PostAsync($"/api/v1/notifications/NotificationMarkAsRead?notificationId={notificationId}", null);
+            var markResponse = await _client.PutAsync($"/api/v1/notifications/{notificationId}/read", null);
 
             Assert.Equal(HttpStatusCode.OK, markResponse.StatusCode);
 
