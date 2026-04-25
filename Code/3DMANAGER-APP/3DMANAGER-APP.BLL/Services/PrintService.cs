@@ -160,9 +160,16 @@ namespace _3DMANAGER_APP.BLL.Services
             if (response != null)
             {
                 if (response.PrintImageData != null && response.PrintImageData.FileUrl != null && response.PrintImageData.FileKey != null)
+                {
                     response.PrintImageData.FileUrl = _absService.GetPresignedUrl(response.PrintImageData.FileKey, 1);
+                    response.PrintHaveSTL = true;
+                }
                 else
+                {
                     response.PrintImageData!.FileUrl = _absService.GetPresignedUrl("default/3dbenchy.stl", 1);
+                    response.PrintHaveSTL = false;
+                }
+
 
             }
             return response!;

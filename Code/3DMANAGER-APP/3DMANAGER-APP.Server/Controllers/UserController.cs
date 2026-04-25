@@ -10,7 +10,7 @@ using static _3DMANAGER_APP.Server.Models.Response;
 namespace _3DMANAGER_APP.Server.Controllers
 {
     [ApiController]
-    [Route("api/v1/users/[action]")]
+    [Route("api/v1/users")]
     public class UserController : BaseController
     {
         private readonly IUserService _userService;
@@ -62,7 +62,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<LoginResponse>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Users")]
-        [HttpPost]
+        [HttpPost("login")]
         public Models.CommonResponse<LoginResponse> Login(BLL.Models.User.LoginRequest request)
         {
             _logger.LogInformation($"Llamada a la funcion Login en el controlador UserController");
@@ -98,7 +98,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<LoginResponse>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Tags("Users")]
-        [HttpPost]
+        [HttpPost("login/guest")]
         public Models.CommonResponse<LoginResponse> LoginGuest()
         {
             _logger.LogInformation($"Llamada a la funcion LoginGuest en el controlador UserController");
@@ -163,7 +163,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize]
         [Tags("Users")]
-        [HttpGet]
+        [HttpGet("invitations")]
         public Models.CommonResponse<List<UserListResponse>> GetUserInvitationList([FromQuery] string? filter)
         {
             _logger.LogInformation($"Llamada a la funcion GetUserInvitationList en el controlador UserController");
@@ -190,8 +190,8 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize(Roles = "Usuario-Manager")]
         [Tags("Users")]
-        [HttpPost]
-        public IActionResult PostUserInvitation([FromQuery] int userId)
+        [HttpPost("invitations/{userId:int}")]
+        public IActionResult PostUserInvitation(int userId)
         {
             _logger.LogInformation($"Llamada a la funcion PostUserInvitation en el controlador UserController");
             if (GroupId == null || UserId == null)
@@ -214,7 +214,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
         [ApiVersionNeutral]
         [Tags("Users")]
-        [HttpGet]
+        [HttpGet("auth")]
         public IActionResult GetUserAuth()
         {
             _logger.LogInformation($"Llamada a la funcion GetUserAuth en el controlador UserController");
@@ -251,7 +251,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize(Roles = "Usuario-Base,Usuario-Manager")]
         [Tags("Users")]
-        [HttpPut]
+        [HttpPut("{userId:int}")]
         public IActionResult UpdateUser([FromBody] UserUpdateRequest request)
         {
             _logger.LogInformation($"Llamada a la funcion UpdateUser en el controlador UserController");
@@ -282,8 +282,8 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize]
         [Tags("Users")]
-        [HttpGet]
-        public IActionResult GetUserDetail([FromQuery] int userId)
+        [HttpGet("{userId:int}")]
+        public IActionResult GetUserDetail(int userId)
         {
             _logger.LogInformation($"Llamada a la funcion GetUserDetail en el controlador UserController");
             if (UserId == null)
@@ -318,7 +318,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize(Roles = "Usuario-Base,Usuario-Manager")]
         [Tags("Users")]
-        [HttpPut]
+        [HttpPost("{userId:int}/image")]
         public async Task<IActionResult> UpdateUserImage(int userId, IFormFile imageFile)
         {
             _logger.LogInformation($"Llamada a UpdateUserImage en el controlador UserController");
@@ -348,7 +348,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize(Roles = "Usuario-Base,Usuario-Manager")]
         [Tags("Users")]
-        [HttpDelete]
+        [HttpDelete("{userId:int}/image")]
         public async Task<IActionResult> DeleteUserImage(int userId)
         {
             _logger.LogInformation($"Llamada a la funcion DeleteUserImage en el controlador UserController");
@@ -379,7 +379,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize(Roles = "Usuario-Base")]
         [Tags("Users")]
-        [HttpDelete]
+        [HttpDelete("{userId:int}")]
         public async Task<IActionResult> DeleteUser()
         {
             _logger.LogInformation($"Llamada a la funcion DeleteUser en el controlador UserController");

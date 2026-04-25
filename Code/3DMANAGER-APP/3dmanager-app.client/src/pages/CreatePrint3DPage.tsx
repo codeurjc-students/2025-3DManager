@@ -152,19 +152,21 @@ const CreatePrint3DPage: React.FC = () => {
             variationText = "No hay histórico suficiente para estimar variación";
         }
 
-        estimationBlock = (
-            <div className="mt-3 p-3 rounded" style={{ background: "#f7f7f7" }}>
-                {variation === 0 ? (
-                    <p style={{ color: variationColor }}>No hay histórico suficiente para estimar variación.</p>
-                ) : (
-                    <p>El tiempo de impresión es{" "}<strong style={{ color: variationColor }}>
-                        {variationText}</strong>{" "}según el histórico.
-                    </p>
-                )}
-                <p>La pieza tardará aproximadamente{" "}<strong>{formatSeconds(adjustedSeconds)}</strong>.</p>
-                <p>El tiempo estimado por el laminador es{" "}<strong>{formatSeconds(slicerSeconds)}</strong>.</p>
-            </div>
-        );
+        if (variation === 0) {
+            estimationBlock = (
+                <div className="mt-3 p-1 rounded" style={{ background: "#f7f7f7" }}>
+                    <p style={{ color: variationColor }}> No hay histórico suficiente para estimar variación.</p>
+                </div>
+            );
+        } else {
+            estimationBlock = (
+                <div className="mt-3 p-1 rounded" style={{ background: "#f7f7f7" }}>
+                    <p>El tiempo de impresión es{" "}<strong style={{ color: variationColor }}>{variationText}</strong>{" "}según el histórico.</p>
+                    <p>La pieza tardará aproximadamente{" "}<strong>{formatSeconds(adjustedSeconds)}</strong>.</p>
+                    <p>El tiempo estimado por el laminador es{" "}<strong>{formatSeconds(slicerSeconds)}</strong>.</p>
+                </div>
+            );
+        }
     }
 
 
@@ -205,7 +207,7 @@ que el tiempo real de impresión tiene al menos minutos agregados" />
                         <InfoPopup title="Operacion realizada" description="La impresión ha sido guardada correctamente" />
                     )
                 });
-                navigate("/dashboard");
+                navigate(`/dashboard/print/detail/${response.data}`);
             } else {
                 showPopup({
                     type: "error", content: (

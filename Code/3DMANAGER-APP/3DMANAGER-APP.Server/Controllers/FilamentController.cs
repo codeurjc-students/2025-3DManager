@@ -10,7 +10,7 @@ using static _3DMANAGER_APP.Server.Models.Response;
 namespace _3DMANAGER_APP.Server.Controllers
 {
     [ApiController]
-    [Route("api/v1/filaments/[action]")]
+    [Route("api/v1/filaments")]
     public class FilamentController : BaseController
     {
         private readonly IFilamentService _filamentService;
@@ -37,9 +37,9 @@ namespace _3DMANAGER_APP.Server.Controllers
         [Tags("Filaments")]
         [Authorize]
         [HttpGet]
-        public IActionResult GetFilamentList()
+        public IActionResult GetAll()
         {
-            _logger.LogInformation($"Llamada a la funcion GetFilamentList en el controlador FilamentController");
+            _logger.LogInformation($"Llamada a la funcion GetAll en el controlador FilamentController");
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<List<FilamentListResponse>>(new ErrorProperties(401, NoAuthConstant)));
 
@@ -70,9 +70,9 @@ namespace _3DMANAGER_APP.Server.Controllers
         [Authorize(Roles = "Usuario-Manager")]
         [Tags("Filaments")]
         [HttpPost]
-        public async Task<IActionResult> PostFilament([FromForm] FilamentRequest filament)
+        public async Task<IActionResult> Create([FromForm] FilamentRequest filament)
         {
-            _logger.LogInformation($"Llamada a la funcion PostFilament en el controlador FilamentController");
+            _logger.LogInformation($"Llamada a la funcion Create en el controlador FilamentController");
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<int>(new ErrorProperties(401, NoAuthConstant)));
 
@@ -104,10 +104,11 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize(Roles = "Usuario-Manager")]
         [Tags("Filaments")]
-        [HttpPut]
-        public IActionResult UpdateFilament([FromBody] FilamentUpdateRequest request)
+        [HttpPut("{id:int}")]
+        public IActionResult Update(int id, [FromBody] FilamentUpdateRequest request)
+
         {
-            _logger.LogInformation($"Llamada a la funcion UpdateFilament en el controlador FilamentController");
+            _logger.LogInformation($"Llamada a la funcion Update en el controlador FilamentController");
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<bool>(new ErrorProperties(401, NoAuthConstant)));
 
@@ -135,14 +136,14 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize]
         [Tags("Filaments")]
-        [HttpGet]
-        public IActionResult GetFilamentDetail([FromQuery] int filamentId)
+        [HttpGet("{id:int}")]
+        public IActionResult GetById(int id)
         {
-            _logger.LogInformation($"Llamada a la funcion GetFilamentDetail en el controlador FilamentController");
+            _logger.LogInformation($"Llamada a la funcion GetById en el controlador FilamentController");
             if (GroupId == null)
                 return Unauthorized(new Models.CommonResponse<FilamentDetailObject>(new ErrorProperties(401, NoAuthConstant)));
 
-            FilamentDetailObject filamentResponse = _filamentService.GetFilamentDetail(GroupId.Value, filamentId, out BaseError? error);
+            FilamentDetailObject filamentResponse = _filamentService.GetFilamentDetail(GroupId.Value, id, out BaseError? error);
 
             if (error != null)
                 return StatusCode(500, new Models.CommonResponse<FilamentDetailObject>(new ErrorProperties(error!.code, error.message)));
@@ -165,14 +166,14 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize(Roles = "Usuario-Manager")]
         [Tags("Filaments")]
-        [HttpDelete]
-        public async Task<IActionResult> DeleteFilament([FromQuery] int filamentId)
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Delete(int id)
         {
-            _logger.LogInformation($"Llamada a la funcion DeleteFilament en el controlador FilamentController");
+            _logger.LogInformation($"Llamada a la funcion Delete en el controlador FilamentController");
             if (GroupId == null && UserId == null && UserRole == "Usuario-Manager")
                 return Unauthorized(new Models.CommonResponse<GroupBasicDataResponse>(new ErrorProperties(401, NoAuthConstant)));
 
-            BLL.Models.Base.CommonResponse<bool> response = await _filamentService.DeleteFilament(filamentId, GroupId!.Value);
+            BLL.Models.Base.CommonResponse<bool> response = await _filamentService.DeleteFilament(id, GroupId!.Value);
             if (response.Error != null || !response.Data)
                 return StatusCode(500, new Models.CommonResponse<bool>(new ErrorProperties(response.Error?.Code ?? StatusCodes.Status500InternalServerError, response.Error?.Message ?? "Error al eliminar el filamento")));
 
@@ -194,7 +195,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize(Roles = "Usuario-Manager")]
         [Tags("Filaments")]
-        [HttpPut]
+        [HttpPut("{filamentId:int}/image")]
         public async Task<IActionResult> UpdateFilamentImage(int filamentId, IFormFile imageFile)
         {
             _logger.LogInformation($"Llamada a UpdateFilamentImage en el controlador FilamentController");
@@ -224,7 +225,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ApiVersionNeutral]
         [Authorize(Roles = "Usuario-Manager")]
         [Tags("Filaments")]
-        [HttpDelete]
+        [HttpDelete("{filamentId:int}/image")]
         public async Task<IActionResult> DeleteFilamentImage(int filamentId)
         {
             _logger.LogInformation($"Llamada a la funcion DeleteFilamentImage en el controlador FilamentController");

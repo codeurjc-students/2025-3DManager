@@ -15,11 +15,11 @@ const CreatePrinterPage: React.FC = () => {
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault(); 
-        if (!printerName || !printerModel) {
+        e.preventDefault();
+        if (!printerName || !printerModel || !printerDescription) {
             showPopup({
                 type: "warning", content: (
-                    <InfoPopup title="Completar formulario" description="El nombre y el modelo de la impresora son campos obligatorios" />
+                    <InfoPopup title="Completar formulario" description="El nombre, el modelo y la descripción de la impresora son campos obligatorios" />
                 )
             });
             return;
