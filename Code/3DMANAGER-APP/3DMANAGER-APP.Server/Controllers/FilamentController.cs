@@ -70,7 +70,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [Authorize(Roles = "Usuario-Manager")]
         [Tags("Filaments")]
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] FilamentRequest filament)
+        public async Task<IActionResult> Create([FromForm] FilamentRequest filament)
         {
             _logger.LogInformation($"Llamada a la funcion Create en el controlador FilamentController");
             if (GroupId == null)

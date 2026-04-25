@@ -207,7 +207,7 @@ que el tiempo real de impresión tiene al menos minutos agregados" />
                         <InfoPopup title="Operacion realizada" description="La impresión ha sido guardada correctamente" />
                     )
                 });
-                navigate("/dashboard");
+                navigate(`/dashboard/print/detail/${response.data}`);
             } else {
                 showPopup({
                     type: "error", content: (
