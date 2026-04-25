@@ -19,7 +19,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         [Fact]
         public async Task GetUserList_ShouldReturnUsersList()
         {
-            var response = await _client.GetAsync("/api/v1/users/GetUserList");
+            var response = await _client.GetAsync("/api/v1/users");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
@@ -31,7 +31,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         [Fact]
         public async Task UpdateUser_ShouldReturnSuccess()
         {
-            var detailResponse = await _client.GetAsync("/api/v1/users/GetUserDetail?userId=1");
+            var detailResponse = await _client.GetAsync("/api/v1/users/1");
 
             Assert.Equal(HttpStatusCode.OK, detailResponse.StatusCode);
 
@@ -48,7 +48,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
                 UserEmail = "e2e@test.com",
             };
 
-            var updateResponse = await _client.PutAsJsonAsync("/api/v1/users/UpdateUser", request);
+            var updateResponse = await _client.PutAsJsonAsync("/api/v1/users/1", request);
 
             Assert.Equal(HttpStatusCode.OK, updateResponse.StatusCode);
 
@@ -61,7 +61,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         [Fact]
         public async Task GetUserDetail_ShouldReturnUser()
         {
-            var response = await _client.GetAsync("/api/v1/users/GetUserDetail?userId=1");
+            var response = await _client.GetAsync("/api/v1/users/1");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 

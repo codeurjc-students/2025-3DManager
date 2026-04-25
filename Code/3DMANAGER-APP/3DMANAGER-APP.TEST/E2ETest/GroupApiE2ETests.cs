@@ -20,7 +20,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         public async Task GetGroupDashboardData_ShouldReturnSuccess()
         {
 
-            var response = await _client.GetAsync("/api/v1/groups/GetGroupDashboardData");
+            var response = await _client.GetAsync("/api/v1/groups/1/dashboard");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 

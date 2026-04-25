@@ -166,10 +166,10 @@ export const deleteUserImage = async (userId: number): Promise<CommonResponse<bo
                 message: backendResponse?.message ?? "Error al eliminar la imagen del usuario"
             }
         };
-    }
+    } 
 };
 
-export const deleteUser = async (): Promise<CommonResponse<boolean>> => {
+export const deleteUser = async (userId : number): Promise<CommonResponse<boolean>> => {
 
     try {
         const response = await apiClient.delete<CommonResponse<boolean>>(`/v1/users/${userId}`);

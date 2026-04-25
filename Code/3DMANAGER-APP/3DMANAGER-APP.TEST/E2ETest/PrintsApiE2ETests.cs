@@ -19,7 +19,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         [Fact]
         public async Task GetPrintList_ShouldReturnPrintsList()
         {
-            var response = await _client.GetAsync("/api/v1/prints/GetPrintList");
+            var response = await _client.GetAsync("/api/v1/prints");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
@@ -32,7 +32,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         [Fact]
         public async Task GetPrintDetail_ShouldReturnPrint()
         {
-            var response = await _client.GetAsync("/api/v1/prints/GetPrintDetail?printId=1");
+            var response = await _client.GetAsync("/api/v1/prints/1");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
@@ -46,7 +46,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         [Fact]
         public async Task UpdatePrinter_ShouldReturnSuccess()
         {
-            var detailResponse = await _client.GetAsync("/api/v1/prints/GetPrintDetail?printId=1");
+            var detailResponse = await _client.GetAsync("/api/v1/prints/1");
 
             Assert.Equal(HttpStatusCode.OK, detailResponse.StatusCode);
 
@@ -63,7 +63,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
                 PrintDescription = "Updated description"
             };
 
-            var updateResponse = await _client.PutAsJsonAsync("/api/v1/prints/UpdatePrint", request);
+            var updateResponse = await _client.PutAsJsonAsync("/api/v1/prints/1", request);
 
             Assert.Equal(HttpStatusCode.OK, updateResponse.StatusCode);
 
@@ -79,7 +79,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
 
             var printId = 1;
 
-            var response = await _client.DeleteAsync($"/api/v1/prints/DeletePrint?printId={printId}");
+            var response = await _client.DeleteAsync($"/api/v1/prints/{printId}");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
@@ -93,7 +93,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         public async Task DeletePrint_ShouldReturnServerError_WhenPrintDoesNotExist()
         {
             var invalidPrintId = -1;
-            var response = await _client.DeleteAsync($"/api/v1/prints/DeletePrint?printId={invalidPrintId}");
+            var response = await _client.DeleteAsync($"/api/v1/prints/{invalidPrintId}");
 
             Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
 
