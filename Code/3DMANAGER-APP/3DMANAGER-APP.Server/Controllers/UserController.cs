@@ -380,7 +380,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [Authorize(Roles = "Usuario-Base")]
         [Tags("Users")]
         [HttpDelete("{userId:int}")]
-        public async Task<IActionResult> DeleteUser()
+        public async Task<IActionResult> DeleteUser(int userId)
         {
             _logger.LogInformation($"Llamada a la funcion DeleteUser en el controlador UserController");
             if (UserId == null)
