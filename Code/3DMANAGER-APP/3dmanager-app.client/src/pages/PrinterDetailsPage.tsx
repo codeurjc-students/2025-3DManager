@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+﻿import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import PrintListDetail from "../components/PrintListDetail";
 import { useAuth } from "../context/AuthContext";
@@ -27,13 +27,7 @@ const PrinterDetailPage: React.FC = () => {
     const isManager = user?.rolId === "Usuario-Manager";
     const [chartData, setChartData] = useState<PrintChartData[]>([]);
 
-
-    useEffect(() => {
-        refreshPrinter();
-    }, [printerId]);
-
-
-    const refreshPrinter = async () => {
+    const refreshPrinter = useCallback (async () => {
         const stateResponse = await getPrinterState();
         setStateData(stateResponse.data!);
 
@@ -52,7 +46,14 @@ const PrinterDetailPage: React.FC = () => {
                 { name: "No completada", value: (printer.printerPrintsNoComplete * 100) / printer.printerPrintsTotal }
             ]);
         }
-    };
+    }, [printerId]);
+
+    useEffect(() => {
+        refreshPrinter();
+    }, [refreshPrinter]);
+
+
+    
 
     const formatVariationText = (variation: number): string => {
         const absValue = Math.abs(Math.round(variation));

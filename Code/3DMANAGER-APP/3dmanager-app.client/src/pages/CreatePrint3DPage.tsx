@@ -69,7 +69,7 @@ const CreatePrint3DPage: React.FC = () => {
         };
 
         loadCatalog();
-    }, []);
+    }, [showPopup]);
 
 
 
@@ -183,9 +183,9 @@ que el tiempo real de impresión tiene al menos minutos agregados" />
         }
         
         try {
-            let groupId = -1;
-            let userId = -1;
-            let printRealTime = printRealTimeH * 3600 + printRealTimeM * 60;
+            const groupId = -1;
+            const userId = -1;
+            const printRealTime = printRealTimeH * 3600 + printRealTimeM * 60;
             const response = await postPrint({
                 userId,
                 printName,

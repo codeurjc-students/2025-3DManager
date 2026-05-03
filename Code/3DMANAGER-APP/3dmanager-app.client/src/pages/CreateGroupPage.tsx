@@ -26,7 +26,7 @@ const CreateGroupPage: React.FC = () => {
         }
         
         try {
-            let userId = -1; //The real user id is loaded on API with the authentication header.
+            const userId = -1; //The real user id is loaded on API with the authentication header.
             
             const response = await postNewGroup({
                 groupName,

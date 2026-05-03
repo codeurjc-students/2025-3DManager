@@ -5,25 +5,18 @@ import type { PrinterRequest } from '../models/printer/PrinterRequest'
 import type { PrinterDashboardObject } from '../models/printer/PrinterDashboardObject'
 import type { PrinterDetailObject } from '../models/printer/PrinterDetailObject'
 import type { PrinterDetailRequest } from '../models/printer/PrinterDetailRequest'
+import { handleApiError } from '../models/base/handleApiError';
 
 export const getPrinterList = async (): Promise<CommonResponse<PrinterObject[]>> => {
     
     try {
         const response = await apiClient.get<CommonResponse<PrinterObject[]>>('/v1/printers')
         return response.data
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: undefined,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al obtener el listado de impresoras (Deprecated)"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<PrinterObject[]>(
+            error,
+            "Error al obtener las impresoras"
+        );
     }
 }
 
@@ -42,19 +35,11 @@ export const postPrinter = async (data: PrinterRequest): Promise<CommonResponse<
         const response = await apiClient.post<CommonResponse<boolean>>('/v1/printers', formData,
             { headers: { "Content-Type": "multipart/form-data" } })
         return response.data
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: false,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al crear una impresora"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<boolean>(
+            error,
+            "Error al crear una impresora"
+        );
     }
 }
 
@@ -62,19 +47,11 @@ export const getPrinterDashboardList = async (): Promise<CommonResponse<PrinterD
     try {
         const response = await apiClient.get<CommonResponse<PrinterDashboardObject[]>>('/v1/printers/dashboard');
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: undefined,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al traer el listado de impresorar del dashboard"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<PrinterDashboardObject[]>(
+            error,
+            "Error al obtener el listado de impresoras"
+        );
     }
 }
 
@@ -82,19 +59,11 @@ export const updatePrinter = async (data: PrinterDetailRequest): Promise<CommonR
     try {
         const response = await apiClient.put<CommonResponse<boolean>>(`/v1/printers/${data.printerId}`, data);
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: false,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al actualizar la impresora"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<boolean>(
+            error,
+            "Error al actualizar una impresora"
+        );
     }
 }
 
@@ -102,19 +71,11 @@ export const getPrinterDetail = async (printerId: number): Promise<CommonRespons
     try {
         const response = await apiClient.get<CommonResponse<PrinterDetailObject>>(`/v1/printers/${printerId}`);
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: undefined,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al obtener el detalle de impresora"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<PrinterDetailObject>(
+            error,
+            "Error al obtener el detalle de impresora"
+        );
     }
 }
 
@@ -122,19 +83,11 @@ export const deletePrinter = async (printerId: number): Promise<CommonResponse<b
     try {
         const response = await apiClient.delete<CommonResponse<boolean>>(`/v1/printers/${printerId}`);
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: false,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al tratar de eliminar una impresora"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<boolean>(
+            error,
+            "Error al eliminar una impresora"
+        );
     }
 }
 
@@ -146,19 +99,11 @@ export const updatePrinterImage = async (printerId: number,file: File): Promise<
         const response = await apiClient.post<CommonResponse<boolean>>(`/v1/printers/${printerId}/image`,
             formData, { headers: { "Content-Type": "multipart/form-data" }});
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-
-        if (backendResponse?.error) return backendResponse;
-
-        return {
-            data: false,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error al actualizar la imagen de la impresora"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<boolean>(
+            error,
+            "Error al actualizar la imagen de impresora"
+        );
     }
 };
 
@@ -166,19 +111,11 @@ export const deletePrinterImage = async (printerId: number): Promise<CommonRespo
     try {
         const response = await apiClient.delete<CommonResponse<boolean>>(`/v1/printers/${printerId}/image`);
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-
-        if (backendResponse?.error) return backendResponse;
-
-        return {
-            data: false,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error al eliminar la imagen de la impresora"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<boolean>(
+            error,
+            "Error al eliminar la imagen de impresora"
+        );
     }
 };
 

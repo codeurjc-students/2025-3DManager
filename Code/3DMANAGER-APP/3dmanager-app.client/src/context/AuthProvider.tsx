@@ -1,0 +1,98 @@
+import { useEffect, useState } from "react";
+import { AuthContext } from "./AuthContext";
+import type { UserObject } from "../models/user/UserObject";
+import { GetUserAuth } from "../api/userService";
+
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const [user, setUser] = useState<UserObject | null>(null);
+    const [token, setToken] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const storedToken = localStorage.getItem("token");
+        const storedUser = localStorage.getItem("user");
+
+        if (!storedToken || !storedUser) {
+            setLoading(false);
+            return;
+        }
+
+        setToken(storedToken);
+        setUser(JSON.parse(storedUser));
+
+        GetUserAuth()
+            .then(response => {
+                const updatedUser = {
+                    ...JSON.parse(storedUser),
+                    userId: response.userId,
+                    groupId: response.groupId,
+                    rolId: response.rolId,
+                    token: response.token
+                };
+
+                setUser(updatedUser);
+                localStorage.setItem("user", JSON.stringify(updatedUser));
+
+                if (response.token) {
+                    setToken(response.token);
+                    localStorage.setItem("token", response.token);
+                }
+            })
+            .catch(() => {
+                setUser(null);
+                setToken(null);
+                localStorage.removeItem("user");
+                localStorage.removeItem("token");
+            })
+            .finally(() => setLoading(false));
+    }, []);
+
+
+
+    const login = (user: UserObject, token: string) => {
+        setUser(user);
+        setToken(token);
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("token", token);
+    };
+
+    const logout = () => {
+        setUser(null);
+        setToken(null);
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+    };
+
+    const refreshUser = async () => {
+        try {
+            const res = await GetUserAuth();
+
+            const updatedUser = {
+                ...user!,
+                userId: res.userId,
+                groupId: res.groupId,
+                rolId: res.rolId,
+                groupName: res.groupName
+            };
+
+            setUser(updatedUser);
+            localStorage.setItem("user", JSON.stringify(updatedUser));
+
+            if (res.token) {
+                setToken(res.token);
+                localStorage.setItem("token", res.token);
+            }
+
+        } catch (err) {
+            console.error(err)
+            logout();
+        }
+    };
+
+
+    return (
+        <AuthContext.Provider value={{ user, token, loading, login, logout, refreshUser }}>
+            {children}
+        </AuthContext.Provider>
+    );
+};

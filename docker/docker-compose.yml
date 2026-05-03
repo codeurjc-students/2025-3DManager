@@ -1,7 +1,7 @@
 services:
   app:
     container_name: 3dmanager-app
-    image: ivicenter2018/3dmanager-app:0.2
+    image: ivicenter2018/3dmanager-app:1.0
     command: ["dotnet", "3dmanager-app.dll"]
     depends_on:
       db:

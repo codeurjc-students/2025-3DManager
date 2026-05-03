@@ -22,7 +22,7 @@ const LoginPage: React.FC = () => {
                 navigate("/group");
             }
         }
-    }, [user]);
+    }, [user, navigate]);
 
     const loginAsGuest = async () => {
 

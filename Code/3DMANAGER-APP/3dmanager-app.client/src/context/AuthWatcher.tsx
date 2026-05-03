@@ -20,7 +20,7 @@ const AuthWatcher: React.FC = () => {
         } else {
             navigate("/group");
         }
-    }, [user, loading]);
+    }, [user, loading, navigate]);
 
     return null;
 };

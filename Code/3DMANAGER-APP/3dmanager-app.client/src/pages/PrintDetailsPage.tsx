@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+﻿import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { usePopupContext } from "../context/PopupContext";
@@ -23,11 +23,7 @@ const PrintDetailPage: React.FC = () => {
     const isManagerOrOwner = (user?.rolId === "Usuario-Manager" || data?.printUserId === user?.userId) && (user?.rolId !== "Usuario-Invitado");
     const timeRegex = /^(\d+)h\s+(\d+)min$/;
 
-    useEffect(() => {
-        refreshPrint();
-    }, [printId]);
-
-    const refreshPrint = async () => {
+    const refreshPrint = useCallback(async () => {
         const response = await getPrintDetail(Number(printId));
         const print = response.data;
 
@@ -36,9 +32,15 @@ const PrintDetailPage: React.FC = () => {
             setData(print);
             setDescription(print.printDescription || "");
             setName(print.printName || "");
-            setRealTime(print.printRealTimeImpression || "0h 1min")
+            setRealTime(print.printRealTimeImpression || "0h 1min");
         }
-    };
+    }, [printId]);
+
+    useEffect(() => {
+        refreshPrint();
+    }, [refreshPrint]);
+
+    
 
     const parseTimeToSeconds = (value: string): number | null => {
         const match = value.match(/^(\d+)h\s+(\d+)min$/);
@@ -230,6 +232,7 @@ const PrintDetailPage: React.FC = () => {
         link.click();
     };
 
+    const fileUrl = data?.printImageData?.fileUrl;
 
     return (
         <div className="d-flex flex-column vh-100">
@@ -274,19 +277,20 @@ const PrintDetailPage: React.FC = () => {
                                 </div>
                             ) : ""}
                         </div>
-                        
-                        <div className="d-flex flex-row h-75 justify-content-between" >
-                            <div className="h-30 col-6 ms-5 image-container-3">
-                                <STLViewer fileUrl={data?.printImageData?.fileUrl!} />
+                        {fileUrl && (
+                            <div className="d-flex flex-row h-75 justify-content-between" >
+                                <div className="h-30 col-6 ms-5 image-container-3">
+                                    <STLViewer fileUrl={fileUrl} />
+                                </div>
+                                {data?.printHaveSTL ? (
+                                    <button className="button-yellow h-05" onClick={() => downloadSTL(fileUrl)}
+                                        title="Descargar archivo STL">
+                                        <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M16 24L24 32M24 32L32 24M24 32V16M44 24C44 35.0457 35.0457 44 24 44C12.9543 44 4 35.0457 4 24C4 12.9543 12.9543 4 24 4C35.0457 4 44 12.9543 44 24Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </button>) : ""}
                             </div>
-                            {data?.printHaveSTL ? (
-                                <button className="button-yellow h-05" onClick={() => downloadSTL(data?.printImageData?.fileUrl!)}
-                                    title="Descargar archivo STL">
-                                    <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M16 24L24 32M24 32L32 24M24 32V16M44 24C44 35.0457 35.0457 44 24 44C12.9543 44 4 35.0457 4 24C4 12.9543 12.9543 4 24 4C35.0457 4 44 12.9543 44 24Z" stroke="#1E1E1E" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                </button>) : ""}
-                        </div>
+                        )}
                     </div>
                     <div className="h-40 ms-3 mt-1">
                         <div className="h-10 mt-2">

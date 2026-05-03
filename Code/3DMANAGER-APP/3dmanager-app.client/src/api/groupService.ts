@@ -1,4 +1,5 @@
 import apiClient from './apiClient'
+import { handleApiError } from '../models/base/handleApiError';
 import type { CommonResponse } from '../models/base/CommonResponse'
 import type { GroupRequest } from '../models/group/GroupRequest'
 import type { GroupInvitation } from '../models/group/GroupInvitation'
@@ -8,19 +9,11 @@ export const postNewGroup = async (data: GroupRequest): Promise<CommonResponse<b
     try {
         const response = await apiClient.post<CommonResponse<boolean>>('/v1/groups', data)
         return response.data
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: false,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<boolean>(
+            error,
+            "Error al crear un grupo"
+        );
     }
 }
 
@@ -29,19 +22,11 @@ export const getGroupInvitations = async (): Promise<CommonResponse<GroupInvitat
     try {
         const response = await apiClient.get<CommonResponse<GroupInvitation[]>>(`/v1/groups/invitations`)
         return response.data
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: undefined,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<GroupInvitation[]>(
+            error,
+            "Error al recibir las invitaciones de grupo"
+        );
     }
 }
 
@@ -49,39 +34,24 @@ export const postAcceptInvitation = async (groupId: number, isAccepted: boolean)
     try {
         const response = await apiClient.post<CommonResponse<boolean>>(`/v1/groups/invitations/${groupId}`, { isAccepted })
         return response.data
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: false,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al tratar de aceptar una invitación al grupo"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<boolean>(
+            error,
+            "Error al aceptar invitación de grupo"
+        );
     }
+    
 }
 
 export const getGroupBasicData = async (): Promise<CommonResponse<GroupBasicDataResponse>> => {
     try {
         const response = await apiClient.get<CommonResponse<GroupBasicDataResponse>>('/v1/groups/me')
         return response.data
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: undefined,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al obtener los datos basicos de grupo"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<GroupBasicDataResponse>(
+            error,
+            "Error al obtener los datos basicos del grupo"
+        );
     }
 }
 
@@ -90,76 +60,44 @@ export const updateGroupData = async (groupId: number, data: GroupRequest): Prom
     try {
         const response = await apiClient.put<CommonResponse<boolean>>(`/v1/groups/${groupId}`, data)
         return response.data
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: false,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al actualizar los datos del grupo"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<boolean>(
+            error,
+            "Error al actualizar el grupo"
+        );
     }
 }
 export const leaveGroup = async (groupId: number): Promise<CommonResponse<boolean>> => {
     try {
         const response = await apiClient.put<CommonResponse<boolean>>(`/v1/groups/${groupId}/leave`)
         return response.data
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: false,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al tratar de abandonar el grupo"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<boolean>(
+            error,
+            "Error al dejar el grupo"
+        );
     }
 }
 export const deleteGroup = async (groupId: number): Promise<CommonResponse<boolean>> => {
     try {
         const response = await apiClient.delete<CommonResponse<boolean>>(`/v1/groups/${groupId}`)
         return response.data
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: false,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al tratar de eliminar el grupo"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<boolean>(
+            error,
+            "Error al eliminar el grupo"
+        );
     }
 }
 export const kickUserFromGroup = async (groupId: number, userId : number): Promise<CommonResponse<boolean>> => {
     try {
         const response = await apiClient.put<CommonResponse<boolean>>(`/v1/groups/${groupId}/kick/${userId}`)
         return response.data
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: false,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al expulsar a un usario del grupo"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<boolean>(
+            error,
+            "Error al expulsar a un usuario del grupo"
+        );
     }
 }
 export const transferOwnership = async (groupId: number,newOwnerUserId: number): Promise<CommonResponse<boolean>> => {
@@ -167,19 +105,11 @@ export const transferOwnership = async (groupId: number,newOwnerUserId: number):
     try {
         const response = await apiClient.put<CommonResponse<boolean>>(`/v1/groups/${groupId}/owner`, { newOwnerUserId });
         return response.data
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: false,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al tranferir el rol de manager de grupo"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<boolean>(
+            error,
+            "Error trasnferir el rol de dueño del grupo"
+        );
     }
 }
 export const getGroupDashboardData = async (groupId: number): Promise<CommonResponse<GroupDashboardData>> => {
@@ -187,19 +117,11 @@ export const getGroupDashboardData = async (groupId: number): Promise<CommonResp
     try {
         const response = await apiClient.get<CommonResponse<GroupDashboardData>>(`/v1/groups/${groupId}/dashboard`)
         return response.data
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: undefined,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al obtener la información del dashboard de grupo"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<GroupDashboardData>(
+            error,
+            "Error al obtener la información del panel principal del grupo"
+        );
     }
 }
 
