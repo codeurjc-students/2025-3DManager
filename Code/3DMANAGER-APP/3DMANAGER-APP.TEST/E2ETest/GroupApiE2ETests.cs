@@ -31,5 +31,32 @@ namespace _3DMANAGER_APP.TEST.E2ETest
             Assert.Null(content.Error);
         }
 
+        [Fact]
+        public async Task GetGroupInvitations_ShouldReturnSuccess()
+        {
+            var response = await _client.GetAsync("/api/v1/groups/invitations");
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var content = await response.Content.ReadFromJsonAsync<CommonResponse<List<GroupInvitation>>>();
+
+            Assert.NotNull(content);
+            Assert.NotNull(content.Data);
+        }
+
+        [Fact]
+        public async Task GetGroupBasicData_ShouldReturnSuccess()
+        {
+            var response = await _client.GetAsync("/api/v1/groups/me");
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var content = await response.Content.ReadFromJsonAsync<CommonResponse<GroupBasicDataResponse>>();
+
+            Assert.NotNull(content);
+            Assert.NotNull(content.Data);
+        }
+
+
     }
 }

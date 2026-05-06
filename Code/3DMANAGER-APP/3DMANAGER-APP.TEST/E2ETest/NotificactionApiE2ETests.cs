@@ -28,6 +28,7 @@ namespace _3DMANAGER_APP.TEST.E2ETest
             Assert.NotNull(content.Data);
             Assert.True(content.Data.Count >= 0);
         }
+
         [Fact]
         public async Task NotificationMarkAsRead_ShouldMarkNotificationSuccessfully()
         {
