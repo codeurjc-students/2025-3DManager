@@ -6,7 +6,7 @@ using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace _3DMANAGER_APP.TEST.UnitaryTest.Catalogs
+namespace _3DMANAGER_APP.TEST.UnitaryTest
 {
     public class CatalogTests
     {

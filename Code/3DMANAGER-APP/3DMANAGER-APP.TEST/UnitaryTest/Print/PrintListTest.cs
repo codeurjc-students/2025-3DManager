@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
-namespace _3DMANAGER_APP.TEST.UnitaryTest.Print
+namespace _3DMANAGER_APP.TEST.UnitaryTest
 {
     public class PrintListTest
     {
