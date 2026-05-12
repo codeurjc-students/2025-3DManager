@@ -22,6 +22,20 @@ namespace _3DMANAGER_APP.Server.Controllers
             _jwtService = jwtService;
         }
 
+        private void SetAuthCookie(string token)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = Request.IsHttps,
+                SameSite = SameSiteMode.Lax,
+                Expires = DateTime.UtcNow.AddHours(4),
+                Path = "/"
+            };
+
+            Response.Cookies.Append("accessToken", token, cookieOptions);
+        }
+
         /// <summary>
         /// Create a user 
         /// </summary>
@@ -79,8 +93,9 @@ namespace _3DMANAGER_APP.Server.Controllers
 
             LoginResponse response = new LoginResponse();
             response.User = user;
-            response.Token = token;
+            SetAuthCookie(token);
 
+            response.Token = string.Empty;
             return new Models.CommonResponse<LoginResponse>(response);
         }
 
@@ -116,8 +131,9 @@ namespace _3DMANAGER_APP.Server.Controllers
 
             LoginResponse response = new LoginResponse();
             response.User = user;
-            response.Token = token;
+            SetAuthCookie(token);
 
+            response.Token = string.Empty;
             return new Models.CommonResponse<LoginResponse>(response);
         }
 
@@ -223,7 +239,7 @@ namespace _3DMANAGER_APP.Server.Controllers
 
             var user = _userService.GetUserById(UserId.Value);
             var newToken = _jwtService.GenerateToken(user);
-
+            SetAuthCookie(newToken);
             if (user == null || user.UserId == 0)
                 return Unauthorized();
 
@@ -232,8 +248,19 @@ namespace _3DMANAGER_APP.Server.Controllers
                 userId = user.UserId,
                 groupId = user.GroupId,
                 rolId = user.RolId,
-                groupName = user.GroupName,
-                token = newToken
+                groupName = user.GroupName
+
+            });
+        }
+
+        [HttpPost("logout")]
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("accessToken");
+
+            return Ok(new
+            {
+                success = true
             });
         }
 

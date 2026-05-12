@@ -55,7 +55,7 @@ const LoginPage: React.FC = () => {
     }
 
     const authLoad = async (userLogged: LoginResponse) => {
-        login(userLogged.user, userLogged.token);
+        login(userLogged.user);
 
         if (userLogged.user.groupId) {
             navigate("/dashboard");

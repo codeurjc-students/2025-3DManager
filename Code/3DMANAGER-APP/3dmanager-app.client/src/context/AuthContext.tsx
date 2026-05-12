@@ -3,9 +3,8 @@ import type { UserObject } from "../models/user/UserObject";
 
 export type AuthContextType = {
     user: UserObject | null;
-    token: string | null;
     loading: boolean;
-    login: (user: UserObject, token: string) => void;
+    login: (user: UserObject) => void;
     logout: () => void;
     refreshUser: () => Promise<void>;
 
