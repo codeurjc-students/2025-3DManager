@@ -334,7 +334,7 @@ namespace _3DMANAGER_APP.Server.Controllers
         [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status500InternalServerError)]
         [ApiVersionNeutral]
         [Authorize(Roles = "Usuario-Base,Usuario-Manager")]
-        [Tags("Printers")]
+        [Tags("Prints")]
         [HttpDelete("{printId:int}/image")]
         public async Task<IActionResult> DeletePrintImage(int printId)
         {

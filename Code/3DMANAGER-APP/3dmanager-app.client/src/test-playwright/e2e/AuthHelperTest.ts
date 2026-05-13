@@ -10,14 +10,14 @@ export async function loginByApi() {
     });
     
     const response = process.env.CI ? await context.post(
-        `${API_URL}/api/v1/users/Login`,
+        `${API_URL}/api/v1/users/login`,
         {
             data: {
                 userName: 'user_test',
                 userPassword: 'password123'
             }
         }
-    ) : await context.post(`${API_URL}/api/v1/users/LoginGuest`);
+    ) : await context.post(`${API_URL}/api/v1/users/login/guest`);
 
     if (!response.ok()) {
         throw new Error('Login por API falló');

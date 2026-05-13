@@ -9,6 +9,7 @@ using _3DMANAGER_APP.DAL.Repositories;
 using _3DMANAGER_APP.TEST.E2ETest;
 using _3DMANAGER_APP.TEST.Fixture;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
@@ -112,7 +113,73 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
             Assert.NotEmpty(filamentsAfterPost);
 
         }
+        [Fact]
+        public void GetFilamentDetail_ShouldReturnError_WhenFilamentDoesNotExist()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER");
 
+            var filamentRepository = new FilamentRepository(
+                dataSource,
+                NullLogger<FilamentRepository>.Instance);
+
+            var service = new FilamentService(
+                filamentRepository,
+                _mapper,
+                NullLogger<FilamentService>.Instance,
+                _fakeService,
+                _notificationService);
+
+            BaseError? error;
+
+            var result = service.GetFilamentDetail(1, -999, out error);
+
+            Assert.NotNull(error);
+            Assert.Equal(500, error.code);
+            Assert.Equal(0, result.FilamentId);
+        }
+
+        [Fact]
+        public async Task GetFilamentDetail_ShouldUseDefaultImage_WhenNoImageExists()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER");
+
+            var filamentRepository = new FilamentRepository(
+                dataSource,
+                NullLogger<FilamentRepository>.Instance);
+
+            var service = new FilamentService(
+                filamentRepository,
+                _mapper,
+                NullLogger<FilamentService>.Instance,
+                _fakeService,
+                _notificationService);
+
+            var created = await service.PostFilament(new FilamentRequest
+            {
+                GroupId = 1,
+                FilamentName = "No Image Test",
+                FilamentDescription = "Test",
+                FilamentColor = "#000000",
+                FilamentWeight = 500,
+                FilamentCost = 10,
+                FilamentLenght = 100,
+                FilamentTemperature = 200,
+                FilamentThickness = 1,
+                FilamentType = 1
+            });
+
+            BaseError? error;
+            var result = service.GetFilamentDetail(1, created.Data, out error);
+
+            Assert.Null(error);
+            Assert.NotNull(result);
+            Assert.NotNull(result.FilamentImageFile);
+            Assert.Contains("https://fake-url.com/presigned/test.jpg", result.FilamentImageFile.FileUrl);
+        }
         [Fact]
         public void Filament_ShouldReturnDetail_AndUpdate()
         {
@@ -185,7 +252,6 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 _notificationService
             );
 
-            // Creamos un filamento de prueba
             var newFilament = new FilamentRequest
             {
                 GroupId = 1,
@@ -217,5 +283,175 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
             Assert.DoesNotContain(filaments, f => f.FilamentId == filamentId);
         }
 
+        [Fact]
+        public async Task UpdateFilamentImage_ShouldUpdateSuccessfully()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER");
+
+            var filamentRepository = new FilamentRepository(
+                dataSource,
+                NullLogger<FilamentRepository>.Instance);
+
+            var service = new FilamentService(
+                filamentRepository,
+                _mapper,
+                NullLogger<FilamentService>.Instance,
+                _fakeService,
+                _notificationService);
+
+            var created = await service.PostFilament(new FilamentRequest
+            {
+                GroupId = 1,
+                FilamentName = "Image Update",
+                FilamentDescription = "Test",
+                FilamentColor = "#fff",
+                FilamentWeight = 500,
+                FilamentCost = 10,
+                FilamentLenght = 100,
+                FilamentTemperature = 200,
+                FilamentThickness = 1,
+                FilamentType = 1
+            });
+
+            var fileMock = new FormFile(
+                new MemoryStream(new byte[] { 1, 2, 3 }),
+                0,
+                3,
+                "Data",
+                "test.jpg"
+            )
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "image/jpeg"
+            };
+
+            var result = await service.UpdateFilamentImage(created.Data, 1, fileMock);
+
+            Assert.True(result.Data);
+        }
+
+        [Fact]
+        public async Task UpdateFilamentImage_ShouldReturnError_WhenImageIsNull()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER");
+
+            var filamentRepository = new FilamentRepository(
+                dataSource,
+                NullLogger<FilamentRepository>.Instance);
+
+            var service = new FilamentService(
+                filamentRepository,
+                _mapper,
+                NullLogger<FilamentService>.Instance,
+                _fakeService,
+                _notificationService);
+
+            var result = await service.UpdateFilamentImage(1, 1, null);
+
+            Assert.NotNull(result.Error);
+            Assert.Equal(400, result.Error.Code);
+        }
+
+        [Fact]
+        public async Task DeleteFilamentImage_ShouldReturnTrue_WhenNoImageExists()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER");
+
+            var filamentRepository = new FilamentRepository(
+                dataSource,
+                NullLogger<FilamentRepository>.Instance);
+
+            var service = new FilamentService(
+                filamentRepository,
+                _mapper,
+                NullLogger<FilamentService>.Instance,
+                _fakeService,
+                _notificationService);
+
+            var created = await service.PostFilament(new FilamentRequest
+            {
+                GroupId = 1,
+                FilamentName = "No Image Delete",
+                FilamentDescription = "Test",
+                FilamentColor = "#fff",
+                FilamentWeight = 500,
+                FilamentCost = 10,
+                FilamentLenght = 100,
+                FilamentTemperature = 200,
+                FilamentThickness = 1,
+                FilamentType = 1
+            });
+
+            var result = await service.DeleteFilamentImage(created.Data, 1);
+
+            Assert.True(result.Data);
+            Assert.Null(result.Error);
+        }
+        [Fact]
+        public async Task DeleteFilament_ShouldFail_WhenFilamentAlreadyDeleted()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER");
+
+            var filamentRepository = new FilamentRepository(
+                dataSource,
+                NullLogger<FilamentRepository>.Instance);
+
+            var service = new FilamentService(
+                filamentRepository,
+                _mapper,
+                NullLogger<FilamentService>.Instance,
+                _fakeService,
+                _notificationService);
+
+            var created = await service.PostFilament(new FilamentRequest
+            {
+                GroupId = 1,
+                FilamentName = "Delete Twice",
+                FilamentDescription = "Test",
+                FilamentColor = "#fff",
+                FilamentWeight = 500,
+                FilamentCost = 10,
+                FilamentLenght = 100,
+                FilamentTemperature = 200,
+                FilamentThickness = 1,
+                FilamentType = 1
+            });
+
+            var firstDelete = await service.DeleteFilament(created.Data, 1);
+            var secondDelete = await service.DeleteFilament(created.Data, 1);
+
+            Assert.True(firstDelete.Data);
+            Assert.True(secondDelete.Data); //Not an error
+        }
+        [Fact]
+        public async Task CheckFilamentLevelsAsync_ShouldRunWithoutExceptions()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER");
+
+            var filamentRepository = new FilamentRepository(
+                dataSource,
+                NullLogger<FilamentRepository>.Instance);
+
+            var service = new FilamentService(
+                filamentRepository,
+                _mapper,
+                NullLogger<FilamentService>.Instance,
+                _fakeService,
+                _notificationService);
+
+            var exception = await Record.ExceptionAsync(() => service.CheckFilamentLevelsAsync());
+
+            Assert.Null(exception);
+        }
     }
 }

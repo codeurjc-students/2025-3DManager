@@ -57,8 +57,9 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
             _fakeService = absMock.Object;
         }
 
+
         [Fact]
-        public void User_ShouldReturnUser()
+        public async Task User_ShouldCreateSuccessfully()
         {
             var dataSource = new MySQLDataSource(
                 _fixture.ConnectionString,
@@ -78,12 +79,18 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
                 _notificationService
             );
 
-            BaseError? error;
-            var users = service.GetUserList(1, out error);
+            var request = new UserCreateRequest
+            {
+                UserName = $"usertest",
+                UserEmail = $"user_test@test.com",
+                UserPassword = "12345"
+            };
 
-            Assert.Null(error);
-            Assert.NotNull(users);
-            Assert.NotEmpty(users);
+            var result = await service.PostNewUser(request);
+
+            Assert.NotNull(result);
+            Assert.True(result.Data > 0);
+            Assert.Null(result.Error);
         }
 
         [Fact]
@@ -123,6 +130,187 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
             Assert.Equal("Integration User Updated", updated.userName);
             Assert.Equal("integration@test.com", updated.userEmail);
         }
+
+        [Fact]
+        public void GetUserDetail_ShouldUseDefaultImage_WhenNoImage()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER");
+
+            var repo = new UserRepository(
+                dataSource,
+                NullLogger<UserRepository>.Instance);
+
+            var service = new UserService(
+                repo,
+                _mapper,
+                NullLogger<UserService>.Instance,
+                _fakeService,
+                _notificationService);
+
+            BaseError? error;
+
+            var user = service.GetUserDetail(1, out error);
+
+            Assert.Null(error);
+            Assert.NotNull(user);
+
+            Assert.Contains("https://fake-url.com/presigned/test.jpg", user.UserImageData.FileUrl);
+        }
+
+
+
+        [Fact]
+        public async Task DeleteUserImage_ShouldReturnTrue_WhenNoImage()
+        {
+            var dataSource = new MySQLDataSource(_fixture.ConnectionString, "3DMANAGER");
+
+            var repo = new UserRepository(dataSource, NullLogger<UserRepository>.Instance);
+
+            var service = new UserService(
+                repo,
+                _mapper,
+                NullLogger<UserService>.Instance,
+                _fakeService,
+                _notificationService
+            );
+
+            var result = await service.DeleteUserImage(1);
+
+            Assert.NotNull(result);
+            Assert.True(result.Data);
+        }
+
+        [Fact]
+        public async Task UpdateUser_ShouldReturnError_WhenUsernameAlreadyExists()
+        {
+            var dataSource = new MySQLDataSource(_fixture.ConnectionString, "3DMANAGER");
+
+            var repo = new UserRepository(dataSource, NullLogger<UserRepository>.Instance);
+
+            var service = new UserService(
+                repo,
+                _mapper,
+                NullLogger<UserService>.Instance,
+                _fakeService,
+                _notificationService
+            );
+            var request1 = new UserCreateRequest
+            {
+                UserName = "usertestNew",
+                UserEmail = "user_testNew@test.com",
+                UserPassword = "12345"
+            };
+
+            var result1 = await service.PostNewUser(request1);
+
+            Assert.NotNull(result1);
+            Assert.True(result1.Data > 0);
+            Assert.Null(result1.Error);
+
+
+            var request = new UserUpdateRequest
+            {
+                GroupId = 1,
+                UserId = 1,
+                UserName = "usertestNew",
+                UserEmail = "newemail@test.com"
+            };
+
+            var result = service.UpdateUser(request, out BaseError? error);
+
+            Assert.False(result);
+            Assert.NotNull(error);
+            Assert.Equal(409, error.code);
+        }
+
+        [Fact]
+        public async Task UpdateUser_ShouldReturnError_WhenEmailAlreadyExists()
+        {
+            var dataSource = new MySQLDataSource(_fixture.ConnectionString, "3DMANAGER");
+
+            var repo = new UserRepository(dataSource, NullLogger<UserRepository>.Instance);
+
+            var service = new UserService(
+                repo,
+                _mapper,
+                NullLogger<UserService>.Instance,
+                _fakeService,
+                _notificationService
+            );
+
+            var request1 = new UserCreateRequest
+            {
+                UserName = "usertest2",
+                UserEmail = "user_test2@test.com",
+                UserPassword = "12345"
+            };
+
+            var result1 = await service.PostNewUser(request1);
+
+            Assert.NotNull(result1);
+            Assert.True(result1.Data > 0);
+            Assert.Null(result1.Error);
+
+            var request = new UserUpdateRequest
+            {
+                GroupId = 1,
+                UserId = 1,
+                UserName = "uniqueName2",
+                UserEmail = "user_test2@test.com"
+            };
+
+            var result = service.UpdateUser(request, out BaseError? error);
+
+            Assert.False(result);
+            Assert.NotNull(error);
+            Assert.Equal(409, error.code);
+        }
+
+        [Fact]
+        public void GetUserDetail_ShouldReturnError_WhenUserNotExists()
+        {
+            var dataSource = new MySQLDataSource(_fixture.ConnectionString, "3DMANAGER");
+
+            var repo = new UserRepository(dataSource, NullLogger<UserRepository>.Instance);
+
+            var service = new UserService(
+                repo,
+                _mapper,
+                NullLogger<UserService>.Instance,
+                _fakeService,
+                _notificationService
+            );
+
+            var result = service.GetUserDetail(999999, out BaseError? error);
+
+            Assert.NotNull(error);
+            Assert.Equal(500, error.code);
+        }
+
+        [Fact]
+        public async Task UpdateUserImage_ShouldReturnError_WhenImageIsNull()
+        {
+            var dataSource = new MySQLDataSource(_fixture.ConnectionString, "3DMANAGER");
+
+            var repo = new UserRepository(dataSource, NullLogger<UserRepository>.Instance);
+
+            var service = new UserService(
+                repo,
+                _mapper,
+                NullLogger<UserService>.Instance,
+                _fakeService,
+                _notificationService
+            );
+
+            var result = await service.UpdateUserImage(1, null);
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.Error);
+            Assert.Equal(400, result.Error.Code);
+        }
+
 
     }
 }

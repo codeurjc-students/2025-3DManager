@@ -5,6 +5,7 @@ import { usePopupContext } from "../context/PopupContext";
 import GroupPopup from './popupComponent/GroupPopup';
 import { useNotifications } from "../context/NotificationContext";
 import NotificationPopup from './popupComponent/NotificationPopup';
+import { logoutUser } from '../api/userService';
 
 const Header: React.FC = () => {
     const { user, logout } = useAuth();
@@ -29,6 +30,7 @@ const Header: React.FC = () => {
 
     const handleLogoutClick = () => {
         logout();
+        logoutUser()
         navigate("/login");
     };
 

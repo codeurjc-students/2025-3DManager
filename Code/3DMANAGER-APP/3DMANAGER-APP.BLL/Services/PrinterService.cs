@@ -157,7 +157,7 @@ namespace _3DMANAGER_APP.BLL.Services
             error = null;
             PrinterDetailObject response;
             var responseDb = _printerRepository.GetPrinterDetail(groupId, printerId);
-            if (responseDb.PrinterId == 0)
+            if (responseDb.PrinterId == 0 || responseDb.PrinterId == null)
             {
                 string msg = $"Error al obtener el detalle de impresora {printerId}";
                 _logger.LogError(msg);
@@ -169,7 +169,7 @@ namespace _3DMANAGER_APP.BLL.Services
             }
             response = _mapper.Map<PrinterDetailObject>(responseDb);
 
-            if (response != null)
+            if (response != null && response.PrinterId != null)
             {
                 if (response.PrinterImageData != null && response.PrinterImageData.FileUrl != null && response.PrinterImageData.FileKey != null)
                     response.PrinterImageData.FileUrl = _absService.GetPresignedUrl(response.PrinterImageData.FileKey, 1);

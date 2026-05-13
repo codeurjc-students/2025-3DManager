@@ -112,6 +112,31 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
         }
 
         [Fact]
+        public void GetPrintDetail_ShouldReturnError_WhenPrintDoesNotExist()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER");
+
+            var repo = new PrintRepository(
+                dataSource,
+                NullLogger<PrintRepository>.Instance);
+
+            var service = new PrintService(
+                repo,
+                _mapper,
+                NullLogger<PrintService>.Instance,
+                _fakeService,
+                _notificationService);
+
+            var result = service.GetPrintDetail(1, -999, out BaseError? error);
+
+            Assert.NotNull(error);
+            Assert.Equal(500, error.code);
+            Assert.Equal(0, result.PrintId);
+        }
+
+        [Fact]
         public void Print_ShouldReturnDetail_AndUpdate()
         {
             var dataSource = new MySQLDataSource(
@@ -152,6 +177,47 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
             Assert.Equal("Updated print", updated.PrintName);
             Assert.Equal("Updated description", updated.PrintDescription);
         }
+
+
+        [Fact]
+        public async Task GetPrintDetail_ShouldUseDefaultSTL_WhenNoFile()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER");
+
+            var repo = new PrintRepository(
+                dataSource,
+                NullLogger<PrintRepository>.Instance);
+
+            var service = new PrintService(
+                repo,
+                _mapper,
+                NullLogger<PrintService>.Instance,
+                _fakeService,
+                _notificationService);
+
+            var created = await service.PostPrint(new PrintRequest
+            {
+                GroupId = 1,
+                PrintName = $"NoSTL Print",
+                PrintDescription = "Test",
+                PrintFilament = 1,
+                PrintFilamentUsed = 10,
+                PrintPrinter = 1,
+                PrintRealTime = 10,
+                PrintTime = 10,
+                PrintState = 1,
+                UserId = 1
+            });
+
+            var result = service.GetPrintDetail(1, created.Data, out BaseError? error);
+
+            Assert.Null(error);
+            Assert.False(result.PrintHaveSTL);
+            Assert.Contains("https://fake-url.com/presigned/test.jpg", result.PrintImageData.FileUrl);
+        }
+
         [Fact]
         public async Task DeletePrint_ShouldDeleteSuccessfully()
         {
@@ -202,6 +268,138 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
             var prints = service.GetPrintList(1, new PagedRequest { PageNumber = 1, PageSize = 50 }, out BaseError? error);
             Assert.Null(error);
             Assert.DoesNotContain(prints.prints, p => p.PrintId == printId);
+        }
+
+        [Fact]
+        public void GetPrintComments_ShouldReturnList()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER");
+
+            var repo = new PrintRepository(
+                dataSource,
+                NullLogger<PrintRepository>.Instance);
+
+            var service = new PrintService(
+                repo,
+                _mapper,
+                NullLogger<PrintService>.Instance,
+                _fakeService,
+                _notificationService);
+
+            var result = service.GetPrintComments(1, 1, out BaseError? error);
+
+            Assert.Null(error);
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public void PostPrintComment_ShouldCreateComment()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER");
+
+            var repo = new PrintRepository(
+                dataSource,
+                NullLogger<PrintRepository>.Instance);
+
+            var service = new PrintService(
+                repo,
+                _mapper,
+                NullLogger<PrintService>.Instance,
+                _fakeService,
+                _notificationService);
+
+            var request = new PrintCommentRequest
+            {
+                PrintId = 1,
+                Comment = "Test comment",
+                UserId = 1
+            };
+
+            var result = service.PostPrintComment(request, 1);
+
+            Assert.True(result > 0);
+        }
+
+        [Fact]
+        public async Task UpdatePrintImage_ShouldReturnError_WhenNullImage()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER");
+
+            var repo = new PrintRepository(
+                dataSource,
+                NullLogger<PrintRepository>.Instance);
+
+            var service = new PrintService(
+                repo,
+                _mapper,
+                NullLogger<PrintService>.Instance,
+                _fakeService,
+                _notificationService);
+
+            var result = await service.UpdatePrintImage(1, 1, null);
+
+            Assert.NotNull(result.Error);
+            Assert.Equal(400, result.Error.Code);
+        }
+
+
+        [Fact]
+        public void GetPrintComments_ShouldReturnError_WhenPrintDoesNotExist()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER");
+
+            var repo = new PrintRepository(
+                dataSource,
+                NullLogger<PrintRepository>.Instance);
+
+            var service = new PrintService(
+                repo,
+                _mapper,
+                NullLogger<PrintService>.Instance,
+                _fakeService,
+                _notificationService);
+
+            var result = service.GetPrintComments(1, -999, out BaseError? error);
+
+            Assert.Empty(result);
+        }
+
+        [Fact]
+        public void PostPrintComment_ShouldReturnZero_WhenFails()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER");
+
+            var repo = new PrintRepository(
+                dataSource,
+                NullLogger<PrintRepository>.Instance);
+
+            var service = new PrintService(
+                repo,
+                _mapper,
+                NullLogger<PrintService>.Instance,
+                _fakeService,
+                _notificationService);
+
+            var request = new PrintCommentRequest
+            {
+                PrintId = -999,
+                Comment = "fail",
+                UserId = 1
+            };
+
+            var result = service.PostPrintComment(request, 1);
+
+            Assert.Equal(0, result);
         }
     }
 }

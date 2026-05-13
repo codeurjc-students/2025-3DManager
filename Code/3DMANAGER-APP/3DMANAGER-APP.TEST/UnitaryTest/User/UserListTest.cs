@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
-namespace _3DMANAGER_APP.TEST.UnitaryTest.User
+namespace _3DMANAGER_APP.TEST.UnitaryTest
 {
 
     public class UserListTest
@@ -44,22 +44,22 @@ namespace _3DMANAGER_APP.TEST.UnitaryTest.User
             int groupId = 1;
 
             var dbResponse = new List<UserListResponseDbObject>
-            {
-                new UserListResponseDbObject
                 {
-                    UserId = 1,
-                    UserName = "user1",
-                    UserHours = 3720,
-                    UserNumberPrints = 4
-                },
-                new UserListResponseDbObject
-                {
-                    UserId = 2,
-                    UserName = "user2",
-                    UserHours = 780,
-                    UserNumberPrints = 4
-                }
-            };
+                    new UserListResponseDbObject
+                    {
+                        UserId = 1,
+                        UserName = "user1",
+                        UserHours = 3720,
+                        UserNumberPrints = 4
+                    },
+                    new UserListResponseDbObject
+                    {
+                        UserId = 2,
+                        UserName = "user2",
+                        UserHours = 780,
+                        UserNumberPrints = 4
+                    }
+                };
 
             bool outError;
 

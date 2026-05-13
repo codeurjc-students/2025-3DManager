@@ -29,6 +29,27 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         }
 
         [Fact]
+        public async Task CreateUser_ShouldReturnSuccess()
+        {
+            var form = new MultipartFormDataContent
+            {
+                { new StringContent("newuser@test.com"), "UserEmail" },
+                { new StringContent("New User"), "UserName" },
+                { new StringContent("123456"), "UserPassword" }
+            };
+
+            var response = await _client.PostAsync("/api/v1/users", form);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var content = await response.Content.ReadFromJsonAsync<CommonResponse<int>>();
+
+            Assert.NotNull(content);
+            Assert.True(content.Data > 0);
+        }
+
+
+        [Fact]
         public async Task UpdateUser_ShouldReturnSuccess()
         {
             var detailResponse = await _client.GetAsync("/api/v1/users/1");
@@ -74,6 +95,41 @@ namespace _3DMANAGER_APP.TEST.E2ETest
             Assert.True(content.Data.userId > 0);
         }
 
+        [Fact]
+        public async Task GetUserDetail_ShouldReturnServerError_WhenUserDoesNotExist()
+        {
+            var response = await _client.GetAsync("/api/v1/users/-1");
 
+            Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task UpdateUserImage_ShouldFail()
+        {
+            var image = new ByteArrayContent(new byte[] { 1, 2, 3 });
+            image.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/png");
+
+            var form = new MultipartFormDataContent
+            {
+                { image, "imageFile", "test.png" }
+            };
+
+            var response = await _client.PostAsync("/api/v1/users/1/image", form);
+
+            Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task DeleteUserImage_ShouldReturnSuccess()
+        {
+            var response = await _client.DeleteAsync("/api/v1/users/1/image");
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var content = await response.Content.ReadFromJsonAsync<CommonResponse<bool>>();
+
+            Assert.NotNull(content);
+            Assert.True(content.Data);
+        }
     }
 }

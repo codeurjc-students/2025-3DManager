@@ -44,6 +44,35 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         }
 
         [Fact]
+        public async Task GetPrintDetail_ShouldReturnServerError_WhenPrintDoesNotExist()
+        {
+            var response = await _client.GetAsync("/api/v1/prints/-1");
+
+            Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task CreatePrint_ShouldReturnSuccess()
+        {
+            var form = new MultipartFormDataContent
+        {
+            { new StringContent("Test Print"), "PrintName" },
+            { new StringContent("Test Description"), "PrintDescription" },
+            { new StringContent("1"), "PrinterId" },
+            { new StringContent("1"), "FilamentId" }
+        };
+
+            var response = await _client.PostAsync("/api/v1/prints", form);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var content = await response.Content.ReadFromJsonAsync<CommonResponse<int>>();
+
+            Assert.NotNull(content);
+            Assert.True(content.Data > 0);
+        }
+
+        [Fact]
         public async Task UpdatePrinter_ShouldReturnSuccess()
         {
             var detailResponse = await _client.GetAsync("/api/v1/prints/1");
@@ -71,6 +100,38 @@ namespace _3DMANAGER_APP.TEST.E2ETest
 
             Assert.NotNull(updateContent);
             Assert.True(updateContent.Data);
+        }
+
+        [Fact]
+        public async Task PostPrintComment_ShouldReturnSuccess()
+        {
+            var request = new PrintCommentRequest
+            {
+                PrintId = 1,
+                UserId = 1,
+                Comment = "Test comment"
+            };
+
+            var response = await _client.PostAsJsonAsync("/api/v1/prints/1/comments", request);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var content = await response.Content.ReadFromJsonAsync<CommonResponse<int>>();
+
+            Assert.NotNull(content);
+            Assert.True(content.Data > 0);
+        }
+        [Fact]
+        public async Task GetPrintComments_ShouldReturnSuccess()
+        {
+            var response = await _client.GetAsync("/api/v1/prints/1/comments");
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var content = await response.Content.ReadFromJsonAsync<CommonResponse<List<PrintCommentObject>>>();
+
+            Assert.NotNull(content);
+            Assert.NotNull(content.Data);
         }
 
         [Fact]

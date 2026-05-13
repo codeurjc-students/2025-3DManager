@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import PrintListDetail from "../components/PrintListDetail";
 import { useAuth } from "../context/AuthContext";
@@ -21,13 +21,7 @@ const UserDetailPage: React.FC = () => {
     const isMyUser = user?.userId == Number(userId) && user?.rolId != "Usuario-Invitado";
     const { showPopup, closePopup } = usePopupContext();
 
-
-    useEffect(() => {
-        refreshUser();
-    }, [userId]);
-
-
-    const refreshUser = async () => {
+    const refreshUser = useCallback(async () => {
         const response = await getUserDetail(Number(userId));
         const user = response.data;
 
@@ -37,8 +31,11 @@ const UserDetailPage: React.FC = () => {
             setName(user.userName || "");
             setEmail(user.userEmail || "");
         }
-    };
+    }, [userId]);
 
+    useEffect(() => {
+        refreshUser();
+    }, [refreshUser]);
 
     const handleUpdate = async () => {
         try {
@@ -144,7 +141,7 @@ const UserDetailPage: React.FC = () => {
     };
 
     const handleBack = () => {
-        if (user!.groupId) {
+        if (user?.groupId) {
             navigate("/dashboard");
         } else {
             navigate("/group");
@@ -171,7 +168,8 @@ const UserDetailPage: React.FC = () => {
                         action="Eliminar tu usuario"
                         onCancel={() => closePopup()}
                         onConfirm={async () => {
-                            const response = await deleteUser(user?.userId!);
+                            if (!user) return;
+                            const response = await deleteUser(user.userId);
 
                             if (response.data) {
                                 showPopup({

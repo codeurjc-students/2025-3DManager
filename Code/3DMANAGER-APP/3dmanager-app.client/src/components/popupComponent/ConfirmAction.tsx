@@ -1,5 +1,7 @@
 ﻿import ConfirmPopup from "./ConfirmPopup";
 import InfoPopup from "./InfoPopup";
+import type { CommonResponse } from "../../models/base/CommonResponse";
+import type { PopupData } from "../../models/popup/PopupData";
 
 export const confirmAction = ({
     action,
@@ -12,12 +14,12 @@ export const confirmAction = ({
     reopenGroupPopup
 }: {
     action: string;
-    service: () => Promise<any>;
+    service: () => Promise<CommonResponse<unknown>>;
     successMessage: string;
     errorMessage: string;
     onSuccess?: () => void | Promise<void>;
     onError?: () => void;
-    showPopup: any;
+    showPopup: (props: PopupData) => void;
     reopenGroupPopup: () => void;
 }) => {
 

@@ -1,4 +1,5 @@
 import apiClient from './apiClient'
+import { handleApiError } from '../models/base/handleApiError';
 import type { CommonResponse } from '../models/base/CommonResponse'
 import type { FilamentListResponse } from '../models/filament/FilamentListResponse';
 import type { FilamentRequest } from '../models/filament/FilamentRequest';
@@ -10,19 +11,11 @@ export const getFilamentList = async (): Promise<CommonResponse<FilamentListResp
     try {
         const response = await apiClient.get<CommonResponse<FilamentListResponse[]>>(`/v1/filaments`);
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: undefined,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al recoger el listado de filamentos"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<FilamentListResponse[]>(
+            error,
+            "Error al recoger el listado de filamentos"
+        );
     }
 }
 
@@ -48,19 +41,11 @@ export const postFilament = async (data: FilamentRequest): Promise<CommonRespons
         const response = await apiClient.post<CommonResponse<number>>(`/v1/filaments`, formData,
             { headers: { "Content-Type": "multipart/form-data" } })
         return response.data
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: undefined,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al crear un filamento"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<number>(
+            error,
+            "Error al crear filamento"
+        );
     }
 }
 
@@ -69,19 +54,11 @@ export const updateFilament = async (data: FilamentUpdateRequest): Promise<Commo
     try {
         const response = await apiClient.put<CommonResponse<boolean>>(`/v1/filaments/${data.filamentId}`, data);
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: false,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al actualizar un filamento"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<boolean>(
+            error,
+            "Error al actualizar el filamento"
+        );
     }
 }
 
@@ -89,19 +66,11 @@ export const getFilamentDetail = async (filamentId: number): Promise<CommonRespo
     try {
         const response = await apiClient.get<CommonResponse<FilamentDetailObject>>(`/v1/filaments/${filamentId}`);
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: undefined,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al obtener el detalle de un filamento"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<FilamentDetailObject>(
+            error,
+            "Error al obtener el detalle de filamento"
+        );
     }
 }
 
@@ -109,19 +78,11 @@ export const deleteFilament = async (filamentId: number): Promise<CommonResponse
     try {
         const response = await apiClient.delete<CommonResponse<boolean>>(`/v1/filaments/${filamentId}`);
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: false,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al tratar de eliminar un filamento"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<boolean>(
+            error,
+            "Error al eliminar un filamento"
+        );
     }
 }
 
@@ -133,19 +94,11 @@ export const updateFilamentImage = async (filamentId: number, file: File): Promi
         const response = await apiClient.put<CommonResponse<boolean>>(`/v1/filaments/${filamentId}/image`,
             formData, { headers: { "Content-Type": "multipart/form-data" } });
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-
-        if (backendResponse?.error) return backendResponse;
-
-        return {
-            data: false,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error al actualizar la imagen del filamento"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<boolean>(
+            error,
+            "Error al actualizar la imagen de filamento"
+        );
     }
 };
 
@@ -153,19 +106,10 @@ export const deleteFilamentImage = async (filamentId: number): Promise<CommonRes
     try {
         const response = await apiClient.delete<CommonResponse<boolean>>(`/v1/filaments/${filamentId}/image`);
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-
-        if (backendResponse?.error) return backendResponse;
-        return {
-            data: false,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error al eliminar la imagen del filamento"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<boolean>(
+            error,
+            "Error al eliminar la imagen de filamento"
+        );
     }
 };
-
-

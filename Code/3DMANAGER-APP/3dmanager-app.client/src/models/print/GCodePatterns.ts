@@ -44,7 +44,7 @@ export function parseGcodeData(text: string) {
     let timeValue = 0;
     let filamentValue = 0;
 
-    for (let line of lines) {
+    for (const line of lines) {
         const cleanLine = line.trim();
         for (const pattern of timePatterns) {
             const match = pattern.regex.exec(cleanLine);

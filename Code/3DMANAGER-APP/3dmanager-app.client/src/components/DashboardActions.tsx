@@ -14,7 +14,7 @@ const DashboardActions: React.FC = () => {
         if (user!.rolId == "Usuario-Base" || user!.rolId == "Usuario-Manager")
             setPermission(true);
         else setPermission(false);
-    }, []);
+    }, [user]);
 
     const handleAddInventory = async () => {
         showPopup({

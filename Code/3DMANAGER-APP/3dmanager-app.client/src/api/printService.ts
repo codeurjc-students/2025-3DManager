@@ -6,24 +6,17 @@ import type { PrintDetailRequest } from '../models/print/PrintDetailRequest';
 import type { PrintDetailObject } from '../models/print/PrintDetailObject';
 import type { PrintCommentRequest } from '../models/print/PrintCommentRequest';
 import type { PrintCommentObject } from '../models/print/PrintCommentObject';
+import { handleApiError } from '../models/base/handleApiError';
 
 export const getPrintList = async (pageNumber: number, pageSize: number): Promise<CommonResponse<PrintListResponse>> => {
     try {
         const response = await apiClient.get<CommonResponse<PrintListResponse>>(`/v1/prints?pageNumber=${pageNumber}&pageSize=${pageSize}`);
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: undefined,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al traer el listado de impresiones"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<PrintListResponse>(
+            error,
+            "Error al obtener listado de impresiones"
+        );
     }
 }
 
@@ -49,19 +42,11 @@ export const postPrint = async (data: PrintRequest): Promise<CommonResponse<numb
         const response = await apiClient.post<CommonResponse<number>>(`/v1/prints`, formData,
             { headers: { "Content-Type": "multipart/form-data" } })
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: undefined,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al crear una impresion"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<number>(
+            error,
+            "Error al crear impresión"
+        );
     }
 }
 
@@ -69,19 +54,11 @@ export const GetPrintListByType = async (pageNumber: number, pageSize: number , 
     try {
         const response = await apiClient.get<CommonResponse<PrintListResponse>>(`/v1/prints/type/${type}/${id}?pageNumber=${pageNumber}&pageSize=${pageSize}`);
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: undefined,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al traer el listado de impresiones para el detalle"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<PrintListResponse>(
+            error,
+            "Error al tarer el listado de impresiones"
+        );
     }
 }
 
@@ -89,19 +66,11 @@ export const updatePrint = async (data: PrintDetailRequest): Promise<CommonRespo
     try {
         const response = await apiClient.put<CommonResponse<boolean>>(`/v1/prints/${data.printId}`, data);
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: false,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al actualizar la impresión"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<boolean>(
+            error,
+            "Error al actualizar la impresión"
+        );
     }
 }
 
@@ -109,19 +78,11 @@ export const getPrintDetail = async (printId: number): Promise<CommonResponse<Pr
     try {
         const response = await apiClient.get<CommonResponse<PrintDetailObject>>(`/v1/prints/${printId}`);
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: undefined,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al obtener el detalle de impresión"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<PrintDetailObject>(
+            error,
+            "Error al obtener el detalle de impresión"
+        );
     }
 }
 
@@ -129,19 +90,11 @@ export const getPrintComments = async (printId: number): Promise<CommonResponse<
     try {
         const response = await apiClient.get(`/v1/prints/${printId}/comments`);
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: undefined,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al obtener el listado de comentarios"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<PrintCommentObject[]>(
+            error,
+            "Error al obtener los comentarios sobre la impresión"
+        );
     }
 };
 
@@ -149,19 +102,11 @@ export const postPrintComment = async (data: PrintCommentRequest): Promise<Commo
     try {
         const response = await apiClient.post(`/v1/prints/${data.printId}/comments`, data);
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: undefined,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al añadir un comentario sobre una impresion"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<number>(
+            error,
+            "Error al comentar en la impresión"
+        );
     }
 };
 
@@ -170,19 +115,11 @@ export const deletePrint = async (printId: number): Promise<CommonResponse<boole
     try {
         const response = await apiClient.delete<CommonResponse<boolean>>(`/v1/prints/${printId}`);
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: false,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al tratar de eliminar una impresión"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<boolean>(
+            error,
+            "Error al eliminar una impresión"
+        );
     }
 }
 
@@ -194,19 +131,11 @@ export const updatePrintImage = async (printId: number, file: File): Promise<Com
         const response = await apiClient.post<CommonResponse<boolean>>(`/v1/prints/${printId}/image`,
             formData, { headers: { "Content-Type": "multipart/form-data" } });
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-
-        if (backendResponse?.error) return backendResponse;
-
-        return {
-            data: false,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error al actualizar el fichero STL de la pieza"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<boolean>(
+            error,
+            "Error al actualizar el fichero STL de la impresión"
+        );
     }
 };
 
@@ -214,19 +143,11 @@ export const deletePrintImage = async (printId: number): Promise<CommonResponse<
     try {
         const response = await apiClient.delete<CommonResponse<boolean>>(`/v1/prints/${printId}/image`);
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-
-        if (backendResponse?.error) return backendResponse;
-
-        return {
-            data: false,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error al eliminar el fichero STL de la impresora"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<boolean>(
+            error,
+            "Error al eliminar la imagen de impresión"
+        );
     }
 };
 
@@ -234,19 +155,11 @@ export const deletePrintComment = async (commentId: number): Promise<CommonRespo
     try {
         const response = await apiClient.delete(`/v1/prints/comments/${commentId}`);
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: undefined,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al eliminar un comentario sobre una impresion"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<boolean>(
+            error,
+            "Error al eliminar un comentario"
+        );
     }
 };
 

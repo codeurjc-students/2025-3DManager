@@ -12,11 +12,12 @@ export const STLViewer = ({ fileUrl }: STLViewerProps) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!mountRef.current || !fileUrl) return;
+        const mount = mountRef.current;
+        if (!mount || !fileUrl) return;
         setLoading(true);
 
-        const width = mountRef.current.clientWidth;
-        const height = mountRef.current.clientHeight;
+        const width = mount.clientWidth;
+        const height = mount.clientHeight;
 
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0xffffff);
@@ -28,7 +29,7 @@ export const STLViewer = ({ fileUrl }: STLViewerProps) => {
         renderer.setSize(width, height);
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFShadowMap;
-        mountRef.current.appendChild(renderer.domElement);
+        mount.appendChild(renderer.domElement);
 
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
@@ -107,8 +108,7 @@ export const STLViewer = ({ fileUrl }: STLViewerProps) => {
             });
             renderer.dispose();
             renderer.forceContextLoss();
-            renderer.domElement = null as any;
-            mountRef.current?.replaceChildren();
+            mount.replaceChildren();
         };
     }, [fileUrl]);
 
