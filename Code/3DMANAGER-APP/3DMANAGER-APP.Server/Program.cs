@@ -152,12 +152,12 @@ builder.Services.AddAuthentication(options =>
     {
         OnMessageReceived = context =>
         {
-            var token = context.Request.Cookies["accessToken"];
+            var tokenFromCookie = context.Request.Cookies["accessToken"];
 
-            if (!string.IsNullOrEmpty(token))
-            {
-                context.Token = token;
-            }
+            var tokenFromHeader = context.Request.Headers["Authorization"]
+                .FirstOrDefault()?.Replace("Bearer ", "");
+
+            context.Token = tokenFromCookie ?? tokenFromHeader;
 
             return Task.CompletedTask;
         }
