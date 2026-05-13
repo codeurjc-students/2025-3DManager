@@ -88,6 +88,162 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
             Assert.True(result.GroupTotalFilament >= 0);
         }
 
+        [Fact]
+        public void GetGroupBasicData_ShouldReturnValidData()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER"
+            );
+
+            var groupRepository = new GroupRepository(
+                dataSource,
+                NullLogger<GroupRepository>.Instance
+            );
+
+            var service = new GroupService(
+                groupRepository,
+                _mapper,
+                NullLogger<GroupService>.Instance,
+                _fakeABSService,
+                _notificationService
+            );
+
+            var result = service.GetGroupBasicData(1, out BaseError? error);
+
+            Assert.Null(error);
+            Assert.NotNull(result);
+            Assert.Equal(1, result.GroupId);
+        }
+
+        [Fact]
+        public void GetGroupBasicData_ShouldReturnError_WhenGroupDoesNotExist()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER"
+            );
+
+            var groupRepository = new GroupRepository(
+                dataSource,
+                NullLogger<GroupRepository>.Instance
+            );
+
+            var service = new GroupService(
+                groupRepository,
+                _mapper,
+                NullLogger<GroupService>.Instance,
+                _fakeABSService,
+                _notificationService
+            );
+
+            var result = service.GetGroupBasicData(-1, out BaseError? error);
+
+            Assert.NotNull(error);
+            Assert.Equal(500, error.code);
+        }
+
+        [Fact]
+        public void PostNewGroup_ShouldCreateSuccessfully()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER"
+            );
+
+            var groupRepository = new GroupRepository(
+                dataSource,
+                NullLogger<GroupRepository>.Instance
+            );
+
+            var service = new GroupService(
+                groupRepository,
+                _mapper,
+                NullLogger<GroupService>.Instance,
+                _fakeABSService,
+                _notificationService
+            );
+
+            var request = new GroupRequest
+            {
+                GroupName = "Nuevo grupo",
+                UserId = 1
+            };
+
+            var result = service.PostNewGroup(request, out BaseError? error);
+
+            Assert.True(result);
+            Assert.Null(error);
+        }
+
+        [Fact]
+        public void PostNewGroup_ShouldReturnConflict_WhenNameExists()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER"
+            );
+
+            var groupRepository = new GroupRepository(
+                dataSource,
+                NullLogger<GroupRepository>.Instance
+            );
+
+            var service = new GroupService(
+                groupRepository,
+                _mapper,
+                NullLogger<GroupService>.Instance,
+                _fakeABSService,
+                _notificationService
+            );
+
+            var groupName = $"Nuevo grupo";
+
+            var request = new GroupRequest
+            {
+                GroupName = groupName,
+                UserId = 1
+            };
+
+            service.PostNewGroup(request, out _);
+            var result = service.PostNewGroup(request, out BaseError? error);
+
+            Assert.False(result);
+            Assert.NotNull(error);
+            Assert.Equal(409, error.code);
+        }
+
+        [Fact]
+        public void UpdateGroupData_ShouldUpdateSuccessfully()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER"
+            );
+
+            var groupRepository = new GroupRepository(
+                dataSource,
+                NullLogger<GroupRepository>.Instance
+            );
+
+            var service = new GroupService(
+                groupRepository,
+                _mapper,
+                NullLogger<GroupService>.Instance,
+                _fakeABSService,
+                _notificationService
+            );
+
+            var request = new GroupRequest
+            {
+                GroupName = "Grupo Actualizado",
+                UserId = 1
+            };
+
+            var result = service.UpdateGroupData(request, 1);
+
+            Assert.True(result);
+        }
 
     }
 }

@@ -69,7 +69,7 @@ const CreatePrint3DPage: React.FC = () => {
         };
 
         loadCatalog();
-    }, []);
+    }, [showPopup]);
 
 
 
@@ -183,9 +183,9 @@ que el tiempo real de impresión tiene al menos minutos agregados" />
         }
         
         try {
-            let groupId = -1;
-            let userId = -1;
-            let printRealTime = printRealTimeH * 3600 + printRealTimeM * 60;
+            const groupId = -1;
+            const userId = -1;
+            const printRealTime = printRealTimeH * 3600 + printRealTimeM * 60;
             const response = await postPrint({
                 userId,
                 printName,
@@ -235,7 +235,7 @@ que el tiempo real de impresión tiene al menos minutos agregados" />
                         <p className="ms-3">Agrega el fichero .gcode antes de la impresión y selecciona la impresora para obtener un tiempo estimado real en base
                         al histórico</p>
                         <div className="ms-3 me-3 p-2">
-                            <label htmlFor="gcodeFileEstimation" className="form-label">Archivo GCODE para estimacion</label>
+                            <label htmlFor="gcodeFileEstimation" className="form-label">Archivo GCODE para estimación:</label>
                             <input
                                 type="file"
                                 id="gcodeFileEstimation"
@@ -244,7 +244,7 @@ que el tiempo real de impresión tiene al menos minutos agregados" />
                                 onChange={handleFileUploadEstimation}
                             />
                             <div className="mt-2">
-                                <label htmlFor="printPrinterEstimation" className="form-label">Impresora para estimar tiempo</label>
+                                <label htmlFor="printPrinterEstimation" className="form-label">Impresora para estimar tiempo:</label>
                                 <select id="printPrinterEstimation" className="input-value w-100" value={printPrinterEstimation ?? 0}
                                     onChange={(e) => setPrintPrinterEstimation(Number(e.target.value))}>
                                     <option value={0}>Seleccione una impresora para la estimación</option>

@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+﻿import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import PrintListDetail from "../components/PrintListDetail";
 import { useAuth } from "../context/AuthContext";
@@ -27,13 +27,8 @@ const FilamentDetailPage: React.FC = () => {
     const [remainingLenght, setRemainingLenght] = useState<number>(0);
     const isManager = user?.rolId === "Usuario-Manager";
     const { showPopup, closePopup } = usePopupContext();
-    
-    useEffect(() => {
-        refreshFilament();
-    }, [filamentId]);
 
-
-    const refreshFilament = async () => {
+    const refreshFilament = useCallback( async () => {
         const stateResponse = await getFilamentState();
         setStateData(stateResponse.data!);
 
@@ -51,8 +46,11 @@ const FilamentDetailPage: React.FC = () => {
             setTemperature(filament.filamentTemperature || 0);
             setCost(filament.filamentCost || 0);
         }
-    };
+    }, [filamentId]);
 
+    useEffect(() => {
+        refreshFilament();
+    }, [refreshFilament]);
 
     const handleUpdate = async () => {
         

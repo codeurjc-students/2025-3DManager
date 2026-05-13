@@ -195,24 +195,87 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/FilamentRequest"
-              }
-            },
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FilamentRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FilamentRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/FilamentRequest"
+                "type": "object",
+                "properties": {
+                  "GroupId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "FilamentName": {
+                    "type": "string"
+                  },
+                  "FilamentType": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "FilamentWeight": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "FilamentColor": {
+                    "type": "string"
+                  },
+                  "FilamentTemperature": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "FilamentLenght": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "FilamentThickness": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "FilamentCost": {
+                    "type": "number",
+                    "format": "double"
+                  },
+                  "FilamentDescription": {
+                    "type": "string"
+                  },
+                  "ImageFile": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "GroupId": {
+                  "style": "form"
+                },
+                "FilamentName": {
+                  "style": "form"
+                },
+                "FilamentType": {
+                  "style": "form"
+                },
+                "FilamentWeight": {
+                  "style": "form"
+                },
+                "FilamentColor": {
+                  "style": "form"
+                },
+                "FilamentTemperature": {
+                  "style": "form"
+                },
+                "FilamentLenght": {
+                  "style": "form"
+                },
+                "FilamentThickness": {
+                  "style": "form"
+                },
+                "FilamentCost": {
+                  "style": "form"
+                },
+                "FilamentDescription": {
+                  "style": "form"
+                },
+                "ImageFile": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -1174,124 +1237,6 @@
             }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanCommonResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanCommonResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanCommonResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/prints/{printId}/image": {
-      "delete": {
-        "tags": [
-          "Printers"
-        ],
-        "parameters": [
-          {
-            "name": "printId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanCommonResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanCommonResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanCommonResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Prints"
-        ],
-        "parameters": [
-          {
-            "name": "printId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "ImageFile": {
-                    "type": "string",
-                    "format": "binary"
-                  }
-                }
-              },
-              "encoding": {
-                "ImageFile": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "OK",
@@ -2340,6 +2285,124 @@
         }
       }
     },
+    "/api/v1/prints/{printId}/image": {
+      "post": {
+        "tags": [
+          "Prints"
+        ],
+        "parameters": [
+          {
+            "name": "printId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ImageFile": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "ImageFile": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Prints"
+        ],
+        "parameters": [
+          {
+            "name": "printId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/prints/comments/{commentId}": {
       "delete": {
         "tags": [
@@ -2753,6 +2816,35 @@
         }
       }
     },
+    "/api/v1/users/logout": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanCommonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/users/{userId}": {
       "put": {
         "tags": [
@@ -2883,7 +2975,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -3250,57 +3343,6 @@
             "items": {
               "$ref": "#/components/schemas/FilamentListResponse"
             },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "FilamentRequest": {
-        "type": "object",
-        "properties": {
-          "groupId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "filamentName": {
-            "type": "string",
-            "nullable": true
-          },
-          "filamentType": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "filamentWeight": {
-            "type": "number",
-            "format": "double"
-          },
-          "filamentColor": {
-            "type": "string",
-            "nullable": true
-          },
-          "filamentTemperature": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "filamentLenght": {
-            "type": "number",
-            "format": "double"
-          },
-          "filamentThickness": {
-            "type": "number",
-            "format": "double"
-          },
-          "filamentCost": {
-            "type": "number",
-            "format": "double"
-          },
-          "filamentDescription": {
-            "type": "string",
-            "nullable": true
-          },
-          "imageFile": {
-            "type": "string",
-            "format": "binary",
             "nullable": true
           }
         },

@@ -30,6 +30,36 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         }
 
         [Fact]
+        public async Task GetPrinterList_ShouldReturnBadRequest_WhenServiceReturnsError()
+        {
+            var response = await _client.GetAsync("/api/v1/printers?forceError=true");
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task CreatePrinter_ShouldReturnSuccess()
+        {
+            var form = new MultipartFormDataContent
+            {
+                { new StringContent("Test Printer"), "PrinterName" },
+                { new StringContent("Test Model"), "PrinterModel" },
+                { new StringContent("Test Description"), "PrinterDescription" },
+                { new StringContent("1"), "PrinterStateId" }
+            };
+
+            var response = await _client.PostAsync("/api/v1/printers", form);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var content = await response.Content.ReadFromJsonAsync<CommonResponse<int>>();
+
+            Assert.NotNull(content);
+            Assert.True(content.Data > 0);
+        }
+
+
+        [Fact]
         public async Task UpdatePrinter_ShouldUpdatePrinterSuccessfully()
         {
             var request = new PrinterDetailRequest
@@ -53,11 +83,33 @@ namespace _3DMANAGER_APP.TEST.E2ETest
             Assert.True(content.Data);
         }
 
+
+        [Fact]
+        public async Task GetPrinterDetail_ShouldReturnSuccess()
+        {
+            var response = await _client.GetAsync("/api/v1/printers/1");
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var content = await response.Content.ReadFromJsonAsync<CommonResponse<PrinterDetailObject>>();
+
+            Assert.NotNull(content);
+            Assert.NotNull(content.Data);
+        }
+
+        [Fact]
+        public async Task GetPrinterDetail_ShouldReturnServerError_WhenPrinterDoesNotExist()
+        {
+            var response = await _client.GetAsync("/api/v1/printers/-1");
+
+            Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+        }
+
         [Fact]
         public async Task DeletePrinter_ShouldReturnSuccess()
         {
 
-            var printerId = 1;
+            var printerId = 4;
 
             var response = await _client.DeleteAsync($"/api/v1/printers/{printerId}");
 

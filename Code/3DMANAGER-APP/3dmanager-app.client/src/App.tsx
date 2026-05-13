@@ -1,8 +1,8 @@
 import './App.css'
 import React  from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext";
-import { PopupProvider } from "./context/PopupContext";
+import { AuthProvider } from "./context/AuthProvider";
+import { PopupProvider } from "./context/PopupProvider";
 import { ProtectedRoute } from './context/ProtectedRoute';
 import Header from "./components/Header";
 import LoginPage from "./pages/LoginPage";
@@ -20,7 +20,7 @@ import UserDetailPage from './pages/UserDetailPage';
 import FilamentDetailPage from './pages/FilamentDetailsPage';
 import PrintDetailPage from './pages/PrintDetailsPage';
 import ErrorPage from './pages/ErrorPage';
-import { NotificationProvider } from './context/NotificationContext';
+import { NotificationProvider } from './context/NotificationProvider';
 
 
 

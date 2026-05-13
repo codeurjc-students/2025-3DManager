@@ -9,8 +9,10 @@ import {
     Rectangle,
 } from "recharts";
 
-const CustomBar = (props: any) => {
-    const { fill, x, y, width, height } = props;
+import type { RectangleProps } from "recharts";
+
+const CustomBar = (props: RectangleProps) => {
+    const { fill, x = 0, y = 0, width = 0, height = 0 } = props;
     return <Rectangle x={x} y={y} width={width} height={height} fill={fill} />;
 };
 

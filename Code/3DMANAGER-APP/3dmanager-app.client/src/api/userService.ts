@@ -6,6 +6,7 @@ import type { LoginRequest } from '../models/user/LoginRequest'
 import type { UserListResponse } from '../models/user/UserListResponse'
 import type { UserUpdateRequest } from '../models/user/UserUpdateRequest'
 import type { UserDetailObject } from '../models/user/UserDetailObject'
+import { handleApiError } from '../models/base/handleApiError';
 
 export const postNewUser = async (data: UserCreateRequest): Promise<CommonResponse<number>> => {
     const formData = new FormData();
@@ -32,25 +33,27 @@ export const LoginGuest = async (): Promise<CommonResponse<LoginResponse>> => {
     const response = await apiClient.post<CommonResponse<LoginResponse>>('/v1/users/login/guest');
     return response.data;
 }
-
+export const logoutUser = async (): Promise<CommonResponse<boolean>> => {
+    try {
+        const response = await apiClient.post<CommonResponse<boolean>>(`/v1/users/logout`);
+        return response.data;
+    } catch (error: unknown) {
+        return handleApiError<boolean>(
+            error,
+            "Error al hacer logout usuario"
+        );
+    }
+}
 export const getUserList = async (): Promise<CommonResponse<UserListResponse[]>> => {
 
     try {
         const response = await apiClient.get<CommonResponse<UserListResponse[]>>("/v1/users");
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: undefined,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al obtener el listado de usuarios"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<UserListResponse[]>(
+            error,
+            "Error al obtener el listado de usuario"
+        );
     }
 }
 
@@ -64,23 +67,15 @@ export const postUserInvitation = async (userId: number): Promise<CommonResponse
     try {
         const response = await apiClient.post<CommonResponse<boolean>>(`/v1/users/invitations/${userId}`);
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: false,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al enviar una invitacion al grupo"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<boolean>(
+            error,
+            "Error al enviar invitación de usuario"
+        );
     }
 }
 
-export const GetUserAuth = async (): Promise<{ userId: number; groupId: number | null; rolId: string | null; groupName: string | null; token: string | null; }> => {
+export const GetUserAuth = async (): Promise<{ userId: number; groupId: number | null; rolId: string | null; groupName: string | null;}> => {
     const response = await apiClient.get("/v1/users/auth");
     return response.data;
 };
@@ -89,19 +84,11 @@ export const updateUser = async (data: UserUpdateRequest): Promise<CommonRespons
     try {
         const response = await apiClient.put<CommonResponse<boolean>>(`/v1/users/${data.userId}`, data);
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: false,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al actualizar el usuario"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<boolean>(
+            error,
+            "Error al actualizar usuario"
+        );
     }
 }
 
@@ -110,19 +97,11 @@ export const getUserDetail = async (userId: number): Promise<CommonResponse<User
     try {
         const response = await apiClient.get<CommonResponse<UserDetailObject>>(`/v1/users/${userId}`);
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: undefined,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al obtener el detalle de usuario"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<UserDetailObject>(
+            error,
+            "Error al obtener el detalle de usuario"
+        );
     }
 }
 
@@ -134,19 +113,11 @@ export const updateUserImage = async (userId: number, file: File): Promise<Commo
         const response = await apiClient.post<CommonResponse<boolean>>(`/v1/users/${userId}/image`,
             formData, { headers: { "Content-Type": "multipart/form-data" } });
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-
-        if (backendResponse?.error) return backendResponse;
-
-        return {
-            data: false,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error al actualizar la imagen del usuario"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<boolean>(
+            error,
+            "Error al actualziar la foto de usuario"
+        );
     }
 };
 
@@ -154,19 +125,12 @@ export const deleteUserImage = async (userId: number): Promise<CommonResponse<bo
     try {
         const response = await apiClient.delete<CommonResponse<boolean>>(`/v1/users/${userId}/image`);
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-
-        if (backendResponse?.error) return backendResponse;
-        return {
-            data: false,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error al eliminar la imagen del usuario"
-            }
-        };
-    } 
+    } catch (error: unknown) {
+        return handleApiError<boolean>(
+            error,
+            "Error al eliminar la foto de un usuario"
+        );
+    }
 };
 
 export const deleteUser = async (userId : number): Promise<CommonResponse<boolean>> => {
@@ -174,18 +138,10 @@ export const deleteUser = async (userId : number): Promise<CommonResponse<boolea
     try {
         const response = await apiClient.delete<CommonResponse<boolean>>(`/v1/users/${userId}`);
         return response.data;
-    } catch (error: any) {
-        const status = error?.response?.status;
-        const backendResponse = error?.response?.data;
-        if (backendResponse?.error) {
-            return backendResponse;
-        }
-        return {
-            data: false,
-            error: {
-                code: status ?? 500,
-                message: backendResponse?.message ?? "Error desconocido en el servidor al tratar de eliminar el usuario"
-            }
-        };
+    } catch (error: unknown) {
+        return handleApiError<boolean>(
+            error,
+            "Error al eliminar un usuario"
+        );
     }
 }

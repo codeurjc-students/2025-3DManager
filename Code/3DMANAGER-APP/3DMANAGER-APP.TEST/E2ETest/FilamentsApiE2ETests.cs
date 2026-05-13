@@ -44,6 +44,28 @@ namespace _3DMANAGER_APP.TEST.E2ETest
         }
 
         [Fact]
+        public async Task CreateFilament_ShouldReturnCreatedId()
+        {
+            var form = new MultipartFormDataContent
+            {
+                { new StringContent("PLA Test"), "FilamentName" },
+                { new StringContent("#FF0000"), "FilamentColor" },
+                { new StringContent("20"), "FilamentCost" },
+                { new StringContent("Test description"), "FilamentDescription" },
+                { new StringContent("100"), "FilamentLenght" },
+                { new StringContent("210"), "FilamentTemperature" }
+            };
+
+            var response = await _client.PostAsync("/api/v1/filaments", form);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var content = await response.Content.ReadFromJsonAsync<CommonResponse<int>>();
+            Assert.NotNull(content);
+            Assert.True(content.Data > 0);
+        }
+
+        [Fact]
         public async Task UpdateFilament_ShouldReturnSuccess()
         {
             var detailResponse = await _client.GetAsync("/api/v1/filaments/1");
@@ -80,6 +102,24 @@ namespace _3DMANAGER_APP.TEST.E2ETest
             Assert.NotNull(updateContent);
             Assert.True(updateContent.Data);
         }
+
+
+        [Fact]
+        public async Task UpdateFilamentImage_ShouldReturnServerError_WhenServiceFails()
+        {
+            var image = new ByteArrayContent(new byte[] { 1 });
+            image.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/png");
+
+            var form = new MultipartFormDataContent
+    {
+        { image, "imageFile", "bad.png" }
+    };
+
+            var response = await _client.PutAsync("/api/v1/filaments/-1/image", form);
+
+            Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+        }
+
 
         [Fact]
         public async Task DeleteFilament_ShouldReturnSuccess()

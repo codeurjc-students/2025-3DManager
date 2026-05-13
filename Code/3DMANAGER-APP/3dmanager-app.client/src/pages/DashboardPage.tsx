@@ -24,7 +24,7 @@ const DashboardPage: React.FC = () => {
         getGroupDashboardData(user!.groupId!).then(response => {
             setData(response.data ?? null);
         });
-    }, []);
+    }, [user, refresh]);
 
      
     const printerHoursChartData = data

@@ -33,6 +33,8 @@
             await CreateFilamentTableAsync();
             await Create3DPrintTableAsync();
             await CreateNotificationTableAsync();
+            await CreateCommentTableAsync();
+            await CreateLogsTableAsync();
         }
         private async Task CreateStoredProceduresAsync()
         {
@@ -65,6 +67,14 @@
             await CreateProcDeleteFilamentAsync();
             await CreateGetNotificationListPostAsync();
             await CreateMarkReadedPostAsync();
+            await CreateFilamentImagesCRUDAsync();
+            await CreateFilamentLevelAsync();
+            await CreateGroupCRUDAsync();
+            await CreatePrinterImagesCRUDAsync();
+            await CreatePrintImageCRUDAsync();
+            await CreatePrinterCommentCRUDAsync();
+            await CreateUserImageCRUDAsync();
+            await CreatePrintListTimesAsync();
         }
 
         private async Task LoadDataAsync()
@@ -178,6 +188,8 @@
                 DROP TABLE IF EXISTS `3DMANAGER_C_STATE_PRINTER`;
                 DROP TABLE IF EXISTS `3DMANAGER_GROUP`;
                 DROP TABLE IF EXISTS `3DMANAGER_NOTIFICATION`;
+                DROP TABLE IF EXISTS `3DMANAGER_SYSTEM_LOGS`;
+                DROP TABLE IF EXISTS `3DMANAGER_COMMENT`;
                 """;
             await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
         }
@@ -186,10 +198,12 @@
         {
             var sql = """
             CREATE TABLE IF NOT EXISTS `3DMANAGER_GROUP` (
-                `3DMANAGER_GROUP_ID` INT AUTO_INCREMENT PRIMARY KEY,
-                `3DMANAGER_GROUP_NAME` VARCHAR(100) NOT NULL,
-                `3DMANAGER_GROUP_DESCRIPTION` VARCHAR(500),
-                `3DMANAGER_PRINTER_REGISTER_DATE` DATETIME DEFAULT CURRENT_TIMESTAMP
+              `3DMANAGER_GROUP_ID` int NOT NULL AUTO_INCREMENT,
+              `3DMANAGER_GROUP_NAME` varchar(100) NOT NULL,
+              `3DMANAGER_GROUP_DESCRIPTION` varchar(500) DEFAULT NULL,
+              `3DMANAGER_GROUP_REGISTER_DATE` datetime DEFAULT CURRENT_TIMESTAMP,
+              `3DMANAGER_USER_OWNER` int NOT NULL DEFAULT '1',
+              PRIMARY KEY (`3DMANAGER_GROUP_ID`)
             );
             """;
 
@@ -252,19 +266,19 @@
         {
             var sql = """
             CREATE TABLE IF NOT EXISTS `3DMANAGER_USER` (
-                `3DMANAGER_USER_ID` INT AUTO_INCREMENT PRIMARY KEY,
-                `3DMANAGER_USER_NAME` VARCHAR(100) NOT NULL,
-                `3DMANAGER_USER_PASSWORD` VARCHAR(100) NOT NULL,
-                `3DMANAGER_USER_EMAIL` VARCHAR(100) NOT NULL,
-                `3DMANAGER_USER_ROLE` INT NULL,
-                `3DMANAGER_USER_GROUP_ID` INT NOT NULL,
-                `3DMANAGER_USER_PHOTO_URL` VARCHAR(255),
-                `3DMANAGER_USER_REGISTER_DATE` DATETIME DEFAULT CURRENT_TIMESTAMP,
-                `3DMANAGER_USER_IMAGE_URL` varchar(255) DEFAULT NULL,
-                `3DMANAGER_USER_IMAGE_KEY` varchar(255) DEFAULT NULL,
-                FOREIGN KEY (`3DMANAGER_USER_GROUP_ID`)
-                    REFERENCES `3DMANAGER_GROUP` (`3DMANAGER_GROUP_ID`)
+              `3DMANAGER_USER_ID` int AUTO_INCREMENT PRIMARY KEY,
+              `3DMANAGER_USER_NAME` varchar(100) NOT NULL,
+              `3DMANAGER_USER_PASSWORD` varchar(255) NOT NULL,
+              `3DMANAGER_USER_EMAIL` varchar(100) NOT NULL,
+              `3DMANAGER_USER_ROLE` int DEFAULT NULL,
+              `3DMANAGER_USER_GROUP_ID` int DEFAULT NULL,
+              `3DMANAGER_USER_PHOTO_URL` varchar(255) DEFAULT NULL,
+              `3DMANAGER_USER_REGISTER_DATE` datetime DEFAULT CURRENT_TIMESTAMP,
+              `3DMANAGER_USER_IMAGE_URL` varchar(255) DEFAULT NULL,
+              `3DMANAGER_USER_IMAGE_KEY` varchar(255) DEFAULT NULL,
+              `3DMANAGER_USER_DELETED` bit(1) DEFAULT b'0'
             );
+            
             """;
 
             await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
@@ -348,6 +362,38 @@
             await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
         }
 
+        private async Task CreateCommentTableAsync()
+        {
+            var sql = """
+            CREATE TABLE IF NOT EXISTS `3DMANAGER_COMMENT` (
+              `3DMANAGER_COMMENT_ID` int AUTO_INCREMENT PRIMARY KEY,
+              `3DMANAGER_COMMENT_COMMENT` varchar(500) NOT NULL,
+              `3DMANAGER_COMMENT_USER_ID` int NOT NULL,
+              `3DMANAGER_COMMENT_3DPRINT_ID` int NOT NULL,
+              `3DMANAGER_COMMENT_REGISTER_DATE` datetime DEFAULT CURRENT_TIMESTAMP
+            );
+            """;
+
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
+
+        private async Task CreateLogsTableAsync()
+        {
+            var sql = """
+            CREATE TABLE IF NOT EXISTS `3DMANAGER_SYSTEM_LOGS` (
+              `LOG_ID` int NOT NULL AUTO_INCREMENT,
+              `LOG_DATE` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+              `PROCEDURE_NAME` varchar(100) NOT NULL,
+              `ERROR_MESSAGE` varchar(500) NOT NULL,
+              PRIMARY KEY(`LOG_ID`)
+            );
+            """;
+
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
+
+
+
         private async Task CreateProcCFilamentAsync()
         {
             var sql = """
@@ -384,22 +430,39 @@
                 OUT CodigoError INT
             )
             BEGIN
+
+            	DECLARE v_err_msg TEXT;
+                DECLARE EXIT HANDLER FOR SQLEXCEPTION
+            	BEGIN
+            		GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
+
+            		-- Forzar un commit independiente
+            		START TRANSACTION;
+            		INSERT INTO `3DMANAGER_SYSTEM_LOGS`(PROCEDURE_NAME, ERROR_MESSAGE)
+            		VALUES('3DMANAGER_pr_USER_POST', v_err_msg);
+            		COMMIT;
+
+            		SET CodigoError = -1;
+            		ROLLBACK;
+            	END;
+
                 SET CodigoError = 0;
+            	START TRANSACTION;
+            		IF EXISTS (
+            			SELECT 1 FROM `3DMANAGER_USER` WHERE `3DMANAGER_USER_NAME` = P_DS_USER_NAME and `3DMANAGER_USER_DELETED` = 0
+            		) THEN
+            			SET CodigoError = 4091;
+            		ELSEIF EXISTS (
+            			SELECT 1 FROM `3DMANAGER_USER` WHERE `3DMANAGER_USER_EMAIL` = P_DS_USER_EMAIL
+            		) THEN
+            			SET CodigoError = 4092;
+            		ELSE
+            			INSERT INTO `3DMANAGER_USER` (`3DMANAGER_USER_NAME`,`3DMANAGER_USER_PASSWORD`, `3DMANAGER_USER_EMAIL`,`3DMANAGER_USER_ROLE`)
+            			VALUES (P_DS_USER_NAME, P_DS_USER_PASSWORD, P_DS_USER_EMAIL,1);
 
-                INSERT INTO `3DMANAGER_USER`
-                (
-                    `3DMANAGER_USER_NAME`,
-                    `3DMANAGER_USER_PASSWORD`,
-                    `3DMANAGER_USER_EMAIL`
-                )
-                VALUES
-                (
-                    P_DS_USER_NAME,
-                    P_DS_USER_PASSWORD,
-                    P_DS_USER_EMAIL
-                );
-
-                SELECT LAST_INSERT_ID() AS `3DMANAGER_USER_ID`;
+            			SELECT `3DMANAGER_USER_ID` FROM `3DMANAGER_USER` WHERE P_DS_USER_NAME = `3DMANAGER_USER_NAME`;
+            		END IF;
+            	COMMIT;
             END;
             
             """;
@@ -537,26 +600,47 @@
                 OUT CodigoError INT
             )
             BEGIN
-                DECLARE NEW_ID INT;
+            	DECLARE NEW_ID INT;
+
+                DECLARE v_err_msg TEXT;
+                DECLARE EXIT HANDLER FOR SQLEXCEPTION
+            	BEGIN
+            		GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
+
+            		-- Forzar un commit independiente
+            		START TRANSACTION;
+            		INSERT INTO `3DMANAGER_SYSTEM_LOGS`(PROCEDURE_NAME, ERROR_MESSAGE)
+            		VALUES('3DMANAGER_pr_PRINTER_POST', v_err_msg);
+            		COMMIT;
+
+            		SET CodigoError = -1;
+            		ROLLBACK;
+            	END;
+
                 SET CodigoError = 0;
+                IF EXISTS(SELECT 1 FROM `3DMANAGER_PRINTER` WHERE `3DMANAGER_PRINTER_NAME` = P_PRINTER_NAME AND `3DMANAGER_PRINTER_GROUP_ID` = P_GROUP_ID AND `3DMANAGER_PRINTER_DELETED` = 0)
+                THEN
+            		SET CodigoError = 1;
+            	ELSE
+            		START TRANSACTION;
+            		INSERT INTO `3DMANAGER_PRINTER` (
+            			`3DMANAGER_PRINTER_NAME`,
+            			`3DMANAGER_PRINTER_DESCRIPTION`,
+            			`3DMANAGER_PRINTER_STATE`,
+            			`3DMANAGER_PRINTER_MODEL`,
+            			`3DMANAGER_PRINTER_GROUP_ID`
+            		) VALUES (
+            			P_PRINTER_NAME,
+            			P_PRINTER_DESCRIPTION,
+            			1,
+            			P_PRINTER_MODEL,
+            			P_GROUP_ID
+            		);
 
-                INSERT INTO `3DMANAGER_PRINTER` (
-                    `3DMANAGER_PRINTER_NAME`,
-                    `3DMANAGER_PRINTER_DESCRIPTION`,
-                    `3DMANAGER_PRINTER_STATE`,
-                    `3DMANAGER_PRINTER_MODEL`,
-                    `3DMANAGER_PRINTER_GROUP_ID`
-                )
-                VALUES (
-                    P_PRINTER_NAME,
-                    P_PRINTER_DESCRIPTION,
-                    1,
-                    P_PRINTER_MODEL,
-                    P_GROUP_ID
-                );
-
-                SET NEW_ID = LAST_INSERT_ID(); 
-                SELECT NEW_ID AS 3DMANAGER_PRINTER_ID;
+            		SET NEW_ID = LAST_INSERT_ID();
+            		COMMIT;    
+                    SELECT NEW_ID AS `3DMANAGER_PRINTER_ID`;
+            	END IF;
             END;
             
             """;
@@ -889,32 +973,44 @@
             )
             BEGIN
 
-                DECLARE v_err_msg TEXT;
-                    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-                    BEGIN
+            	DECLARE v_err_msg TEXT;
+                DECLARE EXIT HANDLER FOR SQLEXCEPTION
+            	BEGIN
+            		GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
 
-                    GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
-
-                    START TRANSACTION;
-                    INSERT INTO 3DMANAGER_SYSTEM_LOGS(PROCEDURE_NAME, ERROR_MESSAGE)
-
-                    VALUES('3DMANAGER_pr_PRINTER_UPDATE', v_err_msg);
-                    COMMIT;
+            		-- Forzar un commit independiente
+            		START TRANSACTION;
+            		INSERT INTO `3DMANAGER_SYSTEM_LOGS`(PROCEDURE_NAME, ERROR_MESSAGE)
+            		VALUES('3DMANAGER_pr_PRINTER_UPDATE', v_err_msg);
+            		COMMIT;
 
             		SET CodigoError = -1;
-                    ROLLBACK;
+            		ROLLBACK;
             	END;
                 SET CodigoError = 0;
-                    START TRANSACTION;
-                    UPDATE `3DMANAGER_PRINTER` 
-                    SET `3DMANAGER_PRINTER_STATE` = P_CD_STATE ,
-                     `3DMANAGER_PRINTER_NAME` = P_DS_NAME ,
-                     `3DMANAGER_PRINTER_MODEL` = P_DS_MODEL ,
-                     `3DMANAGER_PRINTER_DESCRIPTION` = P_DS_DESCRIPTION
-                    WHERE `3DMANAGER_PRINTER_ID` = P_CD_PRINTER AND `3DMANAGER_PRINTER_GROUP_ID` = P_CD_GROUP;
+                START TRANSACTION;
+            		main_block: BEGIN
+            			IF EXISTS (
+            				SELECT 1
+            				FROM `3DMANAGER_PRINTER`
+            				WHERE `3DMANAGER_PRINTER_NAME` = P_DS_NAME
+            				  AND `3DMANAGER_PRINTER_GROUP_ID` = P_CD_GROUP
+            				  AND `3DMANAGER_PRINTER_ID` <> P_CD_PRINTER
+            			) THEN
+            				SET CodigoError = 4091; 
+                            leave main_block;
+            			END IF;
 
-                    SELECT ROW_COUNT() AS Total;
-                    COMMIT;
+            			UPDATE `3DMANAGER_PRINTER` 
+            			SET `3DMANAGER_PRINTER_STATE` = P_CD_STATE ,
+            			 `3DMANAGER_PRINTER_NAME` = P_DS_NAME ,
+            			 `3DMANAGER_PRINTER_MODEL` = P_DS_MODEL ,
+            			 `3DMANAGER_PRINTER_DESCRIPTION` = P_DS_DESCRIPTION 
+            			WHERE `3DMANAGER_PRINTER_ID` = P_CD_PRINTER AND `3DMANAGER_PRINTER_GROUP_ID` = P_CD_GROUP;
+
+            			SELECT ROW_COUNT() AS Total;
+            		END main_block;
+                COMMIT;
             END;
             """;
 
@@ -925,8 +1021,7 @@
             var sql = """
             DROP PROCEDURE IF EXISTS `3DMANAGER_pr_USER_UPDATE`;
 
-            CREATE  PROCEDURE `3DMANAGER_pr_USER_UPDATE`(
-                IN P_CD_GROUP INT,
+            CREATE PROCEDURE `3DMANAGER_pr_USER_UPDATE`(
                 IN P_CD_USER INT,
                 IN P_DS_NAME VARCHAR(100),
                 IN P_DS_EMAIL VARCHAR(100),
@@ -941,7 +1036,7 @@
 
             		-- Forzar un commit independiente
             		START TRANSACTION;
-            		INSERT INTO 3DMANAGER_SYSTEM_LOGS(PROCEDURE_NAME, ERROR_MESSAGE)
+            		INSERT INTO `3DMANAGER_SYSTEM_LOGS`(PROCEDURE_NAME, ERROR_MESSAGE)
             		VALUES('3DMANAGER_pr_USER_UPDATE', v_err_msg);
             		COMMIT;
 
@@ -950,14 +1045,32 @@
             	END;
                 SET CodigoError = 0;
             	START TRANSACTION;
-            		UPDATE `3DMANAGER_USER` 
-                    SET `3DMANAGER_USER_NAME` = P_DS_NAME ,
-                     `3DMANAGER_USER_EMAIL` = P_DS_EMAIL 
-                    WHERE `3DMANAGER_USER_ID` = P_CD_USER AND `3DMANAGER_USER_GROUP_ID` = P_CD_GROUP;
+            		main_block: BEGIN
+            			IF EXISTS (
+            				SELECT 1 FROM `3DMANAGER_USER` 
+            				WHERE `3DMANAGER_USER_NAME` = P_DS_NAME AND `3DMANAGER_USER_ID` <> P_CD_USER AND `3DMANAGER_USER_DELETED` = 0) 
+            				THEN
+            					SET CodigoError = 4091; 
+                                LEAVE main_block;
+            			END IF;
 
-                    SELECT ROW_COUNT() AS Total;
+            			IF EXISTS (
+            				SELECT 1 FROM `3DMANAGER_USER` 
+            				WHERE `3DMANAGER_USER_EMAIL` = P_DS_EMAIL AND `3DMANAGER_USER_ID` <> P_CD_USER)
+            				THEN
+            					SET CodigoError = 4092; 
+                                LEAVE main_block;
+            			END IF;
+
+            			UPDATE `3DMANAGER_USER` 
+            			SET `3DMANAGER_USER_NAME` = P_DS_NAME ,
+            			 `3DMANAGER_USER_EMAIL` = P_DS_EMAIL 
+            			WHERE `3DMANAGER_USER_ID` = P_CD_USER;
+
+            			SELECT ROW_COUNT() AS Total;
+                    END main_block;
                 COMMIT;
-            END
+            END;
             """;
 
             await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
@@ -1434,7 +1547,7 @@
                 BEGIN
                     GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
 
-                    -- Forzar un commit independiente
+                    
                     START TRANSACTION;
                     INSERT INTO `3DMANAGER_SYSTEM_LOGS`(PROCEDURE_NAME, ERROR_MESSAGE)
                     VALUES('3DMANAGER_pr_NOTIFICATION_MARK_READ', v_err_msg);
@@ -1481,6 +1594,585 @@
                   AND `3DMANAGER_NOTIFICATION_IT_READ` = 0;
             END;
             
+            """;
+
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
+
+        private async Task CreateFilamentImagesCRUDAsync()
+        {
+            var sql = """
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_FILAMENT_GET_IMAGE`;
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_FILAMENT_POST_IMAGE`;
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_FILAMENT_DELETE_IMAGE`;
+
+            CREATE PROCEDURE `3DMANAGER_pr_FILAMENT_GET_IMAGE`(
+                IN P_CD_GROUP INT,
+                IN P_CD_FILAMENT INT
+            )
+            BEGIN
+
+            	SELECT 
+                    `3DMANAGER_FILAMENT_IMAGE_URL` AS FILE_URL,
+                    `3DMANAGER_FILAMENT_IMAGE_KEY` AS FILE_KEY
+                FROM `3DMANAGER_FILAMENT` 
+                WHERE `3DMANAGER_FILAMENT_GROUP_ID` = P_CD_GROUP and  `3DMANAGER_FILAMENT_ID` = P_CD_FILAMENT ;
+            END;
+
+            CREATE PROCEDURE `3DMANAGER_pr_FILAMENT_POST_IMAGE`(
+                IN P_FILAMENT_ID INT,
+                IN P_KEY VARCHAR(255),
+                IN P_URL VARCHAR(255),
+                OUT CodigoError INT
+            )
+            BEGIN
+                 -- Si hay un error SQL, se entra al handler, se hace rollback y se asigna el código -1
+                DECLARE v_err_msg TEXT;
+                DECLARE EXIT HANDLER FOR SQLEXCEPTION
+            	BEGIN
+            		GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
+
+            		-- Forzar un commit independiente
+            		START TRANSACTION;
+            		INSERT INTO `3DMANAGER_SYSTEM_LOGS`(PROCEDURE_NAME, ERROR_MESSAGE)
+            		VALUES('3DMANAGER_pr_FILAMENT_POST_IMAGE', v_err_msg);
+            		COMMIT;
+
+            		SET CodigoError = -1;
+            		ROLLBACK;
+            	END;
+
+                SET CodigoError = 0;
+
+            	START TRANSACTION;
+            	UPDATE `3DMANAGER_FILAMENT`
+                SET `3DMANAGER_FILAMENT_IMAGE_URL` = P_URL,
+            		`3DMANAGER_FILAMENT_IMAGE_KEY` = P_KEY
+                    WHERE `3DMANAGER_FILAMENT_ID` = P_FILAMENT_ID;	
+            	COMMIT;    
+            		SELECT `3DMANAGER_FILAMENT_ID` FROM `3DMANAGER_FILAMENT` WHERE P_FILAMENT_ID = `3DMANAGER_FILAMENT_ID`;
+            END;
+
+            CREATE PROCEDURE `3DMANAGER_pr_FILAMENT_DELETE_IMAGE`(
+                IN P_CD_GROUP INT,
+                IN P_CD_FILAMENT INT
+            )
+            BEGIN
+                DECLARE v_err_msg TEXT;
+                DECLARE EXIT HANDLER FOR SQLEXCEPTION
+            	BEGIN
+            		GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
+
+            		START TRANSACTION;
+            		INSERT INTO `3DMANAGER_SYSTEM_LOGS`(PROCEDURE_NAME, ERROR_MESSAGE)
+            		VALUES('3DMANAGER_pr_FILAMENT_DELETE_IMAGE', v_err_msg);
+            		COMMIT;
+
+            		ROLLBACK;
+            	END;
+
+            	START TRANSACTION;
+            	UPDATE `3DMANAGER_FILAMENT` SET
+                    `3DMANAGER_FILAMENT_IMAGE_URL` = NULL,
+                    `3DMANAGER_FILAMENT_IMAGE_KEY` = NULL
+                WHERE `3DMANAGER_FILAMENT_GROUP_ID` = P_CD_GROUP and  `3DMANAGER_FILAMENT_ID` = P_CD_FILAMENT ;
+            	COMMIT;    
+            		SELECT `3DMANAGER_FILAMENT_ID` FROM `3DMANAGER_FILAMENT` WHERE P_CD_FILAMENT = `3DMANAGER_FILAMENT_ID`;
+            END;
+            """;
+
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
+
+        private async Task CreateFilamentLevelAsync()
+        {
+            var sql = """
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_FILAMENT_GET_LOW_MATERIAL`;
+           
+            CREATE PROCEDURE `3DMANAGER_pr_FILAMENT_GET_LOW_MATERIAL`(
+            )
+            BEGIN
+            	CREATE TEMPORARY TABLE IF NOT EXISTS tmp_low_filaments AS
+            		SELECT 
+            			`3DMANAGER_FILAMENT_ID` AS FILAMENT_ID,
+            			`3DMANAGER_FILAMENT_NAME` AS FILAMENT_NAME,
+            			`3DMANAGER_FILAMENT_GROUP_ID` AS FILAMENT_GROUP_ID,
+            			`3DMANAGER_USER_OWNER` AS OWNER_GROUP_ID,
+            			`3DMANAGER_FILAMENT_MATERIAL_REMAINING_LENGTH` AS FILAMENT_LENGTH
+            		FROM `3DMANAGER_FILAMENT` 
+            		LEFT JOIN `3DMANAGER_GROUP` ON `3DMANAGER_FILAMENT_GROUP_ID` = `3DMANAGER_GROUP_ID`
+            		WHERE `3DMANAGER_FILAMENT_MATERIAL_REMAINING_LENGTH` < `3DMANAGER_FILAMENT_MATERIAL_LENGTH` * 0.25 
+                    AND  `3DMANAGER_FILAMENT_MATERIAL_CHECK` = 0;
+
+            	SELECT * FROM tmp_low_filaments;
+
+                UPDATE 3DMANAGER_FILAMENT f
+                JOIN tmp_low_filaments t ON f.`3DMANAGER_FILAMENT_ID` = t.FILAMENT_ID
+                SET f.`3DMANAGER_FILAMENT_MATERIAL_CHECK` = 1;
+            END;
+            """;
+
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
+
+        private async Task CreateGroupCRUDAsync()
+        {
+            var sql = """
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_GROUP_UPDATE`;
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_GROUP_POST`;
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_GROUP_BASIC_DATA_GET`;
+
+            CREATE PROCEDURE `3DMANAGER_pr_GROUP_POST`(
+                IN P_CD_USER_ID INT,
+                IN P_DS_GROUP_NAME VARCHAR(100),
+                IN P_DS_GROUP_DESCRIPTION VARCHAR(500),
+                OUT CodigoError INT
+            )
+            BEGIN
+
+            	DECLARE v_err_msg TEXT;
+                DECLARE EXIT HANDLER FOR SQLEXCEPTION
+            	BEGIN
+            		GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
+
+            		-- Forzar un commit independiente
+            		START TRANSACTION;
+            		INSERT INTO `3DMANAGER_SYSTEM_LOGS`(PROCEDURE_NAME, ERROR_MESSAGE)
+            		VALUES('3DMANAGER_pr_GROUP_POST', v_err_msg);
+            		COMMIT;
+
+            		SET CodigoError = -1;
+            		ROLLBACK;
+            	END;
+                SET CodigoError = 0;
+            	START TRANSACTION;
+                IF EXISTS (
+                    SELECT 1 FROM `3DMANAGER_GROUP` WHERE `3DMANAGER_GROUP_NAME` = P_DS_GROUP_NAME
+                ) THEN
+                    SET CodigoError = 4091;
+                ELSE
+                    INSERT INTO `3DMANAGER_GROUP` (`3DMANAGER_GROUP_NAME`,`3DMANAGER_GROUP_DESCRIPTION`,`3DMANAGER_USER_OWNER`)
+                    VALUES (P_DS_GROUP_NAME, P_DS_GROUP_DESCRIPTION ,P_CD_USER_ID);
+
+                    UPDATE `3DMANAGER_USER` 
+            			SET `3DMANAGER_USER_ROLE` = 2,
+            				`3DMANAGER_USER_GROUP_ID` = (SELECT `3DMANAGER_GROUP_ID` FROM `3DMANAGER_GROUP` WHERE P_DS_GROUP_NAME = `3DMANAGER_GROUP_NAME`)
+            			WHERE `3DMANAGER_USER_ID` = P_CD_USER_ID;
+
+                    SELECT `3DMANAGER_GROUP_NAME` FROM `3DMANAGER_GROUP` WHERE P_DS_GROUP_NAME = `3DMANAGER_GROUP_NAME`;
+                END IF;
+
+                COMMIT;
+            END;
+
+            CREATE PROCEDURE `3DMANAGER_pr_GROUP_UPDATE`(
+                IN P_CD_USER_ID INT,
+                IN P_DS_GROUP_NAME VARCHAR(100),
+                IN P_DS_GROUP_DESCRIPTION VARCHAR(500),
+                IN P_CD_GROUP INT,
+                OUT CodigoError INT
+            )
+            BEGIN
+
+            	DECLARE v_err_msg TEXT;
+                DECLARE EXIT HANDLER FOR SQLEXCEPTION
+            	BEGIN
+            		GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
+
+            		-- Forzar un commit independiente
+            		START TRANSACTION;
+            		INSERT INTO `3DMANAGER_SYSTEM_LOGS`(PROCEDURE_NAME, ERROR_MESSAGE)
+            		VALUES('3DMANAGER_pr_GROUP_UPDATE', v_err_msg);
+            		COMMIT;
+
+            		SET CodigoError = -1;
+            		ROLLBACK;
+            	END;
+                SET CodigoError = 0;
+            	START TRANSACTION;
+            		UPDATE  `3DMANAGER_GROUP` 
+                    SET `3DMANAGER_GROUP_NAME` = P_DS_GROUP_NAME,`3DMANAGER_GROUP_DESCRIPTION` = P_DS_GROUP_DESCRIPTION
+            		WHERE `3DMANAGER_USER_OWNER` = P_CD_USER_ID AND `3DMANAGER_GROUP_ID` = P_CD_GROUP;
+
+            		SELECT `3DMANAGER_GROUP_NAME` FROM `3DMANAGER_GROUP` WHERE P_DS_GROUP_NAME = `3DMANAGER_GROUP_NAME`;
+                COMMIT;
+            END;
+
+            CREATE PROCEDURE `3DMANAGER_pr_GROUP_BASIC_DATA_GET`(
+            IN P_CD_GROUP INT 
+            )
+            BEGIN
+            	SELECT 
+            		G.`3DMANAGER_GROUP_ID` AS GROUP_ID,
+                    G.`3DMANAGER_GROUP_NAME` AS GROUP_NAME,
+                    G.`3DMANAGER_GROUP_DESCRIPTION` AS GROUP_DESCRIPTION,
+                    G.`3DMANAGER_GROUP_REGISTER_DATE` AS GROUP_DATE,
+                    U.`3DMANAGER_USER_NAME` AS  GROUP_OWNER
+                FROM `3DMANAGER_GROUP` G
+                LEFT JOIN `3DMANAGER_USER` U ON U.`3DMANAGER_USER_ID` = G.`3DMANAGER_USER_OWNER`
+                WHERE `3DMANAGER_GROUP_ID` =  P_CD_GROUP;
+
+                CALL `3DMANAGER_pr_USER_LIST`(P_CD_GROUP);
+            END;
+
+            """;
+
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
+
+        private async Task CreatePrinterImagesCRUDAsync()
+        {
+            var sql = """
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_PRINTER_POST_IMAGE`;
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_PRINTER_GET_IMAGE`;
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_PRINTER_DELETE_IMAGE`;
+
+            CREATE PROCEDURE `3DMANAGER_pr_PRINTER_POST_IMAGE`(
+                IN P_PRINTER_ID INT,
+                IN P_KEY VARCHAR(255),
+                IN P_URL VARCHAR(255),
+                OUT CodigoError INT
+            )
+            BEGIN
+                 -- Si hay un error SQL, se entra al handler, se hace rollback y se asigna el código -1
+                DECLARE v_err_msg TEXT;
+                DECLARE EXIT HANDLER FOR SQLEXCEPTION
+            	BEGIN
+            		GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
+
+            		-- Forzar un commit independiente
+            		START TRANSACTION;
+            		INSERT INTO `3DMANAGER_SYSTEM_LOGS`(PROCEDURE_NAME, ERROR_MESSAGE)
+            		VALUES('3DMANAGER_pr_PRINTER_POST_IMAGE', v_err_msg);
+            		COMMIT;
+
+            		SET CodigoError = -1;
+            		ROLLBACK;
+            	END;
+
+                SET CodigoError = 0;
+
+            	START TRANSACTION;
+            	UPDATE `3DMANAGER_PRINTER` 
+                SET `3DMANAGER_PRINTER_IMAGE_URL` = P_URL,
+            		`3DMANAGER_PRINTER_IMAGE_KEY` = P_KEY
+                    WHERE `3DMANAGER_PRINTER_ID` = P_PRINTER_ID;	
+            	COMMIT;    
+            		SELECT `3DMANAGER_PRINTER_ID` FROM `3DMANAGER_PRINTER` WHERE P_PRINTER_ID = `3DMANAGER_PRINTER_ID`;
+            END;
+
+            CREATE PROCEDURE `3DMANAGER_pr_PRINTER_GET_IMAGE`(
+                IN P_CD_GROUP INT,
+                IN P_CD_PRINTER INT
+            )
+            BEGIN
+            	SELECT 
+                    `3DMANAGER_PRINTER_IMAGE_URL` AS FILE_URL,
+                    `3DMANAGER_PRINTER_IMAGE_KEY` AS FILE_KEY
+                FROM `3DMANAGER_PRINTER` 
+                WHERE `3DMANAGER_PRINTER_GROUP_ID` = P_CD_GROUP and  `3DMANAGER_PRINTER_ID` = P_CD_PRINTER ;
+            END;
+
+            CREATE PROCEDURE `3DMANAGER_pr_PRINTER_DELETE_IMAGE`(
+                IN P_CD_GROUP INT,
+                IN P_CD_PRINTER INT
+            )
+            BEGIN
+                DECLARE v_err_msg TEXT;
+                DECLARE EXIT HANDLER FOR SQLEXCEPTION
+            	BEGIN
+            		GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
+
+            		START TRANSACTION;
+            		INSERT INTO `3DMANAGER_SYSTEM_LOGS`(PROCEDURE_NAME, ERROR_MESSAGE)
+            		VALUES('3DMANAGER_pr_PRINTER_DELETE_IMAGE', v_err_msg);
+            		COMMIT;
+
+            		ROLLBACK;
+            	END;
+
+            	START TRANSACTION;
+            	UPDATE `3DMANAGER_PRINTER` SET
+                    `3DMANAGER_PRINTER_IMAGE_URL` = NULL,
+                    `3DMANAGER_PRINTER_IMAGE_KEY` = NULL
+                WHERE `3DMANAGER_PRINTER_GROUP_ID` = P_CD_GROUP and  `3DMANAGER_PRINTER_ID` = P_CD_PRINTER ;
+            	COMMIT;    
+            		SELECT `3DMANAGER_PRINTER_ID` FROM `3DMANAGER_PRINTER` WHERE P_CD_PRINTER = `3DMANAGER_PRINTER_ID`;
+            END;
+            """;
+
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
+
+        private async Task CreatePrintImageCRUDAsync()
+        {
+            var sql = """
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_PRINTER_POST_IMAGE`;
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_PRINTER_GET_IMAGE`;
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_PRINTER_DELETE_IMAGE`;
+            
+            CREATE PROCEDURE `3DMANAGER_pr_PRINTER_POST_IMAGE`(
+                IN P_PRINTER_ID INT,
+                IN P_KEY VARCHAR(255),
+                IN P_URL VARCHAR(255),
+                OUT CodigoError INT
+            )
+            BEGIN
+                 -- Si hay un error SQL, se entra al handler, se hace rollback y se asigna el código -1
+                DECLARE v_err_msg TEXT;
+                DECLARE EXIT HANDLER FOR SQLEXCEPTION
+            	BEGIN
+            		GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
+
+            		-- Forzar un commit independiente
+            		START TRANSACTION;
+            		INSERT INTO `3DMANAGER_SYSTEM_LOGS`(PROCEDURE_NAME, ERROR_MESSAGE)
+            		VALUES('3DMANAGER_pr_PRINTER_POST_IMAGE', v_err_msg);
+            		COMMIT;
+
+            		SET CodigoError = -1;
+            		ROLLBACK;
+            	END;
+
+                SET CodigoError = 0;
+
+            	START TRANSACTION;
+            	UPDATE `3DMANAGER_PRINTER` 
+                SET `3DMANAGER_PRINTER_IMAGE_URL` = P_URL,
+            		`3DMANAGER_PRINTER_IMAGE_KEY` = P_KEY
+                    WHERE `3DMANAGER_PRINTER_ID` = P_PRINTER_ID;	
+            	COMMIT;    
+            		SELECT `3DMANAGER_PRINTER_ID` FROM `3DMANAGER_PRINTER` WHERE P_PRINTER_ID = `3DMANAGER_PRINTER_ID`;
+            END;
+
+            CREATE PROCEDURE `3DMANAGER_pr_PRINTER_GET_IMAGE`(
+                IN P_CD_GROUP INT,
+                IN P_CD_PRINTER INT
+            )
+            BEGIN
+            	SELECT 
+                    `3DMANAGER_PRINTER_IMAGE_URL` AS FILE_URL,
+                    `3DMANAGER_PRINTER_IMAGE_KEY` AS FILE_KEY
+                FROM `3DMANAGER_PRINTER` 
+                WHERE `3DMANAGER_PRINTER_GROUP_ID` = P_CD_GROUP and  `3DMANAGER_PRINTER_ID` = P_CD_PRINTER ;
+            END;
+
+            CREATE PROCEDURE `3DMANAGER_pr_PRINTER_DELETE_IMAGE`(
+                IN P_CD_GROUP INT,
+                IN P_CD_PRINTER INT
+            )
+            BEGIN
+                DECLARE v_err_msg TEXT;
+                DECLARE EXIT HANDLER FOR SQLEXCEPTION
+            	BEGIN
+            		GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
+
+            		START TRANSACTION;
+            		INSERT INTO `3DMANAGER_SYSTEM_LOGS`(PROCEDURE_NAME, ERROR_MESSAGE)
+            		VALUES('3DMANAGER_pr_PRINTER_DELETE_IMAGE', v_err_msg);
+            		COMMIT;
+
+            		ROLLBACK;
+            	END;
+
+            	START TRANSACTION;
+            	UPDATE `3DMANAGER_PRINTER` SET
+                    `3DMANAGER_PRINTER_IMAGE_URL` = NULL,
+                    `3DMANAGER_PRINTER_IMAGE_KEY` = NULL
+                WHERE `3DMANAGER_PRINTER_GROUP_ID` = P_CD_GROUP and  `3DMANAGER_PRINTER_ID` = P_CD_PRINTER ;
+            	COMMIT;    
+            		SELECT `3DMANAGER_PRINTER_ID` FROM `3DMANAGER_PRINTER` WHERE P_CD_PRINTER = `3DMANAGER_PRINTER_ID`;
+            END;
+            """;
+
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
+
+        private async Task CreatePrinterCommentCRUDAsync()
+        {
+            var sql = """
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_PRINT_COMMENTS_LIST`;
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_PRINT_COMMENT_POST`;
+            
+            CREATE PROCEDURE `3DMANAGER_pr_PRINT_COMMENTS_LIST`(
+                IN P_CD_GROUP INT,
+                IN P_PRINT_ID INT
+            )
+            BEGIN
+                SELECT 
+                    C.`3DMANAGER_COMMENT_ID` AS ID_COMMENT,
+                    C.`3DMANAGER_COMMENT_COMMENT` AS DS_COMMENT,
+                    C.`3DMANAGER_COMMENT_USER_ID` AS COMMENT_USER_ID,
+                    U.`3DMANAGER_USER_NAME` AS COMMENT_USER_NAME,
+                    C.`3DMANAGER_COMMENT_REGISTER_DATE` AS COMMENT_DATE
+                FROM `3DMANAGER_COMMENT` C
+                LEFT JOIN `3DMANAGER_USER` U
+                    ON U.`3DMANAGER_USER_ID` = C.`3DMANAGER_COMMENT_USER_ID`
+            	LEFT JOIN `3DMANAGER_3DPRINT` P ON P.`3DMANAGER_3DPRINT_ID` = C.`3DMANAGER_COMMENT_3DPRINT_ID` 
+                WHERE C.`3DMANAGER_COMMENT_3DPRINT_ID` = P_PRINT_ID
+                  AND P.`3DMANAGER_3DPRINT_GROUP_ID` = P_CD_GROUP
+                ORDER BY C.`3DMANAGER_COMMENT_REGISTER_DATE` ASC;
+
+            END;
+
+            CREATE PROCEDURE `3DMANAGER_pr_PRINT_COMMENT_POST`(
+                IN P_COMMENT VARCHAR(500),
+                IN P_USER_ID INT,
+                IN P_PRINT_ID INT,
+                OUT CodigoError INT
+            )
+            BEGIN
+            	DECLARE v_err_msg TEXT;
+                DECLARE EXIT HANDLER FOR SQLEXCEPTION
+            	BEGIN
+            		GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
+
+            		-- Forzar un commit independiente
+            		START TRANSACTION;
+            		INSERT INTO `3DMANAGER_SYSTEM_LOGS`(PROCEDURE_NAME, ERROR_MESSAGE)
+            		VALUES('3DMANAGER_pr_PRINT_COMMENT_POST', v_err_msg);
+            		COMMIT;
+
+            		SET CodigoError = -1;
+            		ROLLBACK;
+            	END;
+
+                SET CodigoError = 0;
+                START TRANSACTION;
+            		INSERT INTO `3DMANAGER_COMMENT`
+            		(
+            			`3DMANAGER_COMMENT_COMMENT`,
+            			`3DMANAGER_COMMENT_USER_ID`,
+            			`3DMANAGER_COMMENT_3DPRINT_ID`
+            		)
+            		VALUES 
+            		(
+            			P_COMMENT,
+            			P_USER_ID,
+            			P_PRINT_ID
+            		);
+            		COMMIT;
+                SELECT LAST_INSERT_ID() AS COMMENT_ID;
+            END;
+            """;
+
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
+        private async Task CreateUserImageCRUDAsync()
+        {
+            var sql = """
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_USER_DELETE`;
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_USER_GET_IMAGE`;
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_USER_POST_IMAGE`;
+
+            CREATE PROCEDURE `3DMANAGER_pr_USER_DELETE`(
+                IN P_CD_USER INT,
+                OUT CodigoError INT
+            )
+            BEGIN
+
+            	DECLARE v_err_msg TEXT;
+                DECLARE EXIT HANDLER FOR SQLEXCEPTION
+            	BEGIN
+            		GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
+
+            		-- Forzar un commit independiente
+            		START TRANSACTION;
+            		INSERT INTO `3DMANAGER_SYSTEM_LOGS`(PROCEDURE_NAME, ERROR_MESSAGE)
+            		VALUES('3DMANAGER_pr_USER_DELETE', v_err_msg);
+            		COMMIT;
+
+            		SET CodigoError = -1;
+            		ROLLBACK;
+            	END;
+                SET CodigoError = 0;
+            	START TRANSACTION;
+            		UPDATE `3DMANAGER_USER` 
+                    SET 
+                     `3DMANAGER_USER_DELETED` = 1 ,
+                     `3DMANAGER_USER_PASSWORD` = "",
+                     `3DMANAGER_USER_EMAIL` = "",
+                     `3DMANAGER_USER_GROUP_ID` = NULL,
+                     `3DMANAGER_USER_ROLE` = 1
+                    WHERE `3DMANAGER_USER_ID` = P_CD_USER;
+
+                    SELECT 
+            			`3DMANAGER_USER_ID` AS ID,
+            			`3DMANAGER_USER_IMAGE_KEY` AS FILE_KEY,
+                        `3DMANAGER_USER_IMAGE_URL` AS FILE_URL
+                    FROM `3DMANAGER_USER` 
+                    WHERE `3DMANAGER_USER_ID` = P_CD_USER;
+                COMMIT;
+            END;
+
+            CREATE PROCEDURE `3DMANAGER_pr_USER_GET_IMAGE`(
+                IN P_CD_USER INT
+            )
+            BEGIN
+
+            	SELECT 
+                    `3DMANAGER_USER_IMAGE_URL` AS FILE_URL,
+                    `3DMANAGER_USER_IMAGE_KEY` AS FILE_KEY
+                FROM `3DMANAGER_USER` 
+                WHERE  `3DMANAGER_USER_ID` = P_CD_USER ;
+            END;
+            
+            CREATE PROCEDURE `3DMANAGER_pr_USER_POST_IMAGE`(
+                IN P_USER_ID INT,
+                IN P_KEY VARCHAR(255),
+                IN P_URL VARCHAR(255),
+                OUT CodigoError INT
+            )
+            BEGIN
+                 -- Si hay un error SQL, se entra al handler, se hace rollback y se asigna el código -1
+                DECLARE v_err_msg TEXT;
+                DECLARE EXIT HANDLER FOR SQLEXCEPTION
+            	BEGIN
+            		GET DIAGNOSTICS CONDITION 1 v_err_msg = MESSAGE_TEXT;
+
+            		-- Forzar un commit independiente
+            		START TRANSACTION;
+            		INSERT INTO `3DMANAGER_SYSTEM_LOGS`(PROCEDURE_NAME, ERROR_MESSAGE)
+            		VALUES('3DMANAGER_pr_USER_POST_IMAGE', v_err_msg);
+            		COMMIT;
+
+            		SET CodigoError = -1;
+            		ROLLBACK;
+            	END;
+
+                SET CodigoError = 0;
+
+            	START TRANSACTION;
+            	UPDATE `3DMANAGER_USER` 
+                SET `3DMANAGER_USER_IMAGE_URL` = P_URL,
+            		`3DMANAGER_USER_IMAGE_KEY` = P_KEY
+                    WHERE `3DMANAGER_USER_ID` = P_USER_ID;	
+            	COMMIT;    
+            		SELECT `3DMANAGER_USER_ID` FROM `3DMANAGER_USER` WHERE P_USER_ID = `3DMANAGER_USER_ID`;
+            END;
+            """;
+
+            await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);
+        }
+
+        private async Task CreatePrintListTimesAsync()
+        {
+            var sql = """
+            DROP PROCEDURE IF EXISTS `3DMANAGER_pr_PRINT_LIST_TIMES`;
+            
+            CREATE PROCEDURE `3DMANAGER_pr_PRINT_LIST_TIMES`(
+                IN P_CD_GROUP INT,
+                IN P_CD_PRINTER INT
+            )
+            BEGIN
+            	SELECT 
+                    `3DMANAGER_3DPRINT_IMPRESSION_TIME` AS PRINTER_TIME,
+                    `3DMANAGER_3DPRINT_REAL_IMPRESSION_TIME` AS PRINTER_TIME_REAL
+                FROM `3DMANAGER_3DPRINT` 
+                LEFT JOIN `3DMANAGER_USER` ON `3DMANAGER_3DPRINT_USER_ID` = `3DMANAGER_USER_ID`
+                WHERE `3DMANAGER_3DPRINT_GROUP_ID` = P_CD_GROUP  AND `3DMANAGER_3DPRINT_PRINTER_ID` = P_CD_PRINTER 
+                AND `3DMANAGER_3DPRINT_STATE` = 1 AND `3DMANAGER_3DPRINT_DELETED` = 0; 
+            END;
             """;
 
             await DatabaseSeederhelper.ExecuteAsync(_connectionString, sql);

@@ -8,6 +8,7 @@ using _3DMANAGER_APP.DAL.Base;
 using _3DMANAGER_APP.DAL.Repositories;
 using _3DMANAGER_APP.TEST.Fixture;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
@@ -32,7 +33,6 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
 
             _mapper = config.CreateMapper();
 
-            //Mocking a AWS service. Test does not use AWS service
             var absMock = new Mock<IAzureBlobStorageService>();
 
             absMock.Setup(x => x.UploadImageAsync(
@@ -103,7 +103,106 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
 
         }
 
+        [Fact]
+        public void GetPrinterDetail_ShouldReturnError_WhenPrinterDoesNotExist()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER"
+            );
 
+            var printerRepository = new PrinterRepository(
+                dataSource,
+                NullLogger<PrinterRepository>.Instance
+            );
+
+            var service = new PrinterService(
+                printerRepository,
+                _mapper,
+                NullLogger<PrinterService>.Instance,
+                _aBSService
+            );
+
+            var result = service.GetPrinterDetail(1, -999, out BaseError? error);
+
+            Assert.NotNull(error);
+            Assert.Equal(500, error.code);
+            Assert.Equal(null, result.PrinterId);
+        }
+
+        [Fact]
+        public async Task GetPrinterDashboardList_ShouldUseDefaultImage_WhenNoImage()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER"
+            );
+
+            var printerRepository = new PrinterRepository(
+                dataSource,
+                NullLogger<PrinterRepository>.Instance
+            );
+
+            var service = new PrinterService(
+                printerRepository,
+                _mapper,
+                NullLogger<PrinterService>.Instance,
+                _aBSService
+            );
+
+            var created = await service.PostPrinter(new PrinterRequest
+            {
+                GroupId = 1,
+                PrinterName = $"Impresora Test POST",
+                PrinterDescription = "Test",
+                PrinterModel = "Test"
+            });
+
+            var list = service.GetPrinterDashboardList(1, out BaseError? error);
+
+            Assert.Null(error);
+
+            var printer = list.First(p => p.PrinterId == created.Data);
+
+            Assert.NotNull(printer.PrinterImageData);
+            Assert.Contains("https://fake-url.com/presigned/test.jpg", printer.PrinterImageData.FileUrl);
+        }
+
+        [Fact]
+        public async Task PostPrinter_ShouldReturnConflict_WhenNameExists()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER"
+            );
+
+            var printerRepository = new PrinterRepository(
+                dataSource,
+                NullLogger<PrinterRepository>.Instance
+            );
+
+            var service = new PrinterService(
+                printerRepository,
+                _mapper,
+                NullLogger<PrinterService>.Instance,
+                _aBSService
+            );
+
+
+            var request = new PrinterRequest
+            {
+                GroupId = 1,
+                PrinterName = "Impresora Test POST",
+                PrinterDescription = "Test",
+                PrinterModel = "Model"
+            };
+
+            await service.PostPrinter(request);
+            var result = await service.PostPrinter(request);
+
+            Assert.NotNull(result.Error);
+            Assert.Equal(409, result.Error.Code);
+        }
         [Fact]
         public void UpdatePrinter_ShouldModifyPrinterCorrectly()
         {
@@ -151,6 +250,61 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
         }
 
         [Fact]
+        public async Task UpdatePrinter_ShouldReturnError_WhenNameDuplicated()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER"
+            );
+
+            var printerRepository = new PrinterRepository(
+                dataSource,
+                NullLogger<PrinterRepository>.Instance
+            );
+
+            var service = new PrinterService(
+                printerRepository,
+                _mapper,
+                NullLogger<PrinterService>.Instance,
+                _aBSService
+            );
+
+            var name = "Impresora Duplicada";
+
+            var p1 = await service.PostPrinter(new PrinterRequest
+            {
+                GroupId = 1,
+                PrinterName = name,
+                PrinterDescription = "Test",
+                PrinterModel = "Model"
+            });
+
+            var p2 = await service.PostPrinter(new PrinterRequest
+            {
+                GroupId = 1,
+                PrinterName = "Impresora No Duplicada",
+                PrinterDescription = "Test",
+                PrinterModel = "Model"
+            });
+
+            var request = new PrinterDetailRequest
+            {
+                GroupId = 1,
+                PrinterId = p2.Data,
+                PrinterName = name,
+                PrinterDescription = "Updated",
+                PrinterModel = "Updated",
+                PrinterStateId = 1
+            };
+
+            var result = service.UpdatePrinter(request, out BaseError? error);
+
+            Assert.False(result);
+            Assert.NotNull(error);
+        }
+
+
+        [Fact]
         public async Task DeletePrinter_ShouldDeleteSuccessfully()
         {
             var dataSource = new MySQLDataSource(
@@ -194,6 +348,108 @@ namespace _3DMANAGER_APP.TEST.IntegrationTest
             Assert.DoesNotContain(printers, p => p.PrinterId == printerId);
         }
 
+        [Fact]
+        public async Task DeletePrinterImage_ShouldReturnTrue_WhenNoImageExists()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER"
+            );
 
+            var printerRepository = new PrinterRepository(
+                dataSource,
+                NullLogger<PrinterRepository>.Instance
+            );
+
+            var service = new PrinterService(
+                printerRepository,
+                _mapper,
+                NullLogger<PrinterService>.Instance,
+                _aBSService
+            );
+
+            var created = await service.PostPrinter(new PrinterRequest
+            {
+                GroupId = 1,
+                PrinterName = $"NoImageDelete_{Guid.NewGuid()}",
+                PrinterDescription = "Test",
+                PrinterModel = "Model"
+            });
+
+            var result = await service.DeletePrinterImage(created.Data, 1);
+
+            Assert.True(result.Data);
+        }
+
+        [Fact]
+        public async Task UpdatePrinterImage_ShouldReturnError_WhenImageIsNull()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER"
+            );
+
+            var printerRepository = new PrinterRepository(
+                dataSource,
+                NullLogger<PrinterRepository>.Instance
+            );
+
+            var service = new PrinterService(
+                printerRepository,
+                _mapper,
+                NullLogger<PrinterService>.Instance,
+                _aBSService
+            );
+
+            var result = await service.UpdatePrinterImage(1, 1, null);
+
+            Assert.NotNull(result.Error);
+            Assert.Equal(400, result.Error.Code);
+        }
+
+        [Fact]
+        public async Task UpdatePrinterImage_ShouldUpdateSuccessfully()
+        {
+            var dataSource = new MySQLDataSource(
+                _fixture.ConnectionString,
+                "3DMANAGER"
+            );
+
+            var printerRepository = new PrinterRepository(
+                dataSource,
+                NullLogger<PrinterRepository>.Instance
+            );
+
+            var service = new PrinterService(
+                printerRepository,
+                _mapper,
+                NullLogger<PrinterService>.Instance,
+                _aBSService
+            );
+
+            var created = await service.PostPrinter(new PrinterRequest
+            {
+                GroupId = 1,
+                PrinterName = $"ImageUpdate_{Guid.NewGuid()}",
+                PrinterDescription = "Test",
+                PrinterModel = "Model"
+            });
+
+            var file = new FormFile(
+                new MemoryStream(new byte[] { 1, 2, 3 }),
+                0,
+                3,
+                "file",
+                "test.jpg"
+            )
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "image/jpeg"
+            };
+
+            var result = await service.UpdatePrinterImage(created.Data, 1, file);
+
+            Assert.True(result.Data);
+        }
     }
 }

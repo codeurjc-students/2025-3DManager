@@ -13,12 +13,13 @@ const GroupPage: React.FC = () => {
     const { refreshUser } = useAuth();
     const { showPopup } = usePopupContext();
     const { refresh } = useNotifications();
+
     useEffect(() => {
         refresh();
         getGroupInvitations().then(response => {
             setItems(response.data ?? []);
         });
-    }, []);
+    }, [refresh]);
 
     const reloadInvitations = async () => {
         const response = await getGroupInvitations();
