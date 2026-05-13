@@ -33,7 +33,17 @@ export const LoginGuest = async (): Promise<CommonResponse<LoginResponse>> => {
     const response = await apiClient.post<CommonResponse<LoginResponse>>('/v1/users/login/guest');
     return response.data;
 }
-
+export const logoutUser = async (): Promise<CommonResponse<boolean>> => {
+    try {
+        const response = await apiClient.post<CommonResponse<boolean>>(`/v1/users/logout`);
+        return response.data;
+    } catch (error: unknown) {
+        return handleApiError<boolean>(
+            error,
+            "Error al hacer logout usuario"
+        );
+    }
+}
 export const getUserList = async (): Promise<CommonResponse<UserListResponse[]>> => {
 
     try {

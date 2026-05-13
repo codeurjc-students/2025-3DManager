@@ -252,7 +252,17 @@ namespace _3DMANAGER_APP.Server.Controllers
 
             });
         }
-
+        /// <summary>
+        /// Invites a user to a group
+        /// </summary>
+        /// <returns>Return a bool that verifies if the invitatios was succesfull or not</returns>
+        /// <response code="200">Respuesta correcta</response>
+        /// <response code="401">No autorizado</response>
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Models.CommonResponse<bool>), StatusCodes.Status401Unauthorized)]
+        [ApiVersionNeutral]
+        [Tags("Users")]
         [HttpPost("logout")]
         public IActionResult Logout()
         {
