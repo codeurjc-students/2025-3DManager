@@ -22,6 +22,11 @@ A common use case is the application for managing the resources of a 3D printing
 
 --- 
 
+### Video DEMO
+[![Demo del proyecto](https://img.youtube.com/vi/_F2Y46CNtFA/0.jpg)](https://www.youtube.com/watch?v=_F2Y46CNtFA)
+
+--- 
+
 ### Version 0.1
 
 In version 0.1, the application introduces the foundational features for user and group management. After registering, each user can choose to create a new group or join an existing one.
