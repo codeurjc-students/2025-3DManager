@@ -69,7 +69,7 @@ const CreatePrint3DPage: React.FC = () => {
         };
 
         loadCatalog();
-    }, [showPopup]);
+    }, []);
 
 
 

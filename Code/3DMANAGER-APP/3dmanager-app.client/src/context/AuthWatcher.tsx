@@ -12,6 +12,24 @@ const AuthWatcher: React.FC = () => {
 
         if (globalThis.location.pathname.startsWith("/error")) return;
 
+        if (user.groupId) {
+            if (globalThis.location.pathname.startsWith("/dashboard")) return;
+            navigate("/dashboard");
+            return;
+        }
+        const allowedWithoutGroup = [
+            `/dashboard/user/detail/${user.userId}`,
+        ];
+
+        if (
+            globalThis.location.pathname.startsWith("/group") ||
+            allowedWithoutGroup.some(route => globalThis.location.pathname.startsWith(route))
+        ) {
+            return;
+        }
+
+        navigate("/group");
+        /*
         if (user.groupId && globalThis.location.pathname.startsWith("/dashboard")) return;
         if (!user.groupId && globalThis.location.pathname.startsWith("/group")) return;
 
@@ -19,7 +37,7 @@ const AuthWatcher: React.FC = () => {
             navigate("/dashboard");
         } else {
             navigate("/group");
-        }
+        }*/
     }, [user, loading, navigate]);
 
     return null;
